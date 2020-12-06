@@ -1,0 +1,231 @@
+.shop{
+	position: absolute;
+	top: 50px;
+    left: 0;
+    right: 0;
+    margin: auto;
+	background-color: rgb(212, 193, 30);
+	border: 3px solid #c10000;
+    box-shadow: 0 0 10px rgb(255, 0, 0);
+	max-width: 1064px;
+	z-index: 12;
+	
+	&__body{
+		box-shadow: inset 0 0 30px 5px #ff3b3b;
+		padding: 10px 20px 20px;
+		overflow: hidden;
+	}
+
+	&__title{
+		font-family: 'FortunataCYR';
+		font-size: 52px;
+		padding: 0 0 30px;
+		text-align: center;
+		color: #e80000;
+		text-shadow: 0 0 10px black, 0 0 10px black;
+	}
+
+	&__close{
+		position: absolute;
+		top: -10px;
+		right: -10px;
+		height: 30px;
+		width: 30px;
+		background-color: red;
+		border-radius: 5px;
+		box-shadow: 0 0 5px 0 black;
+		cursor: pointer;
+		
+		&:hover{
+			color: yellow;
+		}
+		&:active{
+			background-color: #bb5b00;
+			color: black;
+		}
+	}
+		
+	&__close-body{
+		box-shadow: inset 0 0 5px 0px black;
+		height: 100%;
+		border-radius: 5px;
+		text-align: center;
+		line-height: 22px;
+		font-size: 28px;
+		font-family: cursive;
+	}
+
+	&__categories{
+		position: absolute;
+		top: 27px;
+		display: flex;
+	}
+
+	&__container{
+		height: calc(100% - 150px);
+		background-color: #ff710087;
+		box-shadow: 0 0 125px #ff6a00;
+	}
+
+
+
+
+	&__category{
+		width: 50px;
+		cursor: pointer;
+		border: 5px solid black;
+		background-color: #515400;
+		box-shadow: 0 0 5px black;
+		height: 50px;
+		margin-right: 5px;
+
+		&:hover{
+			background-color: #ff8800;
+		}
+	}
+
+	&__category-active{
+		background-color: #ff8800 !important;
+		border-bottom-width: 15px;
+	}
+
+	&__category-title{
+		font-family: 'Cheri';
+		font-size: 18px;
+		color: #ff0000;
+		text-shadow: 0 0 5px black;
+		padding-left: 10px;
+	}
+
+
+
+	&__items-container{
+		background-color: black;
+		box-shadow: 0 0 5px black;
+		border: 3px solid black;
+
+		&--background-magic, &--background-all{
+			background: black url('../../../assets/img/shop/fon1.jpg');
+			background-size: cover;
+		}
+		&--background-buildings{
+			background: black url('../../../assets/img/shop/fon2.jpg');
+			background-size: cover;
+		}
+		&--background-units{
+			background: black url('../../../assets/img/shop/fon3.jpg');
+			background-size: cover;
+		}
+	}
+	&__items-container-body{
+		background-color: rgba(0, 0, 0, 0.5);
+		padding: 10px 5px;
+		overflow: auto;
+		box-shadow: 0 0 50px 10px black;    
+		//min-height: 650px;
+	}
+
+
+	&__item{
+		float: left;
+		margin: 10px;
+		padding: 15px;
+		position: relative;
+		width: 200px;
+		height: 270px;
+		background-color: orange;
+		box-shadow: inset 0 0 15px black;
+
+		
+		&-button{
+			border-color: #00204e !important;
+			background-color: #000a15;
+			bottom: 15px;
+			position: absolute;
+			width: calc(100% - 30px);
+			color: #41f5ff;
+			box-shadow: 0 0 25px 3px #ff6700;
+			cursor: pointer;
+			font-family: 'AnotherCastle3';
+			font-size: 24px;
+			padding: 2px 0 3px;
+			outline: none;
+			line-height: 18px;
+
+			&:hover{
+				color: #ff8800;
+			}
+
+			&:active{
+				background-color: black;
+			}
+
+			& > img {
+				width: 15px;
+				margin: 0 5px;
+				position: absolute;
+			}
+
+			&--disabled{
+				background-color: #001a34 !important;
+				border-color: #000b4a !important;
+				border-style: solid;
+				color: gray !important;
+				cursor: inherit;
+
+				& > img{
+					filter: contrast(0.5);
+				}
+			}
+		}
+
+
+		&-img{
+			background-position: center;
+			background-size: contain;
+			background-repeat: no-repeat;
+			width: 100%;
+			height: 100%;
+
+			&-container{
+				cursor: pointer;
+				box-shadow: 0 0 10px 3px #000000;
+				height: 200px;
+				margin-bottom: 15px;
+				background-color: black;
+			}
+
+			&--small{
+				background-size: auto;
+			}
+		}
+		
+		&-title{
+			font-weight: bold;
+			font-size: 18px;
+			text-align: center;
+		}
+
+		&--info &-img{
+			display: none;
+		}
+
+		&--info &-img-container{
+			background-color: transparent;
+			box-shadow: none;
+		}
+
+		&--info &-info{
+			display: block;
+		}
+
+		&-info{
+			display: none;
+			padding: 7px 10px;
+
+			& > p{
+				margin-bottom: 10px;
+			}
+		}
+	}
+}

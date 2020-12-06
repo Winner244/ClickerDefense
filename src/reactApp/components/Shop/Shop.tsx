@@ -1,0 +1,243 @@
+import * as React from 'react';
+import { connect } from 'react-redux';
+
+import { ApplicationState } from '../../store';
+import * as MenuStore from '../Menu/MenuStore';
+import * as ShopStore from './ShopStore';
+
+import { App } from '../../App';
+
+import './Shop.scss';
+
+import {Mouse} from '../../../gameApp/gamer/Mouse';
+import {Gamer} from '../../../gameApp/gamer/Gamer';
+
+import {Buildings} from '../../../gameApp/buildings/Buildings';
+import {Units} from '../../../gameApp/units/Units';
+
+import {Game} from '../../../gameApp/gameSystems/Game';
+import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
+
+import ShopItem from '../../../models/shop/ShopItem';
+
+import {Panels} from '../Panels/Panels';
+
+import {Cursor} from '../../../gameApp/gamer/Cursor';
+
+import {ShopCategoryEnum, ShopCategory} from '../../../enum/ShopCategoryEnum';
+
+import {Upgrade} from '../Upgrade/Upgrade';
+
+import CoinImage from '../../../assets/img/coin.png';
+import CategoryMagicImage from '../../../assets/img/shop/shop-category-main/magic.png';
+import CategoryBuldingImage from '../../../assets/img/shop/shop-category-main/tower.png';
+import CategoryUnitImage from '../../../assets/img/shop/shop-category-main/unit.png';
+import CategoryCursorImage from '../../../assets/img/shop/shop-category-main/cursor.png';
+
+import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+
+interface Prop {
+  isOpen?: boolean
+}
+
+type Props =
+  ShopStore.ShopState
+  & ShopStore.ShopAction
+  & Prop;
+
+export class Shop extends React.Component<Props, {}> {
+
+  static show(): void{
+    App.Store.dispatch(ShopStore.actionCreators.open());
+    App.Store.dispatch(MenuStore.actionCreators.hideOutsideButtons());
+    Panels.undisable();
+    AudioSystem.load(SelectingSoundUrl);
+  }
+
+  static hide(): void{
+    if(Shop.isOpened()){
+      Game.isBlockMouseLogic = false;
+      App.Store.dispatch(ShopStore.actionCreators.close());
+      App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
+    }
+  }
+
+  static isOpened(): boolean{
+    return App.Store.getState().shop?.isOpen || false;
+  }
+
+  private static playSoundSelect(value: number = -15){
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, value);
+  }
+
+  onKey(event: KeyboardEvent){
+    if(!this.props.isOpen){
+      return;
+    }
+
+
+    switch (event.key){
+      case 'Enter':
+        break;
+
+      case 'ArrowUp':
+        break;
+
+      case 'ArrowDown':
+        break;
+    }
+  }
+
+  componentDidMount() {
+		document.addEventListener('keydown', this.onKey.bind(this));
+  } 
+  
+  componentWillUnmount() {
+		document.removeEventListener('keydown', this.onKey.bind(this));
+  }
+
+  onClickClose(){
+    Shop.playSoundSelect();
+    Shop.hide();
+    Game.continue();
+  }
+
+  onClickSelectCategory(category: string){
+    Shop.playSoundSelect();
+    this.props.selectCategory(category);
+  }
+
+  onClickSelectItem(itemName: string){
+    Shop.playSoundSelect();
+    this.props.selectItem(itemName);
+  }
+
+  onClickBuyItem(item: ShopItem){
+    if(this.isDisabledButtonBuy(item)){
+      return;
+    }
+
+    Shop.playSoundSelect();
+    
+    if(item.category == ShopCategoryEnum.UNITS){
+      setTimeout(() =>  Game.buyThing(item), 200);
+    }
+    else{
+      Game.buyThing(item);
+    }
+
+    Shop.hide();
+  }
+
+  onOpenUpgradeCursorItem(item: ShopItem){
+    var cursor = Cursor.allModifiers.find(x => x.shopName == item.name);
+    if(cursor){
+      Upgrade.show(cursor);
+    }
+    
+    Shop.hide();
+  }
+
+  isDisabledButtonBuy(item: ShopItem): boolean{
+    let isDisabled = item.price > Gamer.coins;
+
+    if(!isDisabled){
+      if(item.category == ShopCategoryEnum.BUILDINGS){
+        isDisabled = Buildings.all.filter(x => x.shopName == item.name).length >= item.maxCount;
+      }
+      else if(item.category == ShopCategoryEnum.UNITS){
+        isDisabled = Units.all.filter(x => x.shopName == item.name).length >= item.maxCount;
+      }
+      else if(item.category == ShopCategoryEnum.MAGIC){
+        isDisabled = Panels.countAllItems() >= item.maxCount;
+      }
+    }
+
+    return isDisabled;
+  }
+
+  render() {
+    if(!this.props.isOpen){
+      return null;
+    }
+
+    let items: ShopItem[] = this.props.selectedCategory == ShopCategoryEnum.ALL 
+      ? Object.values(this.props.items).flat()
+      : this.props.items[this.props.selectedCategory]
+
+    return (
+      <div className="shop noselect" id="shop">
+        <div className="shop__body">
+            <div className="shop__title">Магазин</div>
+            <div className="shop__close" onClick={() => this.onClickClose()}>
+                <div className="shop__close-body">x</div>
+            </div>
+            <div className="shop__categories">
+                <img 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.MAGIC ? 'shop__category-active' : '')} 
+                  src={CategoryMagicImage} 
+                  onClick={() => this.onClickSelectCategory(ShopCategoryEnum.MAGIC)}/>
+                <img 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.BUILDINGS ? 'shop__category-active' : '')} 
+                  src={CategoryBuldingImage} 
+                  onClick={() => this.onClickSelectCategory(ShopCategoryEnum.BUILDINGS)}/>
+                <img 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.UNITS ? 'shop__category-active' : '')} 
+                  src={CategoryUnitImage} 
+                  onClick={() => this.onClickSelectCategory(ShopCategoryEnum.UNITS)}/>
+                <img 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.CURSOR ? 'shop__category-active' : '')} 
+                  src={CategoryCursorImage} 
+                  onClick={() => this.onClickSelectCategory(ShopCategoryEnum.CURSOR)}/>
+            </div>
+            <div className="shop__container">
+                <div className={`shop__items-container shop__items-container--background-${this.props.selectedCategory || 'common'}`}>
+                    <div className="shop__items-container-body">
+                        <div className="shop__category-title">{ShopCategory.GetLabel(this.props.selectedCategory)}</div>
+
+                        {items.map(item => (
+                          <div className={"shop__item " + (this.props.selectedItemNames.includes(item.name) ? 'shop__item--info ' : '')} key={item.name}>
+                              <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(item.name)}>
+                                  <div className={"shop__item-img nodrag " + (item.image.width < 200 ? "shop__item-img--small" : '')} style={{backgroundImage: `url(${item.image.src})`}} />
+                                  <div className="shop__item-info">
+                                      <p>{item.description}</p>
+                                  </div>
+                              </div>
+                              <div className="shop__item-title">{item.name}</div>
+
+                              {item.category == ShopCategoryEnum.CURSOR && Cursor.allModifiers.find(x => x.shopName == item.name) != null
+                                ?
+                                  <button 
+                                    className={"shop__item-button "} 
+                                    onClick={() => this.onOpenUpgradeCursorItem(item)}
+                                  >
+                                    Улучшить
+                                  </button>
+                                :  
+                              
+                                  <button 
+                                    className={"shop__item-button " + (this.isDisabledButtonBuy(item) ? 'shop__item-button--disabled' : '')} 
+                                    onClick={() => this.onClickBuyItem(item)}
+                                  >
+                                    Купить {item.price}
+                                    <img className='nodrag' src={CoinImage}/>
+                                  </button>
+                              }
+                          </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    );
+  }
+}
+	
+// Wire up the React component to the Redux store
+export default connect(
+  (state: ApplicationState, ownProps: Prop) => {
+      return { ...state.shop, ...ownProps };
+  },
+  ShopStore.actionCreators
+)(Shop);

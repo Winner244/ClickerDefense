@@ -1,0 +1,15 @@
+.coin-labels{
+	position: absolute;
+	width: 0;
+	height: 0;
+    top: 0;
+    left: 0;
+	z-index: 11;
+	
+	&__label{
+		position: absolute;
+		font-size: 14px;
+		font-family: Calibri;
+		color: rgb(255, 255, 0);
+	}
+}

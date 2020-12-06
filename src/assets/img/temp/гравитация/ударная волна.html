@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Gravitational Wave Pixel Shift</title>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; background: #000; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+
+<script>
+const canvas = document.getElementById('canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const imageUrl = 'https://upload.wikimedia.org/wikipedia/commons/3/3f/HST-SM4.jpeg';
+const img = new Image();
+img.crossOrigin = 'Anonymous';
+
+const settings = {
+  waveCount: 1,
+  speed: 1,
+  duration: 1000,
+  strength: 500,  // Pixel shift magnitude
+  wavelength: 100,
+};
+
+let waves = [];
+
+class Wave {
+  constructor(x, y, startTime) {
+    this.x = x;
+    this.y = y;
+    this.startTime = startTime;
+    this.duration = settings.duration;
+  }
+
+  getAmplitude(progress) {
+    return settings.strength * Math.sin(Math.PI * progress);
+  }
+
+  shiftPixel(x, y, currentTime) {
+    const elapsed = currentTime - this.startTime;
+    const dist = Math.hypot(x - this.x, y - this.y);
+    const waveFront = elapsed / settings.speed;
+    const distanceFromWave = dist - waveFront;
+    
+    const attenuation = Math.exp(-Math.abs(distanceFromWave) / settings.wavelength);
+    const shiftAmount = this.getAmplitude(elapsed / this.duration) * Math.sin(distanceFromWave / settings.wavelength * Math.PI);
+
+    const dx = (x - this.x) / dist * shiftAmount * attenuation;
+    const dy = (y - this.y) / dist * shiftAmount * attenuation;
+
+    return [dx, dy];
+  }
+
+  isActive(currentTime) {
+    return (currentTime - this.startTime) < this.duration;
+  }
+}
+
+function createWaves(x, y) {
+  const now = performance.now();
+  for (let i = 0; i < settings.waveCount; i++) {
+    const delay = i * 100;
+    waves.push(new Wave(x, y, now + delay));
+  }
+}
+
+function render(time) {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const originalPixels = new Uint8ClampedArray(imageData.data);
+  
+  const width = canvas.width;
+  const height = canvas.height;
+
+  for (let y = 0; y < height; y += 2) {  // performance tweak: skip every other pixel
+    for (let x = 0; x < width; x += 2) {
+      let dx = 0, dy = 0;
+
+      waves.forEach(wave => {
+        if (wave.isActive(time)) {
+          const [shiftX, shiftY] = wave.shiftPixel(x, y, time);
+          dx += shiftX;
+          dy += shiftY;
+        }
+      });
+
+      const sx = Math.min(width - 1, Math.max(0, Math.round(x + dx)));
+      const sy = Math.min(height - 1, Math.max(0, Math.round(y + dy)));
+      
+      const srcPos = (sy * width + sx) * 4;
+      const dstPos = (y * width + x) * 4;
+
+      imageData.data[dstPos] = originalPixels[srcPos];
+      imageData.data[dstPos + 1] = originalPixels[srcPos + 1];
+      imageData.data[dstPos + 2] = originalPixels[srcPos + 2];
+      imageData.data[dstPos + 3] = 255;
+    }
+  }
+
+  ctx.putImageData(imageData, 0, 0);
+
+  waves = waves.filter(wave => wave.isActive(time));
+  requestAnimationFrame(render);
+}
+
+canvas.addEventListener('click', (e) => {
+  const rect = canvas.getBoundingClientRect();
+  const mouseX = e.clientX - rect.left;
+  const mouseY = e.clientY - rect.top;
+  createWaves(mouseX, mouseY);
+});
+
+img.onload = () => {
+  ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+  requestAnimationFrame(render);
+};
+
+img.src = imageUrl;
+</script>
+</body>
+</html>

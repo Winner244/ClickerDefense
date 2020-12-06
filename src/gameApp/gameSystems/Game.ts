@@ -1,0 +1,588 @@
+import {Draw} from './Draw';
+import {AudioSystem} from './AudioSystem';
+import {AnimationsSystem} from './AnimationsSystem';
+import {TestSystem} from './TestSystem';
+
+import {Waves} from './Waves';
+import {WavesState} from '../WavesState';
+
+import {Labels} from '../labels/Labels';
+
+import {BaseObject} from '../../models/objects/BaseObject';
+
+import {FPS} from '../FPS';
+
+import {Mouse} from '../gamer/Mouse';
+import {Keypad} from '../gamer/Keypad';
+import {Cursor} from '../gamer/Cursor';
+import {Gamer} from '../gamer/Gamer';
+
+import {Coin} from '../coins/Coin';
+import {Coins} from '../coins/Coins';
+
+import {Monster} from '../monsters/Monster';
+import {Monsters} from '../monsters/Monsters';
+
+import {Units} from '../units/Units';
+import {Unit} from '../units/Unit';
+import {Miner} from '../units/Miner';
+import {Collector} from '../units/Collector';
+
+import {Builder} from '../buildings/Builder';
+import {Building} from '../buildings/Building';
+import {Buildings} from '../buildings/Buildings';
+import {FlyEarth} from '../buildings/FlyEarth';
+import {FlyEarthRope} from '../buildings/FlyEarthRope';
+import {Tower} from '../buildings/Tower';
+import {Barricade} from '../buildings/Barricade';
+
+import {Magics} from '../magic/Magics';
+import {Magic} from '../magic/Magic';
+import {Meteor} from '../magic/Meteor';
+
+import {MovingObjects} from '../movingObjects/MovingObjects';
+
+import {Helper} from '../helpers/Helper';
+
+import {Menu} from '../../reactApp/components/Menu/Menu';
+import {Shop} from '../../reactApp/components/Shop/Shop';
+import {SuccessfulFinalPanel} from '../../reactApp/components/SuccessfulFinalPanel/SuccessfulFinalPanel';
+import {Panels} from '../../reactApp/components/Panels/Panels';
+import {Upgrade} from '../../reactApp/components/Upgrade/Upgrade';
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+import {UnitButtons} from '../../reactApp/components/UnitButtons/UnitButtons';
+
+import {BaseCursorModifier} from '../cursorModifiers/BaseCursorModifier';
+import {FireCursorModifier} from '../cursorModifiers/FireCursorModifier';
+
+import ShopItem from '../../models/shop/ShopItem';
+
+
+import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
+
+import GrassImage from '../../assets/img/grass1.png'; 
+
+import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
+import GameOverSound from '../../assets/sounds/gameOver.mp3'; 
+
+
+
+/** Система управления игрой - единичный статичный экземпляр */
+export class Game {
+
+	private static readonly grassImage: HTMLImageElement = new Image(); //трава
+
+	static isGameRun: boolean = false; //если false - значит на паузе 
+	static isGameOver: boolean = false; //игра заканчивается (поражением)
+	static readonly gaveOverTimeMs: number = 3000; //время окончания игры после проигрыша
+	static gaveOverTimeLeftMs: number = Game.gaveOverTimeMs; //оставшееся время окончания игры
+	static isEndAfterGameOver: boolean = false; //игра закончилась
+	static isWasInit: boolean = false; //инициализация уже была?
+
+	static gameOverTime: number = 0; //время окончания игры
+	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита drawsDiffMs)
+
+	static isBlockMouseLogic: boolean = false; //if user's mouse enter to interface buttons (menu/shop/nextWave)
+
+	private static _primaryImages: HTMLImageElement[] = [];  // изображения (кроме курсоров) загрузку которых нужно дождаться перед началом игры
+	private static _animationId: number = 0; //техническая переменная для браузера
+
+	/** Инициализация игры */
+	static init(canvas: HTMLCanvasElement, isLoadResources: boolean = true): void{
+		Game.isWasInit = true;
+		Game.isGameRun = false;
+		Game.isGameOver = false;
+		Game.isEndAfterGameOver = false;
+		Game.isBlockMouseLogic = false;
+		Game.lastDrawTime = 0;
+
+		Cursor.init();
+		Cursor.setCursor(Cursor.default, true);
+
+		Draw.init(canvas);
+		Mouse.init();
+		Units.init();
+		Buildings.init();
+		Monsters.init(isLoadResources);
+		Coins.init(isLoadResources);
+		Gamer.init();
+		Labels.init();
+		Waves.init(isLoadResources);
+		Magics.init();
+
+		if(isLoadResources){
+			Menu.loadSelectSound();
+			
+			Game.grassImage.src = GrassImage;
+
+			this._primaryImages = [];
+			this._primaryImages.push(Game.grassImage);
+			this._primaryImages.push(FlyEarth.image);
+			this._primaryImages.push(FlyEarthRope.image);
+			this._primaryImages.push(Coin.image);
+		}
+
+		document.removeEventListener('keydown', Game.onKey);
+		document.addEventListener('keydown', Game.onKey);
+
+		if(this._animationId == 0 && this._primaryImages.length){
+			this._animationId = window.requestAnimationFrame(Game.go.bind(this));
+		}
+	}
+
+	static loadResourcesAfterStartOfWave(startedWave: number){
+		if (startedWave === 0){
+			Monster.loadHitSounds();
+			AudioSystem.load(SwordEmptySound);
+		}
+		else if(startedWave === 2){
+			FlyEarth.loadExplosionResources();
+		}
+	}
+
+	static loadResourcesAfterEndOfWave(endedWave: number){
+		if (endedWave === 0){ //first wave
+			Units.loadResources();
+			Tower.init(true);
+			Barricade.init(true);
+			Builder.init(true);
+			Miner.initForShop();
+			Collector.initForShop();
+			Meteor.initForShop();
+			FireCursorModifier.initForShop();
+		}
+		else{
+			if(Buildings.all.find(x => x.health < x.healthMax)){
+				Building.loadRepairResources();
+			}
+			if(Units.all.find(x => x.health < x.healthMax)){
+				Unit.loadHealingResources();
+			}
+		}
+	}
+
+	static endOfWave(){ //event before blackOut 
+		Buildings.endOfWave();
+		Units.endOfWave();
+		Panels.disable();
+	}
+
+	static endOfWaveComplete(isWasLastWave: boolean){ //event after blackOut 
+		if(isWasLastWave){
+			SuccessfulFinalPanel.show();
+			Game.isGameRun = false;
+		}
+		else{
+			Panels.undisable();
+			Buildings.endOfWaveComplete();
+		}
+	}
+
+	static startOfWaveComplete(){ //event after blackOut 
+		Panels.undisable();
+	}
+
+	static loadResourcesAfterBuild(building: Building){
+		building.loadedResourcesAfterBuild();
+		
+		if (building  instanceof  Tower){ 
+			Tower.loadResourcesAfterBuild();
+		}
+		else if(building  instanceof  Barricade){ 
+			Barricade.loadResourcesAfterBuild();
+		}
+
+		Unit.loadUpgradeResources();
+		Buildings.loadResources();
+		Building.loadUpgradeResources();
+		Upgrade.loadResources();
+	}
+
+	/** основной цикл игры */
+	private static go(millisecondsFromStart: number) : void{
+		if(!Game.isGameRun){
+			this._animationId = 0;
+			return;
+		}
+
+		//проверка что все изображения загружены - иначе будет краш хрома
+		if(this._primaryImages.some(x => !x.complete)){
+			this._animationId = window.requestAnimationFrame(Game.go.bind(this));
+			return;
+		}
+
+		if(!Game.lastDrawTime){
+			Game.lastDrawTime = millisecondsFromStart - 10;
+		}
+
+		let drawsDiffMs = millisecondsFromStart - Game.lastDrawTime; //сколько времени прошло с прошлой прорисовки
+		if(drawsDiffMs > 100) { //защита от долгого отсутствия
+			drawsDiffMs = 100;
+		}
+
+		///** logics **//
+		if(Game.isGameOver){
+			Game.gameOverLogic(drawsDiffMs);
+
+			if(Buildings.flyEarth.y <= -Buildings.flyEarth.height){
+				Game.isEndAfterGameOver = true;
+			}
+
+			Game.gaveOverTimeLeftMs -= drawsDiffMs;
+		}
+		else{
+			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
+				Game.isGameOver = true;
+				Game.gaveOverTimeLeftMs = Game.gaveOverTimeMs;
+				AudioSystem.pauseSounds();
+				AudioSystem.play(-1, GameOverSound, 0);
+				Panels.disable();
+
+				if(Buildings.flyEarth.health <= 0){
+					//delete all miners from flyEarch
+					for(let i = 0; i < Units.all.length; i++)
+					{
+						let unit = Units.all[i];
+						if(unit.name == Miner.name){
+							unit.destroy();
+							Units.all.splice(i, 1);
+							i--;
+						}
+					}
+
+					Buildings.flyEarth.startExplosion();
+				}
+			}
+
+			Builder.logic();
+			
+			Game.mouseLogic(drawsDiffMs); //логика обработки мыши
+
+			Waves.logic(drawsDiffMs, Draw.bottomShiftBorder);
+		}
+		
+		Buildings.logic(drawsDiffMs, Game.isGameOver, Monsters.all, Units.all, Draw.bottomShiftBorder);
+		
+		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Units.all, Game.isGameOver, Draw.canvas.height - Draw.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
+
+		Units.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Draw.bottomShiftBorder);
+		
+		Coins.logic(drawsDiffMs, Draw.bottomShiftBorder);
+		
+		MovingObjects.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Units.all, Draw.bottomShiftBorder);
+
+		Magics.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Units.all, Draw.bottomShiftBorder);
+		
+		Cursor.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Units.all, Draw.bottomShiftBorder);
+
+		Labels.logic(drawsDiffMs);
+
+		TestSystem.logic(drawsDiffMs);
+		AnimationsSystem.logic();
+
+		//FPS.counting();
+
+		Game.drawAll(millisecondsFromStart, drawsDiffMs, !Game.isGameRun);
+
+		
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -Buildings.flyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
+			cancelAnimationFrame(this._animationId);
+			return;
+		}
+
+		if(!Game.isEndAfterGameOver){
+			window.requestAnimationFrame(Game.go.bind(this));
+		}
+	}
+
+	private static mouseLogic(drawsDiffMs: number) : void {
+		if(Game.isBlockMouseLogic || !Mouse.x || !Mouse.y){
+			return;
+		}
+
+		//при изменении размера canvas, мы должны масштабировать координаты мыши
+		let x = Mouse.canvasX;
+		let y = Mouse.canvasY;
+		let alpha = Draw.ctx.getImageData(x, y, 1, 1).data[3]; //pixel alpha
+		let isHoverFound = alpha > 200; //если какой-либо объект находится под курсором (минимум 179 - затемнение фона)
+		let isWaveStarted = WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0;
+		let isWaveEnded = !WavesState.isWaveStarted && WavesState.delayEndLeftTimeMs <= 0;
+
+		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick, Buildings.all, this.loadResourcesAfterBuild.bind(this));
+
+		let isCursorChanged = Magics.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded);
+
+		if(!isCursorChanged){
+			isCursorChanged = Monsters.mouseLogic(x, y, Mouse.isClick, isHoverFound);
+		}
+
+		if(!isCursorChanged){
+			isCursorChanged = Coins.mouseLogic(x, y, Mouse.isClick, isHoverFound);
+		}
+
+		if(!isCursorChanged){
+			isCursorChanged = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
+		}
+
+		if(!isCursorChanged){
+			isCursorChanged = Units.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
+		}
+
+		if(Mouse.isClick){
+			Cursor.click(isHoverFound, Buildings.all, Monsters.all, Units.all, Draw.bottomShiftBorder);
+		}
+
+		if(Cursor.cursorWaitLeftTimeMs > 0){
+			Cursor.cursorWaitLeftTimeMs -= drawsDiffMs;
+		}
+
+		if(!isCursorChanged){
+			Cursor.setCursor(Cursor.default);
+		}
+
+		if(Mouse.isClick && !isCursorChanged && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
+			AudioSystem.play(x, SwordEmptySound, 0, 1, true);
+		}
+
+		Mouse.isClick = false;
+	}
+
+	private static onKey(event: KeyboardEvent) : void{
+		Keypad.isEnter = true;
+		switch(event.key){
+			case 'Escape':
+				if(Game.isGameRun && !Upgrade.isOpened() && !Shop.isOpened()){
+					Game.pause();
+				}
+				else{
+					Game.continue();
+					Menu.hide();
+					Shop.hide();
+					Upgrade.hide();
+				}
+			break;
+		}
+		Keypad.isEnter = false;
+	}
+
+	private static drawAll(millisecondsFromStart: number, drawsDiffMs: number, isPausedMode: boolean = false) : void{
+		Draw.clear(); //очищаем холст
+		Draw.drawBlackout(); //затемняем фон
+	
+		Buildings.draw(drawsDiffMs, Game.isGameOver);
+		Buildings.drawHealth();
+		Buildings.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
+
+		Builder.draw(drawsDiffMs, Game.isGameOver);
+
+		Units.draw(drawsDiffMs, Game.isGameOver);
+		Units.drawHealth();
+		Units.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
+	
+		Coins.draw();
+
+		Buildings.drawRepairingAnimation();
+		Units.drawHealingingAnimation(drawsDiffMs);
+	
+		Monsters.draw(drawsDiffMs, Game.isGameOver);
+		Monsters.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
+
+		MovingObjects.draw(drawsDiffMs, Game.isGameOver);
+		Magics.draw(drawsDiffMs, Game.isGameOver);
+		TestSystem.draw(drawsDiffMs, Game.isGameOver);
+		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
+	
+		Draw.drawGrass(Game.grassImage); 
+	
+		Labels.draw();
+	
+		Draw.drawCoinsInterface(Coin.image, Gamer.coins);
+
+		Waves.draw();
+	
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -Buildings.flyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
+			Draw.drawGameOver();
+		}
+
+		if(isPausedMode){
+			Draw.drawBlackout(); //затемняем фон
+		}
+
+		Cursor.draw(drawsDiffMs, Game.isGameOver);
+	
+		Game.lastDrawTime = millisecondsFromStart;
+	}
+		
+	//Game Over
+	private static gameOverLogic(drawsDiffMs: number) : void{
+		Cursor.allModifiers = [];
+		Cursor.setCursor(Cursor.default, true);
+
+		if(Buildings.flyEarth.health <= 0){
+			//logic in Buildings.flyEarth.drawExplosion
+			Units.all.filter(x => x.name == Miner.name).forEach(x => x.health = 0);
+		}
+		else{
+			if(Buildings.flyEarth.y > -Buildings.flyEarth.height){
+				var delta = 230 * drawsDiffMs / 1000;
+				Buildings.flyEarth.y -= delta;
+				Units.all.forEach(x => {
+					if(x instanceof Miner){
+						x.y -= delta;
+					}
+				});
+			}
+		}
+
+		if(Buildings.flyEarthRope.y < Draw.canvas.height - Draw.bottomShiftBorder - 20){
+			Buildings.flyEarthRope.y += 150 * drawsDiffMs / 1000;
+		}
+	}
+
+
+
+
+	
+	/** Начать новую игру */
+	static startNew(){
+		Game.init(Draw.canvas, false);
+		Game.continue();
+		Draw.canvas.classList.remove("hide");
+		Waves.startFirstWave();
+	}
+
+	/** Поставить игру на паузу */
+	static pause() : void{
+		if(!Game.isWasInit || !Game.isGameRun){
+			return;
+		}
+
+		Cursor.setCursor(Cursor.default, true);
+		Game.isBlockMouseLogic = true;
+		cancelAnimationFrame(this._animationId);
+		this._animationId = 0;
+		Game.isGameRun = false;
+		Menu.show();
+		Game.drawAll(0, 0, true);
+		BuildingButtons.hide();
+		UnitButtons.hide();
+		AudioSystem.pauseSounds();
+		Panels.disable();
+	}
+
+	/** Продолжить игру */
+	static continue() : void{
+		if(!Game.isWasInit){
+			return;
+		}
+
+		if(!Game.isGameRun){
+			AudioSystem.resumeSounds();
+			if(!this.isGameOver){
+				Panels.undisable();
+			}
+		}
+
+		Game.isGameRun = true;
+		Game.lastDrawTime = 0;
+		if(!this._animationId)
+		this._animationId = window.requestAnimationFrame(Game.go.bind(this));
+		Mouse.isClick = false;
+		Game.isBlockMouseLogic = false;
+		BuildingButtons.hide();
+		UnitButtons.hide();
+	}
+
+	/** Начать новую волну */
+	static startNewWave(): void{
+		Builder.finish();
+		Game.continue();
+		Waves.startNewWave();
+		Upgrade.hide();
+		Panels.disable();
+	}
+
+	/** Игрок купил вещь в магазине */
+	static buyThing(shopItem: ShopItem){
+		Game.continue();
+		if(shopItem.category == ShopCategoryEnum.BUILDINGS){
+			var building: Building|null = null;
+
+			if(Tower.shopItem == shopItem){
+				building = new Tower(0);
+			}
+			else if(Barricade.shopItem == shopItem){
+				building = new Barricade(0);
+			}
+			else{
+				throw `unexpected shopItem with type = Building (buyThing('${shopItem.name}')).`;
+			}
+
+			Builder.addBuilding(building, Draw.canvas.height - building.height + Draw.bottomShiftBorder);
+		}
+		else if(shopItem.category == ShopCategoryEnum.UNITS){
+			let newUnit: Unit|null = null;
+
+			if(Miner.shopItem == shopItem){
+				FlyEarth.loadSeparateCrystals();
+				newUnit = Units.addMiner();
+			}
+			else if(Collector.shopItem == shopItem){
+				var x = Helper.getRandom(Buildings.flyEarth.x, Buildings.flyEarth.x + Buildings.flyEarth.width);
+				var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
+				newUnit = new Collector(x, y);
+				Units.add(newUnit);
+			}
+			else{
+				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
+			}
+
+			Gamer.coins -= shopItem.price;
+			Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
+			Coins.playSoundGet(newUnit.x);
+		}
+		else if(shopItem.category == ShopCategoryEnum.MAGIC){
+			var magic: Magic;
+
+			if(Meteor.shopItem == shopItem){
+				magic = new Meteor(0, 0);
+			}
+			else{
+				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
+			}
+
+			magic.loadedResourcesAfterBuy();
+			let promise: Promise<BaseObject|null> = Panels.addItemToPanel(magic);
+			promise.then(itemPosition => {
+				if(itemPosition){
+					let x = itemPosition.location.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+					let y = itemPosition.location.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+					if (itemPosition.location.y > Draw.canvas.height){
+						y = Draw.canvas.height - 60;
+					}
+					Gamer.coins -= shopItem.price;
+					Labels.createCoinLabel(x + itemPosition.size.width - 25, y + itemPosition.size.height - 15, '-' + shopItem.price, 2000);
+					Coins.playSoundGet(itemPosition.centerX);
+				}
+			});
+		}
+		else if(shopItem.category == ShopCategoryEnum.CURSOR){
+			var cursorModifier: BaseCursorModifier;
+
+			if(FireCursorModifier.shopItem == shopItem){
+				cursorModifier = new FireCursorModifier();
+			}
+			else{
+				throw `unexpected shopItem with type = Cursor (buyThing('${shopItem.name}')).`;
+			}
+			
+			Cursor.allModifiers.push(cursorModifier)
+			Gamer.coins -= shopItem.price;
+			Labels.createCoinLabel(Mouse.canvasX, Mouse.canvasY, '-' + shopItem.price, 2000);
+			Coins.playSoundGet(Mouse.x);
+		}
+		else{
+			throw `unexpected shopItem category = '${shopItem.category}'`;
+		}
+	}
+}

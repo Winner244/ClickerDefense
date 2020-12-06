@@ -1,0 +1,49 @@
+.test-page{
+	position: relative;
+	z-index: 11;
+	
+	&__name-test{
+		position: absolute;
+		right: 10px;
+		top: 30px;
+		font-size: 16px;
+		font-family: Calibri;
+		color: #ff0404;
+	}
+
+	&__button-next, &__button-all, &__button-prev{
+		position: absolute;
+		right: 10px;
+		top: 0;
+		background-color: white;
+		color: black;
+		text-decoration: none;
+		padding: 2px 5px;
+	}
+	
+	&__button-prev{
+		right: 160px;
+	}
+
+	&__button-all{
+		right: 100px;
+		padding: 2px 10px;
+	}
+
+	&__list{
+		padding: 10px;
+	}
+
+	&__header-list-tests{
+		font-size: 16px;
+		font-family: Calibri;
+		color: #ff0404;
+	}
+
+	&__link-test{
+		color: white;
+		text-decoration: none;
+		cursor: pointer;
+		z-index: 15;
+	}
+}

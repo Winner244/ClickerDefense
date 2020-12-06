@@ -1,0 +1,67 @@
+import ParameterItem from './ParameterItem';
+import AnimationInfinite from '../animations/AnimationInfinite';
+import Improvement from './Improvement';
+
+import {IUpgradableObject} from './IUpgradableObject';
+
+import timerIcon from '../../assets/img/icons/timer.png';  
+
+/** Базовый класс для магии, которрое можно прокачать */
+export class UpgradableMagicObject implements IUpgradableObject {
+	static readonly upgradeAnimation: AnimationInfinite = new AnimationInfinite(90, 3000); //анимация апгрейда
+
+	// parameter ids
+	static readonly RECOVERY_PARAMETER: string = 'upgradable_magic_recovery_parameter';
+
+	//поля свойства экземпляра
+	name: string;
+	shopName: string;
+	image: HTMLImageElement; //для отображения на панели доступа и в магазине
+	timeRecoveryMs: number; //время восстановления магии (миллисекунды) - растёт при прокачке, так же можно отдельно её уменьшить за монеты
+
+	price: number;
+
+	infoItems: ParameterItem[];  //информация отображаемая в окне 
+	improvements: Improvement[]; //улучшения объекта
+
+	//технические поля экземпляра
+	protected _isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного объекта? если да, то нужно подсвечивать данный объект
+
+	constructor(
+		name: string, 
+		shopName: string, 
+		image: HTMLImageElement, 
+		timeRecoveryMs: number,
+		price: number)
+	{
+		this.name = name;
+		this.shopName = shopName;
+		this.image = image;
+		this.timeRecoveryMs = timeRecoveryMs;
+		this.price = price;
+
+		this._isDisplayedUpgradeWindow = false;
+
+		this.infoItems = [];
+		this.improvements = [];
+	}
+
+	loadedResourcesAfterBuy(){
+		this.infoItems = [
+			new ParameterItem(UpgradableMagicObject.RECOVERY_PARAMETER, 'Восстановление', 
+				() => this.timeRecoveryMs, timerIcon, 13, 
+				() => 10, 
+				() => this.timeRecoveryMs = Math.max(0, this.timeRecoveryMs - 100),
+				() => {},
+				() => {},
+				() => this.timeRecoveryMs > 0)
+		];
+	}
+
+	set isDisplayedUpgradeWindow(value: boolean){
+		this._isDisplayedUpgradeWindow = value;
+	}
+	get isDisplayedUpgradeWindow(): boolean{
+		return this._isDisplayedUpgradeWindow;
+	}
+}

@@ -1,0 +1,12 @@
+.game-canvas{ 
+	width: 100%;
+	background-image: url('../../../assets/img/backgrounds/background-1.jpg');
+	background-repeat: round;
+    position: relative;
+    z-index: 10;
+}
+.hide{ 
+	opacity: 0;
+	z-index: -1;
+	position: absolute;
+}
