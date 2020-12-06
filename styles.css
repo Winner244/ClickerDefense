@@ -1,0 +1,15 @@
+* {margin: 0; padding: 0;}
+head, body{ height: 100%;}
+img{display: none;}
+
+body{
+	overflow:  hidden; 
+	background-image: url(./media/img/earcheBlocks/blockEarche0.jpg);
+	background-size: 40px;
+}
+
+canvas{ 
+	width: 100%;
+	background-image: url('./media/img/backgrounds/background-1.jpg');
+	background-repeat: round;
+}
