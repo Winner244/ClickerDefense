@@ -3,24 +3,22 @@ let ctx = canvas.getContext('2d');
 let heightOfCanvas = canvas.height;
 let widthOfCanvas = canvas.width;
 
-//draw grass
+
+
+/** INIT */
 let imageGrass = new Image();   
 imageGrass.src = './media/img/grass1.png';
 
-/** прорисовка травы на веё нижней части canvas */
-function drawGrass(){
-	for(let i = 0; i < widthOfCanvas / imageGrass.width; i++){
-		ctx.drawImage(imageGrass, imageGrass.width * i, heightOfCanvas - imageGrass.height);
-	}
-}
-
-//draw fly earch
 let imageFlyEarch = new Image();  
 imageFlyEarch.src = './media/img/builders/flyEarth.png';
 let flyEarchWidth = 250;
 let flyEarchHeight = 186;
 let flyEarchFrames = 4;
 
+
+
+
+/** DRAW FUNCTIONS */
 /** прорисовка анимированной летающей земли в центре экрана */
 function drawFlyEarch(frame){
 	ctx.drawImage(imageFlyEarch, 
@@ -33,6 +31,16 @@ function drawFlyEarch(frame){
 		flyEarchWidth, //draw by width 
 		flyEarchHeight); //draw by height 
 }
+
+/** прорисовка травы на веё нижней части canvas */
+function drawGrass(){
+	for(let i = 0; i < widthOfCanvas / imageGrass.width; i++){
+		ctx.drawImage(imageGrass, imageGrass.width * i, heightOfCanvas - imageGrass.height);
+	}
+}
+
+
+
 
 let fps = 0;
 let oldFPStime = '';
@@ -79,6 +87,7 @@ function draw(millisecondsFromStart){
 	window.requestAnimationFrame(draw);
 }
 animationId = window.requestAnimationFrame(draw);
+
 
 
 window.addEventListener('keypress', event => {
