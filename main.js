@@ -5,7 +5,7 @@ let widthOfCanvas = canvas.width;
 
 
 
-/** INIT */
+//*** INIT ***//
 let imageGrass = new Image();   
 imageGrass.src = './media/img/grass1.png';
 
@@ -14,11 +14,19 @@ imageFlyEarch.src = './media/img/builders/flyEarth.png';
 let flyEarchWidth = 250;
 let flyEarchHeight = 186;
 let flyEarchFrames = 4;
+let flyEarchX = widthOfCanvas / 2 - flyEarchWidth / 2;
+let flyEarchY = heightOfCanvas / 2 - flyEarchHeight / 2;
+let flyEarchReduceHover = 15;
+
+let defaultCursor = './media/cursors/Standart.png';
+let pickCursor = './media/cursors/Pick.png';
+setCursor(defaultCursor);
 
 
 
 
-/** DRAW FUNCTIONS */
+
+//*** DRAW FUNCTIONS ***//
 /** прорисовка анимированной летающей земли в центре экрана */
 function drawFlyEarch(frame){
 	ctx.drawImage(imageFlyEarch, 
@@ -26,8 +34,8 @@ function drawFlyEarch(frame){
 		0, //crop from y
 		imageFlyEarch.width / flyEarchFrames, //crop by width
 		imageFlyEarch.height,    //crop by height
-		widthOfCanvas / 2 - flyEarchWidth / 2, //draw from x
-		heightOfCanvas / 2 - flyEarchHeight / 2,  //draw from y
+		flyEarchX, //draw from x
+		flyEarchY,  //draw from y
 		flyEarchWidth, //draw by width 
 		flyEarchHeight); //draw by height 
 }
@@ -41,6 +49,9 @@ function drawGrass(){
 
 
 
+
+
+//*** OTHER FUNCTIONS ***//
 
 let fps = 0;
 let oldFPStime = '';
@@ -56,7 +67,46 @@ function checkFPS(){
 	fps++;
 }
 
-/** Жизненный цикл игры */
+
+function setCursor(img){
+	document.body.style.cursor = "url(" + img + "), auto";
+}
+
+
+function mouseLogic(){
+	//при изменении размера canvas, мы должны масштабировать координаты мыши
+	let kofX = canvas.clientWidth / widthOfCanvas; 
+	let kofY = canvas.clientHeight / heightOfCanvas;
+
+	let x = mouseX / kofX;
+	let y = mouseY / kofY;
+
+	let isSetCursor = false;
+	if(x > flyEarchX + flyEarchReduceHover && 
+		x < flyEarchX + flyEarchWidth - flyEarchReduceHover &&
+		y > flyEarchY + flyEarchReduceHover && 
+		y < flyEarchY + flyEarchHeight - flyEarchReduceHover)
+	{
+		setCursor(pickCursor);
+		isSetCursor = true;
+
+		if(isClick){
+			console.log('click by fly earch');
+		}
+	}
+
+	if(!isSetCursor){
+		setCursor(defaultCursor);
+	}
+
+	isClick = false;
+}
+
+
+
+
+
+//*** Жизненный цикл игры ***//
 let animationId = null;
 let isGameStarted = true;
 function draw(millisecondsFromStart){
@@ -84,6 +134,8 @@ function draw(millisecondsFromStart){
 	drawGrass(); //травка
 	drawFlyEarch(Math.floor(partOfSecond / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
 
+	mouseLogic(); //логика обработки мыши
+
 	window.requestAnimationFrame(draw);
 }
 animationId = window.requestAnimationFrame(draw);
@@ -101,4 +153,15 @@ window.addEventListener('keypress', event => {
 			animationId = window.requestAnimationFrame(draw);
 		}
 	}
-})
+});
+
+
+let mouseX = 0;
+let mouseY = 0;
+window.addEventListener('mousemove', event => {
+	mouseX = event.pageX;
+	mouseY = event.pageY;
+});
+
+let isClick = false;
+window.addEventListener('click', () => isClick = true);
