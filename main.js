@@ -55,31 +55,33 @@ function drawGrass(){
 	}
 }
 
+function drawLabels(){
+	for(let i = 0; i < labels.length; i++){
+		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
 
-
-
-
-//*** OTHER FUNCTIONS ***//
-
-let fps = 0;
-let oldFPStime = '';
-function checkFPS(){
-	let newDate = new Date();
-	let newKey = newDate.getMinutes() + '_' + newDate.getSeconds();
-	if(oldFPStime != newKey){
-		console.log('fps: ' + fps);
-		fps = 0;
-		oldFPStime = newKey;
+		ctx.fillStyle = `rgba(${labels[i].red},${labels[i].green},${labels[i].blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;
+		ctx.font = "14px Calibri";
+		ctx.fillText(labels[i].text, labels[i].x, labels[i].y);
 	}
+}
 
-	fps++;
+function drawCoins(){
+	for(let i = 0; i < coins.length; i++){
+		ctx.drawImage(coinImage, coins[i].x, coins[i].y);
+	}
+}
+
+/** прорисовка интерфейса - сколько у игрока монеток */
+function drawCoinsInterface(){
+	ctx.drawImage(coinImage, 10, 10);
+
+	ctx.fillStyle = `rgba(255, 255, 0)`;
+	ctx.font = "16px Calibri";
+	ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, 25);
 }
 
 
-function setCursor(img){
-	document.body.style.cursor = "url(" + img + "), auto";
-}
-
+//*** LOGIC FUNCTIONS ***//
 
 function mouseLogic(){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
@@ -103,7 +105,7 @@ function mouseLogic(){
 		}
 	}
 
-	if(coins.length){
+	if(!isSetCursor && coins.length){
 		for(let i = 0; i < coins.length; i++){
 			if(Math.pow(x - coins[i].x - coinImage.width / 2, 2) + Math.pow(y - coins[i].y - coinImage.height / 2, 2) < Math.pow(coinImage.width / 2, 2)){
 				setCursor(handCursor);
@@ -127,20 +129,7 @@ function mouseLogic(){
 	isClick = false;
 }
 
-function createCoin(){
-	coins.push({
-		x: flyEarchX + flyEarchReduceHover + Math.random() * (flyEarchWidth - flyEarchReduceHover * 2), 
-		y: flyEarchY + flyEarchHeight / 2, 
-		timeCreated: Date.now(),
-		impulseY: 0
-	});
-}
-
 function coinsLogic(millisecondsDifferent){
-	if(!coins.length){
-		return;
-	}
-	
 	for(let i = 0; i < coins.length; i++){
 		let coin = coins[i];
 
@@ -163,9 +152,50 @@ function coinsLogic(millisecondsDifferent){
 			coin.y = heightOfCanvas - bottomShiftBorder - coinImage.height;
 			coin.impulseY = -coin.impulseY * getRandom(1, 6) / 10;
 		}
-
-		ctx.drawImage(coinImage, coin.x, coin.y);
 	}
+}
+
+function labelsLogic(){
+	for(let i = 0; i < labels.length; i++){
+		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
+		if(leftTime > 0){
+			labels.splice(i, 1);
+			i--;
+			continue;
+		}
+	}
+}
+
+
+
+
+//*** OTHER FUNCTIONS ***//
+
+let fps = 0;
+let oldFPStime = '';
+function checkFPS(){
+	let newDate = new Date();
+	let newKey = newDate.getMinutes() + '_' + newDate.getSeconds();
+	if(oldFPStime != newKey){
+		console.log('fps: ' + fps);
+		fps = 0;
+		oldFPStime = newKey;
+	}
+
+	fps++;
+}
+
+function setCursor(img){
+	document.body.style.cursor = "url(" + img + "), auto";
+}
+
+function createCoin(){
+	coins.push({
+		x: flyEarchX + flyEarchReduceHover + Math.random() * (flyEarchWidth - flyEarchReduceHover * 2), 
+		y: flyEarchY + flyEarchHeight / 2, 
+		timeCreated: Date.now(),
+		impulseY: 0
+	});
 }
 
 function createLabel(x, y, text, red, green, blue){
@@ -180,26 +210,9 @@ function createLabel(x, y, text, red, green, blue){
 	});
 }
 
-function labelsLogic(){
-	for(let i = 0; i < labels.length; i++){
-		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
-		if(leftTime > 0){
-			labels.splice(i, 1);
-			i--;
-			continue;
-		}
-
-		ctx.fillStyle = `rgba(${labels[i].red},${labels[i].green},${labels[i].blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;
-		ctx.font = "14px Calibri";
-		ctx.fillText(labels[i].text, labels[i].x, labels[i].y);
-	}
-}
-
 function getRandom(min, max){
 	return Math.floor(Math.random() * (max - min)) + min;
 }
-
-
 
 
 
@@ -221,8 +234,21 @@ function draw(millisecondsFromStart){
 	let secondsFromStart = millisecondsFromStart % 1000;
 	let millisecondsDifferent = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
 
+
+
+	///** logics **//
+	mouseLogic(); //логика обработки мыши
+
+	coinsLogic(millisecondsDifferent);
+
+	labelsLogic();
+
 	checkFPS();
 	
+
+
+
+	///** draw **//
 	//очищаем холст
 	ctx.clearRect(0, 0, widthOfCanvas, heightOfCanvas);
 
@@ -231,13 +257,14 @@ function draw(millisecondsFromStart){
 	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
 
 	drawGrass(); //травка
+
 	drawFlyEarch(Math.floor(secondsFromStart / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
 
-	mouseLogic(); //логика обработки мыши
+	drawLabels();
 
-	coinsLogic(millisecondsDifferent);
+	drawCoins();
 
-	labelsLogic();
+	drawCoinsInterface();
 
 	lastDrawTime = millisecondsFromStart;
 	window.requestAnimationFrame(draw);
