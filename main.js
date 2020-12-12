@@ -1,16 +1,14 @@
+//*** INIT ***//
 let canvas = document.getElementById('canvas');
 let ctx = canvas.getContext('2d');
 let heightOfCanvas = canvas.height;
 let widthOfCanvas = canvas.width;
 
+let grassImage = new Image();   
+grassImage.src = './media/img/grass1.png';
 
-
-//*** INIT ***//
-let imageGrass = new Image();   
-imageGrass.src = './media/img/grass1.png';
-
-let imageFlyEarch = new Image();  
-imageFlyEarch.src = './media/img/builders/flyEarth.png';
+let flyEarchImage = new Image();  
+flyEarchImage.src = './media/img/builders/flyEarth.png';
 let flyEarchWidth = 250;
 let flyEarchHeight = 186;
 let flyEarchFrames = 4;
@@ -20,20 +18,26 @@ let flyEarchReduceHover = 15;
 
 let defaultCursor = './media/cursors/Standart.png';
 let pickCursor = './media/cursors/Pick.png';
+let handCursor = './media/cursors/Hand.png';
 setCursor(defaultCursor);
 
-
+let coinImage = new Image();  
+coinImage.src = './media/img/coin.png';
+let coins = []; // все монеты на карте [{x, y, timeCreated, impulseY}}]
+let coinTimeOfLife = 8; //время жизни моентки (в секундах)
+let coinsCount = 0; //монет у игрока
+let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
 
 
 //*** DRAW FUNCTIONS ***//
 /** прорисовка анимированной летающей земли в центре экрана */
 function drawFlyEarch(frame){
-	ctx.drawImage(imageFlyEarch, 
-		imageFlyEarch.width / flyEarchFrames * frame, //crop from x
+	ctx.drawImage(flyEarchImage, 
+		flyEarchImage.width / flyEarchFrames * frame, //crop from x
 		0, //crop from y
-		imageFlyEarch.width / flyEarchFrames, //crop by width
-		imageFlyEarch.height,    //crop by height
+		flyEarchImage.width / flyEarchFrames, //crop by width
+		flyEarchImage.height,    //crop by height
 		flyEarchX, //draw from x
 		flyEarchY,  //draw from y
 		flyEarchWidth, //draw by width 
@@ -42,8 +46,8 @@ function drawFlyEarch(frame){
 
 /** прорисовка травы на веё нижней части canvas */
 function drawGrass(){
-	for(let i = 0; i < widthOfCanvas / imageGrass.width; i++){
-		ctx.drawImage(imageGrass, imageGrass.width * i, heightOfCanvas - imageGrass.height);
+	for(let i = 0; i < widthOfCanvas / grassImage.width; i++){
+		ctx.drawImage(grassImage, grassImage.width * i, heightOfCanvas - grassImage.height);
 	}
 }
 
@@ -91,7 +95,23 @@ function mouseLogic(){
 		isSetCursor = true;
 
 		if(isClick){
-			console.log('click by fly earch');
+			createCoin();
+		}
+	}
+
+	if(coins.length){
+		for(var i = 0; i < coins.length; i++){
+			if(Math.pow(x - coins[i].x - coinImage.width / 2, 2) + Math.pow(y - coins[i].y - coinImage.height / 2, 2) < Math.pow(coinImage.width / 2, 2)){
+				setCursor(handCursor);
+				isSetCursor = true;
+
+				if(isClick){
+					coins.splice(i, 1);
+					coinsCount++;
+				}
+
+				break;
+			}
 		}
 	}
 
@@ -102,6 +122,51 @@ function mouseLogic(){
 	isClick = false;
 }
 
+function createCoin(){
+	coins.push({
+		x: flyEarchX + flyEarchReduceHover + Math.random() * (flyEarchWidth - flyEarchReduceHover * 2), 
+		y: flyEarchY + flyEarchHeight / 2, 
+		timeCreated: Date.now(),
+		impulseY: 0
+	});
+}
+
+function coinsLogic(millisecondsDifferent){
+	if(!coins.length){
+		return;
+	}
+	
+	for(var i = 0; i < coins.length; i++){
+		let coin = coins[i];
+
+		if(coin.timeCreated + coinTimeOfLife * 1000 < Date.now()){
+			coins.splice(i, 1);
+			i--;
+			continue;
+		}
+
+		if(coin.y + coinImage.height < heightOfCanvas - bottomShiftBorder){ //ускорение свободного падения
+			if (coin.impulseY < 0)
+				coin.impulseY += 0.02;
+			else
+				coin.impulseY += 0.01;
+		}
+
+		coin.y += millisecondsDifferent * coin.impulseY;
+
+		if(coin.y + coinImage.height > heightOfCanvas - bottomShiftBorder){
+			coin.y = heightOfCanvas - bottomShiftBorder - coinImage.height;
+			coin.impulseY = -coin.impulseY * getRandom(1, 6) / 10;
+		}
+
+		ctx.drawImage(coinImage, coin.x, coin.y);
+	}
+}
+
+function getRandom(min, max){
+	return Math.floor(Math.random() * (max - min)) + min;
+}
+
 
 
 
@@ -109,18 +174,20 @@ function mouseLogic(){
 //*** Жизненный цикл игры ***//
 let animationId = null;
 let isGameStarted = true;
+let lastDrawTime = 0;
 function draw(millisecondsFromStart){
 	if(!isGameStarted){
 		return;
 	}
 
 	//проверка что все изображения загружены - иначе будет краш хрома
-	if(!imageGrass.complete || !imageFlyEarch.complete){
+	if(!grassImage.complete || !flyEarchImage.complete){
 		animationId = window.requestAnimationFrame(draw);
 		return;
 	}
 
-	let partOfSecond = millisecondsFromStart % 1000;
+	let secondsFromStart = millisecondsFromStart % 1000;
+	let millisecondsDifferent = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
 
 	checkFPS();
 	
@@ -132,10 +199,13 @@ function draw(millisecondsFromStart){
 	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
 
 	drawGrass(); //травка
-	drawFlyEarch(Math.floor(partOfSecond / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
+	drawFlyEarch(Math.floor(secondsFromStart / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
 
 	mouseLogic(); //логика обработки мыши
 
+	coinsLogic(millisecondsDifferent);
+
+	lastDrawTime = millisecondsFromStart;
 	window.requestAnimationFrame(draw);
 }
 animationId = window.requestAnimationFrame(draw);
