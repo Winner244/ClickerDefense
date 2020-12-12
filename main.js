@@ -24,9 +24,13 @@ setCursor(defaultCursor);
 let coinImage = new Image();  
 coinImage.src = './media/img/coin.png';
 let coins = []; // все монеты на карте [{x, y, timeCreated, impulseY}}]
-let coinTimeOfLife = 8; //время жизни моентки (в секундах)
+let coinLifetime = 8; //время жизни моентки (в секундах)
 let coinsCount = 0; //монет у игрока
+
 let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
+
+let labels = []; // мини надписи, типо "+1" при сборе монеток
+let labelLifetime = 1; //время жизни сообщения (в секундах)
 
 
 
@@ -100,12 +104,13 @@ function mouseLogic(){
 	}
 
 	if(coins.length){
-		for(var i = 0; i < coins.length; i++){
+		for(let i = 0; i < coins.length; i++){
 			if(Math.pow(x - coins[i].x - coinImage.width / 2, 2) + Math.pow(y - coins[i].y - coinImage.height / 2, 2) < Math.pow(coinImage.width / 2, 2)){
 				setCursor(handCursor);
 				isSetCursor = true;
 
 				if(isClick){
+					createLabel(x - 10, y - 10, '+1', 0, 255, 0);
 					coins.splice(i, 1);
 					coinsCount++;
 				}
@@ -136,10 +141,10 @@ function coinsLogic(millisecondsDifferent){
 		return;
 	}
 	
-	for(var i = 0; i < coins.length; i++){
+	for(let i = 0; i < coins.length; i++){
 		let coin = coins[i];
 
-		if(coin.timeCreated + coinTimeOfLife * 1000 < Date.now()){
+		if(coin.timeCreated + coinLifetime * 1000 < Date.now()){
 			coins.splice(i, 1);
 			i--;
 			continue;
@@ -160,6 +165,33 @@ function coinsLogic(millisecondsDifferent){
 		}
 
 		ctx.drawImage(coinImage, coin.x, coin.y);
+	}
+}
+
+function createLabel(x, y, text, red, green, blue){
+	labels.push({
+		x: x,
+		y: y,
+		text: text,
+		red: red,
+		green: green,
+		blue: blue,
+		timeCreated: Date.now()
+	});
+}
+
+function labelsLogic(){
+	for(let i = 0; i < labels.length; i++){
+		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
+		if(leftTime > 0){
+			labels.splice(i, 1);
+			i--;
+			continue;
+		}
+
+		ctx.fillStyle = `rgba(${labels[i].red},${labels[i].green},${labels[i].blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;
+		ctx.font = "14px Calibri";
+		ctx.fillText(labels[i].text, labels[i].x, labels[i].y);
 	}
 }
 
@@ -204,6 +236,8 @@ function draw(millisecondsFromStart){
 	mouseLogic(); //логика обработки мыши
 
 	coinsLogic(millisecondsDifferent);
+
+	labelsLogic();
 
 	lastDrawTime = millisecondsFromStart;
 	window.requestAnimationFrame(draw);
