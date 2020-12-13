@@ -32,6 +32,9 @@ let bottomShiftBorder = 10; //нижняя граница по которой х
 let labels = []; // мини надписи, типо "+1" при сборе монеток
 let labelLifetime = 1; //время жизни сообщения (в секундах)
 
+let ropeImage = new Image();  
+ropeImage.src = './media/img/builders/flyEarthRope.png';
+
 
 
 //*** DRAW FUNCTIONS ***//
@@ -55,6 +58,7 @@ function drawGrass(){
 	}
 }
 
+/** прорисовка исчезающих надписей */
 function drawLabels(){
 	for(let i = 0; i < labels.length; i++){
 		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
@@ -65,6 +69,7 @@ function drawLabels(){
 	}
 }
 
+/** прорисовка монеток  */
 function drawCoins(){
 	for(let i = 0; i < coins.length; i++){
 		ctx.drawImage(coinImage, coins[i].x, coins[i].y);
@@ -78,6 +83,10 @@ function drawCoinsInterface(){
 	ctx.fillStyle = `rgba(255, 255, 0)`;
 	ctx.font = "16px Calibri";
 	ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, 25);
+}
+
+function drawRope(){
+	ctx.drawImage(ropeImage, flyEarchX + flyEarchWidth / 2 - ropeImage.width / 2, flyEarchY + flyEarchHeight - 8);
 }
 
 
@@ -226,7 +235,7 @@ function draw(millisecondsFromStart){
 	}
 
 	//проверка что все изображения загружены - иначе будет краш хрома
-	if(!grassImage.complete || !flyEarchImage.complete){
+	if(!grassImage.complete || !flyEarchImage.complete || !ropeImage.complete || !coinImage.complete){
 		animationId = window.requestAnimationFrame(draw);
 		return;
 	}
@@ -256,13 +265,15 @@ function draw(millisecondsFromStart){
 	ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
 
-	drawGrass(); //травка
+	drawRope();
 
 	drawFlyEarch(Math.floor(secondsFromStart / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
 
-	drawLabels();
-
 	drawCoins();
+
+	drawGrass(); //травка
+
+	drawLabels();
 
 	drawCoinsInterface();
 
