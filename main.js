@@ -34,6 +34,30 @@ let labelLifetime = 1; //время жизни сообщения (в секун
 
 let ropeImage = new Image();  
 ropeImage.src = './media/img/builders/flyEarthRope.png';
+let reopHealthMax = 100;
+let reopHealth = reopHealthMax;
+
+
+let zombieImage = new Image();
+zombieImage.src = './media/img/monsters/zombie.png';
+let zombieAttackImage = new Image();
+zombieAttackImage.src = './media/img/monsters/zombieAttack.png';
+let zombieWidth = 50;
+let zombies = []; //все зомби [{x, y, health}]
+let zombieHealthMax = 3;
+let zombieDamage = 1; //урон
+let zombieSpeed = 10; //скорость
+let zombieKey = 'zombie';
+
+let waveCurrent = 0; //текущая волна нападения (-1 = нет волны)
+let waveStartTime = Date.now();
+let waveMonsters = [{ //монстры на волнах
+	zombieKey: {
+		count: 500,
+		frequencyCreating: 60 //начальное количество в минуту
+	}
+}];  
+
 
 
 
@@ -85,13 +109,24 @@ function drawCoinsInterface(){
 	ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, 25);
 }
 
-function drawRope(){
+/** прорисовка каната - держащего летающую землю */
+function drawFlyEarchRope(){
 	ctx.drawImage(ropeImage, flyEarchX + flyEarchWidth / 2 - ropeImage.width / 2, flyEarchY + flyEarchHeight - 8);
 }
 
+/** прорисовка анимированных зомби */
+function drawZombies(){
+	for(let i = 0; i < zombies.length; i++){
+		//передвижение
+		ctx.drawImage(zombieImage, zombies[i].x, zombies[i].y);
+
+		//атака
+	}
+}
+
+
 
 //*** LOGIC FUNCTIONS ***//
-
 function mouseLogic(){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
 	let kofX = canvas.clientWidth / widthOfCanvas; 
@@ -175,11 +210,26 @@ function labelsLogic(){
 	}
 }
 
+function zombieLogic(){
+	//логика создания
+	if(Math.random()) //Math.random(0, probabilityСreate - countCreate) > 20 ? probabilityСreate - countCreate : 20) == 0
+	{ 
+		let isLeftSide = Math.random() < 0.5;
+		createZombie(isLeftSide ? -zombieWidth : widthOfCanvas, heightOfCanvas - bottomShiftBorder - zombieImage.height);
+	}
+
+	//логика передвижения
+	zombies.map(zombie => {
+		
+	});
+
+	//логика атаки
+}
+
 
 
 
 //*** OTHER FUNCTIONS ***//
-
 let fps = 0;
 let oldFPStime = '';
 function checkFPS(){
@@ -223,6 +273,13 @@ function getRandom(min, max){
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
+function createZombie(x, y){
+	zombies.push({
+		x: x,
+		y: y,
+		health: zombieHealthMax
+	});
+}
 
 
 //*** Жизненный цикл игры ***//
@@ -235,7 +292,7 @@ function draw(millisecondsFromStart){
 	}
 
 	//проверка что все изображения загружены - иначе будет краш хрома
-	if(!grassImage.complete || !flyEarchImage.complete || !ropeImage.complete || !coinImage.complete){
+	if(!grassImage.complete || !flyEarchImage.complete || !ropeImage.complete || !coinImage.complete || !zombieImage.complete || !zombieAttackImage.complete){
 		animationId = window.requestAnimationFrame(draw);
 		return;
 	}
@@ -252,6 +309,10 @@ function draw(millisecondsFromStart){
 
 	labelsLogic();
 
+	if(waveCurrent == 0){
+		zombieLogic();
+	}
+
 	checkFPS();
 	
 
@@ -265,13 +326,17 @@ function draw(millisecondsFromStart){
 	ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
 
-	drawRope();
+	drawFlyEarchRope();
 
 	drawFlyEarch(Math.floor(secondsFromStart / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
 
 	drawCoins();
 
-	drawGrass(); //травка
+	drawGrass(); 
+
+	if(waveCurrent == 0){
+		drawZombies(); 
+	}
 
 	drawLabels();
 
