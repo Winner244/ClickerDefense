@@ -44,7 +44,7 @@ let zombieAttackImage = new Image();
 zombieAttackImage.src = './media/img/monsters/zombieAttack.png';
 let zombieWidth = 49;
 let zombieAttackWidth = 48;
-let zombies = []; //все зомби [{x, y, health, isAttack, currentFrame, createdTime}]
+let zombies = []; //все зомби [{x, y, health, isAttack, currentFrame, createdTime, isLeftSide}]
 let zombieHealthMax = 3;
 let zombieDamage = 1; //урон (в секунду)
 let zombieSpeed = 50; //скорость (пикселей в секунду)
@@ -122,6 +122,13 @@ function drawFlyEarchRope(){
 /** прорисовка анимированных зомби */
 function drawZombies(){
 	for(let i = 0; i < zombies.length; i++){
+		var isInvert = zombies[i].isLeftSide;
+		var scale = isInvert ? -1 : 1;
+		if(isInvert){
+			ctx.save();
+			ctx.scale(-1, 1);
+		}
+
 		if(zombies[i].isAttack){
 			//атака
 			zombies[i].currentFrame = Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesAttackFrames)) % zombiesAttackFrames;
@@ -130,9 +137,9 @@ function drawZombies(){
 				0, //crop from y
 				zombieAttackWidth,
 				zombieAttackImage.height,
-				zombies[i].x, 
+				scale * zombies[i].x, 
 				zombies[i].y,
-				zombieAttackWidth,
+				scale * zombieAttackWidth,
 				zombieAttackImage.height);
 		}
 		else{
@@ -143,10 +150,14 @@ function drawZombies(){
 				0, //crop from y
 				zombieWidth,
 				zombieImage.height,
-				zombies[i].x, 
+				scale * zombies[i].x, 
 				zombies[i].y,
-				zombieWidth,
+				scale * zombieWidth,
 				zombieImage.height);
+		}
+
+		if(isInvert){
+			ctx.restore();
 		}
 	}
 }
@@ -243,8 +254,8 @@ function zombieLogic(millisecondsDifferent){
 	var periodTime = 1000 * 60 / waveData.frequencyCreating;
 	if(waveData.count > zombiesWasCreated && Date.now() > zombiesWasCreatedLastTime + periodTime + getRandom(-periodTime / 2, periodTime / 2)) 
 	{ 
-		//let isLeftSide = Math.random() < 0.5;
-		//createZombie(isLeftSide ? -zombieWidth : widthOfCanvas, heightOfCanvas - bottomShiftBorder - zombieImage.height);
+		let isLeftSide = Math.random() < 0.5;
+		createZombie(isLeftSide ? -zombieWidth : widthOfCanvas, heightOfCanvas - bottomShiftBorder - zombieImage.height, isLeftSide);
 	}
 
 	//логика передвижения
@@ -252,16 +263,16 @@ function zombieLogic(millisecondsDifferent){
 		var placeGoal = widthOfCanvas / 2;
 
 		zombie.isAttack = false;
-		if(zombie.x < widthOfCanvas / 2) //если монстр идёт с левой стороны
+		if(zombie.isLeftSide) //если монстр идёт с левой стороны
 		{
-			if (zombie.x + zombieWidth < placeGoal + zombieWidth / 5) //ещё не дошёл
+			if (zombie.x + zombieWidth < placeGoal - ropeImage.width / 2 + zombieWidth / 5) //ещё не дошёл
 				zombie.x += zombieSpeed * (millisecondsDifferent / 1000);
 			else //дошёл
 				zombie.isAttack = true; //атакует
 		}
 		else 
 		{
-			if (zombie.x > placeGoal - zombieWidth / 5) //ещё не дошёл
+			if (zombie.x > placeGoal + ropeImage.width / 2 - zombieWidth / 5) //ещё не дошёл
 				zombie.x -= zombieSpeed * (millisecondsDifferent / 1000);
 			else //дошёл
 				zombie.isAttack = true; //атакует
@@ -323,13 +334,14 @@ function getRandom(min, max){
 	return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function createZombie(x, y){
+function createZombie(x, y, isLeftSide){
 	zombies.push({
 		x: x,
 		y: y,
 		health: zombieHealthMax,
 		isAttack: false,
-		createdTime: Date.now()
+		createdTime: Date.now(),
+		isLeftSide: isLeftSide
 	});
 	zombiesWasCreated++;
 	zombiesWasCreatedLastTime = Date.now();
