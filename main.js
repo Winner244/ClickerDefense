@@ -42,17 +42,22 @@ let zombieImage = new Image();
 zombieImage.src = './media/img/monsters/zombie.png';
 let zombieAttackImage = new Image();
 zombieAttackImage.src = './media/img/monsters/zombieAttack.png';
-let zombieWidth = 50;
-let zombies = []; //все зомби [{x, y, health}]
+let zombieWidth = 49;
+let zombieAttackWidth = 48;
+let zombies = []; //все зомби [{x, y, health, isAttack, currentFrame, createdTime}]
 let zombieHealthMax = 3;
-let zombieDamage = 1; //урон
-let zombieSpeed = 10; //скорость
+let zombieDamage = 1; //урон (в секунду)
+let zombieSpeed = 50; //скорость (пикселей в секунду)
 let zombieKey = 'zombie';
+let zombiesWasCreated = 0;
+let zombiesWasCreatedLastTime = 0;
+let zombiesFrames = 12;
+let zombiesAttackFrames = 4;
 
 let waveCurrent = 0; //текущая волна нападения (-1 = нет волны)
 let waveStartTime = Date.now();
 let waveMonsters = [{ //монстры на волнах
-	zombieKey: {
+	[zombieKey]: {
 		count: 500,
 		frequencyCreating: 60 //начальное количество в минуту
 	}
@@ -117,10 +122,32 @@ function drawFlyEarchRope(){
 /** прорисовка анимированных зомби */
 function drawZombies(){
 	for(let i = 0; i < zombies.length; i++){
-		//передвижение
-		ctx.drawImage(zombieImage, zombies[i].x, zombies[i].y);
-
-		//атака
+		if(zombies[i].isAttack){
+			//атака
+			zombies[i].currentFrame = Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesAttackFrames)) % zombiesAttackFrames;
+			ctx.drawImage(zombieAttackImage, 
+				zombieAttackWidth * zombies[i].currentFrame, //crop from x
+				0, //crop from y
+				zombieAttackWidth,
+				zombieAttackImage.height,
+				zombies[i].x, 
+				zombies[i].y,
+				zombieAttackWidth,
+				zombieAttackImage.height);
+		}
+		else{
+			//передвижение
+			zombies[i].currentFrame = Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesFrames)) % zombiesFrames;
+			ctx.drawImage(zombieImage, 
+				zombieWidth * zombies[i].currentFrame, //crop from x
+				0, //crop from y
+				zombieWidth,
+				zombieImage.height,
+				zombies[i].x, 
+				zombies[i].y,
+				zombieWidth,
+				zombieImage.height);
+		}
 	}
 }
 
@@ -210,20 +237,43 @@ function labelsLogic(){
 	}
 }
 
-function zombieLogic(){
+function zombieLogic(millisecondsDifferent){
 	//логика создания
-	if(Math.random()) //Math.random(0, probabilityСreate - countCreate) > 20 ? probabilityСreate - countCreate : 20) == 0
+	var waveData = waveMonsters[waveCurrent][zombieKey];
+	var periodTime = 1000 * 60 / waveData.frequencyCreating;
+	if(waveData.count > zombiesWasCreated && Date.now() > zombiesWasCreatedLastTime + periodTime + getRandom(-periodTime / 2, periodTime / 2)) 
 	{ 
-		let isLeftSide = Math.random() < 0.5;
-		createZombie(isLeftSide ? -zombieWidth : widthOfCanvas, heightOfCanvas - bottomShiftBorder - zombieImage.height);
+		//let isLeftSide = Math.random() < 0.5;
+		//createZombie(isLeftSide ? -zombieWidth : widthOfCanvas, heightOfCanvas - bottomShiftBorder - zombieImage.height);
 	}
 
 	//логика передвижения
 	zombies.map(zombie => {
-		
-	});
+		var placeGoal = widthOfCanvas / 2;
 
-	//логика атаки
+		zombie.isAttack = false;
+		if(zombie.x < widthOfCanvas / 2) //если монстр идёт с левой стороны
+		{
+			if (zombie.x + zombieWidth < placeGoal + zombieWidth / 5) //ещё не дошёл
+				zombie.x += zombieSpeed * (millisecondsDifferent / 1000);
+			else //дошёл
+				zombie.isAttack = true; //атакует
+		}
+		else 
+		{
+			if (zombie.x > placeGoal - zombieWidth / 5) //ещё не дошёл
+				zombie.x -= zombieSpeed * (millisecondsDifferent / 1000);
+			else //дошёл
+				zombie.isAttack = true; //атакует
+		}
+
+		if(zombie.isAttack) //если атакует
+		{
+			var damage = 0 - zombieDamage * (millisecondsDifferent / 1000);
+			if(damage < 0)
+				reopHealth += damage; //наносим урон
+		}
+	});
 }
 
 
@@ -277,8 +327,12 @@ function createZombie(x, y){
 	zombies.push({
 		x: x,
 		y: y,
-		health: zombieHealthMax
+		health: zombieHealthMax,
+		isAttack: false,
+		createdTime: Date.now()
 	});
+	zombiesWasCreated++;
+	zombiesWasCreatedLastTime = Date.now();
 }
 
 
@@ -297,7 +351,6 @@ function draw(millisecondsFromStart){
 		return;
 	}
 
-	let secondsFromStart = millisecondsFromStart % 1000;
 	let millisecondsDifferent = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
 
 
@@ -310,7 +363,7 @@ function draw(millisecondsFromStart){
 	labelsLogic();
 
 	if(waveCurrent == 0){
-		zombieLogic();
+		zombieLogic(millisecondsDifferent);
 	}
 
 	checkFPS();
@@ -328,15 +381,15 @@ function draw(millisecondsFromStart){
 
 	drawFlyEarchRope();
 
-	drawFlyEarch(Math.floor(secondsFromStart / (1000 / flyEarchFrames / 2)) % flyEarchFrames); //летающая земля (2 полных цикла анимации за 1 секунду)
+	drawFlyEarch(Math.floor((millisecondsFromStart % 1000) / (500 / flyEarchFrames)) % flyEarchFrames); //летающая земля 
 
 	drawCoins();
-
-	drawGrass(); 
 
 	if(waveCurrent == 0){
 		drawZombies(); 
 	}
+
+	drawGrass(); 
 
 	drawLabels();
 
