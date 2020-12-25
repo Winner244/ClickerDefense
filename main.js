@@ -19,6 +19,8 @@ let flyEarchReduceHover = 15;
 let defaultCursor = './media/cursors/Standart.png';
 let pickCursor = './media/cursors/Pick.png';
 let handCursor = './media/cursors/Hand.png';
+let swordCursor = './media/cursors/Sword.png';
+let swordCursorRed = './media/cursors/SwordRed.png';
 setCursor(defaultCursor);
 
 let coinImage = new Image();  
@@ -53,6 +55,7 @@ let zombiesWasCreated = 0;
 let zombiesWasCreatedLastTime = 0;
 let zombiesFrames = 12;
 let zombiesAttackFrames = 4;
+let zombiesReduceHover = 5;
 
 let waveCurrent = 0; //текущая волна нападения (-1 = нет волны)
 let waveStartTime = Date.now();
@@ -63,6 +66,7 @@ let waveMonsters = [{ //монстры на волнах
 	}
 }];  
 
+var cursorDamage = 1;
 
 
 
@@ -165,6 +169,7 @@ function drawZombies(){
 
 
 //*** LOGIC FUNCTIONS ***//
+var cursorWait = 0;
 function mouseLogic(){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
 	let kofX = canvas.clientWidth / widthOfCanvas; 
@@ -204,7 +209,41 @@ function mouseLogic(){
 		}
 	}
 
-	if(!isSetCursor){
+	if(!isSetCursor && zombies.length){
+		for(let i = 0; i < zombies.length; i++){
+			if(x > zombies[i].x + zombiesReduceHover && 
+				x < zombies[i].x + zombieWidth - zombiesReduceHover &&
+				y > zombies[i].y + zombiesReduceHover && 
+				y < zombies[i].y + zombieImage.height - zombiesReduceHover)
+			{
+				if(cursorWait <= 0){
+					setCursor(swordCursor);
+				}
+				isSetCursor = true;
+
+				if(isClick){
+					zombies[i].health -= cursorDamage;
+					if(zombies[i].health <= 0){
+						createLabel(x - 10, y - 10, '+1', 0, 255, 0);
+						zombies.splice(i, 1);
+						coinsCount++;
+					}
+					else{
+						setCursor(swordCursorRed);
+						cursorWait = 5;
+					}
+				}
+
+				break;
+			}
+		}
+	}
+
+	if(cursorWait > 0){
+		cursorWait--;
+	}
+
+	if(!isSetCursor && cursorWait <= 0){
 		setCursor(defaultCursor);
 	}
 
@@ -397,6 +436,7 @@ function draw(millisecondsFromStart){
 
 	drawCoins();
 
+	
 	if(waveCurrent == 0){
 		drawZombies(); 
 	}
@@ -410,6 +450,7 @@ function draw(millisecondsFromStart){
 	lastDrawTime = millisecondsFromStart;
 	window.requestAnimationFrame(draw);
 }
+var z = 1;
 animationId = window.requestAnimationFrame(draw);
 
 
