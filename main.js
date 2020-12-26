@@ -307,14 +307,20 @@ function zombieLogic(millisecondsDifferent){
 			if (zombie.x + zombieWidth < placeGoal - ropeImage.width / 2 + zombieWidth / 5) //ещё не дошёл
 				zombie.x += zombieSpeed * (millisecondsDifferent / 1000);
 			else //дошёл
+			{
+				zombie.x = placeGoal - ropeImage.width / 2 - zombieWidth + zombieWidth / 5;
 				zombie.isAttack = true; //атакует
+			}
 		}
 		else 
 		{
 			if (zombie.x > placeGoal + ropeImage.width / 2 - zombieWidth / 5) //ещё не дошёл
 				zombie.x -= zombieSpeed * (millisecondsDifferent / 1000);
 			else //дошёл
+			{
+				zombie.x = placeGoal + ropeImage.width / 2 - zombieWidth / 5;
 				zombie.isAttack = true; //атакует
+			}
 		}
 
 		if(zombie.isAttack) //если атакует
