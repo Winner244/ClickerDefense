@@ -36,8 +36,14 @@ let labelLifetime = 1; //время жизни сообщения (в секун
 
 let ropeImage = new Image();  
 ropeImage.src = './media/img/builders/flyEarthRope.png';
-let reopHealthMax = 100;
-let reopHealth = reopHealthMax;
+ropeImage.onload = () => {
+	ropeX = flyEarchX + flyEarchWidth / 2 - ropeImage.width / 2;
+	ropeY = flyEarchY + flyEarchHeight - 8;
+};
+let ropeHealthMax = 100;
+let ropeHealth = ropeHealthMax;
+let ropeX = 0;
+let ropeY = 0;
 
 
 let zombieImage = new Image();
@@ -120,7 +126,7 @@ function drawCoinsInterface(){
 
 /** прорисовка каната - держащего летающую землю */
 function drawFlyEarchRope(){
-	ctx.drawImage(ropeImage, flyEarchX + flyEarchWidth / 2 - ropeImage.width / 2, flyEarchY + flyEarchHeight - 8);
+	ctx.drawImage(ropeImage, ropeX, ropeY);
 }
 
 /** прорисовка анимированных зомби */
@@ -135,7 +141,7 @@ function drawZombies(){
 
 		if(zombies[i].isAttack){
 			//атака
-			zombies[i].currentFrame = Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesAttackFrames)) % zombiesAttackFrames;
+			zombies[i].currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesAttackFrames)) % zombiesAttackFrames;
 			ctx.drawImage(zombieAttackImage, 
 				zombieAttackWidth * zombies[i].currentFrame, //crop from x
 				0, //crop from y
@@ -148,7 +154,7 @@ function drawZombies(){
 		}
 		else{
 			//передвижение
-			zombies[i].currentFrame = Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesFrames)) % zombiesFrames;
+			zombies[i].currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesFrames)) % zombiesFrames;
 			ctx.drawImage(zombieImage, 
 				zombieWidth * zombies[i].currentFrame, //crop from x
 				0, //crop from y
@@ -163,6 +169,16 @@ function drawZombies(){
 		if(isInvert){
 			ctx.restore();
 		}
+	}
+}
+
+function drawGameOver(){
+	if(flyEarchY <= -flyEarchHeight){
+		ctx.fillStyle = `orange`;
+		ctx.font = "72px Calibri";
+		ctx.fillText('Game Over!', widthOfCanvas / 2 - 150, heightOfCanvas / 2 - 32);
+		ctx.fillStyle = `red`;
+		ctx.fillText('Game Over!', widthOfCanvas / 2 - 152, heightOfCanvas / 2 - 33);
 	}
 }
 
@@ -327,7 +343,7 @@ function zombieLogic(millisecondsDifferent){
 		{
 			var damage = 0 - zombieDamage * (millisecondsDifferent / 1000);
 			if(damage < 0)
-				reopHealth += damage; //наносим урон
+				ropeHealth += damage; //наносим урон
 		}
 	});
 
@@ -345,6 +361,15 @@ function zombieLogic(millisecondsDifferent){
 	}
 }
 
+function gameOverLogic(millisecondsDifferent){
+	if(ropeY < heightOfCanvas - bottomShiftBorder - 20){
+		ropeY += 100 * millisecondsDifferent / 1000;
+	}
+
+	if(flyEarchY > -flyEarchHeight){
+		flyEarchY -= 100 * millisecondsDifferent / 1000;
+	}
+}
 
 
 
@@ -406,6 +431,7 @@ function createZombie(x, y, isLeftSide){
 let animationId = null;
 let isGameStarted = true;
 let lastDrawTime = 0;
+let isGameOver = false;
 function draw(millisecondsFromStart){
 	if(!isGameStarted){
 		return;
@@ -422,14 +448,24 @@ function draw(millisecondsFromStart){
 
 
 	///** logics **//
-	mouseLogic(); //логика обработки мыши
+	if(ropeHealth <= 0){
+		isGameOver = true;
+		setCursor(defaultCursor);
+	}
 
-	coinsLogic(millisecondsDifferent);
-
-	labelsLogic();
-
-	if(waveCurrent == 0){
-		zombieLogic(millisecondsDifferent);
+	if(isGameOver){
+		gameOverLogic(millisecondsDifferent);
+	}
+	else{
+		mouseLogic(); //логика обработки мыши
+	
+		coinsLogic(millisecondsDifferent);
+	
+		labelsLogic();
+	
+		if(waveCurrent == 0){
+			zombieLogic(millisecondsDifferent);
+		}
 	}
 
 	checkFPS();
@@ -447,7 +483,7 @@ function draw(millisecondsFromStart){
 
 	drawFlyEarchRope();
 
-	drawFlyEarch(Math.floor((millisecondsFromStart % 1000) / (500 / flyEarchFrames)) % flyEarchFrames); //летающая земля 
+	drawFlyEarch(isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / flyEarchFrames)) % flyEarchFrames); //летающая земля 
 
 	drawCoins();
 
@@ -461,6 +497,10 @@ function draw(millisecondsFromStart){
 	drawLabels();
 
 	drawCoinsInterface();
+
+	if(isGameOver){
+		drawGameOver();
+	}
 
 	lastDrawTime = millisecondsFromStart;
 	window.requestAnimationFrame(draw);
