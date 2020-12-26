@@ -34,16 +34,16 @@ let bottomShiftBorder = 10; //нижняя граница по которой х
 let labels = []; // мини надписи, типо "+1" при сборе монеток
 let labelLifetime = 1; //время жизни сообщения (в секундах)
 
-let ropeImage = new Image();  
-ropeImage.src = './media/img/builders/flyEarthRope.png';
-ropeImage.onload = () => {
-	ropeX = flyEarchX + flyEarchWidth / 2 - ropeImage.width / 2;
-	ropeY = flyEarchY + flyEarchHeight - 8;
+let flyEarchRopeImage = new Image();  
+flyEarchRopeImage.src = './media/img/builders/flyEarthRope.png';
+flyEarchRopeImage.onload = () => {
+	flyEarchRopeX = flyEarchX + flyEarchWidth / 2 - flyEarchRopeImage.width / 2;
+	flyEarchRopeY = flyEarchY + flyEarchHeight - 8;
 };
-let ropeHealthMax = 100;
-let ropeHealth = ropeHealthMax;
-let ropeX = 0;
-let ropeY = 0;
+let flyEarchRopeHealthMax = 100;
+let flyEarchRopeHealth = flyEarchRopeHealthMax;
+let flyEarchRopeX = 0;
+let flyEarchRopeY = 0;
 
 
 let zombieImage = new Image();
@@ -126,7 +126,7 @@ function drawCoinsInterface(){
 
 /** прорисовка каната - держащего летающую землю */
 function drawFlyEarchRope(){
-	ctx.drawImage(ropeImage, ropeX, ropeY);
+	ctx.drawImage(flyEarchRopeImage, flyEarchRopeX, flyEarchRopeY);
 }
 
 /** прорисовка анимированных зомби */
@@ -320,21 +320,21 @@ function zombieLogic(millisecondsDifferent){
 		zombie.isAttack = false;
 		if(zombie.isLeftSide) //если монстр идёт с левой стороны
 		{
-			if (zombie.x + zombieWidth < placeGoal - ropeImage.width / 2 + zombieWidth / 5) //ещё не дошёл
+			if (zombie.x + zombieWidth < placeGoal - flyEarchRopeImage.width / 2 + zombieWidth / 5) //ещё не дошёл
 				zombie.x += zombieSpeed * (millisecondsDifferent / 1000);
 			else //дошёл
 			{
-				zombie.x = placeGoal - ropeImage.width / 2 - zombieWidth + zombieWidth / 5;
+				zombie.x = placeGoal - flyEarchRopeImage.width / 2 - zombieWidth + zombieWidth / 5;
 				zombie.isAttack = true; //атакует
 			}
 		}
 		else 
 		{
-			if (zombie.x > placeGoal + ropeImage.width / 2 - zombieWidth / 5) //ещё не дошёл
+			if (zombie.x > placeGoal + flyEarchRopeImage.width / 2 - zombieWidth / 5) //ещё не дошёл
 				zombie.x -= zombieSpeed * (millisecondsDifferent / 1000);
 			else //дошёл
 			{
-				zombie.x = placeGoal + ropeImage.width / 2 - zombieWidth / 5;
+				zombie.x = placeGoal + flyEarchRopeImage.width / 2 - zombieWidth / 5;
 				zombie.isAttack = true; //атакует
 			}
 		}
@@ -343,7 +343,7 @@ function zombieLogic(millisecondsDifferent){
 		{
 			var damage = 0 - zombieDamage * (millisecondsDifferent / 1000);
 			if(damage < 0)
-				ropeHealth += damage; //наносим урон
+				flyEarchRopeHealth += damage; //наносим урон
 		}
 	});
 
@@ -362,8 +362,8 @@ function zombieLogic(millisecondsDifferent){
 }
 
 function gameOverLogic(millisecondsDifferent){
-	if(ropeY < heightOfCanvas - bottomShiftBorder - 20){
-		ropeY += 100 * millisecondsDifferent / 1000;
+	if(flyEarchRopeY < heightOfCanvas - bottomShiftBorder - 20){
+		flyEarchRopeY += 100 * millisecondsDifferent / 1000;
 	}
 
 	if(flyEarchY > -flyEarchHeight){
@@ -439,7 +439,7 @@ function draw(millisecondsFromStart){
 	}
 
 	//проверка что все изображения загружены - иначе будет краш хрома
-	if(!grassImage.complete || !flyEarchImage.complete || !ropeImage.complete || !coinImage.complete || !zombieImage.complete || !zombieAttackImage.complete){
+	if(!grassImage.complete || !flyEarchImage.complete || !flyEarchRopeImage.complete || !coinImage.complete || !zombieImage.complete || !zombieAttackImage.complete){
 		animationId = window.requestAnimationFrame(draw);
 		return;
 	}
@@ -458,7 +458,7 @@ function draw(millisecondsFromStart){
 		}
 	}
 	else{
-		if(ropeHealth <= 0){
+		if(flyEarchRopeHealth <= 0){
 			isGameOver = true;
 			setCursor(defaultCursor);
 		}
