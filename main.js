@@ -432,6 +432,7 @@ let animationId = null;
 let isGameStarted = true;
 let lastDrawTime = 0;
 let isGameOver = false;
+let isEndAfterGameOver = false;
 function draw(millisecondsFromStart){
 	if(!isGameStarted){
 		return;
@@ -448,15 +449,20 @@ function draw(millisecondsFromStart){
 
 
 	///** logics **//
-	if(ropeHealth <= 0){
-		isGameOver = true;
-		setCursor(defaultCursor);
-	}
 
 	if(isGameOver){
 		gameOverLogic(millisecondsDifferent);
+
+		if(flyEarchY <= -flyEarchHeight){
+			isEndAfterGameOver = true;
+		}
 	}
 	else{
+		if(ropeHealth <= 0){
+			isGameOver = true;
+			setCursor(defaultCursor);
+		}
+		
 		mouseLogic(); //логика обработки мыши
 	
 		coinsLogic(millisecondsDifferent);
@@ -503,7 +509,9 @@ function draw(millisecondsFromStart){
 	}
 
 	lastDrawTime = millisecondsFromStart;
-	window.requestAnimationFrame(draw);
+	if(!isEndAfterGameOver){
+		window.requestAnimationFrame(draw);
+	}
 }
 var z = 1;
 animationId = window.requestAnimationFrame(draw);
@@ -511,14 +519,16 @@ animationId = window.requestAnimationFrame(draw);
 
 
 window.addEventListener('keypress', event => {
-	if(event.key == ' '){
-		if(isGameStarted){
-			cancelAnimationFrame(animationId);
-			isGameStarted = false;
-		}
-		else{
-			isGameStarted = true;
-			animationId = window.requestAnimationFrame(draw);
+	if(!isEndAfterGameOver){
+		if(event.key == ' '){
+			if(isGameStarted){
+				cancelAnimationFrame(animationId);
+				isGameStarted = false;
+			}
+			else{
+				isGameStarted = true;
+				animationId = window.requestAnimationFrame(draw);
+			}
 		}
 	}
 });
