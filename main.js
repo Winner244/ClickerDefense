@@ -324,6 +324,19 @@ function zombieLogic(millisecondsDifferent){
 				reopHealth += damage; //наносим урон
 		}
 	});
+
+	//логика взаимодействия с монетками
+	if(zombies.length && zombies[0].x > flyEarchX && zombies[0].x < flyEarchX + flyEarchWidth){
+		var availableZombies = zombies.filter(zombie => zombie.x > flyEarchX && zombie.x < flyEarchX + flyEarchWidth);
+		availableZombies.forEach(zombie => {
+			for(let i = 0; i < coins.length; i++){
+				if(coins[i].y > zombie.y && zombie.x < coins[i].x + coinImage.width / 2 && zombie.x + zombieWidth > coins[i].x + coinImage.width / 2){
+					createLabel(coins[i].x + 10, coins[i].y + 10, '-', 255, 0, 0);
+					coins.splice(i, 1);
+				}
+			}
+		});
+	}
 }
 
 
@@ -367,10 +380,6 @@ function createLabel(x, y, text, red, green, blue){
 		blue: blue,
 		timeCreated: Date.now()
 	});
-}
-
-function getRandom(min, max){
-	return Math.floor(Math.random() * (max - min)) + min;
 }
 
 function createZombie(x, y, isLeftSide){
