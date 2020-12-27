@@ -383,6 +383,8 @@ function zombieLogic(millisecondsDifferent){
 }
 
 function gameOverLogic(millisecondsDifferent){
+	setCursor(defaultCursor);
+	
 	if(flyEarchRopeY < heightOfCanvas - bottomShiftBorder - 20){
 		flyEarchRopeY += 100 * millisecondsDifferent / 1000;
 	}
@@ -493,19 +495,18 @@ function draw(millisecondsFromStart){
 	else{
 		if(flyEarchRopeHealth <= 0){
 			isGameOver = true;
-			setCursor(defaultCursor);
 		}
 		
 		mouseLogic(); //логика обработки мыши
-	
-		coinsLogic(millisecondsDifferent);
-	
-		labelsLogic();
 	
 		if(waveCurrent == 0){
 			zombieLogic(millisecondsDifferent);
 		}
 	}
+	
+	coinsLogic(millisecondsDifferent);
+	
+	labelsLogic();
 
 	checkFPS();
 	
