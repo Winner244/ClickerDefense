@@ -127,6 +127,10 @@ function drawCoinsInterface(){
 /** прорисовка каната - держащего летающую землю */
 function drawFlyEarchRope(){
 	ctx.drawImage(flyEarchRopeImage, flyEarchRopeX, flyEarchRopeY);
+
+	if(flyEarchRopeHealth < flyEarchRopeHealthMax && flyEarchRopeHealth > 0){
+		drawHealth(flyEarchRopeX - 15, flyEarchRopeY - 10, 50, flyEarchRopeHealthMax, flyEarchRopeHealth);
+	}
 }
 
 /** прорисовка анимированных зомби */
@@ -169,6 +173,10 @@ function drawZombies(){
 		if(isInvert){
 			ctx.restore();
 		}
+
+		if(zombies[i].health != zombieHealthMax){
+			drawHealth(zombies[i].x + 10, zombies[i].y - 2, zombieWidth - 20, zombieHealthMax, zombies[i].health);
+		}
 	}
 }
 
@@ -180,6 +188,19 @@ function drawGameOver(){
 		ctx.fillStyle = `red`;
 		ctx.fillText('Game Over!', widthOfCanvas / 2 - 152, heightOfCanvas / 2 - 33);
 	}
+}
+
+function drawHealth(x, y, width, healthMax, healthCurrent){
+	let height = 2;
+	let border = 0;
+	ctx.fillStyle = "orange";
+	ctx.fillRect(x, y, width + border * 2, height + border * 2);
+
+	ctx.fillStyle = "black";
+	ctx.fillRect(x + border, y + border, width, height);
+
+	ctx.fillStyle = "red";
+	ctx.fillRect(x + border, y + border, width * (healthCurrent/ healthMax), height);
 }
 
 
@@ -427,6 +448,18 @@ function createZombie(x, y, isLeftSide){
 }
 
 
+function testHealth(){
+	createZombie(500, 802, true);
+	createZombie(300, 802, true);
+	createZombie(1500, 802, false);
+	zombies[0].health = 2;
+	zombies[1].health = 1;
+	zombies[2].health = 2;
+	flyEarchRopeHealth = 70;
+}
+
+//testHealth();
+
 //*** Жизненный цикл игры ***//
 let animationId = null;
 let isGameStarted = true;
@@ -487,11 +520,11 @@ function draw(millisecondsFromStart){
 	ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
 
-	drawFlyEarchRope();
-
 	drawFlyEarch(isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / flyEarchFrames)) % flyEarchFrames); //летающая земля 
 
 	drawCoins();
+
+	drawFlyEarchRope();
 
 	
 	if(waveCurrent == 0){
