@@ -1,0 +1,24 @@
+
+
+	
+	static set WasCreated(newValue){
+		WasCreated = newValue;
+		WasCreatedLastTime = Date.now();
+	}
+	static WasCreated = 0;
+	static WasCreatedLastTime = 0;
+	static all = [];
+
+	
+function drawHealth(x, y, width, healthMax, healthCurrent){
+	let height = 2;
+	let border = 0;
+	ctx.fillStyle = "orange";
+	ctx.fillRect(x, y, width + border * 2, height + border * 2);
+
+	ctx.fillStyle = "black";
+	ctx.fillRect(x + border, y + border, width, height);
+
+	ctx.fillStyle = "red";
+	ctx.fillRect(x + border, y + border, width * (healthCurrent/ healthMax), height);
+}

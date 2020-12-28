@@ -4,17 +4,21 @@ let ctx = canvas.getContext('2d');
 let heightOfCanvas = canvas.height;
 let widthOfCanvas = canvas.width;
 
+let monsters = []; //все монстры
+let buildings = []; //все строения
+let images = []; //все изображения (кроме курсоров)
+
 let grassImage = new Image();   
 grassImage.src = './media/img/grass1.png';
+images.push(grassImage);
 
-let flyEarchImage = new Image();  
-flyEarchImage.src = './media/img/builders/flyEarth.png';
-let flyEarchWidth = 250;
-let flyEarchHeight = 186;
-let flyEarchFrames = 4;
-let flyEarchX = widthOfCanvas / 2 - flyEarchWidth / 2;
-let flyEarchY = heightOfCanvas / 2 - flyEarchHeight / 2;
-let flyEarchReduceHover = 15;
+
+FlyEarth.init();
+images.push(FlyEarth.image);
+let flyEarth = new FlyEarth(
+	widthOfCanvas / 2 - FlyEarth.width / 2, 
+	heightOfCanvas / 2 - FlyEarth.height / 2);
+buildings.push(flyEarth);
 
 let defaultCursor = './media/cursors/Standart.png';
 let pickCursor = './media/cursors/Pick.png';
@@ -25,6 +29,7 @@ setCursor(defaultCursor);
 
 let coinImage = new Image();  
 coinImage.src = './media/img/coin.png';
+images.push(coinImage);
 let coins = []; // все монеты на карте [{x, y, timeCreated, impulseY}}]
 let coinLifetime = 8; //время жизни моентки (в секундах)
 let coinsCount = 0; //монет у игрока
@@ -34,62 +39,37 @@ let bottomShiftBorder = 10; //нижняя граница по которой х
 let labels = []; // мини надписи, типо "+1" при сборе монеток
 let labelLifetime = 1; //время жизни сообщения (в секундах)
 
-let flyEarchRopeImage = new Image();  
-flyEarchRopeImage.src = './media/img/builders/flyEarthRope.png';
-flyEarchRopeImage.onload = () => {
-	flyEarchRopeX = flyEarchX + flyEarchWidth / 2 - flyEarchRopeImage.width / 2;
-	flyEarchRopeY = flyEarchY + flyEarchHeight - 8;
-};
-let flyEarchRopeHealthMax = 100;
-let flyEarchRopeHealth = flyEarchRopeHealthMax;
-let flyEarchRopeX = 0;
-let flyEarchRopeY = 0;
+FlyEarthRope.init();
+images.push(FlyEarthRope.image);
+let flyEarthRope = new FlyEarthRope(0, 0);
+FlyEarthRope.image.onload = () => {
+	flyEarthRope.x = flyEarth.x + FlyEarth.width / 2 - FlyEarthRope.image.width / 2;
+	flyEarthRope.y = flyEarth.y + FlyEarth.height - 8;
+	flyEarthRope.width = FlyEarthRope.image.width;
+	flyEarthRope.height = FlyEarthRope.image.height;
+}
+buildings.push(flyEarthRope);
 
-
-let zombieImage = new Image();
-zombieImage.src = './media/img/monsters/zombie.png';
-let zombieAttackImage = new Image();
-zombieAttackImage.src = './media/img/monsters/zombieAttack.png';
-let zombieWidth = 49;
-let zombieAttackWidth = 48;
-let zombies = []; //все зомби [{x, y, health, isAttack, currentFrame, createdTime, isLeftSide}]
-let zombieHealthMax = 3;
-let zombieDamage = 1; //урон (в секунду)
-let zombieSpeed = 50; //скорость (пикселей в секунду)
-let zombieKey = 'zombie';
-let zombiesWasCreated = 0;
-let zombiesWasCreatedLastTime = 0;
-let zombiesFrames = 12;
-let zombiesAttackFrames = 4;
-let zombiesReduceHover = 5;
+Zombie.init();
+images.push(Zombie.image);
+images.push(Zombie.attackImage);
 
 let waveCurrent = 0; //текущая волна нападения (-1 = нет волны)
 let waveStartTime = Date.now();
 let waveMonsters = [{ //монстры на волнах
-	[zombieKey]: {
+	[Zombie.name]: {
 		count: 500,
 		frequencyCreating: 60 //начальное количество в минуту
 	}
 }];  
+let zombieWasCreated = 0;
+let zombieWasCreatedLastTime = 0;
 
 var cursorDamage = 1;
 
 
 
 //*** DRAW FUNCTIONS ***//
-/** прорисовка анимированной летающей земли в центре экрана */
-function drawFlyEarch(frame){
-	ctx.drawImage(flyEarchImage, 
-		flyEarchImage.width / flyEarchFrames * frame, //crop from x
-		0, //crop from y
-		flyEarchImage.width / flyEarchFrames, //crop by width
-		flyEarchImage.height,    //crop by height
-		flyEarchX, //draw from x
-		flyEarchY,  //draw from y
-		flyEarchWidth, //draw by width 
-		flyEarchHeight); //draw by height 
-}
-
 /** прорисовка травы на веё нижней части canvas */
 function drawGrass(){
 	for(let i = 0; i < widthOfCanvas / grassImage.width; i++){
@@ -124,64 +104,8 @@ function drawCoinsInterface(){
 	ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, 25);
 }
 
-/** прорисовка каната - держащего летающую землю */
-function drawFlyEarchRope(){
-	ctx.drawImage(flyEarchRopeImage, flyEarchRopeX, flyEarchRopeY);
-
-	if(flyEarchRopeHealth < flyEarchRopeHealthMax && flyEarchRopeHealth > 0){
-		drawHealth(flyEarchRopeX - 15, flyEarchRopeY - 10, 50, flyEarchRopeHealthMax, flyEarchRopeHealth);
-	}
-}
-
-/** прорисовка анимированных зомби */
-function drawZombies(){
-	for(let i = 0; i < zombies.length; i++){
-		var isInvert = zombies[i].isLeftSide;
-		var scale = isInvert ? -1 : 1;
-		if(isInvert){
-			ctx.save();
-			ctx.scale(-1, 1);
-		}
-
-		if(zombies[i].isAttack){
-			//атака
-			zombies[i].currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesAttackFrames)) % zombiesAttackFrames;
-			ctx.drawImage(zombieAttackImage, 
-				zombieAttackWidth * zombies[i].currentFrame, //crop from x
-				0, //crop from y
-				zombieAttackWidth,
-				zombieAttackImage.height,
-				scale * zombies[i].x, 
-				zombies[i].y,
-				scale * zombieAttackWidth,
-				zombieAttackImage.height);
-		}
-		else{
-			//передвижение
-			zombies[i].currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - zombies[i].createdTime) % 1000) / (1000 / zombiesFrames)) % zombiesFrames;
-			ctx.drawImage(zombieImage, 
-				zombieWidth * zombies[i].currentFrame, //crop from x
-				0, //crop from y
-				zombieWidth,
-				zombieImage.height,
-				scale * zombies[i].x, 
-				zombies[i].y,
-				scale * zombieWidth,
-				zombieImage.height);
-		}
-
-		if(isInvert){
-			ctx.restore();
-		}
-
-		if(zombies[i].health != zombieHealthMax){
-			drawHealth(zombies[i].x + 10, zombies[i].y - 2, zombieWidth - 20, zombieHealthMax, zombies[i].health);
-		}
-	}
-}
-
 function drawGameOver(){
-	if(flyEarchY <= -flyEarchHeight){
+	if(flyEarth.y <= -FlyEarth.height){
 		ctx.fillStyle = `orange`;
 		ctx.font = "72px Calibri";
 		ctx.fillText('Game Over!', widthOfCanvas / 2 - 150, heightOfCanvas / 2 - 32);
@@ -189,20 +113,6 @@ function drawGameOver(){
 		ctx.fillText('Game Over!', widthOfCanvas / 2 - 152, heightOfCanvas / 2 - 33);
 	}
 }
-
-function drawHealth(x, y, width, healthMax, healthCurrent){
-	let height = 2;
-	let border = 0;
-	ctx.fillStyle = "orange";
-	ctx.fillRect(x, y, width + border * 2, height + border * 2);
-
-	ctx.fillStyle = "black";
-	ctx.fillRect(x + border, y + border, width, height);
-
-	ctx.fillStyle = "red";
-	ctx.fillRect(x + border, y + border, width * (healthCurrent/ healthMax), height);
-}
-
 
 
 //*** LOGIC FUNCTIONS ***//
@@ -216,10 +126,10 @@ function mouseLogic(){
 	let y = mouseY / kofY;
 
 	let isSetCursor = false;
-	if(x > flyEarchX + flyEarchReduceHover && 
-		x < flyEarchX + flyEarchWidth - flyEarchReduceHover &&
-		y > flyEarchY + flyEarchReduceHover && 
-		y < flyEarchY + flyEarchHeight - flyEarchReduceHover)
+	if(x > flyEarth.x + flyEarth.reduceHover && 
+		x < flyEarth.x + FlyEarth.width - flyEarth.reduceHover &&
+		y > flyEarth.y + flyEarth.reduceHover && 
+		y < flyEarth.y + FlyEarth.height - flyEarth.reduceHover)
 	{
 		setCursor(pickCursor);
 		isSetCursor = true;
@@ -246,12 +156,13 @@ function mouseLogic(){
 		}
 	}
 
-	if(!isSetCursor && zombies.length){
-		for(let i = 0; i < zombies.length; i++){
-			if(x > zombies[i].x + zombiesReduceHover && 
-				x < zombies[i].x + zombieWidth - zombiesReduceHover &&
-				y > zombies[i].y + zombiesReduceHover && 
-				y < zombies[i].y + zombieImage.height - zombiesReduceHover)
+	if(!isSetCursor && monsters.length){
+		for(let i = 0; i < monsters.length; i++){
+			let monster = monsters[i];
+			if(x > monster.x + monster.reduceHover && 
+				x < monster.x + monster.width - monster.reduceHover &&
+				y > monster.y + monster.reduceHover && 
+				y < monster.y + monster.image.height - monster.reduceHover)
 			{
 				if(cursorWait <= 0){
 					setCursor(swordCursor);
@@ -259,10 +170,10 @@ function mouseLogic(){
 				isSetCursor = true;
 
 				if(isClick){
-					zombies[i].health -= cursorDamage;
-					if(zombies[i].health <= 0){
+					monster.health -= cursorDamage;
+					if(monster.health <= 0){
 						createLabel(x - 10, y - 10, '+1', 0, 255, 0);
-						zombies.splice(i, 1);
+						monsters.splice(i, 1);
 						coinsCount++;
 					}
 					else{
@@ -308,7 +219,7 @@ function coinsLogic(millisecondsDifferent){
 
 		if(coin.y + coinImage.height > heightOfCanvas - bottomShiftBorder){
 			coin.y = heightOfCanvas - bottomShiftBorder - coinImage.height;
-			coin.impulseY = -coin.impulseY * getRandom(1, 6) / 10;
+			coin.impulseY = -coin.impulseY * Helper.getRandom(1, 6) / 10;
 		}
 	}
 }
@@ -324,73 +235,50 @@ function labelsLogic(){
 	}
 }
 
-function zombieLogic(millisecondsDifferent){
+function monstersLogic(millisecondsDifferent){
 	//логика создания
-	var waveData = waveMonsters[waveCurrent][zombieKey];
+	var waveData = waveMonsters[waveCurrent][Zombie.name];
 	var periodTime = 1000 * 60 / waveData.frequencyCreating;
-	if(waveData.count > zombiesWasCreated && Date.now() > zombiesWasCreatedLastTime + periodTime + getRandom(-periodTime / 2, periodTime / 2)) 
+	if(waveData.count > zombieWasCreated && Date.now() > zombieWasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2)) 
 	{ 
 		let isLeftSide = Math.random() < 0.5;
-		createZombie(isLeftSide ? -zombieWidth : widthOfCanvas, heightOfCanvas - bottomShiftBorder - zombieImage.height, isLeftSide);
+		let x = isLeftSide ? -50 : widthOfCanvas;
+		let y = heightOfCanvas - bottomShiftBorder - Zombie.image.height;
+
+		monsters.push(new Zombie(x, y, isLeftSide));
+		zombieWasCreated++;
+		zombieWasCreatedLastTime = Date.now();
 	}
 
 	//логика передвижения
-	zombies.map(zombie => {
-		var placeGoal = widthOfCanvas / 2;
-
-		zombie.isAttack = false;
-		if(zombie.isLeftSide) //если монстр идёт с левой стороны
-		{
-			if (zombie.x + zombieWidth < placeGoal - flyEarchRopeImage.width / 2 + zombieWidth / 5) //ещё не дошёл
-				zombie.x += zombieSpeed * (millisecondsDifferent / 1000);
-			else //дошёл
-			{
-				zombie.x = placeGoal - flyEarchRopeImage.width / 2 - zombieWidth + zombieWidth / 5;
-				zombie.isAttack = true; //атакует
-			}
-		}
-		else 
-		{
-			if (zombie.x > placeGoal + flyEarchRopeImage.width / 2 - zombieWidth / 5) //ещё не дошёл
-				zombie.x -= zombieSpeed * (millisecondsDifferent / 1000);
-			else //дошёл
-			{
-				zombie.x = placeGoal + flyEarchRopeImage.width / 2 - zombieWidth / 5;
-				zombie.isAttack = true; //атакует
-			}
-		}
-
-		if(zombie.isAttack) //если атакует
-		{
-			var damage = 0 - zombieDamage * (millisecondsDifferent / 1000);
-			if(damage < 0)
-				flyEarchRopeHealth += damage; //наносим урон
-		}
-	});
+	monsters.map(monster => monster.logic(millisecondsDifferent, buildings));
 
 	//логика взаимодействия с монетками
-	if(zombies.length && zombies[0].x > flyEarchX && zombies[0].x < flyEarchX + flyEarchWidth){
-		var availableZombies = zombies.filter(zombie => zombie.x > flyEarchX && zombie.x < flyEarchX + flyEarchWidth);
-		availableZombies.forEach(zombie => {
-			for(let i = 0; i < coins.length; i++){
-				if(coins[i].y > zombie.y && zombie.x < coins[i].x + coinImage.width / 2 && zombie.x + zombieWidth > coins[i].x + coinImage.width / 2){
-					createLabel(coins[i].x + 10, coins[i].y + 10, '-', 255, 0, 0);
-					coins.splice(i, 1);
+	if(monsters.length){
+		monsters.sortByField(monster => Math.abs(widthOfCanvas / 2 - monster.x));
+		if(monsters[0].x > flyEarth.x && monsters[0].x < flyEarth.x + flyEarth.width){
+			var availableMonsters = monsters.filter(monster => monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
+			availableMonsters.forEach(monster => {
+				for(let i = 0; i < coins.length; i++){
+					if(coins[i].y > monster.y && monster.x < coins[i].x + coinImage.width / 2 && monster.x + monster.width > coins[i].x + coinImage.width / 2){
+						createLabel(coins[i].x + 10, coins[i].y + 10, '-', 255, 0, 0);
+						coins.splice(i, 1);
+					}
 				}
-			}
-		});
+			});
+		}
 	}
 }
 
 function gameOverLogic(millisecondsDifferent){
 	setCursor(defaultCursor);
-	
-	if(flyEarchRopeY < heightOfCanvas - bottomShiftBorder - 20){
-		flyEarchRopeY += 100 * millisecondsDifferent / 1000;
+
+	if(flyEarthRope.y < heightOfCanvas - bottomShiftBorder - 20){
+		flyEarthRope.y += 100 * millisecondsDifferent / 1000;
 	}
 
-	if(flyEarchY > -flyEarchHeight){
-		flyEarchY -= 100 * millisecondsDifferent / 1000;
+	if(flyEarth.y > -FlyEarth.height){
+		flyEarth.y -= 100 * millisecondsDifferent / 1000;
 	}
 }
 
@@ -417,8 +305,8 @@ function setCursor(img){
 
 function createCoin(){
 	coins.push({
-		x: flyEarchX + flyEarchReduceHover + Math.random() * (flyEarchWidth - flyEarchReduceHover * 2), 
-		y: flyEarchY + flyEarchHeight / 2, 
+		x: flyEarth.x + flyEarth.reduceHover + Math.random() * (FlyEarth.width - flyEarth.reduceHover * 2), 
+		y: flyEarth.y + FlyEarth.height / 2, 
 		timeCreated: Date.now(),
 		impulseY: 0
 	});
@@ -436,31 +324,6 @@ function createLabel(x, y, text, red, green, blue){
 	});
 }
 
-function createZombie(x, y, isLeftSide){
-	zombies.push({
-		x: x,
-		y: y,
-		health: zombieHealthMax,
-		isAttack: false,
-		createdTime: Date.now(),
-		isLeftSide: isLeftSide
-	});
-	zombiesWasCreated++;
-	zombiesWasCreatedLastTime = Date.now();
-}
-
-
-function testHealth(){
-	createZombie(500, 802, true);
-	createZombie(300, 802, true);
-	createZombie(1500, 802, false);
-	zombies[0].health = 2;
-	zombies[1].health = 1;
-	zombies[2].health = 2;
-	flyEarchRopeHealth = 70;
-}
-
-//testHealth();
 
 //*** Жизненный цикл игры ***//
 let animationId = null;
@@ -474,7 +337,7 @@ function draw(millisecondsFromStart){
 	}
 
 	//проверка что все изображения загружены - иначе будет краш хрома
-	if(!grassImage.complete || !flyEarchImage.complete || !flyEarchRopeImage.complete || !coinImage.complete || !zombieImage.complete || !zombieAttackImage.complete){
+	if(images.some(x => !x.complete)){
 		animationId = window.requestAnimationFrame(draw);
 		return;
 	}
@@ -488,19 +351,19 @@ function draw(millisecondsFromStart){
 	if(isGameOver){
 		gameOverLogic(millisecondsDifferent);
 
-		if(flyEarchY <= -flyEarchHeight){
+		if(flyEarth.y <= -FlyEarth.height){
 			isEndAfterGameOver = true;
 		}
 	}
 	else{
-		if(flyEarchRopeHealth <= 0){
+		if(flyEarthRope.health <= 0){
 			isGameOver = true;
 		}
 		
 		mouseLogic(); //логика обработки мыши
 	
 		if(waveCurrent == 0){
-			zombieLogic(millisecondsDifferent);
+			monstersLogic(millisecondsDifferent);
 		}
 	}
 	
@@ -521,15 +384,16 @@ function draw(millisecondsFromStart){
 	ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
 
-	drawFlyEarch(isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / flyEarchFrames)) % flyEarchFrames); //летающая земля 
-
 	drawCoins();
 
-	drawFlyEarchRope();
-
+	for(let i = 0; i < buildings.length; i++){
+		buildings[i].draw(ctx, isGameOver, millisecondsFromStart);
+	} 
 	
 	if(waveCurrent == 0){
-		drawZombies(); 
+		for(let i = 0; i < monsters.length; i++){
+			monsters[i].draw(ctx, isGameOver);
+		} 
 	}
 
 	drawGrass(); 
