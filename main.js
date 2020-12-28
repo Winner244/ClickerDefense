@@ -333,9 +333,9 @@ function drawAll(millisecondsFromStart){
 
 	Draw.drawCoins(coinImage, coins);
 
-	buildings.forEach(building => building.draw(Draw.ctx, isGameOver, millisecondsFromStart));
+	buildings.forEach(building => building.draw(isGameOver, millisecondsFromStart));
 
-	monsters.forEach(monster => monster.draw(Draw.ctx, isGameOver));
+	monsters.forEach(monster => monster.draw(isGameOver));
 
 	Draw.drawGrass(grassImage); 
 

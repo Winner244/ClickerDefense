@@ -67,19 +67,19 @@ class Monster{
 		}
 	}
 
-	draw(ctx, isGameOver){
+	draw(isGameOver){
 		let isInvert = this.isLeftSide;
 		let scale = isInvert ? -1 : 1;
 
 		if(isInvert){
-			ctx.save();
-			ctx.scale(-1, 1);
+			Draw.ctx.save();
+			Draw.ctx.scale(-1, 1);
 		}
 
 		if(this.isAttack){
 			//атака
 			this.currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.attackFrames)) % this.attackFrames;
-			ctx.drawImage(this.attackImage, 
+			Draw.ctx.drawImage(this.attackImage, 
 				this.attackWidth * this.currentFrame, //crop from x
 				0, //crop from y
 				this.attackWidth, 		  //crop by width
@@ -92,7 +92,7 @@ class Monster{
 		else{
 			//передвижение
 			this.currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.frames)) % this.frames;
-			ctx.drawImage(this.image, 
+			Draw.ctx.drawImage(this.image, 
 				this.width * this.currentFrame, //crop from x
 				0, //crop from y
 				this.width, 	   //crop by width
@@ -104,7 +104,7 @@ class Monster{
 		}
 
 		if(isInvert){
-			ctx.restore();
+			Draw.ctx.restore();
 		}
 
 		if(this.health != this.healthMax){

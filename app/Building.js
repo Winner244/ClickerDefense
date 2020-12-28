@@ -20,10 +20,10 @@ class Building{
 		this.isLand = isLand; //наземное? (иначе - воздушное)
 	}
 
-	draw(ctx, isGameOver, millisecondsFromStart){
+	draw(isGameOver, millisecondsFromStart){
 		if(this.frames > 1){
 			let frame = isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / this.frames)) % this.frames;
-			ctx.drawImage(this.image, 
+			Draw.ctx.drawImage(this.image, 
 				this.image.width / this.frames * frame, //crop from x
 				0, //crop from y
 				this.image.width / this.frames, //crop by width
@@ -34,7 +34,7 @@ class Building{
 				this.height); //draw by height 
 		}
 		else{
-			ctx.drawImage(this.image, this.x, this.y);
+			Draw.ctx.drawImage(this.image, this.x, this.y);
 		}
 
 		if(this.health < this.healthMax && this.health > 0){
