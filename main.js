@@ -1,9 +1,4 @@
 //*** INIT ***//
-let canvas = document.getElementById('canvas');
-let ctx = canvas.getContext('2d');
-let heightOfCanvas = canvas.height;
-let widthOfCanvas = canvas.width;
-
 let monsters = []; //все монстры
 let buildings = []; //все строения
 let images = []; //все изображения (кроме курсоров)
@@ -16,8 +11,8 @@ images.push(grassImage);
 FlyEarth.init();
 images.push(FlyEarth.image);
 let flyEarth = new FlyEarth(
-	widthOfCanvas / 2 - FlyEarth.width / 2, 
-	heightOfCanvas / 2 - FlyEarth.height / 2);
+	Draw.canvas.width / 2 - FlyEarth.width / 2, 
+	Draw.canvas.height / 2 - FlyEarth.height / 2);
 buildings.push(flyEarth);
 
 let defaultCursor = './media/cursors/Standart.png';
@@ -67,60 +62,12 @@ let zombieWasCreatedLastTime = 0;
 
 var cursorDamage = 1;
 
-
-
-//*** DRAW FUNCTIONS ***//
-/** прорисовка травы на веё нижней части canvas */
-function drawGrass(){
-	for(let i = 0; i < widthOfCanvas / grassImage.width; i++){
-		ctx.drawImage(grassImage, grassImage.width * i, heightOfCanvas - grassImage.height);
-	}
-}
-
-/** прорисовка исчезающих надписей */
-function drawLabels(){
-	for(let i = 0; i < labels.length; i++){
-		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
-
-		ctx.fillStyle = `rgba(${labels[i].red},${labels[i].green},${labels[i].blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;
-		ctx.font = "14px Calibri";
-		ctx.fillText(labels[i].text, labels[i].x, labels[i].y);
-	}
-}
-
-/** прорисовка монеток  */
-function drawCoins(){
-	for(let i = 0; i < coins.length; i++){
-		ctx.drawImage(coinImage, coins[i].x, coins[i].y);
-	}
-}
-
-/** прорисовка интерфейса - сколько у игрока монеток */
-function drawCoinsInterface(){
-	ctx.drawImage(coinImage, 10, 10);
-
-	ctx.fillStyle = `rgba(255, 255, 0)`;
-	ctx.font = "16px Calibri";
-	ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, 25);
-}
-
-function drawGameOver(){
-	if(flyEarth.y <= -FlyEarth.height){
-		ctx.fillStyle = `orange`;
-		ctx.font = "72px Calibri";
-		ctx.fillText('Game Over!', widthOfCanvas / 2 - 150, heightOfCanvas / 2 - 32);
-		ctx.fillStyle = `red`;
-		ctx.fillText('Game Over!', widthOfCanvas / 2 - 152, heightOfCanvas / 2 - 33);
-	}
-}
-
-
 //*** LOGIC FUNCTIONS ***//
 var cursorWait = 0;
 function mouseLogic(){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
-	let kofX = canvas.clientWidth / widthOfCanvas; 
-	let kofY = canvas.clientHeight / heightOfCanvas;
+	let kofX = Draw.canvas.clientWidth / Draw.canvas.width; 
+	let kofY = Draw.canvas.clientHeight / Draw.canvas.height;
 
 	let x = mouseX / kofX;
 	let y = mouseY / kofY;
@@ -208,7 +155,7 @@ function coinsLogic(millisecondsDifferent){
 			continue;
 		}
 
-		if(coin.y + coinImage.height < heightOfCanvas - bottomShiftBorder){ //ускорение свободного падения
+		if(coin.y + coinImage.height < Draw.canvas.height - bottomShiftBorder){ //ускорение свободного падения
 			if (coin.impulseY < 0)
 				coin.impulseY += 0.02;
 			else
@@ -217,8 +164,8 @@ function coinsLogic(millisecondsDifferent){
 
 		coin.y += millisecondsDifferent * coin.impulseY;
 
-		if(coin.y + coinImage.height > heightOfCanvas - bottomShiftBorder){
-			coin.y = heightOfCanvas - bottomShiftBorder - coinImage.height;
+		if(coin.y + coinImage.height > Draw.canvas.height - bottomShiftBorder){
+			coin.y = Draw.canvas.height - bottomShiftBorder - coinImage.height;
 			coin.impulseY = -coin.impulseY * Helper.getRandom(1, 6) / 10;
 		}
 	}
@@ -242,8 +189,8 @@ function monstersLogic(millisecondsDifferent){
 	if(waveData.count > zombieWasCreated && Date.now() > zombieWasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2)) 
 	{ 
 		let isLeftSide = Math.random() < 0.5;
-		let x = isLeftSide ? -50 : widthOfCanvas;
-		let y = heightOfCanvas - bottomShiftBorder - Zombie.image.height;
+		let x = isLeftSide ? -50 : Draw.canvas.width;
+		let y = Draw.canvas.height - bottomShiftBorder - Zombie.image.height;
 
 		monsters.push(new Zombie(x, y, isLeftSide));
 		zombieWasCreated++;
@@ -255,7 +202,7 @@ function monstersLogic(millisecondsDifferent){
 
 	//логика взаимодействия с монетками
 	if(monsters.length){
-		monsters.sortByField(monster => Math.abs(widthOfCanvas / 2 - monster.x));
+		monsters.sortByField(monster => Math.abs(Draw.canvas.width / 2 - monster.x));
 		if(monsters[0].x > flyEarth.x && monsters[0].x < flyEarth.x + flyEarth.width){
 			var availableMonsters = monsters.filter(monster => monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
 			availableMonsters.forEach(monster => {
@@ -273,7 +220,7 @@ function monstersLogic(millisecondsDifferent){
 function gameOverLogic(millisecondsDifferent){
 	setCursor(defaultCursor);
 
-	if(flyEarthRope.y < heightOfCanvas - bottomShiftBorder - 20){
+	if(flyEarthRope.y < Draw.canvas.height - bottomShiftBorder - 20){
 		flyEarthRope.y += 100 * millisecondsDifferent / 1000;
 	}
 
@@ -331,23 +278,21 @@ let isGameStarted = true;
 let lastDrawTime = 0;
 let isGameOver = false;
 let isEndAfterGameOver = false;
-function draw(millisecondsFromStart){
+function go(millisecondsFromStart){
 	if(!isGameStarted){
 		return;
 	}
 
 	//проверка что все изображения загружены - иначе будет краш хрома
 	if(images.some(x => !x.complete)){
-		animationId = window.requestAnimationFrame(draw);
+		animationId = window.requestAnimationFrame(go);
 		return;
 	}
 
 	let millisecondsDifferent = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
 
 
-
 	///** logics **//
-
 	if(isGameOver){
 		gameOverLogic(millisecondsDifferent);
 
@@ -374,45 +319,36 @@ function draw(millisecondsFromStart){
 	checkFPS();
 	
 
+	drawAll(millisecondsFromStart);
 
-
-	///** draw **//
-	//очищаем холст
-	ctx.clearRect(0, 0, widthOfCanvas, heightOfCanvas);
-
-	//затемняем фон
-	ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
-	ctx.fillRect(0, 0, widthOfCanvas, heightOfCanvas);
-
-	drawCoins();
-
-	for(let i = 0; i < buildings.length; i++){
-		buildings[i].draw(ctx, isGameOver, millisecondsFromStart);
-	} 
-	
-	if(waveCurrent == 0){
-		for(let i = 0; i < monsters.length; i++){
-			monsters[i].draw(ctx, isGameOver);
-		} 
+	if(!isEndAfterGameOver){
+		window.requestAnimationFrame(go);
 	}
+}
+animationId = window.requestAnimationFrame(go);
 
-	drawGrass(); 
+function drawAll(millisecondsFromStart){
+	Draw.clear(); //очищаем холст
+	Draw.drawBlackout(); //затемняем фон
 
-	drawLabels();
+	Draw.drawCoins(coinImage, coins);
 
-	drawCoinsInterface();
+	buildings.forEach(building => building.draw(Draw.ctx, isGameOver, millisecondsFromStart));
 
-	if(isGameOver){
-		drawGameOver();
+	monsters.forEach(monster => monster.draw(Draw.ctx, isGameOver));
+
+	Draw.drawGrass(grassImage); 
+
+	Draw.drawLabels(labels);
+
+	Draw.drawCoinsInterface(coinImage, coinsCount);
+
+	if(isGameOver && flyEarth.y <= -FlyEarth.height){
+		Draw.drawGameOver();
 	}
 
 	lastDrawTime = millisecondsFromStart;
-	if(!isEndAfterGameOver){
-		window.requestAnimationFrame(draw);
-	}
 }
-var z = 1;
-animationId = window.requestAnimationFrame(draw);
 
 
 
@@ -425,7 +361,7 @@ window.addEventListener('keypress', event => {
 			}
 			else{
 				isGameStarted = true;
-				animationId = window.requestAnimationFrame(draw);
+				animationId = window.requestAnimationFrame(go);
 			}
 		}
 	}

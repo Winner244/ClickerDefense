@@ -32,7 +32,7 @@ class Monster{
 		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
 		buildingsGoal.sortByField(building => building.x);
 		var buildingGoal = this.isLeftSide ? buildingsGoal.first() : buildingsGoal.last();
-		
+
 		this.isAttack = false;
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
@@ -108,16 +108,7 @@ class Monster{
 		}
 
 		if(this.health != this.healthMax){
-			let x = this.x + 10;
-			let y = this.y - 2;
-			let width = this.width - 20;
-			let height = 2;
-
-			ctx.fillStyle = "black";
-			ctx.fillRect(x, y, width, height);
-
-			ctx.fillStyle = "red";
-			ctx.fillRect(x, y, width * (this.health / this.healthMax), height);
+			Draw.drawHealth(this.x + 10, this.y - 2, this.width - 20, this.healthMax, this.health);
 		}
 	}
 }

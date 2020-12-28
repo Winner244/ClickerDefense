@@ -38,16 +38,7 @@ class Building{
 		}
 
 		if(this.health < this.healthMax && this.health > 0){
-			let x = this.x - 15;
-			let y = this.y - 10;
-			let width = 50;
-			let height = 2;
-		
-			ctx.fillStyle = "black";
-			ctx.fillRect(x, y, width, height);
-		
-			ctx.fillStyle = "red";
-			ctx.fillRect(x, y, width * (this.health / this.healthMax), height);
+			Draw.drawHealth(this.x - 15, this.y - 10, 50, this.healthMax, this.health);
 		}
 	}
 }

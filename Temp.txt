@@ -22,3 +22,4 @@ function drawHealth(x, y, width, healthMax, healthCurrent){
 	ctx.fillStyle = "red";
 	ctx.fillRect(x + border, y + border, width * (healthCurrent/ healthMax), height);
 }
+ 
