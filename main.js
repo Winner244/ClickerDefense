@@ -1,41 +1,23 @@
 //*** INIT ***//
-let buildings = []; //все строения
-let images = []; //все изображения (кроме курсоров)
-
 let grassImage = new Image();   
 grassImage.src = './media/img/grass1.png';
+
+Buildings.init();
+Monsters.init();
+Coin.init();
+
+let images = []; //все изображения (кроме курсоров)
 images.push(grassImage);
-
-
-FlyEarth.init();
 images.push(FlyEarth.image);
-let flyEarth = new FlyEarth(
-	Draw.canvas.width / 2 - FlyEarth.width / 2, 
-	Draw.canvas.height / 2 - FlyEarth.height / 2);
-buildings.push(flyEarth);
+images.push(FlyEarthRope.image);
+images.push(Coin.image);
+images.push(Zombie.image);
+images.push(Zombie.attackImage);
 
 Cursor.setCursor(Cursor.default);
 
-Coin.init();
-images.push(Coin.image);
-
 let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
-FlyEarthRope.init();
-images.push(FlyEarthRope.image);
-let flyEarthRope = new FlyEarthRope(0, 0);
-FlyEarthRope.image.onload = () => {
-	flyEarthRope.x = flyEarth.x + FlyEarth.width / 2 - FlyEarthRope.image.width / 2;
-	flyEarthRope.y = flyEarth.y + FlyEarth.height - 8;
-	flyEarthRope.width = FlyEarthRope.image.width;
-	flyEarthRope.height = FlyEarthRope.image.height;
-}
-buildings.push(flyEarthRope);
-
-Monsters.init();
-
-images.push(Zombie.image);
-images.push(Zombie.attackImage);
 
 let waveCurrent = 0; //текущая волна нападения (-1 = нет волны)
 let waveStartTime = Date.now();
@@ -57,21 +39,7 @@ function mouseLogic(millisecondsDifferent){
 	let x = mouseX / kofX;
 	let y = mouseY / kofY;
 
-	let isSetCursor = false;
-	if(x > flyEarth.x + flyEarth.reduceHover && 
-		x < flyEarth.x + FlyEarth.width - flyEarth.reduceHover &&
-		y > flyEarth.y + flyEarth.reduceHover && 
-		y < flyEarth.y + FlyEarth.height - flyEarth.reduceHover)
-	{
-		Cursor.setCursor(Cursor.pick);
-		isSetCursor = true;
-
-		if(isClick){
-			let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (FlyEarth.width - flyEarth.reduceHover * 2);
-			let coinY = flyEarth.y + FlyEarth.height / 2;
-			Coins.create(coinX, coinY);
-		}
-	}
+	let isSetCursor = Buildings.mouseLogic(x, y, isClick);
 
 	if(!isSetCursor){
 		isSetCursor = Coins.mouseLogic(x, y, isClick);
@@ -95,12 +63,12 @@ function mouseLogic(millisecondsDifferent){
 function gameOverLogic(millisecondsDifferent){
 	Cursor.setCursor(Cursor.default);
 
-	if(flyEarthRope.y < Draw.canvas.height - bottomShiftBorder - 20){
-		flyEarthRope.y += 100 * millisecondsDifferent / 1000;
+	if(Buildings.flyEarthRope.y < Draw.canvas.height - bottomShiftBorder - 20){
+		Buildings.flyEarthRope.y += 100 * millisecondsDifferent / 1000;
 	}
 
-	if(flyEarth.y > -FlyEarth.height){
-		flyEarth.y -= 100 * millisecondsDifferent / 1000;
+	if(Buildings.flyEarth.y > -FlyEarth.height){
+		Buildings.flyEarth.y -= 100 * millisecondsDifferent / 1000;
 	}
 }
 
@@ -142,17 +110,16 @@ function go(millisecondsFromStart){
 
 	let millisecondsDifferent = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
 
-
 	///** logics **//
 	if(isGameOver){
 		gameOverLogic(millisecondsDifferent);
 
-		if(flyEarth.y <= -FlyEarth.height){
+		if(Buildings.flyEarth.y <= -FlyEarth.height){
 			isEndAfterGameOver = true;
 		}
 	}
 	else{
-		if(flyEarthRope.health <= 0){
+		if(Buildings.flyEarthRope.health <= 0){
 			isGameOver = true;
 		}
 		
@@ -174,7 +141,7 @@ function go(millisecondsFromStart){
 		}
 	
 	
-		Monsters.logic(millisecondsDifferent, flyEarth);
+		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all);
 	}
 	
 	Coins.logic(millisecondsDifferent, bottomShiftBorder);
@@ -196,7 +163,7 @@ function drawAll(millisecondsFromStart){
 	Draw.clear(); //очищаем холст
 	Draw.drawBlackout(); //затемняем фон
 
-	buildings.forEach(building => building.draw(isGameOver, millisecondsFromStart));
+	Buildings.draw(millisecondsFromStart, isGameOver);
 
 	Coins.draw();
 
@@ -208,7 +175,7 @@ function drawAll(millisecondsFromStart){
 
 	Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 
-	if(isGameOver && flyEarth.y <= -FlyEarth.height){
+	if(isGameOver && Buildings.flyEarth.y <= -FlyEarth.height){
 		Draw.drawGameOver();
 	}
 
