@@ -27,7 +27,8 @@ class Game{
 		Game.images.push(FlyEarth.image);
 		Game.images.push(FlyEarthRope.image);
 		Game.images.push(Coin.image);
-		Game.images.push(Zombie.image);
+		Game.images.push(Zombie.image1);
+		Game.images.push(Zombie.image2);
 		Game.images.push(Zombie.attackImage);
 
 		Cursor.setCursor(Cursor.default);

@@ -12,7 +12,7 @@ class Waves{
 		{ 
 			let isLeftSide = Math.random() < 0.5;
 			let x = isLeftSide ? -50 : Draw.canvas.width;
-			let y = Draw.canvas.height - bottomShiftBorder - Zombie.image.height;
+			let y = Draw.canvas.height - bottomShiftBorder - Zombie.image1.height;
 	
 			Monsters.all.push(new Zombie(x, y, isLeftSide));
 			waveData.wasCreated++;
