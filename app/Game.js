@@ -12,8 +12,6 @@ class Game{
 	static lastDrawTime = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId = null; //техническая переменная для браузера 
 
-	static startTime = 0; //после возвращения из паузы - нужно что бы не было разницы от millisecondsFromStart
-
 	static init(){
 		Game.grassImage.src = './media/img/grass1.png';
 
@@ -35,7 +33,6 @@ class Game{
 		window.addEventListener('keypress', Game.onKey);
 
 		Game.animationId = window.requestAnimationFrame(Game.go);
-		Game.startTime = Date.now();
 	}
 		
 	static gameOverLogic(millisecondsDifferent){
@@ -111,6 +108,10 @@ class Game{
 			return;
 		}
 
+		if(!Game.lastDrawTime){
+			Game.lastDrawTime = millisecondsFromStart - 100;
+		}
+
 		let millisecondsDifferent = millisecondsFromStart - Game.lastDrawTime; //сколько времени прошло с прошлой прорисовки
 
 		///** logics **//
@@ -155,7 +156,7 @@ class Game{
 				}
 				else{
 					Game.isGameRun = true;
-					Game.lastDrawTime = Date.now() - Game.startTime;
+					Game.lastDrawTime = 0;
 					Game.animationId = window.requestAnimationFrame(Game.go);
 				}
 			}
