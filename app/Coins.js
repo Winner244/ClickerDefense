@@ -30,8 +30,9 @@ class Coins{
 	static logic(millisecondsDifferent, bottomShiftBorder){
 		for(let i = 0; i < Coins.all.length; i++){
 			let coin = Coins.all[i];
-	
-			if(coin.timeCreated + Coin.lifetime * 1000 < Date.now()){
+			coin.lifeTimeLeft -= millisecondsDifferent;
+		
+			if(coin.lifeTimeLeft <= 0){
 				Coins.all.splice(i, 1);
 				i--;
 				continue;

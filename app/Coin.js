@@ -9,8 +9,8 @@ class Coin {
 	constructor(x, y){
 		this.x = x; 
 		this.y = y;
-		this.timeCreated = Date.now();
 		this.impulseY = 0;
+		this.lifeTimeLeft = Coin.lifetime * 1000;
 	}
 
 	logic(millisecondsDifferent, bottomShiftBorder){
