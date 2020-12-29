@@ -1,5 +1,5 @@
 class Coin {
-	static lifetime = 8; //время жизни монетки (в секундах)
+	static lifetime = 5; //время жизни монетки (в секундах)
 	static image = new Image();  
 
 	static init(){
@@ -14,10 +14,6 @@ class Coin {
 	}
 
 	logic(millisecondsDifferent, bottomShiftBorder){
-		if(this.timeCreated + Coins.lifetime * 1000 < Date.now()){
-			return;
-		}
-
 		if(this.y + Coin.image.height < Draw.canvas.height - bottomShiftBorder){ //ускорение свободного падения
 			if (this.impulseY < 0)
 				this.impulseY += 0.02;

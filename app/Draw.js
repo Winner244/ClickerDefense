@@ -27,15 +27,8 @@ class Draw{
 		Draw.ctx.fillRect(0, 0, Draw.canvas.width, Draw.canvas.height);
 	}
 	
-	/** Прорисовка исчезающих надписей */
-	static drawLabels(labels){
-		for(let i = 0; i < labels.length; i++){
-			Draw.drawLabel(labels[i]);
-		}
-	}
-
 	/** Прорисовка исчезающей надписи */
-	static drawLabel(label){
+	static drawLabel(label, labelLifetime){
 		let leftTime = Date.now() - (label.timeCreated + labelLifetime * 1000);
 
 		Draw.ctx.fillStyle = `rgba(${label.red},${label.green},${label.blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;

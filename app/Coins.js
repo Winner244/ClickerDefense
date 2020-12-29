@@ -13,7 +13,7 @@ class Coins{
 		for(let i = 0; i < Coins.all.length; i++){
 			let coin = Coins.all[i];
 	
-			if(coin.timeCreated + Coins.lifetime * 1000 < Date.now()){
+			if(coin.timeCreated + Coin.lifetime * 1000 < Date.now()){
 				Coins.all.splice(i, 1);
 				i--;
 				continue;

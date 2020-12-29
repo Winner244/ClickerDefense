@@ -22,9 +22,6 @@ images.push(Coin.image);
 
 let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
-let labels = []; // мини надписи, типо "+1" при сборе монеток
-let labelLifetime = 1; //время жизни сообщения (в секундах)
-
 FlyEarthRope.init();
 images.push(FlyEarthRope.image);
 let flyEarthRope = new FlyEarthRope(0, 0);
@@ -84,7 +81,7 @@ function mouseLogic(){
 				isSetCursor = true;
 
 				if(isClick){
-					createLabel(x - 10, y - 10, '+1', 0, 255, 0);
+					Labels.createGreen(x - 10, y - 10, '+1');
 					Coins.delete(i);
 					Gamer.coins++;
 				}
@@ -110,7 +107,7 @@ function mouseLogic(){
 				if(isClick){
 					monster.health -= Gamer.cursorDamage;
 					if(monster.health <= 0){
-						createLabel(x - 10, y - 10, '+1', 0, 255, 0);
+						Labels.createGreen(x - 10, y - 10, '+1');
 						monsters.splice(i, 1);
 						Gamer.coins++;
 					}
@@ -136,18 +133,6 @@ function mouseLogic(){
 	isClick = false;
 }
 
-
-
-function labelsLogic(){
-	for(let i = 0; i < labels.length; i++){
-		let leftTime = Date.now() - (labels[i].timeCreated + labelLifetime * 1000);
-		if(leftTime > 0){
-			labels.splice(i, 1);
-			i--;
-			continue;
-		}
-	}
-}
 
 function monstersLogic(millisecondsDifferent){
 	//логика создания
@@ -175,7 +160,7 @@ function monstersLogic(millisecondsDifferent){
 			availableMonsters.forEach(monster => {
 				for(let i = 0; i < Coins.all.length; i++){
 					if(Coins.all[i].y > monster.y && monster.x < Coins.all[i].x + Coin.image.width / 2 && monster.x + monster.width > Coins.all[i].x + Coin.image.width / 2){
-						createLabel(Coins.all[i].x + 10, Coins.all[i].y + 10, '-', 255, 0, 0);
+						Labels.createRed(Coins.all[i].x + 10, Coins.all[i].y + 10, '-');
 						Coins.delete(i);
 					}
 				}
@@ -213,18 +198,6 @@ function checkFPS(){
 	fps++;
 }
 
-
-function createLabel(x, y, text, red, green, blue){
-	labels.push({
-		x: x,
-		y: y,
-		text: text,
-		red: red,
-		green: green,
-		blue: blue,
-		timeCreated: Date.now()
-	});
-}
 
 
 //*** Жизненный цикл игры ***//
@@ -269,7 +242,7 @@ function go(millisecondsFromStart){
 	
 	Coins.logic(millisecondsDifferent, bottomShiftBorder);
 	
-	labelsLogic();
+	Labels.logic();
 
 	checkFPS();
 	
@@ -294,7 +267,7 @@ function drawAll(millisecondsFromStart){
 
 	Draw.drawGrass(grassImage); 
 
-	Draw.drawLabels(labels);
+	Labels.draw();
 
 	Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 
