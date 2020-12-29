@@ -2,6 +2,7 @@
 let grassImage = new Image();   
 grassImage.src = './media/img/grass1.png';
 
+Mouse.init();
 Buildings.init();
 Monsters.init();
 Coin.init();
@@ -33,20 +34,17 @@ let zombieWasCreatedLastTime = 0;
 //*** LOGIC FUNCTIONS ***//
 function mouseLogic(millisecondsDifferent){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
-	let kofX = Draw.canvas.clientWidth / Draw.canvas.width; 
-	let kofY = Draw.canvas.clientHeight / Draw.canvas.height;
+	let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+	let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 
-	let x = mouseX / kofX;
-	let y = mouseY / kofY;
-
-	let isSetCursor = Buildings.mouseLogic(x, y, isClick);
+	let isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick);
 
 	if(!isSetCursor){
-		isSetCursor = Coins.mouseLogic(x, y, isClick);
+		isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick);
 	}
 
 	if(!isSetCursor){
-		isSetCursor = Monsters.mouseLogic(x, y, isClick);
+		isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick);
 	}
 
 	if(Cursor.cursorWait > 0){
@@ -57,7 +55,7 @@ function mouseLogic(millisecondsDifferent){
 		Cursor.setCursor(Cursor.default);
 	}
 
-	isClick = false;
+	Mouse.isClick = false;
 }
 
 function gameOverLogic(millisecondsDifferent){
@@ -198,14 +196,3 @@ window.addEventListener('keypress', event => {
 		}
 	}
 });
-
-
-let mouseX = 0;
-let mouseY = 0;
-window.addEventListener('mousemove', event => {
-	mouseX = event.pageX;
-	mouseY = event.pageY;
-});
-
-let isClick = false;
-window.addEventListener('mousedown', () => isClick = true);
