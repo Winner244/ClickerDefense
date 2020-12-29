@@ -1,4 +1,5 @@
 //*** INIT ***//
+let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 let grassImage = new Image();   
 grassImage.src = './media/img/grass1.png';
 
@@ -17,21 +18,8 @@ images.push(Zombie.attackImage);
 
 Cursor.setCursor(Cursor.default);
 
-let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
-
-let waveCurrent = 0; //текущая волна нападения (-1 = нет волны)
-let waveStartTime = Date.now();
-let waveMonsters = [{ //монстры на волнах
-	[Zombie.name]: {
-		count: 500,
-		frequencyCreating: 60 //начальное количество в минуту
-	}
-}];  
-let zombieWasCreated = 0;
-let zombieWasCreatedLastTime = 0;
-
-//*** LOGIC FUNCTIONS ***//
+//*** FUNCTIONS ***//
 function mouseLogic(millisecondsDifferent){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
 	let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
@@ -70,6 +58,29 @@ function gameOverLogic(millisecondsDifferent){
 	}
 }
 
+function drawAll(millisecondsFromStart){
+	Draw.clear(); //очищаем холст
+	Draw.drawBlackout(); //затемняем фон
+
+	Buildings.draw(millisecondsFromStart, isGameOver);
+
+	Coins.draw();
+
+	Monsters.draw(isGameOver);
+
+	Draw.drawGrass(grassImage); 
+
+	Labels.draw();
+
+	Draw.drawCoinsInterface(Coin.image, Gamer.coins);
+
+	if(isGameOver && Buildings.flyEarth.y <= -FlyEarth.height){
+		Draw.drawGameOver();
+	}
+
+	lastDrawTime = millisecondsFromStart;
+}
+
 
 //*** Жизненный цикл игры ***//
 let animationId = null;
@@ -105,21 +116,7 @@ function go(millisecondsFromStart){
 		
 		mouseLogic(millisecondsDifferent); //логика обработки мыши
 
-		//Wave logic
-		//логика создания монстров
-		var waveData = waveMonsters[waveCurrent][Zombie.name];
-		var periodTime = 1000 * 60 / waveData.frequencyCreating;
-		if(waveData.count > zombieWasCreated && Date.now() > zombieWasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2)) 
-		{ 
-			let isLeftSide = Math.random() < 0.5;
-			let x = isLeftSide ? -50 : Draw.canvas.width;
-			let y = Draw.canvas.height - bottomShiftBorder - Zombie.image.height;
-	
-			Monsters.all.push(new Zombie(x, y, isLeftSide));
-			zombieWasCreated++;
-			zombieWasCreatedLastTime = Date.now();
-		}
-	
+		Waves.logic(bottomShiftBorder);
 	
 		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all);
 	}
@@ -137,29 +134,6 @@ function go(millisecondsFromStart){
 	}
 }
 animationId = window.requestAnimationFrame(go);
-
-function drawAll(millisecondsFromStart){
-	Draw.clear(); //очищаем холст
-	Draw.drawBlackout(); //затемняем фон
-
-	Buildings.draw(millisecondsFromStart, isGameOver);
-
-	Coins.draw();
-
-	Monsters.draw(isGameOver);
-
-	Draw.drawGrass(grassImage); 
-
-	Labels.draw();
-
-	Draw.drawCoinsInterface(Coin.image, Gamer.coins);
-
-	if(isGameOver && Buildings.flyEarth.y <= -FlyEarth.height){
-		Draw.drawGameOver();
-	}
-
-	lastDrawTime = millisecondsFromStart;
-}
 
 window.addEventListener('keypress', event => {
 	if(!isEndAfterGameOver){
