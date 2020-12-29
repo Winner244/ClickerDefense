@@ -15,12 +15,7 @@ let flyEarth = new FlyEarth(
 	Draw.canvas.height / 2 - FlyEarth.height / 2);
 buildings.push(flyEarth);
 
-let defaultCursor = './media/cursors/Standart.png';
-let pickCursor = './media/cursors/Pick.png';
-let handCursor = './media/cursors/Hand.png';
-let swordCursor = './media/cursors/Sword.png';
-let swordCursorRed = './media/cursors/SwordRed.png';
-setCursor(defaultCursor);
+Cursor.setCursor(Cursor.default);
 
 Coin.init();
 images.push(Coin.image);
@@ -72,7 +67,7 @@ function mouseLogic(){
 		y > flyEarth.y + flyEarth.reduceHover && 
 		y < flyEarth.y + FlyEarth.height - flyEarth.reduceHover)
 	{
-		setCursor(pickCursor);
+		Cursor.setCursor(Cursor.pick);
 		isSetCursor = true;
 
 		if(isClick){
@@ -85,7 +80,7 @@ function mouseLogic(){
 	if(!isSetCursor && Coins.all.length){
 		for(let i = 0; i < Coins.all.length; i++){
 			if(Math.pow(x - Coins.all[i].x - Coin.image.width / 2, 2) + Math.pow(y - Coins.all[i].y - Coin.image.height / 2, 2) < Math.pow(Coin.image.width / 2, 2)){
-				setCursor(handCursor);
+				Cursor.setCursor(Cursor.hand);
 				isSetCursor = true;
 
 				if(isClick){
@@ -108,7 +103,7 @@ function mouseLogic(){
 				y < monster.y + monster.image.height - monster.reduceHover)
 			{
 				if(cursorWait <= 0){
-					setCursor(swordCursor);
+					Cursor.setCursor(Cursor.sword);
 				}
 				isSetCursor = true;
 
@@ -120,7 +115,7 @@ function mouseLogic(){
 						Gamer.coins++;
 					}
 					else{
-						setCursor(swordCursorRed);
+						Cursor.setCursor(Cursor.swordRed);
 						cursorWait = 5;
 					}
 				}
@@ -135,7 +130,7 @@ function mouseLogic(){
 	}
 
 	if(!isSetCursor && cursorWait <= 0){
-		setCursor(defaultCursor);
+		Cursor.setCursor(Cursor.default);
 	}
 
 	isClick = false;
@@ -190,7 +185,7 @@ function monstersLogic(millisecondsDifferent){
 }
 
 function gameOverLogic(millisecondsDifferent){
-	setCursor(defaultCursor);
+	Cursor.setCursor(Cursor.default);
 
 	if(flyEarthRope.y < Draw.canvas.height - bottomShiftBorder - 20){
 		flyEarthRope.y += 100 * millisecondsDifferent / 1000;
@@ -218,9 +213,6 @@ function checkFPS(){
 	fps++;
 }
 
-function setCursor(img){
-	document.body.style.cursor = "url(" + img + "), auto";
-}
 
 function createLabel(x, y, text, red, green, blue){
 	labels.push({
