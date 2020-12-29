@@ -1,5 +1,4 @@
 //*** INIT ***//
-let monsters = []; //все монстры
 let buildings = []; //все строения
 let images = []; //все изображения (кроме курсоров)
 
@@ -33,7 +32,8 @@ FlyEarthRope.image.onload = () => {
 }
 buildings.push(flyEarthRope);
 
-Zombie.init();
+Monsters.init();
+
 images.push(Zombie.image);
 images.push(Zombie.attackImage);
 
@@ -49,8 +49,7 @@ let zombieWasCreated = 0;
 let zombieWasCreatedLastTime = 0;
 
 //*** LOGIC FUNCTIONS ***//
-var cursorWait = 0;
-function mouseLogic(){
+function mouseLogic(millisecondsDifferent){
 	//при изменении размера canvas, мы должны масштабировать координаты мыши
 	let kofX = Draw.canvas.clientWidth / Draw.canvas.width; 
 	let kofY = Draw.canvas.clientHeight / Draw.canvas.height;
@@ -74,99 +73,23 @@ function mouseLogic(){
 		}
 	}
 
-	if(!isSetCursor && Coins.all.length){
-		for(let i = 0; i < Coins.all.length; i++){
-			if(Math.pow(x - Coins.all[i].x - Coin.image.width / 2, 2) + Math.pow(y - Coins.all[i].y - Coin.image.height / 2, 2) < Math.pow(Coin.image.width / 2, 2)){
-				Cursor.setCursor(Cursor.hand);
-				isSetCursor = true;
-
-				if(isClick){
-					Labels.createGreen(x - 10, y - 10, '+1');
-					Coins.delete(i);
-					Gamer.coins++;
-				}
-
-				break;
-			}
-		}
+	if(!isSetCursor){
+		isSetCursor = Coins.mouseLogic(x, y, isClick);
 	}
 
-	if(!isSetCursor && monsters.length){
-		for(let i = 0; i < monsters.length; i++){
-			let monster = monsters[i];
-			if(x > monster.x + monster.reduceHover && 
-				x < monster.x + monster.width - monster.reduceHover &&
-				y > monster.y + monster.reduceHover && 
-				y < monster.y + monster.image.height - monster.reduceHover)
-			{
-				if(cursorWait <= 0){
-					Cursor.setCursor(Cursor.sword);
-				}
-				isSetCursor = true;
-
-				if(isClick){
-					monster.health -= Gamer.cursorDamage;
-					if(monster.health <= 0){
-						Labels.createGreen(x - 10, y - 10, '+1');
-						monsters.splice(i, 1);
-						Gamer.coins++;
-					}
-					else{
-						Cursor.setCursor(Cursor.swordRed);
-						cursorWait = 5;
-					}
-				}
-
-				break;
-			}
-		}
+	if(!isSetCursor){
+		isSetCursor = Monsters.mouseLogic(x, y, isClick);
 	}
 
-	if(cursorWait > 0){
-		cursorWait--;
+	if(Cursor.cursorWait > 0){
+		Cursor.cursorWait -= millisecondsDifferent;
 	}
 
-	if(!isSetCursor && cursorWait <= 0){
+	if(!isSetCursor){
 		Cursor.setCursor(Cursor.default);
 	}
 
 	isClick = false;
-}
-
-
-function monstersLogic(millisecondsDifferent){
-	//логика создания
-	var waveData = waveMonsters[waveCurrent][Zombie.name];
-	var periodTime = 1000 * 60 / waveData.frequencyCreating;
-	if(waveData.count > zombieWasCreated && Date.now() > zombieWasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2)) 
-	{ 
-		let isLeftSide = Math.random() < 0.5;
-		let x = isLeftSide ? -50 : Draw.canvas.width;
-		let y = Draw.canvas.height - bottomShiftBorder - Zombie.image.height;
-
-		monsters.push(new Zombie(x, y, isLeftSide));
-		zombieWasCreated++;
-		zombieWasCreatedLastTime = Date.now();
-	}
-
-	//логика передвижения
-	monsters.map(monster => monster.logic(millisecondsDifferent, buildings));
-
-	//логика взаимодействия с монетками
-	if(monsters.length){
-		monsters.sortByField(monster => Math.abs(Draw.canvas.width / 2 - monster.x));
-		if(monsters[0].x > flyEarth.x && monsters[0].x < flyEarth.x + flyEarth.width){
-			var availableMonsters = monsters.filter(monster => monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
-			availableMonsters.forEach(monster => {
-				for(let i = 0; i < Coins.all.length; i++){
-					if(Coins.all[i].y > monster.y && monster.x < Coins.all[i].x + Coin.image.width / 2 && monster.x + monster.width > Coins.all[i].x + Coin.image.width / 2){
-						Labels.createRed(Coins.all[i].x + 10, Coins.all[i].y + 10, '-');
-						Coins.delete(i);
-					}
-				}
-			});
-		}
-	}
 }
 
 function gameOverLogic(millisecondsDifferent){
@@ -233,11 +156,25 @@ function go(millisecondsFromStart){
 			isGameOver = true;
 		}
 		
-		mouseLogic(); //логика обработки мыши
+		mouseLogic(millisecondsDifferent); //логика обработки мыши
+
+		//Wave logic
+		//логика создания монстров
+		var waveData = waveMonsters[waveCurrent][Zombie.name];
+		var periodTime = 1000 * 60 / waveData.frequencyCreating;
+		if(waveData.count > zombieWasCreated && Date.now() > zombieWasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2)) 
+		{ 
+			let isLeftSide = Math.random() < 0.5;
+			let x = isLeftSide ? -50 : Draw.canvas.width;
+			let y = Draw.canvas.height - bottomShiftBorder - Zombie.image.height;
 	
-		if(waveCurrent == 0){
-			monstersLogic(millisecondsDifferent);
+			Monsters.all.push(new Zombie(x, y, isLeftSide));
+			zombieWasCreated++;
+			zombieWasCreatedLastTime = Date.now();
 		}
+	
+	
+		Monsters.logic(millisecondsDifferent, flyEarth);
 	}
 	
 	Coins.logic(millisecondsDifferent, bottomShiftBorder);
@@ -259,11 +196,11 @@ function drawAll(millisecondsFromStart){
 	Draw.clear(); //очищаем холст
 	Draw.drawBlackout(); //затемняем фон
 
-	Coins.draw();
-
 	buildings.forEach(building => building.draw(isGameOver, millisecondsFromStart));
 
-	monsters.forEach(monster => monster.draw(isGameOver));
+	Coins.draw();
+
+	Monsters.draw(isGameOver);
 
 	Draw.drawGrass(grassImage); 
 
