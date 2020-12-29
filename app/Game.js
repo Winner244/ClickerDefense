@@ -29,7 +29,8 @@ class Game{
 		Game.images.push(Coin.image);
 		Game.images.push(Zombie.image1);
 		Game.images.push(Zombie.image2);
-		Game.images.push(Zombie.attackImage);
+		Game.images.push(Zombie.attackImage1);
+		Game.images.push(Zombie.attackImage2);
 
 		Cursor.setCursor(Cursor.default);
 
