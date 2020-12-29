@@ -26,13 +26,6 @@ class Draw{
 		Draw.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
 		Draw.ctx.fillRect(0, 0, Draw.canvas.width, Draw.canvas.height);
 	}
-
-	/** Прорисовка всех монеток */
-	static drawCoins(coinImage, coins){
-		for(let i = 0; i < coins.length; i++){
-			Draw.ctx.drawImage(coinImage, coins[i].x, coins[i].y);
-		}
-	}
 	
 	/** Прорисовка исчезающих надписей */
 	static drawLabels(labels){

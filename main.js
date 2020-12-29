@@ -22,12 +22,8 @@ let swordCursor = './media/cursors/Sword.png';
 let swordCursorRed = './media/cursors/SwordRed.png';
 setCursor(defaultCursor);
 
-let coinImage = new Image();  
-coinImage.src = './media/img/coin.png';
-images.push(coinImage);
-let coins = []; // все монеты на карте [{x, y, timeCreated, impulseY}}]
-let coinLifetime = 8; //время жизни моентки (в секундах)
-let coinsCount = 0; //монет у игрока
+Coin.init();
+images.push(Coin.image);
 
 let bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
@@ -60,8 +56,6 @@ let waveMonsters = [{ //монстры на волнах
 let zombieWasCreated = 0;
 let zombieWasCreatedLastTime = 0;
 
-var cursorDamage = 1;
-
 //*** LOGIC FUNCTIONS ***//
 var cursorWait = 0;
 function mouseLogic(){
@@ -82,20 +76,22 @@ function mouseLogic(){
 		isSetCursor = true;
 
 		if(isClick){
-			createCoin();
+			let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (FlyEarth.width - flyEarth.reduceHover * 2);
+			let coinY = flyEarth.y + FlyEarth.height / 2;
+			Coins.create(coinX, coinY);
 		}
 	}
 
-	if(!isSetCursor && coins.length){
-		for(let i = 0; i < coins.length; i++){
-			if(Math.pow(x - coins[i].x - coinImage.width / 2, 2) + Math.pow(y - coins[i].y - coinImage.height / 2, 2) < Math.pow(coinImage.width / 2, 2)){
+	if(!isSetCursor && Coins.all.length){
+		for(let i = 0; i < Coins.all.length; i++){
+			if(Math.pow(x - Coins.all[i].x - Coin.image.width / 2, 2) + Math.pow(y - Coins.all[i].y - Coin.image.height / 2, 2) < Math.pow(Coin.image.width / 2, 2)){
 				setCursor(handCursor);
 				isSetCursor = true;
 
 				if(isClick){
 					createLabel(x - 10, y - 10, '+1', 0, 255, 0);
-					coins.splice(i, 1);
-					coinsCount++;
+					Coins.delete(i);
+					Gamer.coins++;
 				}
 
 				break;
@@ -117,11 +113,11 @@ function mouseLogic(){
 				isSetCursor = true;
 
 				if(isClick){
-					monster.health -= cursorDamage;
+					monster.health -= Gamer.cursorDamage;
 					if(monster.health <= 0){
 						createLabel(x - 10, y - 10, '+1', 0, 255, 0);
 						monsters.splice(i, 1);
-						coinsCount++;
+						Gamer.coins++;
 					}
 					else{
 						setCursor(swordCursorRed);
@@ -145,31 +141,7 @@ function mouseLogic(){
 	isClick = false;
 }
 
-function coinsLogic(millisecondsDifferent){
-	for(let i = 0; i < coins.length; i++){
-		let coin = coins[i];
 
-		if(coin.timeCreated + coinLifetime * 1000 < Date.now()){
-			coins.splice(i, 1);
-			i--;
-			continue;
-		}
-
-		if(coin.y + coinImage.height < Draw.canvas.height - bottomShiftBorder){ //ускорение свободного падения
-			if (coin.impulseY < 0)
-				coin.impulseY += 0.02;
-			else
-				coin.impulseY += 0.01;
-		}
-
-		coin.y += millisecondsDifferent * coin.impulseY;
-
-		if(coin.y + coinImage.height > Draw.canvas.height - bottomShiftBorder){
-			coin.y = Draw.canvas.height - bottomShiftBorder - coinImage.height;
-			coin.impulseY = -coin.impulseY * Helper.getRandom(1, 6) / 10;
-		}
-	}
-}
 
 function labelsLogic(){
 	for(let i = 0; i < labels.length; i++){
@@ -206,10 +178,10 @@ function monstersLogic(millisecondsDifferent){
 		if(monsters[0].x > flyEarth.x && monsters[0].x < flyEarth.x + flyEarth.width){
 			var availableMonsters = monsters.filter(monster => monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
 			availableMonsters.forEach(monster => {
-				for(let i = 0; i < coins.length; i++){
-					if(coins[i].y > monster.y && monster.x < coins[i].x + coinImage.width / 2 && monster.x + monster.width > coins[i].x + coinImage.width / 2){
-						createLabel(coins[i].x + 10, coins[i].y + 10, '-', 255, 0, 0);
-						coins.splice(i, 1);
+				for(let i = 0; i < Coins.all.length; i++){
+					if(Coins.all[i].y > monster.y && monster.x < Coins.all[i].x + Coin.image.width / 2 && monster.x + monster.width > Coins.all[i].x + Coin.image.width / 2){
+						createLabel(Coins.all[i].x + 10, Coins.all[i].y + 10, '-', 255, 0, 0);
+						Coins.delete(i);
 					}
 				}
 			});
@@ -248,15 +220,6 @@ function checkFPS(){
 
 function setCursor(img){
 	document.body.style.cursor = "url(" + img + "), auto";
-}
-
-function createCoin(){
-	coins.push({
-		x: flyEarth.x + flyEarth.reduceHover + Math.random() * (FlyEarth.width - flyEarth.reduceHover * 2), 
-		y: flyEarth.y + FlyEarth.height / 2, 
-		timeCreated: Date.now(),
-		impulseY: 0
-	});
 }
 
 function createLabel(x, y, text, red, green, blue){
@@ -312,7 +275,7 @@ function go(millisecondsFromStart){
 		}
 	}
 	
-	coinsLogic(millisecondsDifferent);
+	Coins.logic(millisecondsDifferent, bottomShiftBorder);
 	
 	labelsLogic();
 
@@ -331,7 +294,7 @@ function drawAll(millisecondsFromStart){
 	Draw.clear(); //очищаем холст
 	Draw.drawBlackout(); //затемняем фон
 
-	Draw.drawCoins(coinImage, coins);
+	Coins.draw();
 
 	buildings.forEach(building => building.draw(isGameOver, millisecondsFromStart));
 
@@ -341,7 +304,7 @@ function drawAll(millisecondsFromStart){
 
 	Draw.drawLabels(labels);
 
-	Draw.drawCoinsInterface(coinImage, coinsCount);
+	Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 
 	if(isGameOver && flyEarth.y <= -FlyEarth.height){
 		Draw.drawGameOver();
@@ -376,4 +339,4 @@ window.addEventListener('mousemove', event => {
 });
 
 let isClick = false;
-window.addEventListener('click', () => isClick = true);
+window.addEventListener('mousedown', () => isClick = true);
