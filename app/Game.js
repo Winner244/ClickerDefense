@@ -27,12 +27,8 @@ class Game{
 		Game.images.push(FlyEarth.image);
 		Game.images.push(FlyEarthRope.image);
 		Game.images.push(Coin.image);
-		Game.images.push(Zombie.image1);
-		Game.images.push(Zombie.image2);
-		Game.images.push(Zombie.image3);
-		Game.images.push(Zombie.attackImage1);
-		Game.images.push(Zombie.attackImage2);
-		Game.images.push(Zombie.attackImage3);
+		Zombie.images.forEach(image => Game.images.push(image));
+		Zombie.attackImages.forEach(attackImage => Game.images.push(attackImage));
 
 		Cursor.setCursor(Cursor.default);
 

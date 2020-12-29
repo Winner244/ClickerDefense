@@ -42,8 +42,7 @@ class Monsters{
 		Monsters.all.map(monster => monster.logic(millisecondsDifferent, buildings));
 	
 		//логика взаимодействия с монетками
-		Monsters.all.sortByField(monster => Math.abs(Draw.canvas.width / 2 - monster.x));
-		if(Monsters.all[0].x > flyEarth.x && Monsters.all[0].x < flyEarth.x + flyEarth.width){
+		if(Coins.all.length){
 			var availableMonsters = Monsters.all.filter(monster => monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
 			availableMonsters.forEach(monster => {
 				for(let i = 0; i < Coins.all.length; i++){
