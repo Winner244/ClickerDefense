@@ -71,24 +71,6 @@ function gameOverLogic(millisecondsDifferent){
 }
 
 
-
-//*** OTHER FUNCTIONS ***//
-let fps = 0;
-let oldFPStime = '';
-function checkFPS(){
-	let newDate = new Date();
-	let newKey = newDate.getMinutes() + '_' + newDate.getSeconds();
-	if(oldFPStime != newKey){
-		console.log('fps: ' + fps);
-		fps = 0;
-		oldFPStime = newKey;
-	}
-
-	fps++;
-}
-
-
-
 //*** Жизненный цикл игры ***//
 let animationId = null;
 let isGameStarted = true;
@@ -146,8 +128,7 @@ function go(millisecondsFromStart){
 	
 	Labels.logic();
 
-	checkFPS();
-	
+	FPS.counting();
 
 	drawAll(millisecondsFromStart);
 
@@ -179,8 +160,6 @@ function drawAll(millisecondsFromStart){
 
 	lastDrawTime = millisecondsFromStart;
 }
-
-
 
 window.addEventListener('keypress', event => {
 	if(!isEndAfterGameOver){
