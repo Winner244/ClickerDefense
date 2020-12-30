@@ -4,12 +4,13 @@ img{display: none;}
 
 body{
 	overflow:  hidden; 
-	background-image: url(./media/img/earthBlocks/blockEarth0.jpg);
+	background-image: url(../media/img/earthBlocks/blockEarth0.jpg);
 	background-size: 40px;
 }
 
 canvas{ 
+    display: none;
 	width: 100%;
-	background-image: url('./media/img/backgrounds/background-1.jpg');
+	background-image: url('../media/img/backgrounds/background-1.jpg');
 	background-repeat: round;
 }

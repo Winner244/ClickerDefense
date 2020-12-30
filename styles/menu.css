@@ -1,0 +1,46 @@
+
+.menu{
+	font-family: 'FortunataCYR';
+	position: absolute;
+    width: 250px;
+	top: 200px;
+	left: calc(50% - 100px);
+	background-color: rgb(212 193 30);
+	border: 1px solid #c10000;
+    box-shadow: 0 0 10px rgb(255 0 0);
+}
+
+.menu__body{
+    box-shadow: inset 0 0 20px 1px #ff3b3b;
+    padding: 10px 20px 5px;
+}
+
+.menu__title{
+    font-size: 32px;
+	padding: 0 0 10px;
+	text-align: center;
+    color: #e80d0d;
+    text-shadow: 0 0 10px black;
+}
+
+.menu__button{
+    font-family: 'AnotherCastle3';
+    width: 100%;
+    font-size: 25px;
+    color: #000000;
+    border: 0;
+    background-color: rgb(158 114 0 / 90%);
+    margin-bottom: 20px;
+    padding: 3px 0 6px;
+	box-shadow: 2px 2px 2px #0000009e;
+	cursor: pointer;
+    outline: none;
+}
+.menu__button:hover{
+    color: #ff0404;
+    text-shadow: 0 0 5px red;
+    box-shadow: 2px 2px 2px #f9ff009e;
+}
+.menu__button:active{
+    background-color: rgb(121 87 0 / 90%);
+}

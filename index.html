@@ -3,8 +3,9 @@
 <head>
     <title>clicker "Defender"</title>
     <meta charset='utf-8'>
-    <link rel='stylesheet' href='styles.css' type='text/css' charset='utf-8'>
-    <link rel='stylesheet' href='fonts.css' type='text/css' charset='utf-8'>
+    <link rel='stylesheet' href='styles/fonts.css' type='text/css' charset='utf-8'>
+    <link rel='stylesheet' href='styles/styles.css' type='text/css' charset='utf-8'>
+    <link rel='stylesheet' href='styles/menu.css' type='text/css' charset='utf-8'>
 </head>
 <body>
     <canvas width="1920" height="882" id='canvas'></canvas>
@@ -30,5 +31,12 @@
     <script type='text/javascript' src='app/Waves.js'></script>
     <script type='text/javascript' src='app/Game.js'></script>
     <script type='text/javascript' src='main.js'></script>
+
+    <div class="menu" id="menu">
+        <div class="menu__body">
+            <div class="menu__title">Меню</div>
+            <button class="menu__button" onclick="startGame()">Новая игра</button>
+        </div>
+    </div>
 </body>
 </html>
