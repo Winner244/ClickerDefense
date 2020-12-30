@@ -6,6 +6,7 @@ class Mouse{
 	static init(){
 		window.addEventListener('mousemove', Mouse.onMove);
 		window.addEventListener('mousedown', Mouse.onClick);
+		this.isClick = false;
 	}
 
 	static onClick(){

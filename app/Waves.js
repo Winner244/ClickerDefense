@@ -4,6 +4,10 @@ class Waves{
 		[Zombie.name]: new WaveData(500, 60) 
 	}];  
 
+	static init(){
+		this.waveCurrent = 0;
+	}
+
 	static logic(bottomShiftBorder){
 		//логика создания монстров
 		var waveData = Waves.waveMonsters[Waves.waveCurrent][Zombie.name];

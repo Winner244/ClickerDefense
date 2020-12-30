@@ -23,6 +23,9 @@ class Game{
 		Buildings.init();
 		Monsters.init();
 		Coins.init();
+		Gamer.init();
+		Labels.init();
+		Waves.init();
 
 		Game.images = [];
 		Game.images.push(Game.grassImage);

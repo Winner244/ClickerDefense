@@ -3,6 +3,10 @@ class Labels{
 	static labels = []; // мини надписи, типо "+1" при сборе монеток
 	static labelLifetime = 1; //время жизни сообщения (в секундах)
 
+	static init(){
+		this.labels = [];
+	}
+
 	static createGreen(x, y, text){
 		Labels.labels.push(new Label(x, y, text, 0, 255, 0));
 	}
