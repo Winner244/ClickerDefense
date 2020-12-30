@@ -22,6 +22,7 @@ class Menu{
 
 	static show(){
 		Menu.element.style.display = 'block';
+		Draw.drawBlackout();
 	}
 	static hide(){
 		Menu.element.style.display = 'none';
