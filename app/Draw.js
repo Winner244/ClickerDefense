@@ -38,7 +38,7 @@ class Draw{
 
 	/** Пррисовка интерфейса - количества монеток у игрока */
 	static drawCoinsInterface(coinImage, coinsCount){
-		let y = 80;
+		let y = 10;
 		Draw.ctx.drawImage(coinImage, 10, y);
 	
 		Draw.ctx.fillStyle = `rgba(255, 255, 0)`;
