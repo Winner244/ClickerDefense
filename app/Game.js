@@ -13,12 +13,16 @@ class Game{
 	static animationId = null; //техническая переменная для браузера 
 
 	static init(){
+		Game.isGameRun = true;
+		Game.isGameOver = false;
+		Game.isEndAfterGameOver = false;
+		Game.lastDrawTime = 0;
 		Game.grassImage.src = './media/img/grass1.png';
 
 		Mouse.init();
 		Buildings.init();
 		Monsters.init();
-		Coin.init();
+		Coins.init();
 
 		Game.images = [];
 		Game.images.push(Game.grassImage);
@@ -148,18 +152,27 @@ class Game{
 	}
 
 	static onKey(event){
-		if(!Game.isEndAfterGameOver){
-			if(event.key == ' '){
-				if(Game.isGameRun){
-					cancelAnimationFrame(Game.animationId);
-					Game.isGameRun = false;
-				}
-				else{
-					Game.isGameRun = true;
-					Game.lastDrawTime = 0;
-					Game.animationId = window.requestAnimationFrame(Game.go);
-				}
+		if(event.key == ' '){
+			if(Game.isGameRun){
+				Game.pause();
+				Menu.show();
+				Menu.showButtonContinueGame();
+			}
+			else{
+				Game.continue();
+				Menu.hide();
 			}
 		}
+	}
+
+	static pause(){
+		cancelAnimationFrame(Game.animationId);
+		Game.isGameRun = false;
+	}
+
+	static continue(){
+		Game.isGameRun = true;
+		Game.lastDrawTime = 0;
+		Game.animationId = window.requestAnimationFrame(Game.go);
 	}
 }

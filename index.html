@@ -31,13 +31,14 @@
     <script type='text/javascript' src='app/Waves.js'></script>
     <script type='text/javascript' src='app/Game.js'></script>
     <script type='text/javascript' src='app/Menu.js'></script>
-    <script type='text/javascript' src='main.js'></script>
 
     <div class="menu" id="menu">
         <div class="menu__body">
             <div class="menu__title">Меню</div>
-            <button class="menu__button" onclick="Menu.clickNewGame()">Новая игра</button>
+            <button class="menu__button" onclick="Menu.clickNewGame()" id="menu-button-new-game">Новая игра</button>
+            <button class="menu__button" onclick="Menu.clickContinueGame()" id="menu-button-continue-game">Продолжить</button>
         </div>
     </div>
+    <script type='text/javascript' src='main.js'></script>
 </body>
 </html>

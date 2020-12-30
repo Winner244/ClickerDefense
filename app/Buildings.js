@@ -5,6 +5,8 @@ class Buildings{
 	static flyEarthRope; //ключивое наземное здание
 
 	static init(){
+		this.all = [];
+		
 		FlyEarth.init();
 		FlyEarthRope.init();
 

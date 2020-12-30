@@ -2,6 +2,7 @@ class Monsters{
 	static all = []; //все монстры
 
 	static init(){
+		this.all = [];
 		Zombie.init();
 	}
 

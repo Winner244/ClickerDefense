@@ -1,6 +1,11 @@
 class Coins{
 	static all = [];
 
+	static init(){
+		this.all = [];
+		Coin.init();
+	}
+
 	static create(x, y){
 		Coins.all.push(new Coin(x, y));
 	}
