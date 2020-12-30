@@ -28,7 +28,7 @@
     width: 100%;
     font-size: 25px;
     color: #000000;
-    border: 0;
+    border: 2px outset #795548;
     background-color: rgb(158 114 0 / 90%);
     margin-bottom: 20px;
     padding: 3px 0 6px;
@@ -38,9 +38,10 @@
 }
 .menu__button:hover{
     color: #ff0404;
-    text-shadow: 0 0 5px red;
-    box-shadow: 2px 2px 2px #f9ff009e;
+    text-shadow: 0 0 5px #ce0000;
 }
 .menu__button:active{
-    background-color: rgb(121 87 0 / 90%);
+    background-color: rgb(51 37 0 / 90%);
+    border: 2px inset #795548;
+    box-shadow: none;
 }
