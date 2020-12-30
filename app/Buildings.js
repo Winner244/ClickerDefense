@@ -23,8 +23,8 @@ class Buildings{
 			this.flyEarthRope.height = FlyEarthRope.image.height;
 		}
 
-		Buildings.all.push(this.flyEarth);
 		Buildings.all.push(this.flyEarthRope);
+		Buildings.all.push(this.flyEarth);
 	}
 
 	static mouseLogic(mouseX, mouseY, isClick){
