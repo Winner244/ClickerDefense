@@ -38,11 +38,12 @@ class Draw{
 
 	/** Пррисовка интерфейса - количества монеток у игрока */
 	static drawCoinsInterface(coinImage, coinsCount){
-		Draw.ctx.drawImage(coinImage, 10, 10);
+		let y = 80;
+		Draw.ctx.drawImage(coinImage, 10, y);
 	
 		Draw.ctx.fillStyle = `rgba(255, 255, 0)`;
 		Draw.ctx.font = "16px Calibri";
-		Draw.ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, 25);
+		Draw.ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, y + 15);
 	}
 	
 	/** Прорисовка травы на всей нижней части экрана */

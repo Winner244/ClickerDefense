@@ -9,6 +9,7 @@
 </head>
 <body>
     <canvas width="1920" height="882" id='canvas'></canvas>
+
     <script type='text/javascript' src='app/extensions.js'></script>
     <script type='text/javascript' src='app/Helper.js'></script>
     <script type='text/javascript' src='app/Draw.js'></script>
@@ -32,6 +33,8 @@
     <script type='text/javascript' src='app/Game.js'></script>
     <script type='text/javascript' src='app/Menu.js'></script>
 
+    <button class="menu__button-open" id="menu-button-open" onclick="Game.pause()">Меню</button>
+
     <div class="menu" id="menu">
         <div class="menu__body">
             <div class="menu__title">Меню</div>
@@ -39,6 +42,7 @@
             <button class="menu__button" onclick="Menu.clickContinueGame()" id="menu-button-continue-game">Продолжить</button>
         </div>
     </div>
+
     <script type='text/javascript' src='main.js'></script>
 </body>
 </html>

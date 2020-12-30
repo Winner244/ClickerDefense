@@ -158,12 +158,9 @@ class Game{
 		if(event.key == ' '){
 			if(Game.isGameRun){
 				Game.pause();
-				Menu.show();
-				Menu.showButtonContinueGame();
 			}
 			else{
 				Game.continue();
-				Menu.hide();
 			}
 		}
 	}
@@ -171,11 +168,15 @@ class Game{
 	static pause(){
 		cancelAnimationFrame(Game.animationId);
 		Game.isGameRun = false;
+		Menu.show();
+		Menu.showButtonContinueGame();
 	}
 
 	static continue(){
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
 		Game.animationId = window.requestAnimationFrame(Game.go);
+		Menu.hide();
+		Mouse.isClick = false;
 	}
 }

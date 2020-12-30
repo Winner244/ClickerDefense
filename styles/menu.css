@@ -45,3 +45,24 @@
     border: 2px inset #795548;
     box-shadow: none;
 }
+
+.menu__button-open{
+    position: absolute;
+    border: 0;
+    top: 0;
+    left: 25px;
+    background-image: url(../media/img/buttons/buttonFon.png);
+    background-color: black;
+    background-size: cover;
+    font-size: 25px;
+    font-family: 'FortunataCYR';
+    color: black;
+    padding: 5px 10px 10px;
+    cursor: pointer;
+    outline: none;
+    box-shadow: 0 0 7px 1px black;
+}
+.menu__button-open:hover{
+    color: red;
+    text-shadow: 0 0 5px black;
+}
