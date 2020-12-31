@@ -39,3 +39,21 @@ if (!Array.prototype.first) {
         return this[0];
     };
 }
+
+
+// Прокачка массива - функция sum: [23, -11, 0, 7].sum() = 23 - 11 + 0 + 7 = 27
+// [{type: '...', int: 12}, {type: '...', int: -7}, {type: '...', int: 3}].sum(x => x.int) = 12 - 7 + 3 = 8
+// [].sum() = 0
+if (!Array.prototype.sum) {
+    Array.prototype.sum = function(fun) {
+        let sum = 0;
+        if(fun){
+            this.map(x => sum += parseFloat(fun(x)));
+        }
+        else{
+            this.map(x => sum += parseFloat(x));
+        }
+
+        return sum;
+    };
+}

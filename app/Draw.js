@@ -45,6 +45,16 @@ class Draw{
 		Draw.ctx.font = "16px Calibri";
 		Draw.ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, y + 15);
 	}
+
+	static drawWaveInterface(MosterImage, killedMonsters, allMonsters){
+		let y = 10;
+		let x = Draw.canvas.width - 300;
+		Draw.ctx.drawImage(MosterImage, x, y);
+
+		Draw.ctx.fillStyle = `rgba(255, 0, 0)`;
+		Draw.ctx.font = "16px Calibri";
+		Draw.ctx.fillText(`${killedMonsters} / ${allMonsters}`, x + MosterImage.width + 7, y + 20);
+	}
 	
 	/** Прорисовка травы на всей нижней части экрана */
 	static drawGrass(grassImage){
