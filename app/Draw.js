@@ -46,9 +46,10 @@ class Draw{
 		Draw.ctx.fillText(`: ${coinsCount}`, 10 + coinImage.width + 3, y + 15);
 	}
 
+	/** прорисовка интерфейса - количество уничтоженных монстров из всего количества */
 	static drawWaveInterface(MosterImage, killedMonsters, allMonsters){
-		let y = 10;
-		let x = Draw.canvas.width - 300;
+		let y = 5;
+		let x = Draw.canvas.width - 200;
 		Draw.ctx.drawImage(MosterImage, x, y);
 
 		Draw.ctx.fillStyle = `rgba(255, 0, 0)`;
