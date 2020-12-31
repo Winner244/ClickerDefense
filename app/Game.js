@@ -97,6 +97,8 @@ class Game{
 		Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 
 		Draw.drawWaveInterface(Waves.iconCountKilledMonsters, Waves.waveCountKilledMonsters, Waves.waveCountMonsters);
+
+		Waves.draw();
 	
 		if(Game.isGameOver && Buildings.flyEarth.y <= -FlyEarth.height){
 			Draw.drawGameOver();

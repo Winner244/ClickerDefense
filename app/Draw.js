@@ -73,4 +73,24 @@ class Draw{
 		Draw.ctx.fillStyle = `red`;
 		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 152, Draw.canvas.height / 2 - 33);
 	}
+
+	/** Надпись о начале новой волны */
+	static drawStartNewWave(waveNumber, strtedWaveTime, delayStartTime){
+		let text = `Волна ${waveNumber}`;
+		Draw.ctx.font = "72px Calibri";
+
+		let diff = Date.now() - strtedWaveTime;
+		let timeFirst = 2000;
+		let timeSecond = 2500;
+		let alpha = diff < timeFirst 
+			? diff / timeFirst //плавное появление надписи
+			: (diff > timeSecond
+				? 1 - (diff - timeSecond) / (delayStartTime - timeSecond) //плавное затухание надписи
+				: 255);
+		Draw.ctx.fillStyle = `rgba(255,165,0,${alpha})`; //orange
+		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 120, 200);
+
+		Draw.ctx.fillStyle = `rgba(255,0,0,${alpha})`; //red
+		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 122, 201);
+	}
 }

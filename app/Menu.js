@@ -16,6 +16,7 @@ class Menu{
 		Menu.hide();
 		Menu.showCanvas();
 		Game.init();
+		Waves.startFirstWave();
 	}
 
 	static clickContinueGame(){
