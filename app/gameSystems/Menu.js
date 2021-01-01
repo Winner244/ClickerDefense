@@ -20,7 +20,7 @@ class Menu{
 
 	static clickNewGame(){
 		Menu.hide();
-		Menu.showElement(Draw.canvas);
+		Draw.canvas.show();
 		Game.init();
 		Waves.startFirstWave();
 	}
@@ -31,46 +31,35 @@ class Menu{
 	}
 
 	static clickOpenShop(){
-
+		Menu.element.hide();
+		Shop.show();
 	}
 
 
 	static showStartMenu(){
-		Menu.hideElement(Menu.buttonContinueGame);
-		Menu.hideElement(Menu.buttonOutsiteShop);
-		Menu.hideElement(Menu.buttonShop);
+		Menu.buttonContinueGame.hide()
+		Menu.buttonOutsiteShop.hide()
+		Menu.buttonShop.hide()
 		this.show();
 	}
 
 
 
 	static show(){
-		Menu.element.style.display = 'block';
+		Menu.element.show();
 		Draw.drawBlackout();
-		Menu.hideElement(Menu.buttonOutsiteOpenMenu);
-		Menu.hideElement(Menu.buttonOutsiteShop);
+		Menu.buttonOutsiteOpenMenu.hide()
+		Menu.buttonOutsiteShop.hide()
 
-		if(!Waves.isStarted && Menu.isShowedElement(Menu.buttonContinueGame)){
-			Menu.showElement(Menu.buttonShop);
+		if(!Waves.isStarted && Menu.buttonContinueGame.isShowed()){
+			Menu.buttonShop.show();
 		}
 	}
 	static hide(){
-		Menu.element.style.display = 'none';
-		Menu.showElement(Menu.buttonOutsiteOpenMenu);
-		if(!Waves.isStarted && Menu.isShowedElement(Menu.buttonContinueGame)){
-			Menu.showElement(Menu.buttonOutsiteShop);
+		Menu.element.hide();
+		Menu.buttonOutsiteOpenMenu.show();
+		if(!Waves.isStarted && Menu.buttonContinueGame.isShowed()){
+			Menu.buttonOutsiteShop.show();
 		}
-	}
-
-
-
-	static showElement(element){
-		element.style.display = 'block';
-	}
-	static hideElement(element){
-		element.style.display = 'none';
-	}
-	static isShowedElement(element){
-		return element.style.display != 'none';
 	}
 }

@@ -42,6 +42,7 @@
 }
 .menu__button:active{
     background-color: rgb(51 37 0 / 90%);
+    text-shadow: 0 0 5px red;
     border: 2px inset #795548;
     box-shadow: none;
 }

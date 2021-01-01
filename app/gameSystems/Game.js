@@ -174,7 +174,7 @@ class Game{
 		cancelAnimationFrame(Game.animationId);
 		Game.isGameRun = false;
 		Menu.show();
-		Menu.showElement(Menu.buttonContinueGame);
+		Menu.buttonContinueGame.show();
 	}
 
 	static continue(){

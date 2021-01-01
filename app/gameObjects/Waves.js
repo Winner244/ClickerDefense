@@ -53,7 +53,7 @@ class Waves{
 		}
 
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
-			Menu.showElement(Menu.buttonOutsiteShop);
+			Menu.buttonOutsiteShop.show();
 			this.isStarted = false;
 			this.delayEndTimeLeft = this.delayEndTime;
 			return;
