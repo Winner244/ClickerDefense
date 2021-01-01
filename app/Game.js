@@ -140,7 +140,7 @@ class Game{
 			
 			Game.mouseLogic(millisecondsDifferent); //логика обработки мыши
 
-			Waves.logic(Game.bottomShiftBorder);
+			Waves.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		
 			Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all);
 		}

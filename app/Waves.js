@@ -2,8 +2,8 @@ class Waves{
 	static iconCountKilledMonsters = new Image(); //иконка для интерфейса
 
 	static isStarted = false; //Волна запущена?
-	static strtedWaveTime = 0; //Время начала волны
-	static delayStartTime = 3500; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Wave N"
+	static delayStartTimeLeft = 0; //сколько ещё осталось задержки
+	static delayStartTime = 3000; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Wave N"
 	static waveCurrent = 0; //текущая волна нападения 
 	static waveMonsters = [{ //монстры на волнах
 		[Zombie.name]: new WaveData(500, 60) 
@@ -26,12 +26,17 @@ class Waves{
 
 	static startNewWave(){
 		this.waveCurrent++;
-		this.strtedWaveTime = Date.now();
+		this.delayStartTimeLeft = this.delayStartTime;
 		this.isStarted = true;
 	}
 
-	static logic(bottomShiftBorder){
-		if(!this.isStarted || this.strtedWaveTime + this.delayStartTime > Date.now()){
+	static logic(millisecondsDifferent, bottomShiftBorder){
+		if(!this.isStarted){
+			return;
+		}
+
+		if(this.delayStartTimeLeft > 0){
+			this.delayStartTimeLeft -= millisecondsDifferent;
 			return;
 		}
 
@@ -51,8 +56,8 @@ class Waves{
 	}
 
 	static draw(){
-		if(Waves.isStarted && Waves.strtedWaveTime + Waves.delayStartTime > Date.now()){
-			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.strtedWaveTime, Waves.delayStartTime);
+		if(Waves.isStarted && Waves.delayStartTimeLeft > 0){
+			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartTimeLeft, Waves.delayStartTime);
 		}
 	}
 }

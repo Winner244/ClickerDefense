@@ -75,13 +75,13 @@ class Draw{
 	}
 
 	/** Надпись о начале новой волны */
-	static drawStartNewWave(waveNumber, strtedWaveTime, delayStartTime){
+	static drawStartNewWave(waveNumber, delayStartTimeLeft, delayStartTime){
 		let text = `Волна ${waveNumber}`;
 		Draw.ctx.font = "72px Calibri";
 
-		let diff = Date.now() - strtedWaveTime;
-		let timeFirst = 2000;
-		let timeSecond = 2500;
+		let diff = delayStartTime - delayStartTimeLeft;
+		let timeFirst = 1500;
+		let timeSecond = 2000;
 		let alpha = diff < timeFirst 
 			? diff / timeFirst //плавное появление надписи
 			: (diff > timeSecond
