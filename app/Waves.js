@@ -2,11 +2,17 @@ class Waves{
 	static iconCountKilledMonsters = new Image(); //иконка для интерфейса
 
 	static isStarted = false; //Волна запущена?
+
 	static delayStartTimeLeft = 0; //сколько ещё осталось задержки
-	static delayStartTime = 3000; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Wave N"
+	static delayStartTime = 3000; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Волна N"
+
+	static delayEndTimeLeft = 0; //сколько ещё осталось задержки 
+	static delayEndTime = 3000; //задержка после окончании волны (в миллисекундах) - что бы показать надпись "Волна пройдена"
+
+
 	static waveCurrent = 0; //текущая волна нападения 
 	static waveMonsters = [{ //монстры на волнах
-		[Zombie.name]: new WaveData(500, 60) 
+		[Zombie.name]: new WaveData(2, 60) 
 	}];  
 	static get waveCountKilledMonsters(){
 		return Object.values(Waves.waveMonsters[Waves.waveCurrent]).sum(x => x.wasCreated) - Monsters.all.length;
@@ -31,12 +37,23 @@ class Waves{
 	}
 
 	static logic(millisecondsDifferent, bottomShiftBorder){
+		if(this.delayEndTimeLeft > 0){
+			this.delayEndTimeLeft -= millisecondsDifferent;
+			return;
+		}
+
 		if(!this.isStarted){
 			return;
 		}
 
 		if(this.delayStartTimeLeft > 0){
 			this.delayStartTimeLeft -= millisecondsDifferent;
+			return;
+		}
+
+		if(this.waveCountKilledMonsters == this.waveCountMonsters){
+			this.isStarted = false;
+			this.delayEndTimeLeft = this.delayEndTime;
 			return;
 		}
 
@@ -58,6 +75,9 @@ class Waves{
 	static draw(){
 		if(Waves.isStarted && Waves.delayStartTimeLeft > 0){
 			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartTimeLeft, Waves.delayStartTime);
+		}
+		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters){
+			Draw.drawEndNewWave(Waves.delayEndTimeLeft, Waves.delayEndTime);
 		}
 	}
 }

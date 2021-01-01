@@ -93,4 +93,24 @@ class Draw{
 		Draw.ctx.fillStyle = `rgba(255,0,0,${alpha})`; //red
 		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 122, 201);
 	}
+
+	/** Надпись об окончании волны */
+	static drawEndNewWave(delayEndTimeLeft, delayEndTime){
+		let text = `Волна пройдена`;
+		Draw.ctx.font = "72px Calibri";
+
+		let diff = delayEndTime - delayEndTimeLeft;
+		let timeFirst = 1500;
+		let timeSecond = 2000;
+		let alpha = diff < timeFirst 
+			? diff / timeFirst //плавное появление надписи
+			: (diff > timeSecond
+				? 1 - (diff - timeSecond) / (delayEndTime - timeSecond) //плавное затухание надписи
+				: 255);
+		Draw.ctx.fillStyle = `rgba(255,165,0,${alpha})`; //orange
+		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 240, 200);
+
+		Draw.ctx.fillStyle = `rgba(255,0,0,${alpha})`; //red
+		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 242, 201);
+	}
 }
