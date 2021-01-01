@@ -4,7 +4,7 @@
 	position: absolute;
     width: 250px;
 	top: 200px;
-	left: calc(50% - 100px);
+	left: calc(50% - 126px);
 	background-color: rgb(212 193 30);
 	border: 1px solid #c10000;
     box-shadow: 0 0 10px rgb(255 0 0);
@@ -46,7 +46,7 @@
     box-shadow: none;
 }
 
-.menu__button-open{
+.menu__button-open, .menu__button-shop{
     position: absolute;
     border: 0;
     top: 0;
@@ -62,7 +62,12 @@
     outline: none;
     box-shadow: 0 0 7px 1px black;
 }
-.menu__button-open:hover{
+.menu__button-open:hover, .menu__button-shop:hover{
     color: red;
     text-shadow: 0 0 5px black;
+}
+
+.menu__button-shop{
+    left: auto;
+    right: 125px;
 }

@@ -1,3 +1,2 @@
-Menu.hideButtonContinueGame();
-Menu.show();
+Menu.showStartMenu();
 Cursor.setCursor(Cursor.default);

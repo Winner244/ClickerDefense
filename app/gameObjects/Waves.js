@@ -11,9 +11,7 @@ class Waves{
 
 
 	static waveCurrent = 0; //текущая волна нападения 
-	static waveMonsters = [{ //монстры на волнах
-		[Zombie.name]: new WaveData(2, 60) 
-	}];  
+	static waveMonsters = [];  
 	static get waveCountKilledMonsters(){
 		return Object.values(Waves.waveMonsters[Waves.waveCurrent]).sum(x => x.wasCreated) - Monsters.all.length;
 	};
@@ -23,6 +21,9 @@ class Waves{
 
 	static init(){
 		this.iconCountKilledMonsters.src = './media/img/monster.png';
+		this.waveMonsters = [{ //монстры на волнах
+			[Zombie.name]: new WaveData(2, 60) 
+		}];  
 	}
 
 	static startFirstWave(){
@@ -52,6 +53,7 @@ class Waves{
 		}
 
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
+			Menu.showElement(Menu.buttonOutsiteShop);
 			this.isStarted = false;
 			this.delayEndTimeLeft = this.delayEndTime;
 			return;

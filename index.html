@@ -10,36 +10,47 @@
 <body>
     <canvas width="1920" height="882" id='canvas'></canvas>
 
-    <script type='text/javascript' src='app/extensions.js'></script>
-    <script type='text/javascript' src='app/Helper.js'></script>
-    <script type='text/javascript' src='app/Draw.js'></script>
+    <script type='text/javascript' src='app/helpers/extensions.js'></script>
+    <script type='text/javascript' src='app/helpers/Helper.js'></script>
+
+    <script type='text/javascript' src='app/gameSystems/Draw.js'></script>
+    <script type='text/javascript' src='app/gameSystems/Game.js'></script>
+    <script type='text/javascript' src='app/gameSystems/Menu.js'></script>
+
     <script type='text/javascript' src='app/FPS.js'></script>
     <script type='text/javascript' src='app/Mouse.js'></script>
-    <script type='text/javascript' src='app/Monster.js'></script>
-    <script type='text/javascript' src='app/Monsters.js'></script>
+    <script type='text/javascript' src='app/Cursor.js'></script>
+
+    <script type='text/javascript' src='app/gameObjects/Monster.js'></script>
+    <script type='text/javascript' src='app/gameObjects/Monsters.js'></script>
     <script type='text/javascript' src='app/monsters/Zombie.js'></script>
-    <script type='text/javascript' src='app/Building.js'></script>
-    <script type='text/javascript' src='app/Buildings.js'></script>
+
+    <script type='text/javascript' src='app/gameObjects/Building.js'></script>
+    <script type='text/javascript' src='app/gameObjects/Buildings.js'></script>
     <script type='text/javascript' src='app/buildings/FlyEarth.js'></script>
     <script type='text/javascript' src='app/buildings/FlyEarthRope.js'></script>
-    <script type='text/javascript' src='app/Coin.js'></script>
-    <script type='text/javascript' src='app/Coins.js'></script>
-    <script type='text/javascript' src='app/Gamer.js'></script>
-    <script type='text/javascript' src='app/Cursor.js'></script>
-    <script type='text/javascript' src='app/Label.js'></script>
-    <script type='text/javascript' src='app/Labels.js'></script>
-    <script type='text/javascript' src='app/WaveData.js'></script>
-    <script type='text/javascript' src='app/Waves.js'></script>
-    <script type='text/javascript' src='app/Game.js'></script>
-    <script type='text/javascript' src='app/Menu.js'></script>
 
-    <button class="menu__button-open noselect" id="menu-button-open" onclick="Game.pause()">Меню</button>
+    <script type='text/javascript' src='app/gameObjects/Coin.js'></script>
+    <script type='text/javascript' src='app/gameObjects/Coins.js'></script>
+
+    <script type='text/javascript' src='app/gameObjects/Label.js'></script>
+    <script type='text/javascript' src='app/gameObjects/Labels.js'></script>
+
+    <script type='text/javascript' src='app/gameObjects/WaveData.js'></script>
+    <script type='text/javascript' src='app/gameObjects/Waves.js'></script>
+
+    <script type='text/javascript' src='app/gameObjects/Gamer.js'></script>
+
+    <button class="menu__button-open noselect" id="menu-button-outside-open" onclick="Game.pause()">Меню</button>
+
+    <button class="menu__button-shop noselect" id="menu-button-outside-shop" onclick="Menu.clickOpenShop()">Shop</button>
 
     <div class="menu noselect" id="menu">
         <div class="menu__body">
             <div class="menu__title">Меню</div>
             <button class="menu__button" onclick="Menu.clickNewGame()" id="menu-button-new-game">Новая игра</button>
             <button class="menu__button" onclick="Menu.clickContinueGame()" id="menu-button-continue-game">Продолжить</button>
+            <button class="menu__button" onclick="Menu.clickOpenShop()" id="menu-button-shop">Магазин</button>
         </div>
     </div>
 
