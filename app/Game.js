@@ -59,7 +59,10 @@ class Game{
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 
-		let isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick);
+		let isSetCursor = false;
+		if(Waves.isStarted && Waves.delayStartTimeLeft < 0){
+			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick);
+		}
 
 		if(!isSetCursor){
 			isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick);
@@ -95,8 +98,6 @@ class Game{
 		Labels.draw();
 	
 		Draw.drawCoinsInterface(Coin.image, Gamer.coins);
-
-		Draw.drawWaveInterface(Waves.iconCountKilledMonsters, Waves.waveCountKilledMonsters, Waves.waveCountMonsters);
 
 		Waves.draw();
 	

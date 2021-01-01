@@ -79,5 +79,9 @@ class Waves{
 		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters){
 			Draw.drawEndNewWave(Waves.delayEndTimeLeft, Waves.delayEndTime);
 		}
+
+		if(Waves.isStarted){
+			Draw.drawWaveInterface(Waves.iconCountKilledMonsters, Waves.waveCountKilledMonsters, Waves.waveCountMonsters);
+		}
 	}
 }
