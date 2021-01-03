@@ -6,6 +6,7 @@
     <link rel='stylesheet' href='styles/fonts.css' type='text/css' charset='utf-8'>
     <link rel='stylesheet' href='styles/common.css' type='text/css' charset='utf-8'>
     <link rel='stylesheet' href='styles/menu.css' type='text/css' charset='utf-8'>
+    <link rel='stylesheet' href='styles/shop.css' type='text/css' charset='utf-8'>
 </head>
 <body>
     <canvas width="1920" height="882" id='canvas'></canvas>
@@ -44,7 +45,7 @@
 
     <button class="menu__button-open noselect" id="menu-button-outside-open" onclick="Game.pause()">Меню</button>
 
-    <button class="menu__button-shop noselect" id="menu-button-outside-shop" onclick="Menu.clickOpenShop()">Магазин</button>
+    <button class="menu__button-shop noselect" id="menu-button-outside-shop" onclick="Shop.show()">Магазин</button>
 
     <div class="menu noselect" id="menu">
         <div class="menu__body">
@@ -56,7 +57,55 @@
     </div>
 
     <div class="shop noselect" id="shop">
-
+        <div class="shop__body">
+            <div class="shop__title">Магазин</div>
+            <div class="shop__close" onclick="Shop.hide()">
+                <div class="shop__close-body">x</div>
+            </div>
+            <div class="shop__categories">
+                <img class="shop__category shop__category-active" src="./media/img/shop-category-main/wall.png">
+                <img class="shop__category" src="./media/img/shop-category-main/weapon.png">
+                <img class="shop__category" src="./media/img/shop-category-main/turret.png">
+            </div>
+            <div class="shop__container">
+                <div class="shop__items-container">
+                    <div class="shop__items-container-body">
+                        <div class="shop__category-title">Магия</div>
+                        <div class="shop__item">
+                            <img src="img/items/FN_P90.png">
+                            <div>FN P90</div>
+                            <button class="button">Купить 30$</button>
+                        </div>
+        
+                        <div class="shop__item">
+                            <img src="img/items/Heckler_Koch_MP5_40.png">
+                            <div>Heckler_Koch_MP5_40</div>
+                            <button class="button">Купить 45$</button>
+                        </div>
+        
+                        <div class="shop__item">
+                            <img src="img/items/Steyr_MPi81.png">
+                            <div>Steyr_MPi81</div>
+                            <button class="button">Купить 60$</button>
+                        </div>
+        
+                        <div class="shop__item shop__item-active">
+                            <img src="img/items/Steyr_tmp.png">
+                            <div>Steyr_tmp</div>
+                            <button class="button">Купить 70$</button>
+                        </div>
+        
+                        <div class="shop__item">
+                            <img src="img/items/TDI_KRISS_Super_V.png">
+                            <div>TDI_KRISS_Super_V</div>
+                            <button class="button">Купить 90$</button>
+                        </div>
+        
+                        <div class="clear"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script type='text/javascript' src='tests.js'></script>

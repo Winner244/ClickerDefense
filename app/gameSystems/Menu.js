@@ -32,7 +32,9 @@ class Menu{
 
 	static clickOpenShop(){
 		Menu.element.hide();
-		Shop.show();
+		Shop.element.show();
+		Menu.buttonOutsiteOpenMenu.hide()
+		Menu.buttonOutsiteShop.hide()
 	}
 
 
