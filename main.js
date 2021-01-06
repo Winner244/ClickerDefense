@@ -1,3 +1,3 @@
 Menu.showStartMenu();
-Shop.hide();
+Shop.element.hide();
 Cursor.setCursor(Cursor.default);
