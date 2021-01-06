@@ -17,4 +17,13 @@ class Shop{
 		Menu.buttonOutsiteShop.show();
 		Game.continue();
 	}
+
+	static onClickByItem(element){
+		if(element.className.indexOf('shop__item--info') > -1){
+			element.className = element.className.replace(' shop__item--info', '');
+		}
+		else{
+			element.className = element.className + ' shop__item--info';
+		}
+	}
 }
