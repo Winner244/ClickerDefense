@@ -1,11 +1,13 @@
 .shop{
 	position: absolute;
 	top: 50px;
-    left: 50px;
-	right: 50px;
+    left: 0;
+    right: 0;
+    margin: auto;
 	background-color: rgb(212 193 30);
-	border: 1px solid #c10000;
+	border: 3px solid #c10000;
     box-shadow: 0 0 10px rgb(255 0 0);
+    max-width: 1064px;
 }
 
 .shop__body{
@@ -129,11 +131,13 @@
     margin-bottom: 15px;
     height: 200px;
 	object-fit: contain;
-	background-color: black;
+	/*background-color: black;*/
     box-shadow: 0 0 25px 3px #ff6700;
 }
 .shop__item > div{
-    color: #00abff;
+    color: #000000;
+    font-weight: bold;
+    font-size: 18px;
 }
 .shop__item > button{
     border-color: #00204e !important;
@@ -153,5 +157,4 @@
     width: 15px;
     margin: 0 5px;
     position: absolute;
-    top: 5px;
 }
