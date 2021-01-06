@@ -12,6 +12,8 @@ class Game{
 	static lastDrawTime = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId = null; //техническая переменная для браузера 
 
+	static isWasInit = false;
+
 	static init(){
 		Game.isGameRun = true;
 		Game.isGameOver = false;
@@ -40,6 +42,8 @@ class Game{
 		window.addEventListener('keypress', Game.onKey);
 
 		Game.animationId = window.requestAnimationFrame(Game.go);
+
+		Game.isWasInit = true;
 	}
 		
 	static gameOverLogic(millisecondsDifferent){
@@ -171,6 +175,10 @@ class Game{
 	}
 
 	static pause(){
+		if(!Game.isWasInit){
+			return;
+		}
+
 		cancelAnimationFrame(Game.animationId);
 		Game.isGameRun = false;
 		Menu.show();
@@ -178,6 +186,10 @@ class Game{
 	}
 
 	static continue(){
+		if(!Game.isWasInit){
+			return;
+		}
+
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
 		Game.animationId = window.requestAnimationFrame(Game.go);
