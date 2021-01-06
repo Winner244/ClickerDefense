@@ -1,0 +1,20 @@
+@font-face {
+    font-family: 'Calibri';
+    src: url('./media/fonts/Calibri.ttf');
+}
+
+@font-face {
+    font-family: "FortunataCYR"; 
+    src: url("./media/fonts/FortunataCYR.ttf"); 
+} 
+
+@font-face {
+    font-family: "AnotherCastle3"; 
+    src: url("./media/fonts/AnotherCastle3.ttf"); 
+}
+
+@font-face {
+    font-family: "Cheri"; 
+    src: url("./media/fonts/Cheri.otf"); 
+} 
+
