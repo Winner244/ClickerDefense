@@ -11,13 +11,14 @@
 <body>
     <canvas width="1920" height="882" id='canvas'></canvas>
 
+    <script type='text/javascript' src="lib/react.development.js"></script>
+    <script type='text/javascript' src="lib/react-dom.development.js"></script>
+
     <script type='text/javascript' src='app/helpers/extensions.js'></script>
     <script type='text/javascript' src='app/helpers/Helper.js'></script>
 
     <script type='text/javascript' src='app/gameSystems/Draw.js'></script>
     <script type='text/javascript' src='app/gameSystems/Game.js'></script>
-    <script type='text/javascript' src='app/gameSystems/Menu.js'></script>
-    <script type='text/javascript' src='app/gameSystems/Shop.js'></script>
 
     <script type='text/javascript' src='app/FPS.js'></script>
     <script type='text/javascript' src='app/Mouse.js'></script>
@@ -42,6 +43,18 @@
     <script type='text/javascript' src='app/gameObjects/Waves.js'></script>
 
     <script type='text/javascript' src='app/gameObjects/Gamer.js'></script>
+
+    <script type='text/javascript' src='app/ui/Menu.js'></script>
+    <script type='text/javascript' src='app/ui/Shop.js'></script>
+
+    <div id='menu'></div>
+    <div id='shop'></div>
+
+    <script type='text/javascript' src='app/ui/MenuUI.js'></script>
+    <script type='text/javascript' src='app/ui/ShopUI.js'></script>
+
+
+
 
     <button class="menu__button-open noselect" id="menu-button-outside-open" onclick="Game.pause()">Меню</button>
 
