@@ -146,9 +146,11 @@
     position: absolute;
     width: calc(100% - 30px);
     color: #41f5ff;
-    font-family: 'Komika Title - Axis RUS-LAT';
     box-shadow: 0 0 25px 3px #ff6700;
     cursor: pointer;
+    font-family: 'AnotherCastle3';
+    font-size: 18px;
+    padding: 2px 0 3px;
 }
 .shop__item > button:hover{
     color: #ff8800;
