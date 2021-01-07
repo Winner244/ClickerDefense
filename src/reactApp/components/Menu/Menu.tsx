@@ -24,7 +24,7 @@ class Menu extends React.Component<Props, {}> {
     return (
       <div className="menu noselect" id="menu">
         <div className="menu__body">
-            <div className="menu__title">Меню</div>
+            <div className="menu__title">Меню</div>-
             <button className="menu__button">Новая игра</button>
             <button className="menu__button">Продолжить</button>
             <button className="menu__button">Магазин</button>

@@ -5,9 +5,9 @@
     width: 250px;
 	top: 200px;
 	left: calc(50% - 126px);
-	background-color: rgb(212 193 30);
+	background-color: rgb(212, 193, 30);
 	border: 1px solid #c10000;
-	box-shadow: 0 0 10px rgb(255 0 0);
+	box-shadow: 0 0 10px rgb(255, 0, 0);
 	
 	
 	&__body{
@@ -29,7 +29,7 @@
 		font-size: 25px;
 		color: #000000;
 		border: 2px outset #795548;
-		background-color: rgb(158 114 0 / 90%);
+		background-color: rgba(158, 114, 0, 0.9);
 		margin-bottom: 20px;
 		padding: 3px 0 6px;
 		box-shadow: 2px 2px 2px #0000009e;
@@ -41,7 +41,7 @@
 			text-shadow: 0 0 5px #ce0000;
 		}
 		&:active{
-			background-color: rgb(51 37 0 / 90%);
+			background-color: rgba(51, 37, 0, 0.9);
 			text-shadow: 0 0 5px red;
 			border: 2px inset #795548;
 			box-shadow: none;
@@ -53,7 +53,7 @@
 		border: 0;
 		top: 0;
 		left: 125px;
-		background-image: url(../media/img/buttons/buttonFon.png);
+		background-image: url(../../../media/img/buttons/buttonFon.png);
 		background-color: black;
 		background-size: cover;
 		font-size: 25px;
