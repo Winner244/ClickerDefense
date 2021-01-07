@@ -39,4 +39,4 @@ export default connect(
       return { ...state.menu, ...ownProps };
   },
   MenuStore.actionCreators
-)(Menu) as typeof Menu;
+)(Menu);

@@ -23,7 +23,7 @@ export const actionCreators = {
 };
 
 // REDUCER 
-export const reducer: Reducer<MenuState> = (state: MenuState, action: KnownAction) => {
+export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action: KnownAction) => {
     switch (action.type) {
         case 'MENU__CLOSE':
             return { isOpen: true };
