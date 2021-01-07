@@ -19,8 +19,6 @@ const store = configureStore(history);
 import './common.css';
 import './fonts.css';
 
-import Menu from './reactApp/components/Menu/Menu';
-
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={ store }>

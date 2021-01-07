@@ -2,38 +2,64 @@ import { Reducer } from 'redux';
 
 // STATE
 export interface MenuState {
-	isOpen: boolean;
+    isOpen: boolean;
+    isDisplayButtonContinueGame: boolean;
+    isDisplayButtonShop: boolean;
+    isDisplayOutsideButtonMenu: boolean;
+    isDisplayOutsideButtonShop: boolean;
 }
 
 // ACTIONS
+interface StartAction { type: 'MENU__START' }
+interface OpenAction { type: 'MENU__OPEN' }
 interface CloseAction { type: 'MENU__CLOSE' }
-interface OpenAction { type: 'MENU__OPEN', text: string }
+interface StartGameAction { type: 'MENU__START_GAME' }
 
-type KnownAction = CloseAction | OpenAction;
+type KnownAction = CloseAction | OpenAction | StartAction | StartGameAction;
 
 // ACTION CREATORS
 //for TypeScript
 export interface MenuAction {
     close: () => CloseAction;
     open: () => OpenAction;
+    openStartMenu: () => StartAction;
+    startGame: () => StartGameAction;
 }
 export const actionCreators = {
     close: () => <CloseAction>{ type: 'MENU__CLOSE' },
-    open: () => <OpenAction>{ type: 'MENU__OPEN'}
+    open: () => <OpenAction>{ type: 'MENU__OPEN'},
+    openStartMenu: () => <StartAction>{ type: 'MENU__START'},
+    startGame: () => <StartGameAction>{ type: 'MENU__START_GAME'}
+};
+
+const defaultState = {
+    isOpen: true,
+    isDisplayButtonContinueGame: false,
+    isDisplayButtonShop: false,
+    isDisplayOutsideButtonMenu: false,
+    isDisplayOutsideButtonShop: false,
 };
 
 // REDUCER 
 export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action: KnownAction) => {
     switch (action.type) {
+        case 'MENU__START':
+            return defaultState;
         case 'MENU__CLOSE':
-            return { isOpen: true };
+            return Object.assign({}, state, { isOpen: false });
         case 'MENU__OPEN':
-            return { isOpen: false };
+            return Object.assign({}, state, { isOpen: false });
+        case 'MENU__START_GAME':
+            return { 
+                isOpen: false, 
+                isDisplayButtonContinueGame: true, 
+                isDisplayButtonShop: false,
+                isDisplayOutsideButtonMenu: true,
+                isDisplayOutsideButtonShop: false,
+            };
         default:
             const exhaustiveCheck: never = action;
     }
 
-    return state || {
-        isOpen: true,
-    };
+    return state || defaultState;
 };

@@ -2,9 +2,6 @@ class Menu{
 	static get element(){
 		return document.getElementById('menu');
 	}
-	static get buttonNewGame(){
-		return document.getElementById('menu-button-new-game');
-	}
 	static get buttonContinueGame(){
 		return document.getElementById('menu-button-continue-game');
 	}
@@ -19,7 +16,6 @@ class Menu{
 	}
 
 	static clickNewGame(){
-		Menu.hide();
 		Draw.canvas.show();
 		Game.init();
 		Waves.startFirstWave();
