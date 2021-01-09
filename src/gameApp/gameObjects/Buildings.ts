@@ -14,11 +14,11 @@ export class Buildings{
 	static flyEarth: Building; //ключевое воздушное здание
 	static flyEarthRope: Building; //ключивое наземное здание
 
-	static init(): void{
+	static init(isLoadImage: boolean = true): void{
 		this.all = [];
 		
-		FlyEarth.init();
-		FlyEarthRope.init();
+		FlyEarth.init(isLoadImage);
+		FlyEarthRope.init(isLoadImage);
 
 		this.flyEarth = new FlyEarth(
 			Draw.canvas.width / 2 - FlyEarth.width / 2, 
@@ -26,11 +26,15 @@ export class Buildings{
 
 		
 		this.flyEarthRope = new FlyEarthRope(0, 0);
-		FlyEarthRope.image.onload = () => {
+		let flyEarthRopeImageOnLoad = () => {
 			this.flyEarthRope.x = this.flyEarth.x + FlyEarth.width / 2 - FlyEarthRope.image.width / 2;
 			this.flyEarthRope.y = this.flyEarth.y + FlyEarth.height - 8;
 			this.flyEarthRope.width = FlyEarthRope.image.width;
 			this.flyEarthRope.height = FlyEarthRope.image.height;
+		}
+		FlyEarthRope.image.onload = flyEarthRopeImageOnLoad;
+		if(FlyEarthRope.image.complete){
+			flyEarthRopeImageOnLoad();
 		}
 
 		Buildings.all.push(this.flyEarthRope);

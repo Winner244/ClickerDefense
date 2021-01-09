@@ -10,7 +10,9 @@ export class FlyEarth extends Building{
 		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100);
 	}
 
-	static init(): void{
-		this.image.src = flyEarthImage; 
+	static init(isLoadImage: boolean = true): void{
+		if(isLoadImage){
+			this.image.src = flyEarthImage; 
+		}
 	}
 }

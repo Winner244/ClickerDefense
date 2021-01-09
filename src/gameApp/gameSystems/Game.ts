@@ -36,7 +36,7 @@ export class Game {
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId: number = 0; //техническая переменная для браузера 
 
-	static init(canvas: HTMLCanvasElement): void{
+	static init(canvas: HTMLCanvasElement, isLoadImage: boolean = true): void{
 		Game.isGameRun = true;
 		Game.isGameOver = false;
 		Game.isEndAfterGameOver = false;
@@ -45,12 +45,12 @@ export class Game {
 
 		Draw.init(canvas);
 		Mouse.init();
-		Buildings.init();
-		Monsters.init();
-		Coins.init();
+		Buildings.init(isLoadImage);
+		Monsters.init(isLoadImage);
+		Coins.init(isLoadImage);
 		Gamer.init();
 		Labels.init();
-		Waves.init();
+		Waves.init(isLoadImage);
 
 		Game.images = [];
 		Game.images.push(Game.grassImage);
@@ -69,6 +69,12 @@ export class Game {
 		Game.isWasInit = true;
 
 		Cursor.setCursor(Cursor.default);
+	}
+
+	static startNew(){
+		Game.init(Draw.canvas, false);
+		Draw.canvas.style.display = 'block';
+		Waves.startFirstWave();
 	}
 		
 	static gameOverLogic(millisecondsDifferent: number) : void{

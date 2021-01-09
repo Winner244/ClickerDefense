@@ -32,8 +32,11 @@ export class Waves{
 		return sum(Object.values(Waves.waveMonsters[Waves.waveCurrent]).map(x => x.count))
 	}
 
-	static init(): void{
-		this.iconCountKilledMonsters.src = MonsterImage;
+	static init(isLoadImage: boolean = true): void{
+		if(isLoadImage){
+			this.iconCountKilledMonsters.src = MonsterImage;
+		}
+		
 		this.waveMonsters = [{ //монстры на волнах
 			[Zombie.name]: new WaveData(2, 60) 
 		}];  

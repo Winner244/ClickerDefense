@@ -24,15 +24,17 @@ export class Zombie extends Monster{
 		super(x, y, isLeftSide, true, Zombie.name, selectedImage, 12,  49, selectedAttackImage, 4, 48, 5, 3, 1, 50);
 	}
 
-	static init(): void{
-		Zombie.images.push(new Image()); Zombie.images[0].src = Zombie1Image;
-		Zombie.images.push(new Image()); Zombie.images[1].src = Zombie2Image;
-		Zombie.images.push(new Image()); Zombie.images[2].src = Zombie3Image;
-		Zombie.images.push(new Image()); Zombie.images[3].src = Zombie4Image;
-		
-		Zombie.attackImages.push(new Image()); Zombie.attackImages[0].src = ZombieAttack1Image;
-		Zombie.attackImages.push(new Image()); Zombie.attackImages[1].src = ZombieAttack2Image;
-		Zombie.attackImages.push(new Image()); Zombie.attackImages[2].src = ZombieAttack3Image;
-		Zombie.attackImages.push(new Image()); Zombie.attackImages[3].src = ZombieAttack4Image;
+	static init(isLoadImage: boolean = true): void{
+		if(isLoadImage){
+			Zombie.images.push(new Image()); Zombie.images[0].src = Zombie1Image;
+			Zombie.images.push(new Image()); Zombie.images[1].src = Zombie2Image;
+			Zombie.images.push(new Image()); Zombie.images[2].src = Zombie3Image;
+			Zombie.images.push(new Image()); Zombie.images[3].src = Zombie4Image;
+			
+			Zombie.attackImages.push(new Image()); Zombie.attackImages[0].src = ZombieAttack1Image;
+			Zombie.attackImages.push(new Image()); Zombie.attackImages[1].src = ZombieAttack2Image;
+			Zombie.attackImages.push(new Image()); Zombie.attackImages[2].src = ZombieAttack3Image;
+			Zombie.attackImages.push(new Image()); Zombie.attackImages[3].src = ZombieAttack4Image;
+		}
 	}
 }

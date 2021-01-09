@@ -3,7 +3,6 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
-import * as GameStore from '../GameDisplay/GameStore';
 import {Game} from '../../../gameApp/gameSystems/Game';
 
 import './Menu.scss';
@@ -42,7 +41,7 @@ export class Menu extends React.Component<Props, {}> {
 
   onClickNewGame(){
     this.props.startGame();
-    App.Store.dispatch(GameStore.actionCreators.start());
+    Game.startNew()
   }
 
   onClickShow(){

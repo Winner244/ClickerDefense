@@ -14,9 +14,9 @@ import {Monster} from './Monster';
 export class Monsters{
 	static all: Monster[] = []; //все монстры
 
-	static init(){
+	static init(isLoadImage: boolean = true){
 		this.all = [];
-		Zombie.init();
+		Zombie.init(isLoadImage);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{

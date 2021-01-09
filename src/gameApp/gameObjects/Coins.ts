@@ -6,9 +6,9 @@ import {Gamer} from './Gamer';
 export class Coins{
 	static all: Coin[] = [];
 
-	static init(): void{
+	static init(isLoadImage: boolean = true): void{
 		this.all = [];
-		Coin.init();
+		Coin.init(isLoadImage);
 	}
 
 	static create(x: number, y: number): void{
