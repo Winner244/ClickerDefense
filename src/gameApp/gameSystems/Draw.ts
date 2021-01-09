@@ -1,8 +1,13 @@
 import {Label} from '../gameObjects/Label';
 
 export class Draw{
-	static canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('canvas');
-	static ctx: CanvasRenderingContext2D = Draw.canvas.getContext('2d') || new CanvasRenderingContext2D();
+	static canvas: HTMLCanvasElement;
+	static ctx: CanvasRenderingContext2D;
+
+	static init(element: HTMLCanvasElement): void{
+		this.canvas = element;
+		this.ctx = element.getContext('2d') || new CanvasRenderingContext2D();
+	}
 
 	/** Прорисовка жизней */
 	static drawHealth(x: number, y: number, width: number, healthMax: number, healthCurrent: number){

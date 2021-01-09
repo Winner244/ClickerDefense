@@ -16,17 +16,28 @@ GameStore.GameState
   & Prop;
 
 class GameDisplay extends React.Component<Props, {}> {
+
+  private canvas: React.RefObject<HTMLCanvasElement>;
+
+  constructor(props: any){
+    super(props);
+
+    this.canvas = React.createRef();
+  }
+
   componentDidMount(){
-    Game.init();
+    Game.init(this.canvas.current || new HTMLCanvasElement());
     Menu.showStartMenu();
     //Shop.element.hide();
   }
 
   render() {
+    console.log('GameDisplay render');
+    Game.isGameRun = !this.props.isPause;
     return (
       <div>
         Game {this.props.isPause ? 'isPaused' : 'is not pause'}
-        <canvas width="1920" height="882" id='canvas'></canvas>
+        <canvas width="1920" height="882" id='canvas' ref={this.canvas} ></canvas>
       </div>);
   }
 }

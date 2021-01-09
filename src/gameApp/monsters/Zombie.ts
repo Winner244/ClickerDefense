@@ -3,8 +3,8 @@ import {Helper} from '../helpers/Helper';
 
 export class Zombie extends Monster{
 
-	static images = [];
-	static attackImages = [];
+	static images: HTMLImageElement[] = [];
+	static attackImages: HTMLImageElement[] = [];
 
 	constructor(x: number, y: number, isLeftSide: boolean) {
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
@@ -14,7 +14,7 @@ export class Zombie extends Monster{
 		super(x, y, isLeftSide, true, Zombie.name, selectedImage, 12,  49, selectedAttackImage, 4, 48, 5, 3, 1, 50);
 	}
 
-	static init(){
+	static init(): void{
 		Zombie.images.push(new Image()); Zombie.images[0].src = './media/img/monsters/zombie.png';
 		Zombie.images.push(new Image()); Zombie.images[1].src = './media/img/monsters/zombie2.png';
 		Zombie.images.push(new Image()); Zombie.images[2].src = './media/img/monsters/zombie3.png';

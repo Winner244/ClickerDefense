@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
+import {Game} from '../../../gameApp/gameSystems/Game';
 
 import './Menu.scss';
 import { App } from '../../App';
@@ -18,12 +19,20 @@ type Props =
 
 export class Menu extends React.Component<Props, {}> {
 
+  static displayShop(): void{
+    App.Store.dispatch(MenuStore.actionCreators.displayShop());
+  }
+
+  static hideShop(): void{
+    App.Store.dispatch(MenuStore.actionCreators.hideShop());
+  }
+
   static showStartMenu(): void{
     App.Store.dispatch(MenuStore.actionCreators.openStartMenu());
   }
 
-  static show(isShowButtonContinueGame: boolean = false): void{
-    App.Store.dispatch(MenuStore.actionCreators.open(isShowButtonContinueGame));
+  static show(): void{
+    App.Store.dispatch(MenuStore.actionCreators.open());
   }
 
   static hide(): void{
@@ -43,7 +52,7 @@ export class Menu extends React.Component<Props, {}> {
         }
         
         {this.props.isDisplayOutsideButtonShop
-          ? <button className="menu__button-shop noselect" id="menu-button-outside-shop" onClick={() => Shop.show()}>Магазин</button>
+          ? <button className="menu__button-shop noselect" id="menu-button-outside-shop">Магазин</button>
           : null
         }
 

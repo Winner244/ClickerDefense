@@ -34,13 +34,14 @@ export class Game {
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId: number = 0; //техническая переменная для браузера 
 
-	static init(): void{
+	static init(canvas: HTMLCanvasElement): void{
 		Game.isGameRun = true;
 		Game.isGameOver = false;
 		Game.isEndAfterGameOver = false;
 		Game.lastDrawTime = 0;
 		Game.grassImage.src = './media/img/grass1.png';
 
+		Draw.init(canvas);
 		Mouse.init();
 		Buildings.init();
 		Monsters.init();
@@ -203,7 +204,7 @@ export class Game {
 
 		cancelAnimationFrame(Game.animationId);
 		Game.isGameRun = false;
-		Menu.show(true);
+		Menu.show();
 	}
 
 	static continue() : void{

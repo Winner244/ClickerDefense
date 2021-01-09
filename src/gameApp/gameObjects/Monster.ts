@@ -1,5 +1,6 @@
 import {Draw} from '../gameSystems/Draw';
 import {Building} from './Building';
+import sortBy from 'lodash/sortBy';
 
 export class Monster{
 	name: string;
@@ -75,8 +76,8 @@ export class Monster{
 	logic(millisecondsDifferent: number, buildings: Building[]): void{
 		//логика передвижения
 		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
-		buildingsGoal.sortByField(building => building.x);
-		var buildingGoal = this.isLeftSide ? buildingsGoal.first() : buildingsGoal.last();
+		buildingsGoal = sortBy(buildingsGoal, [building => building.x]);
+		var buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
 
 		this.isAttack = false;
 		if(this.isLeftSide) //если монстр идёт с левой стороны

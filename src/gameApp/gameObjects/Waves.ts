@@ -3,6 +3,9 @@ import {Zombie} from '../monsters/Zombie';
 import {Helper} from '../helpers/Helper';
 import {Monsters} from './Monsters';
 import {WaveData} from './WaveData';
+import sum from 'lodash/sum';
+
+import {Menu} from '../../reactApp/components/Menu/Menu';
 
 export class Waves{
 	static readonly iconCountKilledMonsters = new Image(); //иконка для интерфейса
@@ -17,13 +20,13 @@ export class Waves{
 
 
 	static waveCurrent: number = 0; //текущая волна нападения 
-	static waveMonsters = [];  
+	static waveMonsters: { [id: string] : WaveData; }[] = [];  
 
 	static get waveCountKilledMonsters(): number{
-		return Object.values(Waves.waveMonsters[Waves.waveCurrent]).sum(x => x.wasCreated) - Monsters.all.length;
+		return sum(Object.values(Waves.waveMonsters[Waves.waveCurrent]).map(x => x.wasCreated)) - Monsters.all.length;
 	};
 	static get waveCountMonsters(): number {
-		return Object.values(Waves.waveMonsters[Waves.waveCurrent]).sum(x => x.count)
+		return sum(Object.values(Waves.waveMonsters[Waves.waveCurrent]).map(x => x.count))
 	}
 
 	static init(): void{
@@ -60,7 +63,7 @@ export class Waves{
 		}
 
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
-			Menu.buttonOutsiteShop.show();
+			Menu.displayShop();
 			this.isStarted = false;
 			this.delayEndTimeLeft = this.delayEndTime;
 			return;
