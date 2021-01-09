@@ -11,7 +11,7 @@ export interface MenuState {
 
 // ACTIONS
 interface StartAction { type: 'MENU__START' }
-interface OpenAction { type: 'MENU__OPEN' }
+interface OpenAction { type: 'MENU__OPEN', isDisplayButtonContinueGame: boolean }
 interface CloseAction { type: 'MENU__CLOSE' }
 interface StartGameAction { type: 'MENU__START_GAME' }
 
@@ -21,13 +21,13 @@ type KnownAction = CloseAction | OpenAction | StartAction | StartGameAction;
 //for TypeScript
 export interface MenuAction {
     close: () => CloseAction;
-    open: () => OpenAction;
+    open: (isDisplayButtonContinueGame: boolean) => OpenAction;
     openStartMenu: () => StartAction;
     startGame: () => StartGameAction;
 }
 export const actionCreators = {
     close: () => <CloseAction>{ type: 'MENU__CLOSE' },
-    open: () => <OpenAction>{ type: 'MENU__OPEN'},
+    open: (isDisplayButtonContinueGame: boolean) => <OpenAction>{ type: 'MENU__OPEN', isDisplayButtonContinueGame: isDisplayButtonContinueGame},
     openStartMenu: () => <StartAction>{ type: 'MENU__START'},
     startGame: () => <StartGameAction>{ type: 'MENU__START_GAME'}
 };
@@ -48,7 +48,7 @@ export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action
         case 'MENU__CLOSE':
             return Object.assign({}, state, { isOpen: false });
         case 'MENU__OPEN':
-            return Object.assign({}, state, { isOpen: false });
+            return Object.assign({}, state, { isOpen: false, isDisplayButtonContinueGame: action.isDisplayButtonContinueGame });
         case 'MENU__START_GAME':
             return { 
                 isOpen: false, 

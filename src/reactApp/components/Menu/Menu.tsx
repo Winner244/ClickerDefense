@@ -5,6 +5,7 @@ import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
 
 import './Menu.scss';
+import { App } from '../../App';
 
 interface Prop {
   isOpen?: boolean
@@ -15,7 +16,16 @@ type Props =
   & MenuStore.MenuAction
   & Prop;
 
-class Menu extends React.Component<Props, {}> {
+export class Menu extends React.Component<Props, {}> {
+
+  static show(isShowButtonContinueGame: boolean = false): void{
+    App.Store.dispatch(MenuStore.actionCreators.open(isShowButtonContinueGame));
+  }
+
+  static hide(): void{
+    App.Store.dispatch(MenuStore.actionCreators.close());
+  }
+
   onClickNewGame(){
     this.props.startGame();
   }

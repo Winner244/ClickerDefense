@@ -16,24 +16,25 @@ import {Cursor} from '../Cursor';
 import {FPS} from '../FPS';
 import {Mouse} from '../Mouse';
 
+import {Menu} from '../../reactApp/components/Menu/Menu';
+
 
 export class Game {
-	static images = [];  //все изображения (кроме курсоров)
+	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
-	static bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
+	static images: HTMLImageElement[] = [];  //все изображения (кроме курсоров)
 
-	static grassImage = new Image(); //трава
+	static grassImage: HTMLImageElement = new Image(); //трава
 
-	static isGameRun = true; //если false - значит на паузе 
-	static isGameOver = false; //игра заканчивается
-	static isEndAfterGameOver = false; //игра закончилась
+	static isGameRun: boolean = true; //если false - значит на паузе 
+	static isGameOver: boolean = false; //игра заканчивается
+	static isEndAfterGameOver: boolean = false; //игра закончилась
+	static isWasInit: boolean = false;
 
-	static lastDrawTime = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
-	static animationId = null; //техническая переменная для браузера 
+	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
+	static animationId: number = null; //техническая переменная для браузера 
 
-	static isWasInit = false;
-
-	static init(){
+	static init(): void{
 		Game.isGameRun = true;
 		Game.isGameOver = false;
 		Game.isEndAfterGameOver = false;
@@ -65,7 +66,7 @@ export class Game {
 		Game.isWasInit = true;
 	}
 		
-	static gameOverLogic(millisecondsDifferent){
+	static gameOverLogic(millisecondsDifferent: number) : void{
 		Cursor.setCursor(Cursor.default);
 
 		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
@@ -77,7 +78,7 @@ export class Game {
 		}
 	}
 
-	static mouseLogic(millisecondsDifferent){
+	static mouseLogic(millisecondsDifferent: number) : void{
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
@@ -106,7 +107,7 @@ export class Game {
 		Mouse.isClick = false;
 	}
 
-	static drawAll(millisecondsFromStart){
+	static drawAll(millisecondsFromStart: number) : void{
 		Draw.clear(); //очищаем холст
 		Draw.drawBlackout(); //затемняем фон
 	
@@ -132,7 +133,7 @@ export class Game {
 	}
 
 	/** основной цикл игры */
-	static go(millisecondsFromStart){
+	static go(millisecondsFromStart: number) : void{
 		if(!Game.isGameRun){
 			return;
 		}
@@ -182,7 +183,7 @@ export class Game {
 		}
 	}
 
-	static onKey(event){
+	static onKey(event: KeyboardEvent) : void{
 		if(event.key == ' '){
 			if(Game.isGameRun){
 				Game.pause();
@@ -193,18 +194,17 @@ export class Game {
 		}
 	}
 
-	static pause(){
+	static pause() : void{
 		if(!Game.isWasInit){
 			return;
 		}
 
 		cancelAnimationFrame(Game.animationId);
 		Game.isGameRun = false;
-		Menu.show();
-		Menu.buttonContinueGame.show();
+		Menu.show(true);
 	}
 
-	static continue(){
+	static continue() : void{
 		if(!Game.isWasInit){
 			return;
 		}
