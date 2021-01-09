@@ -8,6 +8,7 @@ import * as ShopStore from '../Shop/ShopStore';
 import { App } from '../../App';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
+import {Waves} from '../../../gameApp/gameObjects/Waves';
 
 import './Menu.scss';
 
@@ -58,7 +59,9 @@ export class Menu extends React.Component<Props, {}> {
   onClickShopOpen(){
     App.Store.dispatch(ShopStore.actionCreators.open());
     this.props.hideShop();
-    Game.continue();
+    Game.pause();
+    Waves.delayEndTimeLeft = 0;
+    this.props.close();
   }
 
   render() {

@@ -14,6 +14,7 @@ import TempImage from '../../../assets/img/builders/tent.png';
 import CategoryMagicImage from '../../../assets/img/shop/shop-category-main/magic.png';
 import CategoryBuldingImage from '../../../assets/img/shop/shop-category-main/tower.png';
 import CategoryUnitImage from '../../../assets/img/shop/shop-category-main/unit.png';
+import { Game } from '../../../gameApp/gameSystems/Game';
 
 
 interface Prop {
@@ -39,6 +40,7 @@ export class Shop extends React.Component<Props, {}> {
   onClickClose(){
     this.props.close();
     App.Store.dispatch(MenuStore.actionCreators.displayShop());
+    Game.continue();
   }
 
   onClickSelectCategory(categoryId: number){

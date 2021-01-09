@@ -94,7 +94,7 @@ export class Waves{
 		if(Waves.isStarted && Waves.delayStartTimeLeft > 0){
 			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartTimeLeft, Waves.delayStartTime);
 		}
-		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters){
+		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters && Waves.delayEndTimeLeft > 0){
 			Draw.drawEndNewWave(Waves.delayEndTimeLeft, Waves.delayEndTime);
 		}
 

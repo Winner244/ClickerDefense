@@ -63,17 +63,21 @@ Ok. после волный, показывать сообщение - 1-ая в
 	Ok. появляется кнопка магазина 
 	> и кнопка - начать следующую волну
 
-> Архитектурный момент по html:
+Ok. Архитектурный момент по html:
 	магазин стал сильно большим и там много функционала по добавлению/исчезновению элементов
-		может пора использовать react?
+	Ok. может пора использовать react?
 			стоит ли использовать reduxe? 
 				только для html? или для всего?
 			Какой react? 
 				native или продвинутый?
 
-	Так же пора использовать less или sass для стилей
+	Ok. Так же пора использовать less или sass для стилей
 
-	и TypeScript 
+	Ok. TypeScript 
+
+Ok. нужно использовать TypeScript что бы не было проблем с тонной ошибок
+
+у магазина должно быть затемнение заднего фона
 
 > добавить магазин (вариант 1):
 	нужно расписать все возможности, которые можно купить
@@ -180,7 +184,7 @@ Ok. после волный, показывать сообщение - 1-ая в
 			> повышение защиты юнитов
 			> 
 
-> Магазин (Вариант 3) - гибрид варианта 1 и 2
+В процессе. Магазин (Вариант 3) - гибрид варианта 1 и 2
 	Минусы варианта 2 - необходимость строить здание перед покупкой
 	Минусы варианта 1 - было бы классно построить храм на горе и казарму и завод (или нет?)
 		Храм позволяет апгрейдить магию, силу клика и изучать новые заклинания
@@ -200,7 +204,6 @@ Ok. после волный, показывать сообщение - 1-ая в
 
 > добавить звуки
 
-> нужно использовать TypeScript что бы не было проблем с тонной ошибок
 
 > Нужна защита от макросов мышки на 2x и 3x клик
 
@@ -222,101 +225,3 @@ Ok. после волный, показывать сообщение - 1-ая в
 
 
 
-
-
-
-class Menu{
-	static get element(){
-		return document.getElementById('menu');
-	}
-	static get buttonContinueGame(){
-		return document.getElementById('menu-button-continue-game');
-	}
-	static get buttonOutsiteOpenMenu(){
-		return document.getElementById('menu-button-outside-open');
-	}
-	static get buttonOutsiteShop(){
-		return document.getElementById('menu-button-outside-shop');
-	}
-	static get buttonShop(){
-		return document.getElementById('menu-button-shop');
-	}
-
-	static clickNewGame(){
-		Draw.canvas.show();
-		Game.init();
-		Waves.startFirstWave();
-	}
-
-	static clickContinueGame(){
-		Game.continue();
-		Menu.hide();
-	}
-
-	static clickOpenShop(){
-		Menu.element.hide();
-		Shop.element.show();
-		Menu.buttonOutsiteOpenMenu.hide()
-		Menu.buttonOutsiteShop.hide()
-	}
-
-
-	static showStartMenu(){
-		Menu.buttonContinueGame.hide()
-		Menu.buttonOutsiteShop.hide()
-		Menu.buttonShop.hide()
-		this.show();
-	}
-
-
-
-	static show(){
-		Menu.element.show();
-		Draw.drawBlackout();
-		Menu.buttonOutsiteOpenMenu.hide()
-		Menu.buttonOutsiteShop.hide()
-
-		if(!Waves.isStarted && Menu.buttonContinueGame.isShowed()){
-			Menu.buttonShop.show();
-		}
-	}
-	static hide(){
-		Menu.element.hide();
-		Menu.buttonOutsiteOpenMenu.show();
-		if(!Waves.isStarted && Menu.buttonContinueGame.isShowed()){
-			Menu.buttonOutsiteShop.show();
-		}
-	}
-}
-
-
-
-class Shop{
-	static get element(){
-		return document.getElementById('shop');
-	}
-
-	
-	static show(){
-		this.element.show();
-		Game.pause();
-		Menu.buttonOutsiteOpenMenu.hide()
-		Menu.buttonOutsiteShop.hide()
-	}
-
-	static hide(){
-		this.element.hide();
-		Menu.buttonOutsiteOpenMenu.show();
-		Menu.buttonOutsiteShop.show();
-		Game.continue();
-	}
-
-	static onClickByItem(element){
-		if(element.className.indexOf('shop__item--info') > -1){
-			element.className = element.className.replace(' shop__item--info', '');
-		}
-		else{
-			element.className = element.className + ' shop__item--info';
-		}
-	}
-}
