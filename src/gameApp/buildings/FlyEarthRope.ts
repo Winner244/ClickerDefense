@@ -1,4 +1,5 @@
 import {Building} from '../gameObjects/Building';
+import FlyEarthRopeImage from '../../assets/img/builders/flyEarthRope.png';  
 
 export class FlyEarthRope extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -8,6 +9,6 @@ export class FlyEarthRope extends Building{
 	}
 
 	static init(): void{
-		FlyEarthRope.image.src = './media/img/builders/flyEarthRope.png'; 
+		FlyEarthRope.image.src = FlyEarthRopeImage; 
 	}
 }

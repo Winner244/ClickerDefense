@@ -4,14 +4,14 @@ body{
 	overflow:  hidden; 
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-	background-image: url(./media/img/earthBlocks/blockEarth0.jpg);
+	background-image: url(./assets/img/earthBlocks/blockEarth0.jpg);
 	background-size: 40px;
 }
 
 canvas{ 
   display: none;
 	width: 100%;
-	background-image: url('./media/img/backgrounds/background-1.jpg');
+	background-image: url('./assets/img/backgrounds/background-1.jpg');
 	background-repeat: round;
 }
 

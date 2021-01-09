@@ -1,9 +1,16 @@
+
+import StandartImage from '../assets/cursors/Standart.png';  
+import PickImage from '../assets/cursors/Pick.png';  
+import HandImage from '../assets/cursors/Hand.png';  
+import SwordImage from '../assets/cursors/Sword.png';  
+import SwordRedImage from '../assets/cursors/SwordRed.png';  
+
 export class Cursor{
-	static readonly default: string = './media/cursors/Standart.png';
-	static readonly pick: string = './media/cursors/Pick.png';
-	static readonly hand: string = './media/cursors/Hand.png';
-	static readonly sword: string = './media/cursors/Sword.png';
-	static readonly swordRed: string = './media/cursors/SwordRed.png';
+	static readonly default: string = StandartImage;
+	static readonly pick: string = PickImage;
+	static readonly hand: string = HandImage;
+	static readonly sword: string = SwordImage;
+	static readonly swordRed: string = SwordRedImage;
 
 	static cursorWait: number = 0; 
 

@@ -1,4 +1,5 @@
 import {Building} from '../gameObjects/Building';
+import flyEarthImage from '../../assets/img/builders/flyEarth.png';  
 
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -10,6 +11,6 @@ export class FlyEarth extends Building{
 	}
 
 	static init(): void{
-		this.image.src = './media/img/builders/flyEarth.png'; 
+		this.image.src = flyEarthImage; 
 	}
 }

@@ -1,5 +1,6 @@
 import {Draw} from '../gameSystems/Draw';
 import {Helper} from '../helpers/Helper';
+import CoinImage from '../../assets/img/coin.png'; 
 
 export class Coin {
 	static readonly lifetime: number = 5; //время жизни монетки (в секундах)
@@ -11,7 +12,7 @@ export class Coin {
 	lifeTimeLeft: number; //осталось времени жизни
 
 	static init(){
-		Coin.image.src = './media/img/coin.png';
+		Coin.image.src = CoinImage;
 	}
 
 	constructor(x: number, y: number){

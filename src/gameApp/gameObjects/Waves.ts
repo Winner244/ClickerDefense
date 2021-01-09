@@ -3,7 +3,10 @@ import {Zombie} from '../monsters/Zombie';
 import {Helper} from '../helpers/Helper';
 import {Monsters} from './Monsters';
 import {WaveData} from './WaveData';
+
 import sum from 'lodash/sum';
+
+import MonsterImage from '../../assets/img/monster.png'; 
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
@@ -30,7 +33,7 @@ export class Waves{
 	}
 
 	static init(): void{
-		this.iconCountKilledMonsters.src = './media/img/monster.png';
+		this.iconCountKilledMonsters.src = MonsterImage;
 		this.waveMonsters = [{ //монстры на волнах
 			[Zombie.name]: new WaveData(2, 60) 
 		}];  

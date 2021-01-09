@@ -18,6 +18,8 @@ import {Mouse} from '../Mouse';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
+import GrassImage from '../../assets/img/grass1.png'; 
+
 
 export class Game {
 	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
@@ -39,7 +41,7 @@ export class Game {
 		Game.isGameOver = false;
 		Game.isEndAfterGameOver = false;
 		Game.lastDrawTime = 0;
-		Game.grassImage.src = './media/img/grass1.png';
+		Game.grassImage.src = GrassImage;
 
 		Draw.init(canvas);
 		Mouse.init();

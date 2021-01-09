@@ -2,7 +2,7 @@
 
 class MainPage extends React.Component {
     public render() {
-        return <div>MainPage</div>;
+        return <div></div>;
     }
 }
 
