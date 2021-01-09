@@ -64,7 +64,9 @@ export class Building{
 		else{
 			Draw.ctx.drawImage(this.image, this.x, this.y);
 		}
+	}
 
+	drawHealth(): void{
 		if(this.health < this.healthMax && this.health > 0){
 			Draw.drawHealth(this.x - 15, this.y - 10, 50, this.healthMax, this.health);
 		}

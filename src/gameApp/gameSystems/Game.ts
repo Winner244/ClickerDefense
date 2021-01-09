@@ -123,6 +123,7 @@ export class Game {
 		Draw.drawBlackout(); //затемняем фон
 	
 		Buildings.draw(millisecondsFromStart, Game.isGameOver);
+		Buildings.drawHealth();
 	
 		Coins.draw();
 	
