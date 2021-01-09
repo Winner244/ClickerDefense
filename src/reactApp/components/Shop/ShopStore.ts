@@ -40,7 +40,6 @@ const defaultState: ShopState = {
 export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action: KnownAction) => {
     switch (action.type) {
         case 'SHOP__OPEN':
-            console.log('SHOP__OPEN');
             return Object.assign({}, defaultState, { isOpen: true });
         case 'SHOP__CLOSE':
             return defaultState;

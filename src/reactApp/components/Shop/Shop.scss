@@ -56,7 +56,8 @@
 
 	&__categories{
 		position: absolute;
-		top: 25px;
+		top: 27px;
+		display: flex;
 	}
 
 	&__container{
@@ -74,6 +75,8 @@
 		border: 5px solid black;
 		background-color: #515400;
 		box-shadow: 0 0 5px black;
+		height: 50px;
+		margin-right: 5px;
 
 		&:hover{
 			background-color: #ff8800;
@@ -82,10 +85,7 @@
 
 	&__category-active{
 		background-color: #ff8800 !important;
-		top: 5px;
-		position: relative;
-		border-bottom-width: 10px;
-		cursor: default;
+		border-bottom-width: 15px;
 	}
 
 	&__category-title{
@@ -100,17 +100,19 @@
 
 	&__items-container{
 		box-shadow: 0 0 5px black;
-		background-size: cover;
 		border: 3px solid black;
 
 		&--background1{
 			background: url('../../../assets/img/shop/fon1.jpg');
+			background-size: cover;
 		}
 		&--background2{
 			background: url('../../../assets/img/shop/fon2.jpg');
+			background-size: cover;
 		}
 		&--background3{
 			background: url('../../../assets/img/shop/fon3.jpg');
+			background-size: cover;
 		}
 	}
 	&__items-container-body{

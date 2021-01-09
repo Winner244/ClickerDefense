@@ -58,7 +58,7 @@ export class Menu extends React.Component<Props, {}> {
   onClickShopOpen(){
     App.Store.dispatch(ShopStore.actionCreators.open());
     this.props.hideShop();
-    Game.pause();
+    Game.continue();
   }
 
   render() {

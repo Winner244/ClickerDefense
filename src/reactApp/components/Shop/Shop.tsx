@@ -54,6 +54,14 @@ export class Shop extends React.Component<Props, {}> {
       return null;
     }
 
+    let categoryTitle = '';
+    switch(this.props.selectedCategoryId){
+      case 1: categoryTitle = 'Магия'; break;
+      case 2: categoryTitle = 'Строения'; break;
+      case 3: categoryTitle = 'Юниты'; break;
+      default: categoryTitle = 'Всё'; break;
+    }
+
     return (
       <div className="shop noselect" id="shop">
         <div className="shop__body">
@@ -69,7 +77,7 @@ export class Shop extends React.Component<Props, {}> {
             <div className="shop__container">
                 <div className={`shop__items-container shop__items-container--background${this.props.selectedCategoryId || 1}`}>
                     <div className="shop__items-container-body">
-                        <div className="shop__category-title">Магия</div>
+                        <div className="shop__category-title">{categoryTitle}</div>
                         <div className="shop__item">
                             <div className="shop__item-img-container"  onClick={() => this.onClickSelectItem(1)}>
                                 <img className="shop__item-img" src={TempImage} />
@@ -135,7 +143,7 @@ export class Shop extends React.Component<Props, {}> {
 // Wire up the React component to the Redux store
 export default connect(
   (state: ApplicationState, ownProps: Prop) => {
-      return { ...state.menu, ...ownProps };
+      return { ...state.shop, ...ownProps };
   },
   ShopStore.actionCreators
 )(Shop);

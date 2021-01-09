@@ -3,8 +3,8 @@ import * as ShopStore from '../components/Shop/ShopStore';
 
 // The top-level state object
 export interface ApplicationState {
-    menu: MenuStore.MenuState;
-    shop: ShopStore.ShopState;
+    menu: MenuStore.MenuState | undefined;
+    shop: ShopStore.ShopState | undefined;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using

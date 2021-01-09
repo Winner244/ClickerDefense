@@ -17,7 +17,7 @@ interface StartGameAction { type: 'MENU__START_GAME' }
 interface DisplayShopAction { type: 'MENU__DISPLAY_SHOP' }
 interface HideShopAction { type: 'MENU__HIDE_SHOP' }
 
-type KnownAction = CloseAction | OpenAction | StartAction | StartGameAction | DisplayShopAction | HideShopAction;
+type KnownMenuAction = CloseAction | OpenAction | StartAction | StartGameAction | DisplayShopAction | HideShopAction;
 
 // ACTION CREATORS
 //for TypeScript
@@ -38,7 +38,7 @@ export const actionCreators = {
     hideShop: () => <HideShopAction>{ type: 'MENU__HIDE_SHOP'},
 };
 
-const defaultState: MenuState = {
+const defaultMenuState: MenuState = {
     isOpen: true,
     isDisplayButtonContinueGame: false,
     isDisplayButtonShop: false,
@@ -47,10 +47,10 @@ const defaultState: MenuState = {
 };
 
 // REDUCER 
-export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action: KnownAction) => {
+export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action: KnownMenuAction) => {
     switch (action.type) {
         case 'MENU__START':
-            return defaultState;
+            return defaultMenuState;
         case 'MENU__CLOSE':
             return Object.assign({}, state, { isOpen: false });
         case 'MENU__OPEN':
@@ -71,5 +71,5 @@ export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action
             const exhaustiveCheck: never = action;
     }
 
-    return state || defaultState;
+    return state || defaultMenuState;
 };
