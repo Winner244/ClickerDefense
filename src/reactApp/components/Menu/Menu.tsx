@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
+import * as GameStore from '../GameDisplay/GameStore';
 import {Game} from '../../../gameApp/gameSystems/Game';
 
 import './Menu.scss';
@@ -41,13 +42,22 @@ export class Menu extends React.Component<Props, {}> {
 
   onClickNewGame(){
     this.props.startGame();
+    App.Store.dispatch(GameStore.actionCreators.start());
+  }
+
+  onClickShow(){
+    Game.pause();
+  }
+
+  onClickContinue(){
+    Game.continue();
   }
 
   render() {
     return (
       <div>
         {this.props.isDisplayOutsideButtonMenu
-          ? <button className="menu__button-open noselect" id="menu-button-outside-open" onClick={() => Game.pause()}>Меню</button>
+          ? <button className="menu__button-open noselect" id="menu-button-outside-open" onClick={() => this.onClickShow()}>Меню</button>
           : null
         }
         
@@ -64,7 +74,7 @@ export class Menu extends React.Component<Props, {}> {
                   <button className="menu__button" onClick={() => this.onClickNewGame()}>Новая игра</button>
 
                   {this.props.isDisplayButtonContinueGame 
-                    ? <button className="menu__button">Продолжить</button>
+                    ? <button className="menu__button" onClick={() => this.onClickContinue()}>Продолжить</button>
                     : null
                   }
                   

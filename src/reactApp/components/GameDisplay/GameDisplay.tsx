@@ -6,6 +6,8 @@ import * as GameStore from './GameStore';
 import {Menu} from '../Menu/Menu';
 import {Game} from '../../../gameApp/gameSystems/Game';
 
+import './GameDisplay.scss';
+
 interface Prop {
   isPause?: boolean
 }
@@ -18,11 +20,13 @@ GameStore.GameState
 class GameDisplay extends React.Component<Props, {}> {
 
   private canvas: React.RefObject<HTMLCanvasElement>;
+  private displayCanvas: boolean;
 
   constructor(props: any){
     super(props);
 
     this.canvas = React.createRef();
+    this.displayCanvas = false;
   }
 
   componentDidMount(){
@@ -32,13 +36,9 @@ class GameDisplay extends React.Component<Props, {}> {
   }
 
   render() {
-    console.log('GameDisplay render');
+    this.displayCanvas = this.displayCanvas || !this.props.isPause;
     Game.isGameRun = !this.props.isPause;
-    return (
-      <div>
-        Game {this.props.isPause ? 'isPaused' : 'is not pause'}
-        <canvas width="1920" height="882" id='canvas' ref={this.canvas} ></canvas>
-      </div>);
+    return <canvas width="1920" height="882" className='game-canvas' ref={this.canvas} style={{display: this.displayCanvas ? 'block' : 'none'}} ></canvas>
   }
 }
 	

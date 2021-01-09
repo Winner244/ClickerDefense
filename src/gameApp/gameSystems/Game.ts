@@ -207,6 +207,7 @@ export class Game {
 		cancelAnimationFrame(Game.animationId);
 		Game.isGameRun = false;
 		Menu.show();
+		Draw.drawBlackout();
 	}
 
 	static continue() : void{

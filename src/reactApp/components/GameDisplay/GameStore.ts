@@ -33,7 +33,7 @@ const defaultState = {
 export const reducer: Reducer<GameState> = (state: GameState | undefined, action: KnownAction) => {
     switch (action.type) {
         case 'GAME__START':
-            return defaultState;
+            return Object.assign({}, state, { isPause: false });
         case 'GAME__PAUSE':
             return Object.assign({}, state, { isPause: true });
         case 'GAME__CONTINUE':

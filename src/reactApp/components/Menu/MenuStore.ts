@@ -54,7 +54,7 @@ export const reducer: Reducer<MenuState> = (state: MenuState | undefined, action
         case 'MENU__CLOSE':
             return Object.assign({}, state, { isOpen: false });
         case 'MENU__OPEN':
-            return Object.assign({}, state, { isOpen: false });
+            return Object.assign({}, state, { isOpen: true });
         case 'MENU__START_GAME':
             return { 
                 isOpen: false, 

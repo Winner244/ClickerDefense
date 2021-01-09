@@ -8,13 +8,6 @@ body{
 	background-size: 40px;
 }
 
-canvas{ 
-  display: none;
-	width: 100%;
-	background-image: url('./assets/img/backgrounds/background-1.jpg');
-	background-repeat: round;
-}
-
 .noselect {
 	-webkit-touch-callout: none; /* iOS Safari */
 	  -webkit-user-select: none; /* Safari */
