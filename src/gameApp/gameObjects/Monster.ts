@@ -1,5 +1,50 @@
-class Monster{
-	constructor(x, y, isLeftSide, isLand, name, image, frames, width, imageAttack, attackFrames, attackWidth, reduceHover, healthMax, damage, speed){
+import {Draw} from '../gameSystems/Draw';
+import {Building} from './Building';
+
+export class Monster{
+	name: string;
+
+	image: HTMLImageElement; //содержит несколько изображений для анимации
+	attackImage: HTMLImageElement;  //содержит несколько изображений для анимации
+
+	frames: number; //сколько изображений в image?
+	attackFrames: number; //сколько изображений атаки в attackImage?
+
+	width: number; //ширина image
+	attackWidth: number; //ширина attack image
+	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
+
+	healthMax: number; //максимум хп
+	health: number;
+	damage: number; //урон (в секунду)
+	speed: number; //скорость (пикселей в секунду)
+
+	x: number;
+	y: number;
+
+	isAttack: boolean; //атакует?
+	isLeftSide: boolean; // с левой стороны движется?
+	isLand: boolean; //наземный?
+
+	createdTime: number;
+
+	constructor(
+		x: number, 
+		y: number, 
+		isLeftSide: boolean, 
+		isLand: boolean, 
+		name: string, 
+		image: HTMLImageElement, 
+		frames: number, 
+		width: number, 
+		imageAttack: HTMLImageElement, 
+		attackFrames: number, 
+		attackWidth: number, 
+		reduceHover: number, 
+		healthMax: number, 
+		damage: number, 
+		speed: number)
+	{
 		this.name = name;
 
 		this.image = image; //содержит несколько изображений для анимации
@@ -27,7 +72,7 @@ class Monster{
 		this.createdTime = Date.now();
 	}
 
-	logic(millisecondsDifferent, buildings){
+	logic(millisecondsDifferent: number, buildings: Building[]): void{
 		//логика передвижения
 		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
 		buildingsGoal.sortByField(building => building.x);
@@ -67,7 +112,7 @@ class Monster{
 		}
 	}
 
-	draw(isGameOver){
+	draw(isGameOver: boolean): void{
 		let isInvert = this.isLeftSide;
 		let scale = isInvert ? -1 : 1;
 
@@ -78,9 +123,9 @@ class Monster{
 
 		if(this.isAttack){
 			//атака
-			this.currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.attackFrames)) % this.attackFrames;
+			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.attackFrames)) % this.attackFrames;
 			Draw.ctx.drawImage(this.attackImage, 
-				this.attackWidth * this.currentFrame, //crop from x
+				this.attackWidth * currentFrame, //crop from x
 				0, //crop from y
 				this.attackWidth, 		  //crop by width
 				this.attackImage.height,  //crop by height
@@ -91,9 +136,9 @@ class Monster{
 		}
 		else{
 			//передвижение
-			this.currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.frames)) % this.frames;
+			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.frames)) % this.frames;
 			Draw.ctx.drawImage(this.image, 
-				this.width * this.currentFrame, //crop from x
+				this.width * currentFrame, //crop from x
 				0, //crop from y
 				this.width, 	   //crop by width
 				this.image.height, //crop by height

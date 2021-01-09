@@ -1,10 +1,12 @@
-class Zombie extends Monster{
+import {Monster} from '../gameObjects/Monster';
+import {Helper} from '../helpers/Helper';
+
+export class Zombie extends Monster{
 
 	static images = [];
 	static attackImages = [];
-	static name = 'zombie';
 
-	constructor(x, y, isLeftSide) {
+	constructor(x: number, y: number, isLeftSide: boolean) {
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
 		let selectedImage = Zombie.images[random];
 		let selectedAttackImage = Zombie.attackImages[random];

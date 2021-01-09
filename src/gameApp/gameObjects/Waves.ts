@@ -1,25 +1,32 @@
-class Waves{
-	static iconCountKilledMonsters = new Image(); //иконка для интерфейса
+import {Draw} from '../gameSystems/Draw';
+import {Zombie} from '../monsters/Zombie';
+import {Helper} from '../helpers/Helper';
+import {Monsters} from './Monsters';
+import {WaveData} from './WaveData';
 
-	static isStarted = false; //Волна запущена?
+export class Waves{
+	static readonly iconCountKilledMonsters = new Image(); //иконка для интерфейса
 
-	static delayStartTimeLeft = 0; //сколько ещё осталось задержки
-	static delayStartTime = 3000; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Волна N"
+	static isStarted: boolean = false; //Волна запущена?
 
-	static delayEndTimeLeft = 0; //сколько ещё осталось задержки 
-	static delayEndTime = 3000; //задержка после окончании волны (в миллисекундах) - что бы показать надпись "Волна пройдена"
+	static delayStartTimeLeft: number = 0; //сколько ещё осталось задержки
+	static delayStartTime: number = 3000; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Волна N"
+
+	static delayEndTimeLeft: number = 0; //сколько ещё осталось задержки 
+	static delayEndTime: number = 3000; //задержка после окончании волны (в миллисекундах) - что бы показать надпись "Волна пройдена"
 
 
-	static waveCurrent = 0; //текущая волна нападения 
+	static waveCurrent: number = 0; //текущая волна нападения 
 	static waveMonsters = [];  
-	static get waveCountKilledMonsters(){
+
+	static get waveCountKilledMonsters(): number{
 		return Object.values(Waves.waveMonsters[Waves.waveCurrent]).sum(x => x.wasCreated) - Monsters.all.length;
 	};
-	static get waveCountMonsters() {
+	static get waveCountMonsters(): number {
 		return Object.values(Waves.waveMonsters[Waves.waveCurrent]).sum(x => x.count)
 	}
 
-	static init(){
+	static init(): void{
 		this.iconCountKilledMonsters.src = './media/img/monster.png';
 		this.waveMonsters = [{ //монстры на волнах
 			[Zombie.name]: new WaveData(2, 60) 
@@ -37,7 +44,7 @@ class Waves{
 		this.isStarted = true;
 	}
 
-	static logic(millisecondsDifferent, bottomShiftBorder){
+	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
 		if(this.delayEndTimeLeft > 0){
 			this.delayEndTimeLeft -= millisecondsDifferent;
 			return;
@@ -74,7 +81,7 @@ class Waves{
 		}
 	}
 
-	static draw(){
+	static draw(): void{
 		if(Waves.isStarted && Waves.delayStartTimeLeft > 0){
 			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartTimeLeft, Waves.delayStartTime);
 		}

@@ -1,12 +1,25 @@
-class Monsters{
-	static all = []; //все монстры
+import {FlyEarth} from '../buildings/FlyEarth';
+import {Zombie} from '../monsters/Zombie';
+import {Cursor} from '../Cursor';
+
+import {Gamer} from '../gameObjects/Gamer';
+import {Labels} from '../gameObjects/Labels';
+import {Coin} from '../gameObjects/Coin';
+import {Coins} from '../gameObjects/Coins';
+import {Building} from '../gameObjects/Building';
+
+import {Monster} from './Monster';
+
+
+export class Monsters{
+	static all: Monster[] = []; //все монстры
 
 	static init(){
 		this.all = [];
 		Zombie.init();
 	}
 
-	static mouseLogic(mouseX, mouseY, isClick){
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
 		for(let i = 0; i < Monsters.all.length; i++){
 			let monster = Monsters.all[i];
 			if(mouseX > monster.x + monster.reduceHover && 
@@ -34,7 +47,7 @@ class Monsters{
 		return false;
 	}
 
-	static logic(millisecondsDifferent, flyEarth, buildings){
+	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[]): void{
 		if(!Monsters.all.length){
 			return;
 		}
@@ -56,7 +69,7 @@ class Monsters{
 		}
 	}
 
-	static draw(isGameOver){
+	static draw(isGameOver: boolean): void{
 		Monsters.all.forEach(monster => monster.draw(isGameOver));
 	}
 }

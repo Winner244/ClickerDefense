@@ -1,10 +1,20 @@
-class Buildings{
-	static all = []; //все строения
+import {FlyEarth} from '../buildings/FlyEarth';
+import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
-	static flyEarth; //ключевое воздушное здание
-	static flyEarthRope; //ключивое наземное здание
+import {Cursor} from '../Cursor';
 
-	static init(){
+import {Draw} from '../gameSystems/Draw';
+
+import {Building} from './Building';
+import {Coins} from './Coins';
+
+export class Buildings{
+	static all: Building[] = []; //все строения
+
+	static flyEarth: Building; //ключевое воздушное здание
+	static flyEarthRope: Building; //ключивое наземное здание
+
+	static init(): void{
 		this.all = [];
 		
 		FlyEarth.init();
@@ -27,7 +37,7 @@ class Buildings{
 		Buildings.all.push(this.flyEarth);
 	}
 
-	static mouseLogic(mouseX, mouseY, isClick){
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
 		if(mouseX > this.flyEarth.x + this.flyEarth.reduceHover && 
 			mouseX < this.flyEarth.x + FlyEarth.width - this.flyEarth.reduceHover &&
 			mouseY > this.flyEarth.y + this.flyEarth.reduceHover && 
@@ -47,7 +57,7 @@ class Buildings{
 		return false;
 	}
 
-	static draw(millisecondsFromStart, isGameOver){
+	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
 		Buildings.all.forEach(building => building.draw(isGameOver, millisecondsFromStart));
 	}
 }

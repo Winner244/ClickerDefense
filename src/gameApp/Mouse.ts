@@ -1,19 +1,19 @@
-class Mouse{
-	static x;
-	static y;
-	static isClick;
+export class Mouse{
+	static x: number;
+	static y: number;
+	static isClick: boolean;
 
-	static init(){
+	static init(): void{
 		window.addEventListener('mousemove', Mouse.onMove);
 		window.addEventListener('mousedown', Mouse.onClick);
 		this.isClick = false;
 	}
 
-	static onClick(){
+	static onClick(): void{
 		Mouse.isClick = true;
 	}
 
-	static onMove(event){
+	static onMove(event: MouseEvent): void{
 		Mouse.x = event.pageX;
 		Mouse.y = event.pageY;
 	}

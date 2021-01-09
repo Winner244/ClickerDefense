@@ -57,20 +57,3 @@ if (!Array.prototype.sum) {
         return sum;
     };
 }
-
-if(!HTMLElement.prototype.show){
-    HTMLElement.prototype.show = function() {
-        this.style.display = 'block';
-    }
-}
-
-if(!HTMLElement.prototype.hide){
-    HTMLElement.prototype.hide = function() {
-        this.style.display = 'none';
-    }
-}
-if(!HTMLElement.prototype.isShowed){
-    HTMLElement.prototype.isShowed = function() {
-        return this.style.display != 'none';
-    }
-}

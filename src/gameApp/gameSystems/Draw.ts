@@ -1,9 +1,11 @@
-class Draw{
-	static canvas = document.getElementById('canvas');
-	static ctx = Draw.canvas.getContext('2d');
+import {Label} from '../gameObjects/Label';
+
+export class Draw{
+	static canvas: HTMLCanvasElement = <HTMLCanvasElement>document.getElementById('canvas');
+	static ctx: CanvasRenderingContext2D = Draw.canvas.getContext('2d') || new CanvasRenderingContext2D();
 
 	/** Прорисовка жизней */
-	static drawHealth(x, y, width, healthMax, healthCurrent){
+	static drawHealth(x: number, y: number, width: number, healthMax: number, healthCurrent: number){
 		let height = 2;
 		let border = 0;
 		Draw.ctx.fillStyle = "orange";
@@ -28,7 +30,7 @@ class Draw{
 	}
 	
 	/** Прорисовка исчезающей надписи */
-	static drawLabel(label, labelLifetime){
+	static drawLabel(label: Label, labelLifetime: number){
 		let leftTime = Date.now() - (label.timeCreated + labelLifetime * 1000);
 
 		Draw.ctx.fillStyle = `rgba(${label.red},${label.green},${label.blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;
@@ -37,7 +39,7 @@ class Draw{
 	}
 
 	/** Пррисовка интерфейса - количества монеток у игрока */
-	static drawCoinsInterface(coinImage, coinsCount){
+	static drawCoinsInterface(coinImage: HTMLImageElement, coinsCount: number){
 		let y = 10;
 		Draw.ctx.drawImage(coinImage, 10, y);
 	
@@ -47,7 +49,7 @@ class Draw{
 	}
 
 	/** прорисовка интерфейса - количество уничтоженных монстров из всего количества */
-	static drawWaveInterface(MosterImage, killedMonsters, allMonsters){
+	static drawWaveInterface(MosterImage: HTMLImageElement, killedMonsters: number, allMonsters: number){
 		let y = 5;
 		let x = Draw.canvas.width - 200;
 		Draw.ctx.drawImage(MosterImage, x, y);
@@ -58,7 +60,7 @@ class Draw{
 	}
 	
 	/** Прорисовка травы на всей нижней части экрана */
-	static drawGrass(grassImage){
+	static drawGrass(grassImage: HTMLImageElement){
 		for(let i = 0; i < Draw.canvas.width / grassImage.width; i++){
 			Draw.ctx.drawImage(grassImage, grassImage.width * i, Draw.canvas.height - grassImage.height);
 		}
@@ -75,7 +77,7 @@ class Draw{
 	}
 
 	/** Надпись о начале новой волны */
-	static drawStartNewWave(waveNumber, delayStartTimeLeft, delayStartTime){
+	static drawStartNewWave(waveNumber: number, delayStartTimeLeft: number, delayStartTime: number){
 		let text = `Волна ${waveNumber}`;
 		Draw.ctx.font = "72px Calibri";
 
@@ -95,7 +97,7 @@ class Draw{
 	}
 
 	/** Надпись об окончании волны */
-	static drawEndNewWave(delayEndTimeLeft, delayEndTime){
+	static drawEndNewWave(delayEndTimeLeft: number, delayEndTime: number){
 		let text = `Волна пройдена`;
 		Draw.ctx.font = "72px Calibri";
 

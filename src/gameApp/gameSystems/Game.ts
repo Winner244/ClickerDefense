@@ -1,4 +1,23 @@
-class Game{
+import {Draw} from './Draw';
+import {Buildings} from '../gameObjects/Buildings';
+import {Monsters} from '../gameObjects/Monsters';
+import {Coins} from '../gameObjects/Coins';
+import {Coin} from '../gameObjects/Coin';
+import {Gamer} from '../gameObjects/Gamer';
+import {Labels} from '../gameObjects/Labels';
+import {Waves} from '../gameObjects/Waves';
+
+import {Zombie} from '../monsters/Zombie';
+
+import {FlyEarth} from '../buildings/FlyEarth';
+import {FlyEarthRope} from '../buildings/FlyEarthRope';
+
+import {Cursor} from '../Cursor';
+import {FPS} from '../FPS';
+import {Mouse} from '../Mouse';
+
+
+export class Game {
 	static images = [];  //все изображения (кроме курсоров)
 
 	static bottomShiftBorder = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
