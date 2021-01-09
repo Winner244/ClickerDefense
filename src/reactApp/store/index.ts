@@ -1,8 +1,10 @@
 import * as MenuStore from '../components/Menu/MenuStore';
+import * as ShopStore from '../components/Shop/ShopStore';
 
 // The top-level state object
 export interface ApplicationState {
     menu: MenuStore.MenuState;
+    shop: ShopStore.ShopState;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -10,6 +12,7 @@ export interface ApplicationState {
 // acts on the corresponding ApplicationState property type.
 export const reducers = {
     menu: MenuStore.reducer,
+    shop: ShopStore.reducer,
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are
