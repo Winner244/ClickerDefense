@@ -62,9 +62,12 @@ export class Game {
 
 		Cursor.setCursor(Cursor.default);
 
+		window.removeEventListener('keypress', Game.onKey);
 		window.addEventListener('keypress', Game.onKey);
 
-		Game.animationId = window.requestAnimationFrame(Game.go);
+		if(Game.animationId == 0){
+			Game.animationId = window.requestAnimationFrame(Game.go);
+		}
 
 		Game.isWasInit = true;
 
@@ -212,6 +215,7 @@ export class Game {
 		}
 
 		cancelAnimationFrame(Game.animationId);
+		Game.animationId = 0;
 		Game.isGameRun = false;
 		Menu.show();
 		Draw.drawBlackout();
