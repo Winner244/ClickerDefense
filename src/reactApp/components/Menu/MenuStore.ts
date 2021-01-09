@@ -38,7 +38,7 @@ export const actionCreators = {
     hideShop: () => <HideShopAction>{ type: 'MENU__HIDE_SHOP'},
 };
 
-const defaultState = {
+const defaultState: MenuState = {
     isOpen: true,
     isDisplayButtonContinueGame: false,
     isDisplayButtonShop: false,

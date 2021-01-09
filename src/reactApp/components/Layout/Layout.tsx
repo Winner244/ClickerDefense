@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import Menu from "../Menu/Menu";
+import Shop from "../Shop/Shop";
 import GameDisplay from "../GameDisplay/GameDisplay";
 
 export interface Props {
@@ -12,6 +13,7 @@ export default class Layout extends React.Component<Props, {}> {
         return <div>
             <GameDisplay />
             <Menu />
+            <Shop />
             {this.props.children}
         </div>;
     }

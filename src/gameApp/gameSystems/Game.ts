@@ -218,6 +218,7 @@ export class Game {
 		Game.animationId = 0;
 		Game.isGameRun = false;
 		Menu.show();
+		Game.drawAll(0);
 		Draw.drawBlackout();
 	}
 

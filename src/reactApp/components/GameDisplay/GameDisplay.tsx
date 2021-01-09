@@ -19,7 +19,6 @@ class GameDisplay extends React.Component {
   componentDidMount(){
     Game.init(this.canvas.current || new HTMLCanvasElement());
     Menu.showStartMenu();
-    //Shop.element.hide();
   }
 
   render() {

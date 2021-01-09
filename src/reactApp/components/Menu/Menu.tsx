@@ -3,10 +3,13 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
+import * as ShopStore from '../Shop/ShopStore';
+
+import { App } from '../../App';
+
 import {Game} from '../../../gameApp/gameSystems/Game';
 
 import './Menu.scss';
-import { App } from '../../App';
 
 interface Prop {
   isOpen?: boolean
@@ -52,6 +55,12 @@ export class Menu extends React.Component<Props, {}> {
     Game.continue();
   }
 
+  onClickShopOpen(){
+    App.Store.dispatch(ShopStore.actionCreators.open());
+    this.props.hideShop();
+    Game.pause();
+  }
+
   render() {
     return (
       <div>
@@ -61,7 +70,7 @@ export class Menu extends React.Component<Props, {}> {
         }
         
         {this.props.isDisplayOutsideButtonShop
-          ? <button className="menu__button-shop noselect" id="menu-button-outside-shop">Магазин</button>
+          ? <button className="menu__button-shop noselect" id="menu-button-outside-shop" onClick={() => this.onClickShopOpen()}>Магазин</button>
           : null
         }
 
@@ -78,7 +87,7 @@ export class Menu extends React.Component<Props, {}> {
                   }
                   
                   {this.props.isDisplayButtonShop
-                    ? <button className="menu__button">Магазин</button>
+                    ? <button className="menu__button" onClick={() => this.onClickShopOpen()}>Магазин</button>
                     : null
                   }
               </div>
