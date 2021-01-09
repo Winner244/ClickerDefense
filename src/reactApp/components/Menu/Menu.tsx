@@ -18,6 +18,10 @@ type Props =
 
 export class Menu extends React.Component<Props, {}> {
 
+  static showStartMenu(): void{
+    App.Store.dispatch(MenuStore.actionCreators.openStartMenu());
+  }
+
   static show(isShowButtonContinueGame: boolean = false): void{
     App.Store.dispatch(MenuStore.actionCreators.open(isShowButtonContinueGame));
   }

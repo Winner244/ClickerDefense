@@ -32,7 +32,7 @@ export class Game {
 	static isWasInit: boolean = false;
 
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
-	static animationId: number = null; //техническая переменная для браузера 
+	static animationId: number = 0; //техническая переменная для браузера 
 
 	static init(): void{
 		Game.isGameRun = true;
@@ -64,6 +64,8 @@ export class Game {
 		Game.animationId = window.requestAnimationFrame(Game.go);
 
 		Game.isWasInit = true;
+
+		Cursor.setCursor(Cursor.default);
 	}
 		
 	static gameOverLogic(millisecondsDifferent: number) : void{

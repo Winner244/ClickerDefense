@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as GameStore from './GameStore';
+import {Menu} from '../Menu/Menu';
+import {Game} from '../../../gameApp/gameSystems/Game';
 
 interface Prop {
   isPause?: boolean
@@ -13,11 +15,18 @@ GameStore.GameState
   & GameStore.GameAction
   & Prop;
 
-class Game extends React.Component<Props, {}> {
+class GameDisplay extends React.Component<Props, {}> {
+  componentDidMount(){
+    Game.init();
+    Menu.showStartMenu();
+    //Shop.element.hide();
+  }
+
   render() {
     return (
       <div>
         Game {this.props.isPause ? 'isPaused' : 'is not pause'}
+        <canvas width="1920" height="882" id='canvas'></canvas>
       </div>);
   }
 }
@@ -28,4 +37,4 @@ export default connect(
       return { ...state.game, ...ownProps };
   },
   GameStore.actionCreators
-)(Game);
+)(GameDisplay);

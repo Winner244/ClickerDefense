@@ -1,5 +1,5 @@
 import * as MenuStore from '../components/Menu/MenuStore';
-import * as GameStore from '../components/Game/GameStore';
+import * as GameStore from '../components/GameDisplay/GameStore';
 
 // The top-level state object
 export interface ApplicationState {
