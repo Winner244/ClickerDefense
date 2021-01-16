@@ -1,5 +1,6 @@
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
+import {Tower} from '../buildings/Tower';
 
 import {Cursor} from '../Cursor';
 
@@ -19,6 +20,7 @@ export class Buildings{
 		
 		FlyEarth.init(isLoadImage);
 		FlyEarthRope.init(isLoadImage);
+		Tower.init(isLoadImage);
 
 		this.flyEarth = new FlyEarth(
 			Draw.canvas.width / 2 - FlyEarth.width / 2, 

@@ -45,7 +45,7 @@ export class Menu extends React.Component<Props, {}> {
 
   onClickNewGame(){
     this.props.startGame();
-    Game.startNew()
+    Game.startNew();
   }
 
   onClickShow(){
