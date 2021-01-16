@@ -30,7 +30,7 @@ export class Draw{
 
 	/** Затемнение холста */
 	static drawBlackout(){
-		Draw.ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+		Draw.ctx.fillStyle = "rgba(0, 0, 0, 0.7)";
 		Draw.ctx.fillRect(0, 0, Draw.canvas.width, Draw.canvas.height);
 	}
 	

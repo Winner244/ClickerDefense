@@ -62,7 +62,12 @@ export class Building{
 				this.height); //draw by height 
 		}
 		else{
-			Draw.ctx.drawImage(this.image, this.x, this.y);
+			if(this.width > 0 && this.height > 0){
+				Draw.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+			}
+			else{
+				Draw.ctx.drawImage(this.image, this.x, this.y);
+			}
 		}
 	}
 
