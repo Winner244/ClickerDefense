@@ -1,5 +1,5 @@
 import {Building} from '../gameObjects/Building';
-import flyEarthImage from '../../assets/img/builders/flyEarth.png';  
+import flyEarthImage from '../../assets/img/buildings/flyEarth.png';  
 
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();

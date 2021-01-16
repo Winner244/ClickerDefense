@@ -1,5 +1,5 @@
 import {Building} from '../gameObjects/Building';
-import FlyEarthRopeImage from '../../assets/img/builders/flyEarthRope.png';  
+import FlyEarthRopeImage from '../../assets/img/buildings/flyEarthRope.png';  
 
 export class FlyEarthRope extends Building{
 	static readonly image: HTMLImageElement = new Image();

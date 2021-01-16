@@ -10,7 +10,7 @@ import { App } from '../../App';
 import './Shop.scss';
 
 import CoinImage from '../../../assets/img/coin.png';
-import TempImage from '../../../assets/img/builders/tent.png';
+import TempImage from '../../../assets/img/buildings/tent.png';
 import CategoryMagicImage from '../../../assets/img/shop/shop-category-main/magic.png';
 import CategoryBuldingImage from '../../../assets/img/shop/shop-category-main/tower.png';
 import CategoryUnitImage from '../../../assets/img/shop/shop-category-main/unit.png';
