@@ -5,11 +5,10 @@ import {Shop} from '../../components/Shop/Shop';
 import * as MenuStore from '../../components/Menu/MenuStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {Waves} from '../../../gameApp/gameObjects/Waves';
+import {Waves} from '../../../gameApp/gameSystems/Waves';
 
 class TestShopPage extends React.Component {
     componentDidMount(){
-        console.log('TestShop');
         App.Store.dispatch(MenuStore.actionCreators.startGame());
         Game.startNew();
         Object.values(Waves.waveMonsters[0]).map(x => x.wasCreated = x.count); //end of wawes

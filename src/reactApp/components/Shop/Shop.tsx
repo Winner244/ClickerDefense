@@ -9,6 +9,8 @@ import { App } from '../../App';
 
 import './Shop.scss';
 
+import ShoCategoryEnum from '../../../enum/ShoCategoryEnum';
+
 import CoinImage from '../../../assets/img/coin.png';
 import TempImage from '../../../assets/img/buildings/tent.png';
 import CategoryMagicImage from '../../../assets/img/shop/shop-category-main/magic.png';
@@ -43,8 +45,8 @@ export class Shop extends React.Component<Props, {}> {
     Game.continue();
   }
 
-  onClickSelectCategory(categoryId: number){
-    this.props.selectCategory(categoryId);
+  onClickSelectCategory(category: string){
+    this.props.selectCategory(category);
   }
 
   onClickSelectItem(itemId: number){
@@ -56,14 +58,6 @@ export class Shop extends React.Component<Props, {}> {
       return null;
     }
 
-    let categoryTitle = '';
-    switch(this.props.selectedCategoryId){
-      case 1: categoryTitle = 'Магия'; break;
-      case 2: categoryTitle = 'Строения'; break;
-      case 3: categoryTitle = 'Юниты'; break;
-      default: categoryTitle = 'Всё'; break;
-    }
-
     return (
       <div className="shop noselect" id="shop">
         <div className="shop__body">
@@ -72,14 +66,23 @@ export class Shop extends React.Component<Props, {}> {
                 <div className="shop__close-body">x</div>
             </div>
             <div className="shop__categories">
-                <img className={"shop__category " + (this.props.selectedCategoryId == 1 ? 'shop__category-active' : '')} src={CategoryMagicImage} onClick={() => this.onClickSelectCategory(1)}/>
-                <img className={"shop__category " + (this.props.selectedCategoryId == 2 ? 'shop__category-active' : '')} src={CategoryBuldingImage} onClick={() => this.onClickSelectCategory(2)}/>
-                <img className={"shop__category " + (this.props.selectedCategoryId == 3 ? 'shop__category-active' : '')} src={CategoryUnitImage} onClick={() => this.onClickSelectCategory(3)}/>
+                <img 
+                  className={"shop__category " + (this.props.selectedCategory == ShoCategoryEnum.MAGIC ? 'shop__category-active' : '')} 
+                  src={CategoryMagicImage} 
+                  onClick={() => this.onClickSelectCategory(ShoCategoryEnum.MAGIC)}/>
+                <img 
+                  className={"shop__category " + (this.props.selectedCategory == ShoCategoryEnum.BUILDINGS ? 'shop__category-active' : '')} 
+                  src={CategoryBuldingImage} 
+                  onClick={() => this.onClickSelectCategory(ShoCategoryEnum.BUILDINGS)}/>
+                <img 
+                  className={"shop__category " + (this.props.selectedCategory == ShoCategoryEnum.UNITS ? 'shop__category-active' : '')} 
+                  src={CategoryUnitImage} 
+                  onClick={() => this.onClickSelectCategory(ShoCategoryEnum.UNITS)}/>
             </div>
             <div className="shop__container">
-                <div className={`shop__items-container shop__items-container--background${this.props.selectedCategoryId || 1}`}>
+                <div className={`shop__items-container shop__items-container--background-${this.props.selectedCategory || 'common'}`}>
                     <div className="shop__items-container-body">
-                        <div className="shop__category-title">{categoryTitle}</div>
+                        <div className="shop__category-title">{ShoCategoryEnum.GetLabel(this.props.selectedCategory)}</div>
                         <div className="shop__item">
                             <div className="shop__item-img-container"  onClick={() => this.onClickSelectItem(1)}>
                                 <img className="shop__item-img" src={TempImage} />

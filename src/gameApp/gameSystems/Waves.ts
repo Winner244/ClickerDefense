@@ -1,8 +1,8 @@
-import {Draw} from '../gameSystems/Draw';
+import {Draw} from './Draw';
 import {Zombie} from '../monsters/Zombie';
 import {Helper} from '../helpers/Helper';
-import {Monsters} from './Monsters';
-import {WaveData} from './WaveData';
+import {Monsters} from '../gameObjects/Monsters';
+import {WaveData} from '../gameObjects/WaveData';
 
 import sum from 'lodash/sum';
 

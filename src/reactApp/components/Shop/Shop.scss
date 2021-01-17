@@ -102,15 +102,15 @@
 		box-shadow: 0 0 5px black;
 		border: 3px solid black;
 
-		&--background1{
+		&--background-magic, &--background-all{
 			background: url('../../../assets/img/shop/fon1.jpg');
 			background-size: cover;
 		}
-		&--background2{
+		&--background-buildings{
 			background: url('../../../assets/img/shop/fon2.jpg');
 			background-size: cover;
 		}
-		&--background3{
+		&--background-units{
 			background: url('../../../assets/img/shop/fon3.jpg');
 			background-size: cover;
 		}

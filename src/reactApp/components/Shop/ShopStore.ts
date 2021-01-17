@@ -1,16 +1,18 @@
 import { Reducer } from 'redux';
 
+import ShoCategoryEnum from '../../../enum/ShoCategoryEnum';
+
 // STATE
 export interface ShopState {
 	isOpen: boolean;
-	selectedCategoryId: number;
+	selectedCategory: string;
 	selectedItemId: number;
 }
 
 // ACTIONS
 interface OpenAction { type: 'SHOP__OPEN' }
 interface CloseAction { type: 'SHOP__CLOSE' }
-interface SelectCategoryAction { type: 'SHOP__SELECT_CATEGORY', categoryId: number }
+interface SelectCategoryAction { type: 'SHOP__SELECT_CATEGORY', category: string }
 interface SelectItemAction { type: 'SHOP__SELECT_ITEM', itemId: number }
 
 type KnownAction = CloseAction | OpenAction | SelectCategoryAction | SelectItemAction;
@@ -20,19 +22,19 @@ type KnownAction = CloseAction | OpenAction | SelectCategoryAction | SelectItemA
 export interface ShopAction {
     open: () => OpenAction;
     close: () => CloseAction;
-    selectCategory: (categoryId: number) => SelectCategoryAction;
+    selectCategory: (category: string) => SelectCategoryAction;
     selectItem: (itemId: number) => SelectItemAction;
 }
 export const actionCreators = {
     open: () => <OpenAction>{ type: 'SHOP__OPEN'},
     close: () => <CloseAction>{ type: 'SHOP__CLOSE' },
-    selectCategory: (categoryId: number) => <SelectCategoryAction>{ type: 'SHOP__SELECT_CATEGORY', categoryId: categoryId},
+    selectCategory: (category: string) => <SelectCategoryAction>{ type: 'SHOP__SELECT_CATEGORY', category: category},
     selectItem: (itemId: number) => <SelectItemAction>{ type: 'SHOP__SELECT_ITEM', itemId: itemId},
 };
 
 const defaultState: ShopState = {
     isOpen: false,
-    selectedCategoryId: 0,
+    selectedCategory: ShoCategoryEnum.ALL,
     selectedItemId: 0,
 };
 
@@ -44,7 +46,7 @@ export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action
         case 'SHOP__CLOSE':
             return defaultState;
         case 'SHOP__SELECT_CATEGORY':
-            return Object.assign({}, state, { selectedCategoryId: action.categoryId == state?.selectedCategoryId ? 0 : action.categoryId });
+            return Object.assign({}, state, { selectedCategory: action.category == state?.selectedCategory ? ShoCategoryEnum.ALL : action.category });
         case 'SHOP__SELECT_ITEM':
             return Object.assign({}, state, { selectedItemId: action.itemId });
         default:

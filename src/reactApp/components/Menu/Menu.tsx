@@ -8,7 +8,7 @@ import * as ShopStore from '../Shop/ShopStore';
 import { App } from '../../App';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {Waves} from '../../../gameApp/gameObjects/Waves';
+import {Waves} from '../../../gameApp/gameSystems/Waves';
 
 import './Menu.scss';
 

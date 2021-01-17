@@ -5,7 +5,7 @@ import {Coins} from '../gameObjects/Coins';
 import {Coin} from '../gameObjects/Coin';
 import {Gamer} from '../gameObjects/Gamer';
 import {Labels} from '../gameObjects/Labels';
-import {Waves} from '../gameObjects/Waves';
+import {Waves} from './Waves';
 
 import {Zombie} from '../monsters/Zombie';
 
