@@ -1,5 +1,6 @@
 import {Draw} from '../gameSystems/Draw';
 import ShopItem from '../../models/ShopItem';
+import ShopCategoryEnum from '../../enum/ShopCategoryEnum';
 
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
@@ -29,10 +30,9 @@ export class Building extends ShopItem{
 		reduceHover: number, 
 		healthMax: number,
 		price: number,
-		description: string,
-		category: string)
+		description: string)
 	{
-		super(name, image, price, description, category);
+		super(name, image, price, description, ShopCategoryEnum.BUILDINGS);
 
 		this.name = name;
 		this.image = image;

@@ -1,12 +1,19 @@
 import { Reducer } from 'redux';
 
-import ShoCategoryEnum from '../../../enum/ShoCategoryEnum';
+import ShopCategoryEnum from '../../../enum/ShopCategoryEnum';
+import { Tower } from '../../../gameApp/buildings/Tower';
+import ShopItem from '../../../models/ShopItem';
 
 // STATE
 export interface ShopState {
 	isOpen: boolean;
 	selectedCategory: string;
-	selectedItemId: number;
+    selectedItemId: number;
+    items: {
+        [ShopCategoryEnum.MAGIC]: ShopItem[],
+        [ShopCategoryEnum.BUILDINGS]: ShopItem[],
+        [ShopCategoryEnum.UNITS]: ShopItem[]
+    }
 }
 
 // ACTIONS
@@ -34,8 +41,15 @@ export const actionCreators = {
 
 const defaultState: ShopState = {
     isOpen: false,
-    selectedCategory: ShoCategoryEnum.ALL,
+    selectedCategory: ShopCategoryEnum.ALL,
     selectedItemId: 0,
+    items: {
+        [ShopCategoryEnum.MAGIC]: [],
+        [ShopCategoryEnum.BUILDINGS]: [
+            new Tower(0)
+        ],
+        [ShopCategoryEnum.UNITS]: []
+    }
 };
 
 // REDUCER 
@@ -46,7 +60,7 @@ export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action
         case 'SHOP__CLOSE':
             return defaultState;
         case 'SHOP__SELECT_CATEGORY':
-            return Object.assign({}, state, { selectedCategory: action.category == state?.selectedCategory ? ShoCategoryEnum.ALL : action.category });
+            return Object.assign({}, state, { selectedCategory: action.category == state?.selectedCategory ? ShopCategoryEnum.ALL : action.category });
         case 'SHOP__SELECT_ITEM':
             return Object.assign({}, state, { selectedItemId: action.itemId });
         default:

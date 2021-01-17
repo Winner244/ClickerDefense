@@ -1,4 +1,4 @@
-export default class ShoCategoryEnum{
+export default class ShopCategoryEnum{
 	public static readonly ALL = 'all';
 	public static readonly MAGIC = 'magic';
 	public static readonly BUILDINGS = 'buildings';
@@ -6,9 +6,9 @@ export default class ShoCategoryEnum{
 
 	public static GetLabel(shopCategory: string){
 		switch(shopCategory){
-			case ShoCategoryEnum.MAGIC: return 'Магия';
-			case ShoCategoryEnum.BUILDINGS: return 'Строения';
-			case ShoCategoryEnum.UNITS: return 'Юниты';
+			case ShopCategoryEnum.MAGIC: return 'Магия';
+			case ShopCategoryEnum.BUILDINGS: return 'Строения';
+			case ShopCategoryEnum.UNITS: return 'Юниты';
 			default: return 'Всё'; 
 		  }
 	}
