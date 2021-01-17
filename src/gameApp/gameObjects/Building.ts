@@ -1,9 +1,7 @@
 import {Draw} from '../gameSystems/Draw';
+import ShopItem from '../../models/ShopItem';
 
-export class Building{
-	name: string;
-	
-	image: HTMLImageElement;  //содержит несколько изображений для анимации
+export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
 	width: number;  //ширина image
 	height: number; //высота image
@@ -29,8 +27,13 @@ export class Building{
 		width: number, 
 		height: number, 
 		reduceHover: number, 
-		healthMax: number)
+		healthMax: number,
+		price: number,
+		description: string,
+		category: string)
 	{
+		super(name, image, price, description, category);
+
 		this.name = name;
 		this.image = image;
 		this.frames = frames;
