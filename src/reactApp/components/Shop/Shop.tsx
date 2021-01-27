@@ -9,7 +9,7 @@ import { App } from '../../App';
 
 import './Shop.scss';
 
-import ShopCategoryEnum from '../../../enum/ShopCategoryEnum';
+import {ShopCategoryEnum, ShopCategory} from '../../../enum/ShopCategoryEnum';
 
 import CoinImage from '../../../assets/img/coin.png';
 import TempImage from '../../../assets/img/buildings/tent.png';
@@ -60,7 +60,7 @@ export class Shop extends React.Component<Props, {}> {
     }
 
     let items: ShopItem[] = this.props.selectedCategory == ShopCategoryEnum.ALL 
-      ? Object.values(this.props.items)
+      ? Object.values(this.props.items).flat()
       : this.props.items[this.props.selectedCategory]
 
     return (
@@ -87,7 +87,7 @@ export class Shop extends React.Component<Props, {}> {
             <div className="shop__container">
                 <div className={`shop__items-container shop__items-container--background-${this.props.selectedCategory || 'common'}`}>
                     <div className="shop__items-container-body">
-                        <div className="shop__category-title">{ShopCategoryEnum.GetLabel(this.props.selectedCategory)}</div>
+                        <div className="shop__category-title">{ShopCategory.GetLabel(this.props.selectedCategory)}</div>
 
                         <div className="shop__item">
                             <div className="shop__item-img-container"  onClick={() => this.onClickSelectItem(1)}>

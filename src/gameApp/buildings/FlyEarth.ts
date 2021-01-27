@@ -7,7 +7,7 @@ export class FlyEarth extends Building{
 	static readonly height: number = 279;
 
 	constructor(x: number, y: number) {
-		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100);
+		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100, 0, '');
 	}
 
 	static init(isLoadImage: boolean = true): void{

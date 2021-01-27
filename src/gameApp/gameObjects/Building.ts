@@ -1,6 +1,6 @@
 import {Draw} from '../gameSystems/Draw';
 import ShopItem from '../../models/ShopItem';
-import ShopCategoryEnum from '../../enum/ShopCategoryEnum';
+import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?

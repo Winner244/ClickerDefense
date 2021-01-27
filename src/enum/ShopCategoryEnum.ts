@@ -1,9 +1,4 @@
-export default class ShopCategoryEnum{
-	public static readonly ALL = 'all';
-	public static readonly MAGIC = 'magic';
-	public static readonly BUILDINGS = 'buildings';
-	public static readonly UNITS = 'units';
-
+export class ShopCategory{
 	public static GetLabel(shopCategory: string){
 		switch(shopCategory){
 			case ShopCategoryEnum.MAGIC: return 'Магия';
@@ -13,3 +8,10 @@ export default class ShopCategoryEnum{
 		  }
 	}
 }
+
+export enum ShopCategoryEnum {
+	ALL = 'all',
+	MAGIC = 'magic',
+	BUILDINGS = 'buildings',
+	UNITS = 'units'
+  }

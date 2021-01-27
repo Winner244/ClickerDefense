@@ -1,13 +1,13 @@
 import { Reducer } from 'redux';
 
-import ShopCategoryEnum from '../../../enum/ShopCategoryEnum';
+import {ShopCategoryEnum} from '../../../enum/ShopCategoryEnum';
 import { Tower } from '../../../gameApp/buildings/Tower';
 import ShopItem from '../../../models/ShopItem';
 
 // STATE
 export interface ShopState {
 	isOpen: boolean;
-	selectedCategory: string;
+	selectedCategory: ShopCategoryEnum;
     selectedItemId: number;
     items: {
         [ShopCategoryEnum.MAGIC]: ShopItem[],
