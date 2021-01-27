@@ -8,7 +8,7 @@ import ShopItem from '../../../models/ShopItem';
 export interface ShopState {
 	isOpen: boolean;
 	selectedCategory: ShopCategoryEnum;
-    selectedItemId: number;
+    selectedItemNames: string[];
     items: {
         [ShopCategoryEnum.MAGIC]: ShopItem[],
         [ShopCategoryEnum.BUILDINGS]: ShopItem[],
@@ -20,7 +20,7 @@ export interface ShopState {
 interface OpenAction { type: 'SHOP__OPEN' }
 interface CloseAction { type: 'SHOP__CLOSE' }
 interface SelectCategoryAction { type: 'SHOP__SELECT_CATEGORY', category: string }
-interface SelectItemAction { type: 'SHOP__SELECT_ITEM', itemId: number }
+interface SelectItemAction { type: 'SHOP__SELECT_ITEM', itemName: string }
 
 type KnownAction = CloseAction | OpenAction | SelectCategoryAction | SelectItemAction;
 
@@ -30,19 +30,19 @@ export interface ShopAction {
     open: () => OpenAction;
     close: () => CloseAction;
     selectCategory: (category: string) => SelectCategoryAction;
-    selectItem: (itemId: number) => SelectItemAction;
+    selectItem: (itemName: string) => SelectItemAction;
 }
 export const actionCreators = {
     open: () => <OpenAction>{ type: 'SHOP__OPEN'},
     close: () => <CloseAction>{ type: 'SHOP__CLOSE' },
     selectCategory: (category: string) => <SelectCategoryAction>{ type: 'SHOP__SELECT_CATEGORY', category: category},
-    selectItem: (itemId: number) => <SelectItemAction>{ type: 'SHOP__SELECT_ITEM', itemId: itemId},
+    selectItem: (itemName: string) => <SelectItemAction>{ type: 'SHOP__SELECT_ITEM', itemName: itemName},
 };
 
 const defaultState: ShopState = {
     isOpen: false,
     selectedCategory: ShopCategoryEnum.ALL,
-    selectedItemId: 0,
+    selectedItemNames: [],
     items: {
         [ShopCategoryEnum.MAGIC]: [],
         [ShopCategoryEnum.BUILDINGS]: [
@@ -62,7 +62,15 @@ export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action
         case 'SHOP__SELECT_CATEGORY':
             return Object.assign({}, state, { selectedCategory: action.category == state?.selectedCategory ? ShopCategoryEnum.ALL : action.category });
         case 'SHOP__SELECT_ITEM':
-            return Object.assign({}, state, { selectedItemId: action.itemId });
+            let selectedItemNames = [...state?.selectedItemNames || []];
+            let index = selectedItemNames.indexOf(action.itemName);
+            if(index == -1){
+                selectedItemNames.push(action.itemName);
+            }
+            else{
+                selectedItemNames.splice(index, 1);
+            }
+            return Object.assign({}, state, { selectedItemNames: selectedItemNames });
         default:
             const exhaustiveCheck: never = action;
     }

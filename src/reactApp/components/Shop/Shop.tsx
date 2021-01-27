@@ -50,8 +50,8 @@ export class Shop extends React.Component<Props, {}> {
     this.props.selectCategory(category);
   }
 
-  onClickSelectItem(itemId: number){
-    this.props.selectItem(itemId);
+  onClickSelectItem(itemName: string){
+    this.props.selectItem(itemName);
   }
 
   render() {
@@ -90,15 +90,15 @@ export class Shop extends React.Component<Props, {}> {
                         <div className="shop__category-title">{ShopCategory.GetLabel(this.props.selectedCategory)}</div>
 
                         {items.map(item => (
-                          <div className="shop__item" key={item.name}>
-                              <div className="shop__item-img-container"  onClick={() => this.onClickSelectItem(1)}>
+                          <div className={"shop__item " + (this.props.selectedItemNames.includes(item.name) ? 'shop__item--info ' : '')} key={item.name}>
+                              <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(item.name)}>
                                   <img className="shop__item-img" src={item.image.src} />
                                   <div className="shop__item-info">
                                       <p>{item.description}</p>
                                   </div>
                               </div>
                               <div className="shop__item-title">{item.name}</div>
-                              <button className="button">Купить {item.price}<img src={CoinImage}/></button>
+                              <button className="shop__item-button">Купить {item.price}<img src={CoinImage}/></button>
                           </div>
                         ))}
 
