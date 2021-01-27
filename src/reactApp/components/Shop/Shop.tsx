@@ -12,12 +12,12 @@ import './Shop.scss';
 import {ShopCategoryEnum, ShopCategory} from '../../../enum/ShopCategoryEnum';
 
 import CoinImage from '../../../assets/img/coin.png';
-import TempImage from '../../../assets/img/buildings/tent.png';
 import CategoryMagicImage from '../../../assets/img/shop/shop-category-main/magic.png';
 import CategoryBuldingImage from '../../../assets/img/shop/shop-category-main/tower.png';
 import CategoryUnitImage from '../../../assets/img/shop/shop-category-main/unit.png';
 import { Game } from '../../../gameApp/gameSystems/Game';
 import ShopItem from '../../../models/ShopItem';
+import { Gamer } from '../../../gameApp/gameObjects/Gamer';
 
 
 interface Prop {
@@ -52,6 +52,12 @@ export class Shop extends React.Component<Props, {}> {
 
   onClickSelectItem(itemName: string){
     this.props.selectItem(itemName);
+  }
+
+  onClickBuyItem(item: ShopItem){
+    if(item.category == ShopCategoryEnum.BUILDINGS){
+
+    }
   }
 
   render() {
@@ -98,7 +104,13 @@ export class Shop extends React.Component<Props, {}> {
                                   </div>
                               </div>
                               <div className="shop__item-title">{item.name}</div>
-                              <button className="shop__item-button">Купить {item.price}<img src={CoinImage}/></button>
+                              <button 
+                                className={"shop__item-button " + (item.price > Gamer.coins ? 'shop__item-button--disabled' : '')} 
+                                onClick={() => this.onClickBuyItem(item)}
+                              >
+                                Купить {item.price}
+                                <img src={CoinImage}/>
+                              </button>
                           </div>
                         ))}
 
