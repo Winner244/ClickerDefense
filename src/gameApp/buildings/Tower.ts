@@ -9,7 +9,7 @@ export class Tower extends Building{
 
 	constructor(x: number) {
 		super(x, 
-			Draw.canvas.height - Tower.height + 10, 
+			(Draw.canvas ? Draw.canvas.height : 0) - Tower.height + 10, 
 			false,
 			true, 
 			'Сторожевая башня', 

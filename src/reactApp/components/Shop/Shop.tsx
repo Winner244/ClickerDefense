@@ -89,58 +89,19 @@ export class Shop extends React.Component<Props, {}> {
                     <div className="shop__items-container-body">
                         <div className="shop__category-title">{ShopCategory.GetLabel(this.props.selectedCategory)}</div>
 
-                        <div className="shop__item">
-                            <div className="shop__item-img-container"  onClick={() => this.onClickSelectItem(1)}>
-                                <img className="shop__item-img" src={TempImage} />
-                                <div className="shop__item-info">
-                                    <p>Загораживает проход монстрам к базе. Часть урона, от ближней атаки, возвращает обратно монстрам.</p>
-                                    <div>* Здоровье: 45</div>
-                                    <div>* Защита: 0</div>
-                                </div>
-                            </div>
-                            <div className="shop__item-title">Баррикада</div>
-                            <button className="button">Купить 30<img src={CoinImage}/></button>
-                        </div>
-        
-                        <div className="shop__item">
-                            <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(2)}>
-                                <img className="shop__item-img" src={TempImage}/>
-                                <div className="shop__item-info">
-                                    <p>Атакует наземных и летающих монстров в радиусе действия.</p>
-                                    <div>* Здоровье: 100</div>
-                                    <div>* Защита: 1</div>
-                                    <div>* Урон: 10</div>
-                                    <div>* Дальность: 500</div>
-                                </div>
-                            </div>
-                            <div className="shop__item-title">Сторожевая Башня</div>
-                            <button className="button">Купить 45<img src={CoinImage}/></button>
-                        </div>
-        
-                        <div className="shop__item">
-                            <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(3)}>
-                                <img className="shop__item-img" src={TempImage}/>
-                            </div>
-                            <div className="shop__item-title">Балиста</div>
-                            <button className="button">Купить 60<img src={CoinImage}/></button>
-                        </div>
-        
-                        <div className="shop__item shop__item-active">
-                            <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(4)}>
-                                <img className="shop__item-img" src={TempImage}/>
-                            </div>
-                            <div className="shop__item-title">Катапульта</div>
-                            <button className="button">Купить 70<img src={CoinImage}/></button>
-                        </div>
-        
-                        <div className="shop__item">
-                            <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(5)}>
-                                <img className="shop__item-img" src={TempImage}/>
-                            </div>
-                            <div className="shop__item-title">Энергетический щит</div>
-                            <button className="button">Купить 90<img src={CoinImage}/></button>
-                        </div>
-        
+                        {items.map(item => (
+                          <div className="shop__item" key={item.name}>
+                              <div className="shop__item-img-container"  onClick={() => this.onClickSelectItem(1)}>
+                                  <img className="shop__item-img" src={item.image.src} />
+                                  <div className="shop__item-info">
+                                      <p>{item.description}</p>
+                                  </div>
+                              </div>
+                              <div className="shop__item-title">{item.name}</div>
+                              <button className="button">Купить {item.price}<img src={CoinImage}/></button>
+                          </div>
+                        ))}
+
                         <div className="clear"></div>
                     </div>
                 </div>
