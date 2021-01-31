@@ -105,7 +105,6 @@ export class Game {
 
 		if(Game.selectedBuildingForBuild){
 			if(Mouse.isClick){
-				console.log('buy');
 				Gamer.coins -= Game.selectedBuildingForBuild.price;
 				//Buildings.all.push(Game.selectedBuildingForBuild.create());
 				Game.selectedBuildingForBuild = null;
@@ -267,6 +266,7 @@ export class Game {
 
 	/** Игрок купил вещь в магазине */
 	static buyThing(item: ShopItem){
+		Game.continue();
 		if(item.category == ShopCategoryEnum.BUILDINGS){
 			Game.selectedBuildingForBuild = item;
 		}

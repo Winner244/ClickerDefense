@@ -41,8 +41,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   onClickClose(){
-    this.props.close();
-    App.Store.dispatch(MenuStore.actionCreators.displayShop());
+    Shop.hide();
     Game.continue();
   }
 
@@ -55,7 +54,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   onClickBuyItem(item: ShopItem){
-    this.props.close();
+    Shop.hide();
     Game.buyThing(item);
   }
 
