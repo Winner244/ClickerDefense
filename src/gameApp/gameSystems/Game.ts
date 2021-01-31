@@ -19,6 +19,8 @@ import {Mouse} from '../Mouse';
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
 import GrassImage from '../../assets/img/grass1.png'; 
+import ShopItem from '../../models/ShopItem';
+import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 
 
 export class Game {
@@ -31,11 +33,14 @@ export class Game {
 	static isGameRun: boolean = true; //если false - значит на паузе 
 	static isGameOver: boolean = false; //игра заканчивается
 	static isEndAfterGameOver: boolean = false; //игра закончилась
-	static isWasInit: boolean = false;
+	static isWasInit: boolean = false; //инициализация уже была?
+
+	static selectedBuildingForBuild: ShopItem | null = null; //выбранное строение для постройки
 
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId: number = 0; //техническая переменная для браузера 
 
+	/** Инициализация игры */
 	static init(canvas: HTMLCanvasElement, isLoadImage: boolean = true): void{
 		Game.isGameRun = true;
 		Game.isGameOver = false;
@@ -74,13 +79,14 @@ export class Game {
 		Cursor.setCursor(Cursor.default);
 	}
 
+	/** Начать новую игру */
 	static startNew(){
 		Game.init(Draw.canvas, false);
 		Draw.canvas.style.display = 'block';
 		Waves.startFirstWave();
 	}
 		
-	static gameOverLogic(millisecondsDifferent: number) : void{
+	private static gameOverLogic(millisecondsDifferent: number) : void{
 		Cursor.setCursor(Cursor.default);
 
 		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
@@ -92,10 +98,24 @@ export class Game {
 		}
 	}
 
-	static mouseLogic(millisecondsDifferent: number) : void{
+	private static mouseLogic(millisecondsDifferent: number) : void{
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+
+		if(Game.selectedBuildingForBuild){
+			if(Mouse.isClick){
+				console.log('buy');
+				Gamer.coins -= Game.selectedBuildingForBuild.price;
+				//Buildings.all.push(Game.selectedBuildingForBuild.create());
+				Game.selectedBuildingForBuild = null;
+				return;
+			}
+			else if(Mouse.isRightClick){
+				Game.selectedBuildingForBuild = null;
+				return;
+			}
+		}
 
 		let isSetCursor = false;
 		if(Waves.isStarted && Waves.delayStartTimeLeft < 0){
@@ -121,12 +141,21 @@ export class Game {
 		Mouse.isClick = false;
 	}
 
-	static drawAll(millisecondsFromStart: number) : void{
+	private static drawAll(millisecondsFromStart: number) : void{
 		Draw.clear(); //очищаем холст
 		Draw.drawBlackout(); //затемняем фон
 	
 		Buildings.draw(millisecondsFromStart, Game.isGameOver);
 		Buildings.drawHealth();
+
+		if(Game.selectedBuildingForBuild){
+			//при изменении размера canvas, мы должны масштабировать координаты мыши
+			let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+			Draw.ctx.drawImage(
+				Game.selectedBuildingForBuild.image, 
+				x - Game.selectedBuildingForBuild.image.width / 2, 
+				Draw.canvas.height - Game.selectedBuildingForBuild.image.height + Game.bottomShiftBorder);
+		}
 	
 		Coins.draw();
 	
@@ -148,7 +177,7 @@ export class Game {
 	}
 
 	/** основной цикл игры */
-	static go(millisecondsFromStart: number) : void{
+	private static go(millisecondsFromStart: number) : void{
 		if(!Game.isGameRun){
 			return;
 		}
@@ -198,7 +227,7 @@ export class Game {
 		}
 	}
 
-	static onKey(event: KeyboardEvent) : void{
+	private static onKey(event: KeyboardEvent) : void{
 		if(event.key == ' '){
 			if(Game.isGameRun){
 				Game.pause();
@@ -209,6 +238,7 @@ export class Game {
 		}
 	}
 
+	/** Поставить игру на паузу */
 	static pause() : void{
 		if(!Game.isWasInit){
 			return;
@@ -222,6 +252,7 @@ export class Game {
 		Draw.drawBlackout();
 	}
 
+	/** Продолжить игру */
 	static continue() : void{
 		if(!Game.isWasInit){
 			return;
@@ -232,5 +263,12 @@ export class Game {
 		Game.animationId = window.requestAnimationFrame(Game.go);
 		Menu.hide();
 		Mouse.isClick = false;
+	}
+
+	/** Игрок купил вещь в магазине */
+	static buyThing(item: ShopItem){
+		if(item.category == ShopCategoryEnum.BUILDINGS){
+			Game.selectedBuildingForBuild = item;
+		}
 	}
 }

@@ -2,6 +2,7 @@ export class Mouse{
 	static x: number;
 	static y: number;
 	static isClick: boolean;
+	static isRightClick: boolean;
 
 	static init(): void{
 		window.removeEventListener('mousemove', Mouse.onMove);
@@ -11,8 +12,9 @@ export class Mouse{
 		this.isClick = false;
 	}
 
-	static onClick(): void{
-		Mouse.isClick = true;
+	static onClick(event: MouseEvent): void{
+		Mouse.isClick = event.button == 0;
+		Mouse.isRightClick = event.button == 2;
 	}
 
 	static onMove(event: MouseEvent): void{

@@ -17,6 +17,9 @@ class GameDisplay extends React.Component {
   }
 
   componentDidMount(){
+    if(this.canvas.current != null){
+      this.canvas.current.oncontextmenu = () => false;
+    }
     Game.init(this.canvas.current || new HTMLCanvasElement());
     Menu.showStartMenu();
   }

@@ -55,9 +55,8 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   onClickBuyItem(item: ShopItem){
-    if(item.category == ShopCategoryEnum.BUILDINGS){
-
-    }
+    this.props.close();
+    Game.buyThing(item);
   }
 
   render() {
