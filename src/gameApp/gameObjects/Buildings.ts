@@ -64,7 +64,7 @@ export class Buildings{
 	}
 
 	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
-		Buildings.all.forEach(building => building.draw(isGameOver, millisecondsFromStart));
+		Buildings.all.forEach(building => building.draw(millisecondsFromStart, isGameOver));
 	}
 
 	static drawHealth(): void{

@@ -1,4 +1,5 @@
 import {Draw} from './Draw';
+import {Building} from '../gameObjects/Building';
 import {Buildings} from '../gameObjects/Buildings';
 import {Monsters} from '../gameObjects/Monsters';
 import {Coins} from '../gameObjects/Coins';
@@ -35,7 +36,7 @@ export class Game {
 	static isEndAfterGameOver: boolean = false; //игра закончилась
 	static isWasInit: boolean = false; //инициализация уже была?
 
-	static selectedBuildingForBuild: ShopItem | null = null; //выбранное строение для постройки
+	static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
 
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId: number = 0; //техническая переменная для браузера 
@@ -104,9 +105,11 @@ export class Game {
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 
 		if(Game.selectedBuildingForBuild){
+			Game.selectedBuildingForBuild.x = x - Game.selectedBuildingForBuild.width / 2;
 			if(Mouse.isClick){
 				Gamer.coins -= Game.selectedBuildingForBuild.price;
-				//Buildings.all.push(Game.selectedBuildingForBuild.create());
+				Buildings.all.push(Game.selectedBuildingForBuild);
+				console.log(Buildings.all);
 				Game.selectedBuildingForBuild = null;
 				return;
 			}
@@ -148,12 +151,7 @@ export class Game {
 		Buildings.drawHealth();
 
 		if(Game.selectedBuildingForBuild){
-			//при изменении размера canvas, мы должны масштабировать координаты мыши
-			let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
-			Draw.ctx.drawImage(
-				Game.selectedBuildingForBuild.image, 
-				x - Game.selectedBuildingForBuild.image.width / 2, 
-				Draw.canvas.height - Game.selectedBuildingForBuild.image.height + Game.bottomShiftBorder);
+			Game.selectedBuildingForBuild.draw(millisecondsFromStart, Game.isGameOver);
 		}
 	
 		Coins.draw();
@@ -268,7 +266,8 @@ export class Game {
 	static buyThing(item: ShopItem){
 		Game.continue();
 		if(item.category == ShopCategoryEnum.BUILDINGS){
-			Game.selectedBuildingForBuild = item;
+			Game.selectedBuildingForBuild = <Building>item;
+			Game.selectedBuildingForBuild.y = Draw.canvas.height - Game.selectedBuildingForBuild.height + Game.bottomShiftBorder;
 		}
 	}
 }

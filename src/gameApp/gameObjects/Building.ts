@@ -51,7 +51,7 @@ export class Building extends ShopItem{
 		this.isLand = isLand; 
 	}
 
-	draw(isGameOver: boolean, millisecondsFromStart: number): void{
+	draw(millisecondsFromStart: number, isGameOver: boolean): void{
 		if(this.frames > 1){
 			let frame = isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / this.frames)) % this.frames;
 			Draw.ctx.drawImage(this.image, 
