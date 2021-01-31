@@ -108,8 +108,12 @@ export class Game {
 			Game.selectedBuildingForBuild.x = x - Game.selectedBuildingForBuild.width / 2;
 			if(Mouse.isClick){
 				Gamer.coins -= Game.selectedBuildingForBuild.price;
+				Labels.createRed(
+					Game.selectedBuildingForBuild.x + Game.selectedBuildingForBuild.width, 
+					Game.selectedBuildingForBuild.y + Game.selectedBuildingForBuild.height / 3, 
+					'-' + Game.selectedBuildingForBuild.price,
+					2);
 				Buildings.all.push(Game.selectedBuildingForBuild);
-				console.log(Buildings.all);
 				Game.selectedBuildingForBuild = null;
 				return;
 			}

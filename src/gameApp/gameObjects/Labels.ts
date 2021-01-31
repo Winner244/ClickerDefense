@@ -10,18 +10,18 @@ export class Labels{
 		this.labels = [];
 	}
 
-	static createGreen(x: number, y: number, text: string): void{
-		Labels.labels.push(new Label(x, y, text, 0, 255, 0));
+	static createGreen(x: number, y: number, text: string, lifeTime: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 0, 255, 0, lifeTime));
 	}
 
-	static createRed(x: number, y: number, text: string): void{
-		Labels.labels.push(new Label(x, y, text, 255, 0, 0));
+	static createRed(x: number, y: number, text: string, lifeTime: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 255, 0, 0, lifeTime));
 	}
 
 	static logic(): void{
 		//контроль за временем жизни
 		for(let i = 0; i < Labels.labels.length; i++){
-			let leftTime = Date.now() - (Labels.labels[i].timeCreated + Labels.labelLifetime * 1000);
+			let leftTime = Date.now() - (Labels.labels[i].timeCreated + Labels.labels[i].lifeTime * 1000);
 			if(leftTime > 0){
 				Labels.labels.splice(i, 1);
 				i--;
@@ -31,6 +31,6 @@ export class Labels{
 	}
 
 	static draw(): void{
-		Labels.labels.forEach(label => Draw.drawLabel(label, Labels.labelLifetime));
+		Labels.labels.forEach(label => Draw.drawLabel(label, label.lifeTime));
 	}
 }

@@ -6,8 +6,9 @@ export class Label{
 	green: number;
 	blue: number;
 	timeCreated: number;
+	lifeTime: number;
 
-	constructor(x: number, y: number, text: string, red: number, green: number, blue: number){
+	constructor(x: number, y: number, text: string, red: number, green: number, blue: number, lifeTime: number){
 		this.x = x;
 		this.y = y;
 		this.text = text;
@@ -15,5 +16,6 @@ export class Label{
 		this.green = green;
 		this.blue = blue;
 		this.timeCreated = Date.now();
+		this.lifeTime = lifeTime;
 	}
 }
