@@ -6,6 +6,7 @@ import {Coins} from '../gameObjects/Coins';
 import {Coin} from '../gameObjects/Coin';
 import {Gamer} from '../gameObjects/Gamer';
 import {Labels} from '../gameObjects/Labels';
+import {Builder} from '../gameObjects/Builder';
 import {Waves} from './Waves';
 
 import {Zombie} from '../monsters/Zombie';
@@ -36,8 +37,6 @@ export class Game {
 	static isEndAfterGameOver: boolean = false; //игра закончилась
 	static isWasInit: boolean = false; //инициализация уже была?
 
-	static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
-
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId: number = 0; //техническая переменная для браузера 
 
@@ -57,6 +56,7 @@ export class Game {
 		Gamer.init();
 		Labels.init();
 		Waves.init(isLoadImage);
+		Builder.init(isLoadImage);
 
 		Game.images = [];
 		Game.images.push(Game.grassImage);
@@ -104,24 +104,7 @@ export class Game {
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 
-		if(Game.selectedBuildingForBuild){
-			Game.selectedBuildingForBuild.x = x - Game.selectedBuildingForBuild.width / 2;
-			if(Mouse.isClick){
-				Gamer.coins -= Game.selectedBuildingForBuild.price;
-				Labels.createRed(
-					Game.selectedBuildingForBuild.x + Game.selectedBuildingForBuild.width, 
-					Game.selectedBuildingForBuild.y + Game.selectedBuildingForBuild.height / 3, 
-					'-' + Game.selectedBuildingForBuild.price,
-					2);
-				Buildings.all.push(Game.selectedBuildingForBuild);
-				Game.selectedBuildingForBuild = null;
-				return;
-			}
-			else if(Mouse.isRightClick){
-				Game.selectedBuildingForBuild = null;
-				return;
-			}
-		}
+		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
 
 		let isSetCursor = false;
 		if(Waves.isStarted && Waves.delayStartTimeLeft < 0){
@@ -154,9 +137,7 @@ export class Game {
 		Buildings.draw(millisecondsFromStart, Game.isGameOver);
 		Buildings.drawHealth();
 
-		if(Game.selectedBuildingForBuild){
-			Game.selectedBuildingForBuild.draw(millisecondsFromStart, Game.isGameOver);
-		}
+		Builder.draw(millisecondsFromStart, Game.isGameOver);
 	
 		Coins.draw();
 	
@@ -207,6 +188,8 @@ export class Game {
 			if(Buildings.flyEarthRope.health <= 0){
 				Game.isGameOver = true;
 			}
+
+			Builder.logic();
 			
 			Game.mouseLogic(millisecondsDifferent); //логика обработки мыши
 
@@ -270,8 +253,8 @@ export class Game {
 	static buyThing(item: ShopItem){
 		Game.continue();
 		if(item.category == ShopCategoryEnum.BUILDINGS){
-			Game.selectedBuildingForBuild = <Building>item;
-			Game.selectedBuildingForBuild.y = Draw.canvas.height - Game.selectedBuildingForBuild.height + Game.bottomShiftBorder;
+			Builder.selectedBuildingForBuild = <Building>item;
+			Builder.selectedBuildingForBuild.y = Draw.canvas.height - Builder.selectedBuildingForBuild.height + Game.bottomShiftBorder;
 		}
 	}
 }

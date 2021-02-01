@@ -12,8 +12,8 @@ class TestShopPage extends React.Component {
     componentDidMount(){
         App.Store.dispatch(MenuStore.actionCreators.startGame());
         Game.startNew();
+        Waves.isStarted = false;
         Gamer.coins = 500;
-        Object.values(Waves.waveMonsters[0]).map(x => x.wasCreated = x.count); //end of wawes
         Shop.show();
     }
 
