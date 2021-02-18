@@ -6,12 +6,13 @@ import {Draw} from '../gameSystems/Draw';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
 
+/** Режим строительства */
 export class Builder {
 
 	static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
 	static smokeImage: HTMLImageElement = new Image();  
-	static isDrawSmoke: boolean = false;
-	static buildTime: number;
+	static isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
+	static buildTime: number; //время постройки
 	static readonly smokeFrames: number = 10; 
 	static readonly smokeLifeTime: number = 1000; //в миллисекундах
 
@@ -57,15 +58,16 @@ export class Builder {
 		if(this.selectedBuildingForBuild){
 			if(this.isDrawSmoke){
 				let frame = isGameOver ? 0 : Math.floor((Date.now() - this.buildTime) / this.smokeLifeTime * this.smokeFrames);
-				let newHeight = this.smokeImage.height * (200 / (this.smokeImage.width / this.smokeFrames));
+				let smokeWidth = this.selectedBuildingForBuild.width * 2;
+				let newHeight = this.smokeImage.height * (smokeWidth / (this.smokeImage.width / this.smokeFrames));
 				Draw.ctx.drawImage(this.smokeImage, 
 					this.smokeImage.width / this.smokeFrames * frame, //crop from x
 					0, //crop from y
 					this.smokeImage.width / this.smokeFrames, //crop by width
 					this.smokeImage.height,    //crop by height
-					this.selectedBuildingForBuild.x, //draw from x
+					this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2, //draw from x
 					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight,  //draw from y
-					this.selectedBuildingForBuild.width, //draw by width 
+					smokeWidth, //draw by width 
 					newHeight); //draw by height 
 			}
 			else{
