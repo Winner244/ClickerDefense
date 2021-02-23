@@ -72,17 +72,17 @@ export class Menu extends React.Component<Props, {}> {
     return (
       <div>
         {this.props.isDisplayOutsideButtonMenu
-          ? <button className="menu__button-open noselect" id="menu-button-outside-open" onClick={() => this.onClickShow()}>Меню</button>
+          ? <button className="menu__button-outside-open noselect" id="menu-button-outside-open" onClick={() => this.onClickShow()}>Меню</button>
           : null
         }
         
         {this.props.isDisplayOutsideButtonShop
-          ? <button className="menu__button-shop noselect" id="menu-button-outside-shop" onClick={() => this.onClickShopOpen()}>Магазин</button>
+          ? <button className="menu__button-outside-shop noselect" id="menu-button-outside-shop" onClick={() => this.onClickShopOpen()}>Магазин</button>
           : null
         }
 
         {this.props.isDisplayNewWaveOutsideButton
-          ? <button className="menu__button-new-wave noselect" id="menu-button-outside-new-wave" onClick={() => this.onClickStartNewWave()}>
+          ? <button className="menu__button-outside-new-wave noselect" id="menu-button-outside-new-wave" onClick={() => this.onClickStartNewWave()}>
               Новая волна
             </button>
           : null
@@ -104,7 +104,7 @@ export class Menu extends React.Component<Props, {}> {
                   }
 
                   {this.props.isDisplayNewWaveButton
-                    ? <button className="menu__button menu__button--new-wave" onClick={() => this.onClickStartNewWave()}>Новая волна</button>
+                    ? <button className="menu__button menu__button-new-wave" onClick={() => this.onClickStartNewWave()}>Новая волна</button>
                     : null
                   }
                   

@@ -48,7 +48,7 @@
 		}
 	}
 
-	&__button-open, &__button-shop{
+	&__button-outside-open, &__button-outside-shop{
 		position: absolute;
 		border: 0;
 		top: 0;
@@ -70,22 +70,37 @@
 		}
 	}
 
-	&__button-shop{
+	&__button-outside-shop{
 		left: auto;
 		right: 195px;
 	}
 
-	&__button-new-wave{
+	&__button-outside-new-wave{
 		position: absolute;
-		top: 0;
-		right: 20px;
-		font-size: 25px;
-		font-family: 'FortunataCYR';
+		top: 8px;
+		right: 25px;
+		font-size: 22px;
+		font-family: 'AnotherCastle3';
 		color: black;
 		padding: 5px 10px 10px;
 		cursor: pointer;
 		outline: none;
 		box-shadow: 0 0 7px 1px black;
+		background-color: #ba0707;
+		border: 1px solid #610000;
+		border-radius: 5px;
+
+		&:hover{
+			background-color: #eb0000;
+		}
+	}
+
+	&__button-new-wave{
+		background-color: #9d0000;
+
+		&:hover{
+			background-color: #640000;
+		}
 	}
 
 	&__close{

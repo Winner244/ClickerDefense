@@ -14,9 +14,10 @@ class TestShopPage extends React.Component {
         App.Store.dispatch(MenuStore.actionCreators.startGame());
         Game.startNew();
         Waves.isStarted = false;
+        Menu.displayNewWaveButton();
+        Menu.displayShopButton();
         Gamer.coins = 500;
         Shop.show();
-        Menu.displayNewWaveButton();
     }
 
     public render() {
