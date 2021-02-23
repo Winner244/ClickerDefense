@@ -76,7 +76,7 @@ export class Building extends ShopItem{
 
 	drawHealth(): void{
 		if(this.health < this.healthMax && this.health > 0){
-			Draw.drawHealth(this.x - 15, this.y - 10, 50, this.healthMax, this.health);
+			Draw.drawHealth(this.x + 15, this.y - 10, this.width - 30, this.healthMax, this.health);
 		}
 	}
 }

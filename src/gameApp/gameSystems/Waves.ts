@@ -42,7 +42,7 @@ export class Waves{
 				[Zombie.name]: new WaveData(2, 60) 
 			},
 			{ //2-я волна
-				[Zombie.name]: new WaveData(3, 120) 
+				[Zombie.name]: new WaveData(13, 100) 
 			}];  
 	}
 

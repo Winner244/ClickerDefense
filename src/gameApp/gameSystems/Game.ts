@@ -196,6 +196,8 @@ export class Game {
 			Waves.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		
 			Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all);
+
+			Buildings.logic();
 		}
 		
 		Coins.logic(millisecondsDifferent, Game.bottomShiftBorder);

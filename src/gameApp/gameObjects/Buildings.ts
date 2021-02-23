@@ -63,6 +63,16 @@ export class Buildings{
 		return false;
 	}
 
+	static logic(){
+		for(let i = 0; i < this.all.length; i++)
+		{
+			if(this.all[i].health <= 0){
+				this.all.splice(i, 1);
+				i--;
+			}
+		}
+	}
+
 	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
 		Buildings.all.forEach(building => building.draw(millisecondsFromStart, isGameOver));
 	}
