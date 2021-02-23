@@ -6,6 +6,7 @@ import * as MenuStore from './MenuStore';
 import * as ShopStore from '../Shop/ShopStore';
 
 import { App } from '../../App';
+import { Shop } from '../Shop/Shop';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Waves} from '../../../gameApp/gameSystems/Waves';
@@ -23,12 +24,12 @@ type Props =
 
 export class Menu extends React.Component<Props, {}> {
 
-  static displayShop(): void{
-    App.Store.dispatch(MenuStore.actionCreators.displayShop());
+  static displayNewWaveButton():void{
+    App.Store.dispatch(MenuStore.actionCreators.displayNewWaveButton());
   }
 
-  static hideShop(): void{
-    App.Store.dispatch(MenuStore.actionCreators.hideShop());
+  static displayShopButton(): void{
+    App.Store.dispatch(MenuStore.actionCreators.displayShopButton());
   }
 
   static showStartMenu(): void{
@@ -37,10 +38,6 @@ export class Menu extends React.Component<Props, {}> {
 
   static show(): void{
     App.Store.dispatch(MenuStore.actionCreators.open());
-  }
-
-  static hide(): void{
-    App.Store.dispatch(MenuStore.actionCreators.close());
   }
 
   onClickNewGame(){
@@ -53,15 +50,22 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   onClickContinue(){
+		this.props.close();
     Game.continue();
   }
 
+  onClickStartNewWave(){
+    Game.startNewWave();
+    this.props.hideShopButton();
+    this.props.hideNewWaveButton();
+    this.props.close();
+  }
+
   onClickShopOpen(){
-    App.Store.dispatch(ShopStore.actionCreators.open());
-    this.props.hideShop();
     Game.pause();
     Waves.delayEndTimeLeft = 0;
     this.props.close();
+    Shop.show();
   }
 
   render() {
@@ -77,15 +81,30 @@ export class Menu extends React.Component<Props, {}> {
           : null
         }
 
+        {this.props.isDisplayNewWaveOutsideButton
+          ? <button className="menu__button-new-wave noselect" id="menu-button-outside-new-wave" onClick={() => this.onClickStartNewWave()}>
+              Новая волна
+            </button>
+          : null
+        }
+
         {this.props.isOpen
           ? <div className="menu noselect">
               <div className="menu__body">
                   <div className="menu__title">Меню</div>
+                  <div className="menu__close" onClick={() => this.onClickContinue()}>
+                      <div className="menu__close-body">x</div>
+                  </div>
 
                   <button className="menu__button" onClick={() => this.onClickNewGame()}>Новая игра</button>
 
                   {this.props.isDisplayButtonContinueGame 
                     ? <button className="menu__button" onClick={() => this.onClickContinue()}>Продолжить</button>
+                    : null
+                  }
+
+                  {this.props.isDisplayNewWaveButton
+                    ? <button className="menu__button menu__button--new-wave" onClick={() => this.onClickStartNewWave()}>Новая волна</button>
                     : null
                   }
                   

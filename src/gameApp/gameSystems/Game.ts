@@ -245,8 +245,13 @@ export class Game {
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
 		Game.animationId = window.requestAnimationFrame(Game.go);
-		Menu.hide();
 		Mouse.isClick = false;
+	}
+
+	/** Начать новую волну */
+	static startNewWave(): void{
+		this.continue();
+		Waves.startNewWave();
 	}
 
 	/** Игрок купил вещь в магазине */

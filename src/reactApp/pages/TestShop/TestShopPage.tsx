@@ -2,6 +2,7 @@
 
 import { App } from '../../App';
 import {Shop} from '../../components/Shop/Shop';
+import {Menu} from '../../components/Menu/Menu';
 import * as MenuStore from '../../components/Menu/MenuStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
@@ -15,6 +16,7 @@ class TestShopPage extends React.Component {
         Waves.isStarted = false;
         Gamer.coins = 500;
         Shop.show();
+        Menu.displayNewWaveButton();
     }
 
     public render() {

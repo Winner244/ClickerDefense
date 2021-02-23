@@ -33,11 +33,12 @@ export class Shop extends React.Component<Props, {}> {
 
   static show(): void{
     App.Store.dispatch(ShopStore.actionCreators.open());
+    App.Store.dispatch(MenuStore.actionCreators.hideOutsideButtons());
   }
 
   static hide(): void{
     App.Store.dispatch(ShopStore.actionCreators.close());
-    App.Store.dispatch(MenuStore.actionCreators.displayShop());
+    App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
   }
 
   onClickClose(){
@@ -104,7 +105,9 @@ export class Shop extends React.Component<Props, {}> {
                               <div className="shop__item-title">{item.name}</div>
                               <button 
                                 className={"shop__item-button " + (item.price > Gamer.coins ? 'shop__item-button--disabled' : '')} 
-                                onClick={() => this.onClickBuyItem(item)}
+                                onClick={() => item.price > Gamer.coins
+                                  ? () => {} 
+                                  : this.onClickBuyItem(item)}
                               >
                                 Купить {item.price}
                                 <img src={CoinImage}/>

@@ -37,9 +37,13 @@ export class Waves{
 			this.iconCountKilledMonsters.src = MonsterImage;
 		}
 		
-		this.waveMonsters = [{ //монстры на волнах
-			[Zombie.name]: new WaveData(2, 60) 
-		}];  
+		this.waveMonsters = [ //монстры на волнах
+			{ //1-я волна
+				[Zombie.name]: new WaveData(2, 60) 
+			},
+			{ //2-я волна
+				[Zombie.name]: new WaveData(3, 120) 
+			}];  
 	}
 
 	static startFirstWave(){
@@ -69,9 +73,12 @@ export class Waves{
 		}
 
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
-			Menu.displayShop();
+			Menu.displayShopButton();
 			this.isStarted = false;
 			this.delayEndTimeLeft = this.delayEndTime;
+			if(this.waveMonsters.length > this.waveCurrent + 1){
+				Menu.displayNewWaveButton();
+			}
 			return;
 		}
 
