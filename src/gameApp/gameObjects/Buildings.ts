@@ -1,6 +1,7 @@
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 import {Tower} from '../buildings/Tower';
+import {SimpleObject} from '../../models/SimpleObject';
 
 import {Cursor} from '../Cursor';
 
@@ -9,8 +10,15 @@ import {Draw} from '../gameSystems/Draw';
 import {Building} from './Building';
 import {Coins} from './Coins';
 
+import ExplosionImage from '../../assets/img/explosion2.png'; 
+
 export class Buildings{
 	static all: Building[] = []; //все строения
+	
+	static explosionImage: HTMLImageElement = new Image(); //анимация после разрушения здания
+	static explosions: SimpleObject[] = []; //анимации разрушения 
+	static readonly explosionLifeTime = 700; //время жизни анимации разрушения (в миллисекундах)
+	static readonly explosionFrames = 10;
 
 	static flyEarth: Building; //ключевое воздушное здание
 	static flyEarthRope: Building; //ключивое наземное здание
@@ -21,6 +29,10 @@ export class Buildings{
 		FlyEarth.init(isLoadImage);
 		FlyEarthRope.init(isLoadImage);
 		Tower.init(isLoadImage);
+
+		if(isLoadImage){
+			this.explosionImage.src = ExplosionImage;
+		}
 
 		this.flyEarth = new FlyEarth(
 			Draw.canvas.width / 2 - FlyEarth.width / 2, 
@@ -63,17 +75,48 @@ export class Buildings{
 		return false;
 	}
 
-	static logic(){
-		for(let i = 0; i < this.all.length; i++)
-		{
-			if(this.all[i].health <= 0){
-				this.all.splice(i, 1);
-				i--;
+	static logic(millisecondsDifferent: number, isGameOver: boolean){
+		//логика анимации разрушения здания
+		if(this.explosions.length){
+			for(let i = 0; i < this.explosions.length; i++){
+				this.explosions[i].lifeTime -= millisecondsDifferent;
+				if(this.explosions[i].lifeTime <= 0){
+					this.explosions.splice(i, 1);
+					i--;
+				}
+			}
+		}
+
+		if(!isGameOver){
+			for(let i = 0; i < this.all.length; i++)
+			{
+				if(this.all[i].health <= 0){
+					let building = this.all[i];
+					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionLifeTime));
+					this.all.splice(i, 1);
+					i--;
+				}
 			}
 		}
 	}
 
 	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
+		//разрушения зданий
+		this.explosions.forEach(explosion => {
+			let frame = Math.floor((this.explosionLifeTime - explosion.lifeTime) / this.explosionLifeTime * this.explosionFrames);
+			let newHeight = this.explosionImage.height * (explosion.size.width / (this.explosionImage.width / this.explosionFrames));
+			Draw.ctx.drawImage(this.explosionImage, 
+				this.explosionImage.width / this.explosionFrames * frame, //crop from x
+				0, //crop from y
+				this.explosionImage.width / this.explosionFrames, //crop by width
+				this.explosionImage.height,    //crop by height
+				explosion.location.x, //draw from x
+				explosion.location.y + explosion.size.height - newHeight,  //draw from y
+				explosion.size.width, //draw by width 
+				newHeight); //draw by height 
+
+		});
+
 		Buildings.all.forEach(building => building.draw(millisecondsFromStart, isGameOver));
 	}
 

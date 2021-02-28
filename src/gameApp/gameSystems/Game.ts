@@ -194,9 +194,9 @@ export class Game {
 			Game.mouseLogic(millisecondsDifferent); //логика обработки мыши
 
 			Waves.logic(millisecondsDifferent, Game.bottomShiftBorder);
-
-			Buildings.logic();
 		}
+
+		Buildings.logic(millisecondsDifferent, Game.isGameOver);
 		
 		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver);
 		

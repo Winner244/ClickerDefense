@@ -16,6 +16,7 @@ import { Draw } from '../gameSystems/Draw';
 
 export class Monsters{
 	static all: Monster[] = []; //все монстры
+	
 	static explosionImage: HTMLImageElement = new Image(); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
 	static readonly explosionLifeTime = 700; //время жизни анимации гибели монстра (в миллисекундах)
