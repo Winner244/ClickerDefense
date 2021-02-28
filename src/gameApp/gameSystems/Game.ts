@@ -198,7 +198,7 @@ export class Game {
 			Buildings.logic();
 		}
 		
-		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all);
+		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver);
 		
 		Coins.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		
