@@ -11,6 +11,7 @@ import {Building} from './Building';
 import {Coins} from './Coins';
 
 import ExplosionImage from '../../assets/img/explosion2.png'; 
+import { Monster } from './Monster';
 
 export class Buildings{
 	static all: Building[] = []; //все строения
@@ -75,7 +76,7 @@ export class Buildings{
 		return false;
 	}
 
-	static logic(millisecondsDifferent: number, isGameOver: boolean){
+	static logic(millisecondsDifferent: number, isGameOver: boolean, monsters: Monster[]){
 		//логика анимации разрушения здания
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
@@ -90,11 +91,14 @@ export class Buildings{
 		if(!isGameOver){
 			for(let i = 0; i < this.all.length; i++)
 			{
-				if(this.all[i].health <= 0){
-					let building = this.all[i];
+				let building = this.all[i];
+				if(this.all[i].health <= 0){ //проверка здоровья
 					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionLifeTime));
 					this.all.splice(i, 1);
 					i--;
+				}
+				else{
+					building.logic(millisecondsDifferent, monsters)
 				}
 			}
 		}

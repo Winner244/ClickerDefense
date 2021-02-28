@@ -1,4 +1,5 @@
 import {Draw} from '../gameSystems/Draw';
+import {Monster} from '../gameObjects/Monster';
 import ShopItem from '../../models/ShopItem';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
@@ -79,4 +80,6 @@ export class Building extends ShopItem{
 			Draw.drawHealth(this.x + 15, this.y - 10, this.width - 30, this.healthMax, this.health);
 		}
 	}
+
+	logic(millisecondsDifferent: number, monsters: Monster[]){}
 }

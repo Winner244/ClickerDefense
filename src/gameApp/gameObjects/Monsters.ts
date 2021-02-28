@@ -42,13 +42,6 @@ export class Monsters{
 
 				if(isClick){
 					monster.health -= Gamer.cursorDamage;
-					if(monster.health <= 0){
-						Labels.createGreen(mouseX - 10, mouseY - 10, '+1');
-						Monsters.all.splice(i, 1);
-						Gamer.coins++;
-						this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.image.height, this.explosionLifeTime));
-					}
-
 					Cursor.setCursor(Cursor.swordRed);
 				}
 
@@ -60,6 +53,19 @@ export class Monsters{
 	}
 
 	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean): void{
+		if(!isGameOver && Monsters.all.length){
+			for(let i = 0; i < Monsters.all.length; i++){
+				let monster = Monsters.all[i];
+				if(monster.health <= 0){
+					Labels.createGreen(monster.x - 10, monster.y - 10, '+1');
+					Monsters.all.splice(i, 1);
+					i--;
+					Gamer.coins++;
+					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.image.height, this.explosionLifeTime));
+				}
+			}
+		}
+
 		//логика взрывов погибших монстров
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
@@ -71,11 +77,7 @@ export class Monsters{
 			}
 		}
 
-		if(!Monsters.all.length){
-			return;
-		}
-
-		if(!isGameOver){
+		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
 			Monsters.all.map(monster => monster.logic(millisecondsDifferent, buildings));
 		

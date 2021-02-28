@@ -196,7 +196,7 @@ export class Game {
 			Waves.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		}
 
-		Buildings.logic(millisecondsDifferent, Game.isGameOver);
+		Buildings.logic(millisecondsDifferent, Game.isGameOver, Monsters.all);
 		
 		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver);
 		
