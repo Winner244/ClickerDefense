@@ -81,5 +81,5 @@ export class Building extends ShopItem{
 		}
 	}
 
-	logic(millisecondsDifferent: number, monsters: Monster[]){}
+	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){}
 }

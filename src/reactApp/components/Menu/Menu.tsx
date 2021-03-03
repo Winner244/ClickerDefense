@@ -39,6 +39,9 @@ export class Menu extends React.Component<Props, {}> {
   static show(): void{
     App.Store.dispatch(MenuStore.actionCreators.open());
   }
+  static hide(): void{
+    App.Store.dispatch(MenuStore.actionCreators.close());
+  }
 
   onClickNewGame(){
     this.props.startGame();

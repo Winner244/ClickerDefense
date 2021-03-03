@@ -196,7 +196,7 @@ export class Game {
 			Waves.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		}
 
-		Buildings.logic(millisecondsDifferent, Game.isGameOver, Monsters.all);
+		Buildings.logic(millisecondsDifferent, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
 		
 		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver);
 		
@@ -220,6 +220,7 @@ export class Game {
 			}
 			else{
 				Game.continue();
+				Menu.hide();
 			}
 		}
 	}

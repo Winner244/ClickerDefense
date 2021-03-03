@@ -11,7 +11,7 @@ import {SimpleObject} from '../../models/SimpleObject';
 
 import {Monster} from './Monster';
 
-import ExplosionImage from '../../assets/img/explosionOfEnergy.png'; 
+import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 import { Draw } from '../gameSystems/Draw';
 
 export class Monsters{
@@ -57,7 +57,7 @@ export class Monsters{
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
 				if(monster.health <= 0){
-					Labels.createGreen(monster.x - 10, monster.y - 10, '+1');
+					Labels.createGreen(monster.x, monster.y, '+1');
 					Monsters.all.splice(i, 1);
 					i--;
 					Gamer.coins++;

@@ -10,7 +10,7 @@ import {Draw} from '../gameSystems/Draw';
 import {Building} from './Building';
 import {Coins} from './Coins';
 
-import ExplosionImage from '../../assets/img/explosion2.png'; 
+import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
 import { Monster } from './Monster';
 
 export class Buildings{
@@ -18,7 +18,7 @@ export class Buildings{
 	
 	static explosionImage: HTMLImageElement = new Image(); //анимация после разрушения здания
 	static explosions: SimpleObject[] = []; //анимации разрушения 
-	static readonly explosionLifeTime = 700; //время жизни анимации разрушения (в миллисекундах)
+	static readonly explosionLifeTime = 1000; //время жизни анимации разрушения (в миллисекундах)
 	static readonly explosionFrames = 10;
 
 	static flyEarth: Building; //ключевое воздушное здание
@@ -76,7 +76,7 @@ export class Buildings{
 		return false;
 	}
 
-	static logic(millisecondsDifferent: number, isGameOver: boolean, monsters: Monster[]){
+	static logic(millisecondsDifferent: number, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){
 		//логика анимации разрушения здания
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
@@ -98,7 +98,7 @@ export class Buildings{
 					i--;
 				}
 				else{
-					building.logic(millisecondsDifferent, monsters)
+					building.logic(millisecondsDifferent, monsters, bottomShiftBorder)
 				}
 			}
 		}
