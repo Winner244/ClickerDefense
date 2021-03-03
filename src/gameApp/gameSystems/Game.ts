@@ -247,13 +247,14 @@ export class Game {
 
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
-		Game.animationId = window.requestAnimationFrame(Game.go);
+		if(!Game.animationId)
+			Game.animationId = window.requestAnimationFrame(Game.go);
 		Mouse.isClick = false;
 	}
 
 	/** Начать новую волну */
 	static startNewWave(): void{
-		this.continue();
+		Game.continue();
 		Waves.startNewWave();
 	}
 
