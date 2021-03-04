@@ -19,7 +19,7 @@ export class Tower extends Building{
 	static readonly damage: number = 1; //урон от 1 атаки
 
 	static readonly imageArrow: HTMLImageElement = new Image();
-	static readonly arrowSpeed: number = 550; //скорость полёта стрелы (в пикселях за секунду)
+	static readonly arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
 
 	rechargeLeft: number = 0; //сколько осталось времени перезарядки
 	arrows: MovingObject[] = [];
@@ -62,7 +62,7 @@ export class Tower extends Building{
 					let dx = (x1 - x2) / (distance / Tower.arrowSpeed);
 					let dy = (y1 - y2) / (distance / Tower.arrowSpeed);
 
-					this.arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 60, dx, dy, rotate));
+					this.arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
 					this.rechargeLeft = Tower.rechargeTime;
 				}
 			}
@@ -75,7 +75,7 @@ export class Tower extends Building{
 			arrow.lifeTime -= millisecondsDifferent;
 
 			//moving
-			if(arrow.location.y + arrow.size.height < Draw.canvas.height - bottomShiftBorder){
+			if(arrow.location.y + arrow.size.height < Draw.canvas.height - bottomShiftBorder - 10){
 				arrow.location.x -= arrow.dx * (millisecondsDifferent / 1000);
 				arrow.location.y -= arrow.dy * (millisecondsDifferent / 1000);
 				endMoving = false;
@@ -109,13 +109,11 @@ export class Tower extends Building{
 		{
 			let arrow = this.arrows[i];
 
-			Draw.ctx.setTransform(1, 0, 0, 1, arrow.location.x + arrow.size.width, arrow.location.y + arrow.size.height); 
+			Draw.ctx.setTransform(1, 0, 0, 1, arrow.location.x + arrow.size.width / 2, arrow.location.y + arrow.size.height / 2); 
 			Draw.ctx.rotate(arrow.rotate * Math.PI / 180);
-			Draw.ctx.drawImage(Tower.imageArrow, arrow.size.width / 2, arrow.size.height / 2, arrow.size.width, arrow.size.height);
-			Draw.ctx.setTransform(1,0,0,1,0,0);
+			Draw.ctx.drawImage(Tower.imageArrow, -arrow.size.width / 2, -arrow.size.height / 2, arrow.size.width, arrow.size.height);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
-
-			//Draw.ctx.drawImage(Tower.imageArrow, arrow.location.x, arrow.location.y, arrow.size.width, arrow.size.height);
 		}
 
 		super.draw(millisecondsFromStart, isGameOver);
