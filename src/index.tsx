@@ -9,14 +9,14 @@ import configureStore from './reactApp/store/configureStore';
 import * as RoutesModule from './routes';
 import {App} from './reactApp/App';
 
+import './common.css';
+import './fonts.css';
+
 // Create browser history to use in the Redux store
 App.History = createBrowserHistory();
 
 // Get the application-wide store instance, prepopulating with state from the server where available.
 App.Store = configureStore(App.History);
-
-import './common.css';
-import './fonts.css';
 
 ReactDOM.render(
   <React.StrictMode>
