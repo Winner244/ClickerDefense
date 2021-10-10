@@ -73,6 +73,8 @@ export class Draw{
 
 	/** Конец игры */
 	static drawGameOver(){
+		Draw.drawBlackout();
+
 		let text = 'Game Over!';
 		Draw.ctx.fillStyle = `orange`;
 		Draw.ctx.font = "72px Calibri";
@@ -83,6 +85,8 @@ export class Draw{
 
 	/** Надпись о начале новой волны */
 	static drawStartNewWave(waveNumber: number, delayStartTimeLeft: number, delayStartTime: number){
+		Draw.drawBlackout();
+
 		let text = `Волна ${waveNumber}`;
 		Draw.ctx.font = "72px Calibri";
 
@@ -103,6 +107,8 @@ export class Draw{
 
 	/** Надпись об окончании волны */
 	static drawEndNewWave(delayEndTimeLeft: number, delayEndTime: number){
+		Draw.drawBlackout();
+
 		let text = `Волна пройдена`;
 		Draw.ctx.font = "72px Calibri";
 
