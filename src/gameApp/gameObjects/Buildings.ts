@@ -68,6 +68,7 @@ export class Buildings{
 				let coinX = this.flyEarth.x + this.flyEarth.reduceHover + Math.random() * (FlyEarth.width - this.flyEarth.reduceHover * 2);
 				let coinY = this.flyEarth.y + FlyEarth.height / 2;
 				Coins.create(coinX, coinY);
+				Cursor.setCursor(Cursor.pickYellow);
 			}
 			
 			return true;
