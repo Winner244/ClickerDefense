@@ -1,5 +1,6 @@
 import {Draw} from './Draw';
 import {Zombie} from '../monsters/Zombie';
+import {Boar} from '../monsters/Boar';
 import {Helper} from '../helpers/Helper';
 import {Monsters} from '../gameObjects/Monsters';
 import {WaveData} from '../gameObjects/WaveData';
@@ -21,15 +22,16 @@ export class Waves{
 	static delayEndTimeLeft: number = 0; //сколько ещё осталось задержки 
 	static delayEndTime: number = 3000; //задержка после окончании волны (в миллисекундах) - что бы показать надпись "Волна пройдена"
 
+	static waveTimeMs: number = 0; //(в миллисекундах) сколько по времени волна уже идёт
 
 	static waveCurrent: number = 0; //текущая волна нападения 
-	static waveMonsters: { [id: string] : WaveData; }[] = [];  
+	static all: { [id: string] : WaveData; }[] = [];
 
 	static get waveCountKilledMonsters(): number{
-		return sum(Object.values(Waves.waveMonsters[Waves.waveCurrent]).map(x => x.wasCreated)) - Monsters.all.length;
+		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.wasCreated)) - Monsters.all.length;
 	};
 	static get waveCountMonsters(): number {
-		return sum(Object.values(Waves.waveMonsters[Waves.waveCurrent]).map(x => x.count))
+		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.count))
 	}
 
 	static init(isLoadImage: boolean = true): void{
@@ -37,13 +39,14 @@ export class Waves{
 			this.iconCountKilledMonsters.src = MonsterImage;
 		}
 		
-		this.waveMonsters = [ //монстры на волнах
+		this.all = [ //монстры на волнах
 			{ //1-я волна
-				[Zombie.name]: new WaveData(13, 60) 
+				[Zombie.name]: new WaveData(Zombie.images[0].height,5, 80, 0),
 			},
 			{ //2-я волна
-				[Zombie.name]: new WaveData(13, 80) 
-			}];  
+				[Zombie.name]: new WaveData(Zombie.images[0].height, 13, 80, 0),
+				[Boar.name]: new WaveData(Boar.images[0].height,5, 60, 5)
+			}];
 	}
 
 	static startFirstWave(){
@@ -55,6 +58,7 @@ export class Waves{
 		this.waveCurrent++;
 		this.delayStartTimeLeft = this.delayStartTime;
 		this.isStarted = true;
+		this.waveTimeMs = 0;
 	}
 
 	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
@@ -72,28 +76,41 @@ export class Waves{
 			return;
 		}
 
+		this.waveTimeMs += millisecondsDifferent;
+
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
 			Menu.displayShopButton();
 			this.isStarted = false;
 			this.delayEndTimeLeft = this.delayEndTime;
-			if(this.waveMonsters.length > this.waveCurrent + 1){
+			if(this.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
 			}
 			return;
 		}
 
 		//логика создания монстров
-		var waveData = Waves.waveMonsters[Waves.waveCurrent][Zombie.name];
-		var periodTime = 1000 * 60 / waveData.frequencyCreating;
-		if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2)) 
-		{ 
-			let isLeftSide = Math.random() < 0.5;
-			let x = isLeftSide ? -50 : Draw.canvas.width;
-			let y = Draw.canvas.height - bottomShiftBorder - Zombie.images[0].height;
-	
-			Monsters.all.push(new Zombie(x, y, isLeftSide));
-			waveData.wasCreated++;
-			waveData.wasCreatedLastTime = Date.now();
+		var currentWave = Waves.all[Waves.waveCurrent];
+		var wavesData = Object.keys(currentWave);
+		for(var i = 0; i < wavesData.length; i++){
+			var key = wavesData[i];
+			var waveData = currentWave[key];
+
+			if(this.waveTimeMs < waveData.startDelaySec * 1000){
+				continue;
+			}
+
+			var periodTime = 1000 * 60 / waveData.frequencyCreating;
+			if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2))
+			{
+				let isLeftSide = Math.random() < 0.5;
+				let x = isLeftSide ? -50 : Draw.canvas.width;
+				let y = Draw.canvas.height - bottomShiftBorder - waveData.monsterHeight;
+
+				Monsters.add(key, x, y, isLeftSide);
+
+				waveData.wasCreated++;
+				waveData.wasCreatedLastTime = Date.now();
+			}
 		}
 	}
 

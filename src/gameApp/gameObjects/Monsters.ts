@@ -1,5 +1,6 @@
 import {FlyEarth} from '../buildings/FlyEarth';
 import {Zombie} from '../monsters/Zombie';
+import {Boar} from '../monsters/Boar';
 import {Cursor} from '../Cursor';
 
 import {Gamer} from '../gameObjects/Gamer';
@@ -25,6 +26,7 @@ export class Monsters{
 	static init(isLoadImage: boolean = true){
 		this.all = [];
 		Zombie.init(isLoadImage);
+		Boar.init(isLoadImage);
 		if(isLoadImage){
 			this.explosionImage.src = ExplosionImage;
 		}
@@ -114,5 +116,17 @@ export class Monsters{
 		});
 
 		Monsters.all.forEach(monster => monster.draw(isGameOver));
+	}
+
+	static add(name: string, x: number, y: number, isLeftSide: boolean){
+		var newMonster: Monster;
+
+		switch (name){
+			case Zombie.name: newMonster = new Zombie(x, y, isLeftSide); break;
+			case Boar.name: newMonster = new Boar(x, y, isLeftSide); break;
+			default: throw 'unexpected name of monster.';
+		}
+
+		Monsters.all.push(newMonster);
 	}
 }
