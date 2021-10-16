@@ -13,7 +13,7 @@ import { Draw } from '../../../gameApp/gameSystems/Draw';
 import { MovingObject } from '../../../models/MovingObject';
 import {Gamer} from "../../../gameApp/gameObjects/Gamer";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
-import {WaveData} from "../../../gameApp/gameObjects/WaveData";
+import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
 
 class TestPage extends React.Component {

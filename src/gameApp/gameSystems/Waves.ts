@@ -3,7 +3,7 @@ import {Zombie} from '../monsters/Zombie';
 import {Boar} from '../monsters/Boar';
 import {Helper} from '../helpers/Helper';
 import {Monsters} from './Monsters';
-import {WaveData} from '../gameObjects/WaveData';
+import {WaveData} from '../../models/WaveData';
 
 import sum from 'lodash/sum';
 

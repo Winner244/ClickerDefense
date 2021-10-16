@@ -12,7 +12,7 @@ import { Helper } from '../../helpers/Helper';
 import { Draw } from '../../../gameApp/gameSystems/Draw';
 import { MovingObject } from '../../../models/MovingObject';
 import {Zombie} from "../../../gameApp/monsters/Zombie";
-import {WaveData} from "../../../gameApp/gameObjects/WaveData";
+import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
 import {Gamer} from "../../../gameApp/gameObjects/Gamer";
 
