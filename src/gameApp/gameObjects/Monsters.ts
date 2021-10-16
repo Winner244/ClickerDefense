@@ -3,11 +3,11 @@ import {Zombie} from '../monsters/Zombie';
 import {Boar} from '../monsters/Boar';
 import {Cursor} from '../Cursor';
 
-import {Gamer} from '../gameObjects/Gamer';
-import {Labels} from '../gameObjects/Labels';
-import {Coin} from '../gameObjects/Coin';
-import {Coins} from '../gameObjects/Coins';
-import {Building} from '../gameObjects/Building';
+import {Gamer} from './Gamer';
+import {Labels} from './Labels';
+import {Coin} from './Coin';
+import {Coins} from './Coins';
+import {Building} from './Building';
 import {SimpleObject} from '../../models/SimpleObject';
 
 import {Monster} from './Monster';
@@ -28,7 +28,7 @@ export class Monsters{
 	static init(isLoadImage: boolean = true){
 		Zombie.init(isLoadImage);
 		Boar.init(isLoadImage);
-		
+
 		this.all = [];
 		this.typeSizes = {
 			[Zombie.name]: new Size(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height),
