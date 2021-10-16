@@ -1,7 +1,7 @@
 import {Cursor} from '../Cursor';
-import {Coin} from './Coin';
+import {Coin} from '../gameObjects/Coin';
 import {Labels} from './Labels';
-import {Gamer} from './Gamer';
+import {Gamer} from '../gameObjects/Gamer';
 
 export class Coins{
 	static all: Coin[] = [];

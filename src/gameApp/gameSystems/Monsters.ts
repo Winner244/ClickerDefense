@@ -3,17 +3,17 @@ import {Zombie} from '../monsters/Zombie';
 import {Boar} from '../monsters/Boar';
 import {Cursor} from '../Cursor';
 
-import {Gamer} from './Gamer';
+import {Gamer} from '../gameObjects/Gamer';
 import {Labels} from './Labels';
-import {Coin} from './Coin';
+import {Coin} from '../gameObjects/Coin';
 import {Coins} from './Coins';
-import {Building} from './Building';
+import {Building} from '../gameObjects/Building';
 import {SimpleObject} from '../../models/SimpleObject';
 
-import {Monster} from './Monster';
+import {Monster} from '../gameObjects/Monster';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
-import {Draw } from '../gameSystems/Draw';
+import {Draw } from './Draw';
 import {Size} from "../../models/Size";
 
 export class Monsters{

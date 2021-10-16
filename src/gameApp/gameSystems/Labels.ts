@@ -1,5 +1,5 @@
-import {Draw} from '../gameSystems/Draw';
-import {Label} from './Label';
+import {Draw} from './Draw';
+import {Label} from '../gameObjects/Label';
 
 export class Labels{
 	static readonly labelLifetime: number = 1; //время жизни сообщения (в секундах)

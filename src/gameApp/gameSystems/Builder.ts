@@ -1,8 +1,8 @@
-import {Building} from './Building';
-import {Gamer} from './Gamer';
+import {Building} from '../gameObjects/Building';
+import {Gamer} from '../gameObjects/Gamer';
 import {Labels} from './Labels';
 import {Buildings} from './Buildings';
-import {Draw} from '../gameSystems/Draw';
+import {Draw} from './Draw';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
 

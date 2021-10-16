@@ -5,13 +5,13 @@ import {SimpleObject} from '../../models/SimpleObject';
 
 import {Cursor} from '../Cursor';
 
-import {Draw} from '../gameSystems/Draw';
+import {Draw} from './Draw';
 
-import {Building} from './Building';
+import {Building} from '../gameObjects/Building';
 import {Coins} from './Coins';
 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
-import { Monster } from './Monster';
+import { Monster } from '../gameObjects/Monster';
 
 export class Buildings{
 	static all: Building[] = []; //все строения

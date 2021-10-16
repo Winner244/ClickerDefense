@@ -1,12 +1,12 @@
 import {Draw} from './Draw';
 import {Building} from '../gameObjects/Building';
-import {Buildings} from '../gameObjects/Buildings';
-import {Monsters} from '../gameObjects/Monsters';
-import {Coins} from '../gameObjects/Coins';
+import {Buildings} from './Buildings';
+import {Monsters} from './Monsters';
+import {Coins} from './Coins';
 import {Coin} from '../gameObjects/Coin';
 import {Gamer} from '../gameObjects/Gamer';
-import {Labels} from '../gameObjects/Labels';
-import {Builder} from '../gameObjects/Builder';
+import {Labels} from './Labels';
+import {Builder} from './Builder';
 import {Waves} from './Waves';
 
 import {Zombie} from '../monsters/Zombie';
