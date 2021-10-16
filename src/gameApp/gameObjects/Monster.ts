@@ -24,7 +24,9 @@ export class Monster{
 	healthMax: number; //максимум хп
 	health: number;
 	damage: number; //урон (в секунду)
-	speed: number; //скорость (пикселей в секунду)
+	speed: number; //скорость передвижения (пикселей в секунду)
+	speedAnimation: number; //скорость анимации
+	speedAnimationAttack: number; //скорость анимации атаки
 
 	x: number;
 	y: number;
@@ -43,10 +45,12 @@ export class Monster{
 		name: string, 
 		image: HTMLImageElement, 
 		frames: number, 
-		width: number, 
+		width: number,
+		speedAnimation: number,
 		imageAttack: HTMLImageElement, 
 		attackFrames: number, 
-		attackWidth: number, 
+		attackWidth: number,
+		speedAnimationAttack: number,
 		reduceHover: number, 
 		healthMax: number, 
 		damage: number, 
@@ -55,18 +59,18 @@ export class Monster{
 		this.name = name;
 
 		this.image = image; //содержит несколько изображений для анимации
-		this.attackImage = imageAttack;  //содержит несколько изображений для анимации
-
 		this.frames = frames; //сколько изображений в image?
-		this.attackFrames = attackFrames; //сколько изображений атаки в attackImage?
-
 		this.width = width; //ширина image
 		this.widthFrame = image.width / frames;
 		this.height = this.width / this.widthFrame * this.image.height;
+		this.speedAnimation = speedAnimation;
 
+		this.attackImage = imageAttack;  //содержит несколько изображений для анимации
+		this.attackFrames = attackFrames; //сколько изображений атаки в attackImage?
 		this.attackWidth = attackWidth; //ширина attack image
 		this.attackWidthFrame = imageAttack.width / attackFrames;
 		this.attackHeight = this.attackWidth / this.attackWidthFrame * this.attackImage.height;
+		this.speedAnimationAttack = speedAnimationAttack;
 
 		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
 
@@ -155,7 +159,7 @@ export class Monster{
 
 		if(this.isAttack){
 			//атака
-			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.attackFrames)) % this.attackFrames;
+			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000 * this.speedAnimationAttack) / (1000 / this.attackFrames)) % this.attackFrames;
 			Draw.ctx.drawImage(this.attackImage, 
 				this.attackWidthFrame * currentFrame, //crop from x
 				0, //crop from y
@@ -168,7 +172,7 @@ export class Monster{
 		}
 		else{
 			//передвижение
-			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.frames)) % this.frames;
+			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000 * this.speedAnimation) / (1000 / this.frames)) % this.frames;
 			Draw.ctx.drawImage(this.image, 
 				this.widthFrame * currentFrame, //crop from x
 				0, //crop from y
