@@ -198,7 +198,7 @@ export class Game {
 
 		Buildings.logic(millisecondsDifferent, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
 		
-		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver);
+		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder);
 		
 		Coins.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		

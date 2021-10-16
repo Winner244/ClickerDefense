@@ -16,12 +16,12 @@ export class Zombie extends Monster{
 	static images: HTMLImageElement[] = [];
 	static attackImages: HTMLImageElement[] = [];
 
-	constructor(x: number, y: number, isLeftSide: boolean) {
+	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
 		let selectedImage = Zombie.images[random];
 		let selectedAttackImage = Zombie.attackImages[random];
 
-		super(x, y, isLeftSide, true, Zombie.name, selectedImage, 12,  49, selectedAttackImage, 4, 48, 5, 3, 1, 50);
+		super(x, y, isLeftSide, true, Zombie.name, selectedImage, 12,  49 * scaleSize, selectedAttackImage, 4, 48 * scaleSize, 5, 3 * scaleSize, 1, 50);
 	}
 
 	static init(isLoadImage: boolean = true): void{

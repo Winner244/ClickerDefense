@@ -13,6 +13,7 @@ import {Menu} from '../../reactApp/components/Menu/Menu';
 
 export class Waves{
 	static readonly iconCountKilledMonsters = new Image(); //иконка для интерфейса
+	static readonly monsterSizeDifferentScalePercentage = 20; //(в процентах) разница в размерах создаваемых монстров одного типа.
 
 	static isStarted: boolean = false; //Волна запущена?
 
@@ -41,7 +42,8 @@ export class Waves{
 		
 		this.all = [ //монстры на волнах
 			{ //1-я волна
-				[Zombie.name]: new WaveData(Zombie.images[0].height,5, 80, 0),
+				[Zombie.name]: new WaveData(Zombie.images[0].height,15, 80, 0),
+				[Boar.name]: new WaveData(Boar.images[0].height,5, 60, 0)
 			},
 			{ //2-я волна
 				[Zombie.name]: new WaveData(Zombie.images[0].height, 13, 80, 0),
@@ -89,24 +91,25 @@ export class Waves{
 		}
 
 		//логика создания монстров
-		var currentWave = Waves.all[Waves.waveCurrent];
-		var wavesData = Object.keys(currentWave);
-		for(var i = 0; i < wavesData.length; i++){
-			var key = wavesData[i];
-			var waveData = currentWave[key];
+		let currentWave = Waves.all[Waves.waveCurrent];
+		let wavesData = Object.keys(currentWave);
+		for(let i = 0; i < wavesData.length; i++){
+			let key = wavesData[i];
+			let waveData = currentWave[key];
 
 			if(this.waveTimeMs < waveData.startDelaySec * 1000){
 				continue;
 			}
 
-			var periodTime = 1000 * 60 / waveData.frequencyCreating;
+			let periodTime = 1000 * 60 / waveData.frequencyCreating;
 			if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2))
 			{
+				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
 				let isLeftSide = Math.random() < 0.5;
 				let x = isLeftSide ? -50 : Draw.canvas.width;
-				let y = Draw.canvas.height - bottomShiftBorder - waveData.monsterHeight;
+				let y = Draw.canvas.height - bottomShiftBorder - waveData.monsterImageHeight * scaleMonsterSize;
 
-				Monsters.add(key, x, y, isLeftSide);
+				Monsters.add(key, x, y, isLeftSide, scaleMonsterSize);
 
 				waveData.wasCreated++;
 				waveData.wasCreatedLastTime = Date.now();

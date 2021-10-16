@@ -11,8 +11,14 @@ export class Monster{
 	frames: number; //сколько изображений в image?
 	attackFrames: number; //сколько изображений атаки в attackImage?
 
-	width: number; //ширина image
-	attackWidth: number; //ширина attack image
+	width: number; //текущая ширина
+	widthFrame: number; //ширина кадра
+	height: number; //текущая высота (расчитывается по текущей ширине)
+
+	attackWidth: number; //текущая ширина attack
+	attackWidthFrame: number; //ширина attack фрейма
+	attackHeight: number; //текущая высота attack (расчитывается по текущей ширине attack)
+
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
 
 	healthMax: number; //максимум хп
@@ -55,7 +61,13 @@ export class Monster{
 		this.attackFrames = attackFrames; //сколько изображений атаки в attackImage?
 
 		this.width = width; //ширина image
+		this.widthFrame = image.width / frames;
+		this.height = this.width / this.widthFrame * this.image.height;
+
 		this.attackWidth = attackWidth; //ширина attack image
+		this.attackWidthFrame = imageAttack.width / attackFrames;
+		this.attackHeight = this.attackWidth / this.attackWidthFrame * this.attackImage.height;
+
 		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
 
 		this.healthMax = healthMax; //максимум хп
@@ -73,7 +85,7 @@ export class Monster{
 		this.createdTime = Date.now();
 	}
 
-	logic(millisecondsDifferent: number, buildings: Building[]): void{
+	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
 		//логика передвижения
 		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
 		buildingsGoal = sortBy(buildingsGoal, [building => building.x]);
@@ -110,6 +122,25 @@ export class Monster{
 			if(damage > 0){
 				buildingGoal.health -= damage; //наносим урон
 			}
+
+			if(this.isLand){
+				if(this.y > bottomBorder - this.attackHeight){
+					this.y--;
+				}
+				else if(this.y < bottomBorder - this.attackHeight){
+					this.y+=2;
+				}
+			}
+		}
+		else {
+			if(this.isLand){
+				if(this.y > bottomBorder - this.height){
+					this.y--;
+				}
+				else if(this.y < bottomBorder - this.height){
+					this.y+=2;
+				}
+			}
 		}
 	}
 
@@ -126,27 +157,27 @@ export class Monster{
 			//атака
 			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.attackFrames)) % this.attackFrames;
 			Draw.ctx.drawImage(this.attackImage, 
-				this.attackWidth * currentFrame, //crop from x
+				this.attackWidthFrame * currentFrame, //crop from x
 				0, //crop from y
-				this.attackWidth, 		  //crop by width
+				this.attackWidthFrame, 		  //crop by width
 				this.attackImage.height,  //crop by height
 				scale * this.x,  //draw from x
 				this.y,  		 //draw from y
 				scale * this.attackWidth, //draw by width 
-				this.attackImage.height); //draw by height
+				this.attackHeight); //draw by height
 		}
 		else{
 			//передвижение
 			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000) / (1000 / this.frames)) % this.frames;
 			Draw.ctx.drawImage(this.image, 
-				this.width * currentFrame, //crop from x
+				this.widthFrame * currentFrame, //crop from x
 				0, //crop from y
-				this.width, 	   //crop by width
+				this.widthFrame, 	   //crop by width
 				this.image.height, //crop by height
 				scale * this.x,  //draw from x
 				this.y,  		 //draw from y
 				scale * this.width, //draw by width 
-				this.image.height); //draw by height
+				this.height); //draw by height
 		}
 
 		if(isInvert){

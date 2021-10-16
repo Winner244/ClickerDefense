@@ -1,21 +1,21 @@
 import {Monster} from '../gameObjects/Monster';
 import {Helper} from '../helpers/Helper';
 
-import Boar1Image from '../../assets/img/monsters/boar2.png';
+import Boar1Image from '../../assets/img/monsters/boar.png';
 
-import BoarAttack1Image from '../../assets/img/monsters/boar2.png';
+import BoarAttack1Image from '../../assets/img/monsters/boar.png';
 
 export class Boar extends Monster{
 
 	static images: HTMLImageElement[] = [];
 	static attackImages: HTMLImageElement[] = [];
 
-	constructor(x: number, y: number, isLeftSide: boolean) {
+	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Boar.images.length) - 1;
 		let selectedImage = Boar.images[random];
 		let selectedAttackImage = Boar.attackImages[random];
 
-		super(x, y, isLeftSide, true, Boar.name, selectedImage, 8,  85, selectedAttackImage, 8, 85, 5, 4, 3, 150);
+		super(x, y, isLeftSide, true, Boar.name, selectedImage, 8,  85 * scaleSize, selectedAttackImage, 8, 85 * scaleSize, 5, 4 * scaleSize, 3, 150);
 	}
 
 	static init(isLoadImage: boolean = true): void{

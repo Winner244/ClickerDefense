@@ -54,7 +54,7 @@ export class Monsters{
 		return false;
 	}
 
-	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean): void{
+	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number): void{
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
@@ -81,7 +81,7 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.map(monster => monster.logic(millisecondsDifferent, buildings));
+			Monsters.all.map(monster => monster.logic(millisecondsDifferent, buildings, bottomBorder));
 		
 			//логика взаимодействия с монетками
 			if(Coins.all.length){
@@ -118,12 +118,12 @@ export class Monsters{
 		Monsters.all.forEach(monster => monster.draw(isGameOver));
 	}
 
-	static add(name: string, x: number, y: number, isLeftSide: boolean){
+	static add(name: string, x: number, y: number, isLeftSide: boolean, scaleSize: number){
 		var newMonster: Monster;
 
 		switch (name){
-			case Zombie.name: newMonster = new Zombie(x, y, isLeftSide); break;
-			case Boar.name: newMonster = new Boar(x, y, isLeftSide); break;
+			case Zombie.name: newMonster = new Zombie(x, y, isLeftSide, scaleSize); break;
+			case Boar.name: newMonster = new Boar(x, y, isLeftSide, scaleSize); break;
 			default: throw 'unexpected name of monster.';
 		}
 
