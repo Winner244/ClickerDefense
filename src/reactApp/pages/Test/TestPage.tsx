@@ -59,12 +59,12 @@ class TestPage extends React.Component {
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.all = [ //монстры на волнах
                     { //1-я волна
-                        [Zombie.name]: new WaveData(Zombie.images[0].height,7, 80, 0),
-                        [Boar.name]: new WaveData(Boar.images[0].height,5, 60, 0)
+                        [Zombie.name]: new WaveData(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height,7, 80, 0),
+                        [Boar.name]: new WaveData(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height,5, 60, 0)
                     },
                     { //2-я волна
-                        [Zombie.name]: new WaveData(Zombie.images[0].height, 33, 10, 0),
-                        [Boar.name]: new WaveData(Boar.images[0].height,15, 10, 0)
+                        [Zombie.name]: new WaveData(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height, 33, 10, 0),
+                        [Boar.name]: new WaveData(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height,15, 10, 0)
                     }];
                 break;
 

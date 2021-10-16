@@ -8,7 +8,10 @@ import BoarAttack1Image from '../../assets/img/monsters/boar.png';
 export class Boar extends Monster{
 
 	static images: HTMLImageElement[] = [];
+	static imageFrames = 8;
+
 	static attackImages: HTMLImageElement[] = [];
+	static attackImageFrames = 8;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Boar.images.length) - 1;
@@ -20,12 +23,12 @@ export class Boar extends Monster{
 			true,
 			Boar.name,
 			selectedImage,
-			8,
-			selectedImage.width / 8 * scaleSize,
+			Boar.imageFrames,
+			selectedImage.width / Boar.imageFrames * scaleSize,
 			2,
 			selectedAttackImage,
-			8,
-			selectedAttackImage.width / 8 * scaleSize,
+			Boar.attackImageFrames,
+			selectedAttackImage.width / Boar.attackImageFrames * scaleSize,
 			1,
 			5,
 			4 * scaleSize,

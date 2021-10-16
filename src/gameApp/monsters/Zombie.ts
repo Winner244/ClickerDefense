@@ -14,7 +14,11 @@ import ZombieAttack4Image from '../../assets/img/monsters/zombieAttack4.png';
 export class Zombie extends Monster{
 
 	static images: HTMLImageElement[] = [];
+	static imageFrames = 12;
+
 	static attackImages: HTMLImageElement[] = [];
+	static attackImageFrames = 4;
+
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
@@ -26,12 +30,12 @@ export class Zombie extends Monster{
 			true,
 			Zombie.name,
 			selectedImage,
-			12,
-			selectedImage.width / 12 * scaleSize,
+			Zombie.imageFrames,
+			selectedImage.width / Zombie.imageFrames * scaleSize,
 			1,
 			selectedAttackImage,
-			4,
-			selectedAttackImage.width / 4 * scaleSize,
+			Zombie.attackImageFrames,
+			selectedAttackImage.width / Zombie.attackImageFrames * scaleSize,
 			1,
 			5,
 			3 * scaleSize,

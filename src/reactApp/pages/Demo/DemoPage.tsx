@@ -23,11 +23,11 @@ class DemoPage extends React.Component {
         Gamer.coins = 500;
         Waves.all = [ //монстры на волнах
             { //1-я волна
-                [Zombie.name]: new WaveData(Zombie.images[0].height,7, 80, 0),
+                [Zombie.name]: new WaveData(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height,7, 80, 0),
             },
             { //2-я волна
-                [Zombie.name]: new WaveData(Zombie.images[0].height, 13, 80, 0),
-                [Boar.name]: new WaveData(Boar.images[0].height,5, 60, 5)
+                [Zombie.name]: new WaveData(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height, 13, 80, 0),
+                [Boar.name]: new WaveData(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height,5, 60, 5)
             }];
     }
 
