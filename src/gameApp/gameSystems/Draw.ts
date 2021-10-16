@@ -1,4 +1,4 @@
-import {Label} from '../gameObjects/Label';
+import {Label} from '../../models/Label';
 
 export class Draw{
 	static canvas: HTMLCanvasElement;

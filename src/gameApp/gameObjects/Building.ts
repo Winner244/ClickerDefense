@@ -1,5 +1,5 @@
 import {Draw} from '../gameSystems/Draw';
-import {Monster} from '../gameObjects/Monster';
+import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 

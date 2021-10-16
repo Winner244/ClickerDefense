@@ -32,7 +32,7 @@ export class Tower extends Building{
 			'Сторожевая башня', 
 			Tower.image, 0, Tower.width, Tower.height, 15, 
 			25, 
-			500, 
+			50,
 			'Стреляет по наземным и воздушным монстрам в радиусе действия.');
 	}
 
