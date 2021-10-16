@@ -15,7 +15,7 @@ import { MovingObject } from '../../../models/MovingObject';
 class TestPage extends React.Component {
     componentDidMount(){
         let variant: any = Helper.getUrlQuery()['variant'];
-        switch(variant){
+        switch(+variant){
             case 1:
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();

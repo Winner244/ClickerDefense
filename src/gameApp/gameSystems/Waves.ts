@@ -42,8 +42,7 @@ export class Waves{
 		
 		this.all = [ //монстры на волнах
 			{ //1-я волна
-				[Zombie.name]: new WaveData(Zombie.images[0].height,15, 80, 0),
-				[Boar.name]: new WaveData(Boar.images[0].height,5, 60, 0)
+				[Zombie.name]: new WaveData(Zombie.images[0].height,15, 30, 0),
 			},
 			{ //2-я волна
 				[Zombie.name]: new WaveData(Zombie.images[0].height, 13, 80, 0),

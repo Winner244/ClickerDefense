@@ -62,7 +62,7 @@ export class Monsters{
 					Labels.createGreen(monster.x, monster.y, '+1');
 					Monsters.all.splice(i, 1);
 					i--;
-					Gamer.coins++;
+					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.image.height, this.explosionLifeTime));
 				}
 			}
