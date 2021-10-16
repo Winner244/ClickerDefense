@@ -42,11 +42,11 @@ export class Waves{
 		
 		this.all = [ //монстры на волнах
 			{ //1-я волна
-				[Zombie.name]: new WaveData(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height,15, 30, 0),
+				[Zombie.name]: new WaveData(15, 30, 0),
 			},
 			{ //2-я волна
-				[Zombie.name]: new WaveData(Zombie.images[0].width / Zombie.imageFrames,Zombie.images[0].height, 13, 80, 0),
-				[Boar.name]: new WaveData(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height,5, 60, 5)
+				[Zombie.name]: new WaveData( 13, 80, 0),
+				[Boar.name]: new WaveData(5, 60, 5)
 			}];
 	}
 
@@ -103,10 +103,11 @@ export class Waves{
 			let periodTime = 1000 * 60 / waveData.frequencyCreating;
 			if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2))
 			{
+				let monsterSize = Monsters.typeSizes[key];
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
 				let isLeftSide = Math.random() < 0.5;
-				let x = isLeftSide ? -waveData.monsterImageWidth * scaleMonsterSize : Draw.canvas.width;
-				let y = Draw.canvas.height - bottomShiftBorder - waveData.monsterImageHeight * scaleMonsterSize;
+				let x = isLeftSide ? -monsterSize.width * scaleMonsterSize : Draw.canvas.width;
+				let y = Draw.canvas.height - bottomShiftBorder - monsterSize.height * scaleMonsterSize;
 
 				Monsters.add(key, x, y, isLeftSide, scaleMonsterSize);
 
