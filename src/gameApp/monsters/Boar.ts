@@ -15,7 +15,20 @@ export class Boar extends Monster{
 		let selectedImage = Boar.images[random];
 		let selectedAttackImage = Boar.attackImages[random];
 
-		super(x, y, isLeftSide, true, Boar.name, selectedImage, 8,  85 * scaleSize, selectedAttackImage, 8, 85 * scaleSize, 5, 4 * scaleSize, 3, 150);
+		super(x, y,
+			isLeftSide,
+			true,
+			Boar.name,
+			selectedImage,
+			8,
+			selectedImage.width / 8 * scaleSize,
+			selectedAttackImage,
+			8,
+			selectedAttackImage.width / 8 * scaleSize,
+			5,
+			4 * scaleSize,
+			3,
+			150);
 	}
 
 	static init(isLoadImage: boolean = true): void{

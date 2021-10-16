@@ -106,7 +106,7 @@ export class Waves{
 			{
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
 				let isLeftSide = Math.random() < 0.5;
-				let x = isLeftSide ? -50 : Draw.canvas.width;
+				let x = isLeftSide ? -150 : Draw.canvas.width;
 				let y = Draw.canvas.height - bottomShiftBorder - waveData.monsterImageHeight * scaleMonsterSize;
 
 				Monsters.add(key, x, y, isLeftSide, scaleMonsterSize);

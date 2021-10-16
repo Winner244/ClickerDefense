@@ -21,7 +21,20 @@ export class Zombie extends Monster{
 		let selectedImage = Zombie.images[random];
 		let selectedAttackImage = Zombie.attackImages[random];
 
-		super(x, y, isLeftSide, true, Zombie.name, selectedImage, 12,  49 * scaleSize, selectedAttackImage, 4, 48 * scaleSize, 5, 3 * scaleSize, 1, 50);
+		super(x, y,
+			isLeftSide,
+			true,
+			Zombie.name,
+			selectedImage,
+			12,
+			selectedImage.width / 12 * scaleSize,
+			selectedAttackImage,
+			4,
+			selectedAttackImage.width / 4 * scaleSize,
+			5,
+			3 * scaleSize,
+			1,
+			50);
 	}
 
 	static init(isLoadImage: boolean = true): void{
