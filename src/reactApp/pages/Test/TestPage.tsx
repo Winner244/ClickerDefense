@@ -15,6 +15,7 @@ import {Gamer} from "../../../gameApp/gameObjects/Gamer";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
 import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
+import {Monsters} from "../../../gameApp/gameSystems/Monsters";
 
 class TestPage extends React.Component {
     componentDidMount(){
@@ -28,7 +29,7 @@ class TestPage extends React.Component {
                 Buildings.all[Buildings.all.length - 1].health = 1;
             break;
 
-            case 2: //кабаны
+            case 2: //стрелы
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -53,19 +54,20 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
                 break;
 
-            default: //стрелы
+            default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.all = [ //монстры на волнах
                     { //1-я волна
-                        [Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(5, 60, 0)
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
                     },
                     { //2-я волна
                         [Zombie.name]: new WaveData(33, 10, 0),
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
+                Monsters.all.push(new Boar(650, 780, true, 1));
                 break;
 
         }
