@@ -65,7 +65,8 @@ export class Builder {
 				let frame = isGameOver ? 0 : Math.floor((Date.now() - this.buildTime) / this.smokeLifeTime * this.smokeFrames);
 				let smokeWidth = this.selectedBuildingForBuild.width * 2;
 				let newHeight = this.smokeImage.height * (smokeWidth / (this.smokeImage.width / this.smokeFrames));
-				Draw.ctx.drawImage(this.smokeImage, 
+				Draw.ctx.globalAlpha = Math.max(0, (this.smokeLifeTime - (Date.now() - this.buildTime)) / this.smokeLifeTime); //better
+				Draw.ctx.drawImage(this.smokeImage,
 					this.smokeImage.width / this.smokeFrames * frame, //crop from x
 					0, //crop from y
 					this.smokeImage.width / this.smokeFrames, //crop by width
@@ -73,7 +74,8 @@ export class Builder {
 					this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2, //draw from x
 					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight,  //draw from y
 					smokeWidth, //draw by width 
-					newHeight); //draw by height 
+					newHeight); //draw by height
+				Draw.ctx.globalAlpha = 1;
 			}
 			else{
 				this.selectedBuildingForBuild.draw(millisecondsFromStart, isGameOver, true);

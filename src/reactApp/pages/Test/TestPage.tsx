@@ -16,6 +16,7 @@ import {Zombie} from "../../../gameApp/monsters/Zombie";
 import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
 import {Monsters} from "../../../gameApp/gameSystems/Monsters";
+import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 class TestPage extends React.Component {
     componentDidMount(){
@@ -25,8 +26,9 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Buildings.all.push(new Tower(200)); 
-                Buildings.all[Buildings.all.length - 1].health = 1;
+                Buildings.all.push(new Tower(200));
+                setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 300);
+
             break;
 
             case 2: //стрелы
@@ -52,6 +54,17 @@ class TestPage extends React.Component {
                 tower.arrows.push(new MovingObject(700, Draw.canvas.height - Game.bottomShiftBorder - Tower.imageArrow.height - z, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 60, 0, 0, 400));
                 Buildings.all.push(tower);
                 Waves.isStarted = false;
+                break;
+
+            case 3: //строительство башни
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                setTimeout(() => {
+                    Builder.selectedBuildingForBuild = new Tower(0);
+                    Builder.mouseLogic(200, 0, true, false)
+                }, 300);
+
                 break;
 
             default: //кабаны

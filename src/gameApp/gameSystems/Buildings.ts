@@ -110,6 +110,7 @@ export class Buildings{
 		this.explosions.forEach(explosion => {
 			let frame = Math.floor((this.explosionLifeTime - explosion.lifeTime) / this.explosionLifeTime * this.explosionFrames);
 			let newHeight = this.explosionImage.height * (explosion.size.width / (this.explosionImage.width / this.explosionFrames));
+			//Draw.ctx.globalAlpha = Math.max(0, explosion.lifeTime / this.explosionLifeTime); //no better
 			Draw.ctx.drawImage(this.explosionImage, 
 				this.explosionImage.width / this.explosionFrames * frame, //crop from x
 				0, //crop from y
@@ -118,7 +119,8 @@ export class Buildings{
 				explosion.location.x, //draw from x
 				explosion.location.y + explosion.size.height - newHeight,  //draw from y
 				explosion.size.width, //draw by width 
-				newHeight); //draw by height 
+				newHeight); //draw by height
+			Draw.ctx.globalAlpha = 1;
 
 		});
 
