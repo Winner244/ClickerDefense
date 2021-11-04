@@ -39,26 +39,28 @@ export const actionCreators = {
     selectItem: (itemName: string) => <SelectItemAction>{ type: 'SHOP__SELECT_ITEM', itemName: itemName},
 };
 
-const defaultState: ShopState = {
-    isOpen: false,
-    selectedCategory: ShopCategoryEnum.ALL,
-    selectedItemNames: [],
-    items: {
-        [ShopCategoryEnum.MAGIC]: [],
-        [ShopCategoryEnum.BUILDINGS]: [
-            new Tower(0)
-        ],
-        [ShopCategoryEnum.UNITS]: []
-    }
-};
+function getDefaultState(): ShopState{
+    return {
+        isOpen: false,
+        selectedCategory: ShopCategoryEnum.ALL,
+        selectedItemNames: [],
+        items: {
+            [ShopCategoryEnum.MAGIC]: [],
+            [ShopCategoryEnum.BUILDINGS]: [
+                new Tower(0)
+            ],
+            [ShopCategoryEnum.UNITS]: []
+        }
+    };
+}
 
 // REDUCER 
 export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action: KnownAction) => {
     switch (action.type) {
         case 'SHOP__OPEN':
-            return Object.assign({}, defaultState, { isOpen: true });
+            return Object.assign({}, getDefaultState(), { isOpen: true });
         case 'SHOP__CLOSE':
-            return defaultState;
+            return getDefaultState();
         case 'SHOP__SELECT_CATEGORY':
             return Object.assign({}, state, { selectedCategory: action.category == state?.selectedCategory ? ShopCategoryEnum.ALL : action.category });
         case 'SHOP__SELECT_ITEM':
@@ -75,5 +77,5 @@ export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action
             const exhaustiveCheck: never = action;
     }
 
-    return state || defaultState;
+    return state || getDefaultState();
 };
