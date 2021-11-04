@@ -60,6 +60,7 @@ export class Waves{
 		this.delayStartTimeLeft = this.delayStartTime;
 		this.isStarted = true;
 		this.waveTimeMs = 0;
+		this.delayEndTimeLeft = 0;
 	}
 
 	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
