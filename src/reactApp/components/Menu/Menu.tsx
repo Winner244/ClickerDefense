@@ -10,6 +10,7 @@ import { Shop } from '../Shop/Shop';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Waves} from '../../../gameApp/gameSystems/Waves';
+import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import './Menu.scss';
 
@@ -40,6 +41,7 @@ export class Menu extends React.Component<Props, {}> {
     App.Store.dispatch(MenuStore.actionCreators.open());
   }
   static hide(): void{
+    Game.isBlockMouseLogic = false;
     App.Store.dispatch(MenuStore.actionCreators.close());
   }
 
@@ -53,7 +55,7 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   onClickContinue(){
-		this.props.close();
+    this.props.close();
     Game.continue();
   }
 
@@ -71,21 +73,47 @@ export class Menu extends React.Component<Props, {}> {
     Shop.show();
   }
 
+  onMouseEnterInOutsideButtons(){
+    Game.isBlockMouseLogic = true;
+  }
+  onMouseOutFromOutsideButtons(){
+    Game.isBlockMouseLogic = false;
+  }
+
   render() {
     return (
       <div>
         {this.props.isDisplayOutsideButtonMenu
-          ? <button className="menu__button-outside-open noselect" id="menu-button-outside-open" onClick={() => this.onClickShow()}>Меню</button>
+          ? <button className="menu__button-outside-open noselect"
+                    id="menu-button-outside-open"
+                    onClick={() => this.onClickShow()}
+                    onMouseEnter={() => this.onMouseEnterInOutsideButtons()}
+                    onMouseOut={() => this.onMouseOutFromOutsideButtons()}
+            >
+              Меню
+            </button>
           : null
         }
         
         {this.props.isDisplayOutsideButtonShop
-          ? <button className="menu__button-outside-shop noselect" id="menu-button-outside-shop" onClick={() => this.onClickShopOpen()}>Магазин</button>
+          ? <button className="menu__button-outside-shop noselect"
+                    id="menu-button-outside-shop"
+                    onClick={() => this.onClickShopOpen()}
+                    onMouseEnter={() => this.onMouseEnterInOutsideButtons()}
+                    onMouseOut={() => this.onMouseOutFromOutsideButtons()}
+            >
+              Магазин
+            </button>
           : null
         }
 
         {this.props.isDisplayNewWaveOutsideButton
-          ? <button className="menu__button-outside-new-wave noselect" id="menu-button-outside-new-wave" onClick={() => this.onClickStartNewWave()}>
+          ? <button className="menu__button-outside-new-wave noselect"
+                    id="menu-button-outside-new-wave"
+                    onClick={() => this.onClickStartNewWave()}
+                    onMouseEnter={() => this.onMouseEnterInOutsideButtons()}
+                    onMouseOut={() => this.onMouseOutFromOutsideButtons()}
+            >
               Новая волна
             </button>
           : null

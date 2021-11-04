@@ -20,6 +20,11 @@ export class Builder {
 		if(isLoadImage){
 			this.smokeImage.src = SmokeImage;
 		}
+		this.selectedBuildingForBuild = null;
+	}
+
+	static finish(){
+		this.selectedBuildingForBuild = null;
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean){

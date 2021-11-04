@@ -38,7 +38,9 @@ export class Game {
 	static isWasInit: boolean = false; //инициализация уже была?
 
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
-	static animationId: number = 0; //техническая переменная для браузера 
+	static animationId: number = 0; //техническая переменная для браузера
+
+	static isBlockMouseLogic: boolean = false; //if user's mouse enter to interface buttons (menu/shop/nextWave)
 
 	/** Инициализация игры */
 	static init(canvas: HTMLCanvasElement, isLoadImage: boolean = true): void{
@@ -76,6 +78,7 @@ export class Game {
 		}
 
 		Game.isWasInit = true;
+		Game.isBlockMouseLogic = false;
 
 		Cursor.setCursor(Cursor.default);
 	}
@@ -100,6 +103,10 @@ export class Game {
 	}
 
 	private static mouseLogic(millisecondsDifferent: number) : void{
+		if(Game.isBlockMouseLogic){
+			return;
+		}
+
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
@@ -231,6 +238,7 @@ export class Game {
 			return;
 		}
 
+		Game.isBlockMouseLogic = true;
 		cancelAnimationFrame(Game.animationId);
 		Game.animationId = 0;
 		Game.isGameRun = false;
@@ -250,10 +258,12 @@ export class Game {
 		if(!Game.animationId)
 			Game.animationId = window.requestAnimationFrame(Game.go);
 		Mouse.isClick = false;
+		Game.isBlockMouseLogic = false;
 	}
 
 	/** Начать новую волну */
 	static startNewWave(): void{
+		Builder.finish();
 		Game.continue();
 		Waves.startNewWave();
 	}

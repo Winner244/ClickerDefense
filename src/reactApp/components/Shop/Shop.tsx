@@ -18,6 +18,7 @@ import CategoryUnitImage from '../../../assets/img/shop/shop-category-main/unit.
 import { Game } from '../../../gameApp/gameSystems/Game';
 import ShopItem from '../../../models/ShopItem';
 import { Gamer } from '../../../gameApp/gameObjects/Gamer';
+import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 
 interface Prop {
@@ -37,6 +38,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   static hide(): void{
+    Game.isBlockMouseLogic = false;
     App.Store.dispatch(ShopStore.actionCreators.close());
     App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
   }
