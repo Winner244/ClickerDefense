@@ -89,6 +89,13 @@ export class Monster{
 		this.createdTime = Date.now();
 	}
 
+	get centerX(){
+		return this.x + this.width / 2;
+	}
+	get centerY(){
+		return this.y + this.height / 2;
+	}
+
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
 		//логика передвижения
 		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);

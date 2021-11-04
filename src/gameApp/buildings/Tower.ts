@@ -43,6 +43,10 @@ export class Tower extends Building{
 		}
 	}
 
+	get centerY(){
+		return this.y + this.height / 4;
+	}
+
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number)
 	{
 		if(this.rechargeLeft > 0){ //перезарядка
@@ -50,12 +54,13 @@ export class Tower extends Building{
 		}
 		else{
 			if(monsters.length){
-				let monsterGoal = sortBy(monsters, [monster => Math.abs((this.x + this.width / 2) - (monster.x + monster.width / 2))])[0];
-				if(Math.abs(this.x - monsterGoal.x) < Tower.radiusAttack){ //в радиусе атаки
-					let x1 = this.x + this.width / 2 - Tower.imageArrow.width / 2;
-					let y1 = this.y + this.height / 4 - Tower.imageArrow.height / 2;
-					let x2 = monsterGoal.x + monsterGoal.width / 2 - Tower.imageArrow.width / 2;
-					let y2 = monsterGoal.y + monsterGoal.image.height / 2 - Tower.imageArrow.height / 2;
+				var monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < Tower.radiusAttack);
+				let monsterGoal = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)])[0];
+				if(monsterGoal){ //в радиусе атаки
+					let x1 = this.centerX - Tower.imageArrow.width / 2;
+					let y1 = this.centerY - Tower.imageArrow.height / 2;
+					let x2 = monsterGoal.centerX - Tower.imageArrow.width / 2;
+					let y2 = monsterGoal.centerY - Tower.imageArrow.height / 2;
 
 					let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
 					let distance = Helper.getDistance(x1, y1, x2, y2);
@@ -104,7 +109,7 @@ export class Tower extends Building{
 		}
 	}
 
-	draw(millisecondsFromStart: number, isGameOver: boolean): void{
+	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		for(let i = 0; i < this.arrows.length; i++)
 		{
 			let arrow = this.arrows[i];
@@ -116,6 +121,17 @@ export class Tower extends Building{
 			Draw.ctx.rotate(0);
 		}
 
-		super.draw(millisecondsFromStart, isGameOver);
+		//display radius attack
+		if(isBuildingMode){
+			Draw.ctx.beginPath();
+			Draw.ctx.arc(this.centerX, this.centerY, Tower.radiusAttack, 0, 2 * Math.PI, false);
+			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+			Draw.ctx.fill();
+			Draw.ctx.lineWidth = 2;
+			Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
+			Draw.ctx.stroke();
+		}
+
+		super.draw(millisecondsFromStart, isGameOver, isBuildingMode);
 	}
 }

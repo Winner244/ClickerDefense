@@ -52,7 +52,14 @@ export class Building extends ShopItem{
 		this.isLand = isLand; 
 	}
 
-	draw(millisecondsFromStart: number, isGameOver: boolean): void{
+	get centerX(){
+		return this.x + this.width / 2;
+	}
+	get centerY(){
+		return this.y + this.height / 2;
+	}
+
+	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		if(this.frames > 1){
 			let frame = isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / this.frames)) % this.frames;
 			Draw.ctx.drawImage(this.image, 

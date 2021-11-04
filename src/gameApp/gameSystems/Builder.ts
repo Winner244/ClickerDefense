@@ -71,7 +71,7 @@ export class Builder {
 					newHeight); //draw by height 
 			}
 			else{
-				this.selectedBuildingForBuild.draw(millisecondsFromStart, isGameOver);
+				this.selectedBuildingForBuild.draw(millisecondsFromStart, isGameOver, true);
 			}
 		}
 	}
