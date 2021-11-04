@@ -99,7 +99,7 @@ export class Monster{
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
 		//логика передвижения
 		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
-		buildingsGoal = sortBy(buildingsGoal, [building => building.x]);
+		buildingsGoal = sortBy(buildingsGoal, [building => this.isLeftSide ? building.x : building.x + building.width]);
 		var buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
 
 		this.isAttack = false;
