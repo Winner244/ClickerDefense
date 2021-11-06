@@ -1,6 +1,8 @@
 import {Draw} from '../gameSystems/Draw';
 import {Building} from './Building';
 import sortBy from 'lodash/sortBy';
+import {Modifier} from "./Modifier";
+import {Helper} from "../helpers/Helper";
 
 export class Monster{
 	name: string;
@@ -36,6 +38,10 @@ export class Monster{
 	isLand: boolean; //наземный?
 
 	createdTime: number;
+
+	buildingGoal: Building|null; //цель-здание для атаки
+
+	modifiers: Modifier[]; //бафы/дебафы
 
 	constructor(
 		x: number, 
@@ -87,6 +93,9 @@ export class Monster{
 		this.isLand = isLand; //наземный?
 
 		this.createdTime = Date.now();
+
+		this.buildingGoal = null;
+		this.modifiers = [];
 	}
 
 	get centerX(){
@@ -98,30 +107,36 @@ export class Monster{
 
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
 		//логика передвижения
-		let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
-		buildingsGoal = sortBy(buildingsGoal, [building => this.isLeftSide ? building.x : building.x + building.width]);
-		var buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
+		if(this.buildingGoal == null || this.buildingGoal.health <= 0){
+			let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
+			buildingsGoal = sortBy(buildingsGoal, [building => this.isLeftSide ? building.x : building.x + building.width]);
+			this.buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
+		}
+
+		var speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+		var speed = this.speed * (millisecondsDifferent / 1000);
+		speed += speed * speedMultiplier;
 
 		this.isAttack = false;
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
-			if (this.x + this.width < buildingGoal.x + this.width / 5) { //ещё не дошёл
-				this.x += this.speed * (millisecondsDifferent / 1000);
+			if (this.x + this.width < this.buildingGoal.x + this.width / 5) { //ещё не дошёл
+				this.x += speed;
 			}
 			else //дошёл
 			{
-				this.x = buildingGoal.x - this.width + this.width / 5;
+				this.x = this.buildingGoal.x - this.width + this.width / 5;
 				this.isAttack = true; //атакует
 			}
 		}
 		else 
 		{
-			if (this.x > buildingGoal.x + buildingGoal.width - this.width / 5) { //ещё не дошёл
-				this.x -= this.speed * (millisecondsDifferent / 1000);
+			if (this.x > this.buildingGoal.x + this.buildingGoal.width - this.width / 5) { //ещё не дошёл
+				this.x -= speed;
 			}
 			else //дошёл
 			{
-				this.x = buildingGoal.x + buildingGoal.width - this.width / 5;
+				this.x = this.buildingGoal.x + this.buildingGoal.width - this.width / 5;
 				this.isAttack = true; //атакует
 			}
 		}
@@ -129,11 +144,14 @@ export class Monster{
 		//логика атаки
 		if(this.isAttack) //если атакует
 		{
+			var damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
 			var damage = this.damage * (millisecondsDifferent / 1000);
+			damage += damage * damageMultiplier;
 			if(damage > 0){
-				buildingGoal.health -= damage; //наносим урон
+				this.buildingGoal.health -= damage; //наносим урон
 			}
 
+			//гравитация
 			if(this.isLand){
 				if(this.y > bottomBorder - this.attackHeight){
 					this.y--;
@@ -144,6 +162,7 @@ export class Monster{
 			}
 		}
 		else {
+			//гравитация
 			if(this.isLand){
 				if(this.y > bottomBorder - this.height){
 					this.y--;
@@ -154,6 +173,8 @@ export class Monster{
 			}
 		}
 	}
+
+	onClicked(): void{}
 
 	draw(isGameOver: boolean): void{
 		let isInvert = this.isLeftSide;
@@ -195,6 +216,10 @@ export class Monster{
 			Draw.ctx.restore();
 		}
 
+		this.drawHealth();
+	}
+
+	drawHealth(){
 		if(this.health != this.healthMax){
 			Draw.drawHealth(this.x + 10, this.y - 2, this.width - 20, this.healthMax, this.health);
 		}

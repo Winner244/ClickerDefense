@@ -36,4 +36,14 @@ export class Helper{
 	{
 		return Math.sqrt(Math.pow(x1 - x2, 2) + Math.pow(y1 - y2, 2));
 	}
+
+	/**
+	 * Сумма массива по выбраннмоу полю в getValue функции
+	 * @param array массив
+	 * @param getValue функция для выбора суммируемых полей
+	 */
+	static sum(array: any[], getValue: (a: any) => number) : number
+	{
+		return array.reduce((accumulator, currentEl) => accumulator + getValue(currentEl));
+	}
 }
