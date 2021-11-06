@@ -18,7 +18,7 @@ export class Boar extends Monster{
 	static attackImageFrames = 3;
 
 	static specialAbilityImages: HTMLImageElement[] = [];
-	static specialAbilityImageFrames = 10;
+	static specialAbilityImageFrames = 12;
 
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
