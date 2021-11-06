@@ -24,9 +24,9 @@ export class Boar extends Monster{
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
 		 спец способность отменяется при нанесении урона монстру */
 	static probabilitySpecialAbilityPercentage = 33; //(%) Вероятность срабатывания спец способности
-	static maxDistanceActivateSpecialAbility = 300; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
-	static minDistanceActivateSpecialAbility = 50; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
-	static timeAnimatedSpecialAbility = 3000; //(milliseconds) время анимации способности
+	static maxDistanceActivateSpecialAbility = 700; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
+	static minDistanceActivateSpecialAbility = 150; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
+	static timeAnimatedSpecialAbility = 1000; //(milliseconds) время анимации способности
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	specialAbilityImage: HTMLImageElement; //анимация спец способности
@@ -94,6 +94,7 @@ export class Boar extends Monster{
 				this.isActivatedSpecialAbility = true;
 				this.timeSpecialAbilityActivated = Date.now();
 				this.modifiers.push(new BoarSpecialAbility());
+				console.log('start');
 			}
 			else if(this.isActivatedSpecialAbility && this.isAttack && this.buildingGoal){
 				this.buildingGoal.health -= this.specialAbilityAdditionalDamage; //наносим доп урон
@@ -113,6 +114,7 @@ export class Boar extends Monster{
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
 		this.isActivatedSpecialAbility = false;
 		this.timeSpecialAbilityActivated = 0;
+		console.log('stopSpecialAbility');
 	}
 
 	draw(isGameOver: boolean) {
@@ -126,11 +128,12 @@ export class Boar extends Monster{
 			}
 
 			//передвижение
-			let currentFrame = isGameOver ? 0 : (Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimatedSpecialAbility * Boar.specialAbilityImageFrames;
+			let currentFrame = isGameOver ? 0 : Math.floor((Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimatedSpecialAbility * Boar.specialAbilityImageFrames);
+			console.log('currentFrame', currentFrame);
 			Draw.ctx.drawImage(this.specialAbilityImage,
-				this.widthFrame * currentFrame, //crop from x
+				375 * currentFrame, //crop from x
 				0, //crop from y
-				this.widthFrame, 	   //crop by width
+				375, 	   //crop by width
 				this.specialAbilityImage.height, //crop by height
 				scale * this.x,  //draw from x
 				this.y,  		 //draw from y

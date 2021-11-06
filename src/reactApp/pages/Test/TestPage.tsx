@@ -67,6 +67,25 @@ class TestPage extends React.Component {
 
                 break;
 
+            case 4: //спец способность кабана
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+                var boar = new Boar(50, 780, true, 1);
+                boar.isWillUseSpecialAbility = true;
+                boar.health--;
+                Monsters.all.push(boar);
+
+                break;
+
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();

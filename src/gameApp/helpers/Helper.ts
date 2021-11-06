@@ -44,6 +44,10 @@ export class Helper{
 	 */
 	static sum(array: any[], getValue: (a: any) => number) : number
 	{
-		return array.reduce((accumulator, currentEl) => accumulator + getValue(currentEl));
+		if(!array || !array.length){
+			return 0;
+		}
+
+		return array.reduce((accumulator, currentEl) => accumulator + getValue(currentEl), 0);
 	}
 }
