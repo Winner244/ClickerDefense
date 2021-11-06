@@ -83,6 +83,10 @@ export class Boar extends Monster{
 			if(Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimatedSpecialAbility){
 				return; //игнорируем базовую логику движения и атаки
 			}
+			else if(this.isAttack && this.buildingGoal){
+				this.buildingGoal.health -= this.specialAbilityAdditionalDamage; //наносим доп урон
+				this.stopSpecialAbility();
+			}
 		}
 		else if(this.isWillUseSpecialAbility){
 			//активация спец способности
@@ -96,10 +100,6 @@ export class Boar extends Monster{
 				this.modifiers.push(new BoarSpecialAbility());
 				console.log('start');
 			}
-			else if(this.isActivatedSpecialAbility && this.isAttack && this.buildingGoal){
-				this.buildingGoal.health -= this.specialAbilityAdditionalDamage; //наносим доп урон
-				this.stopSpecialAbility();
-			}
 		}
 
 		super.logic(millisecondsDifferent, buildings, bottomBorder);
@@ -111,7 +111,7 @@ export class Boar extends Monster{
 
 	stopSpecialAbility(): void{
 		this.modifiers = this.modifiers.filter(x => x.name != BoarSpecialAbility.name);
-		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
+		this.isWillUseSpecialAbility = false;
 		this.isActivatedSpecialAbility = false;
 		this.timeSpecialAbilityActivated = 0;
 		console.log('stopSpecialAbility');
