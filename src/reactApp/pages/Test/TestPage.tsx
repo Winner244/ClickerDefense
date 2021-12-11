@@ -79,10 +79,16 @@ class TestPage extends React.Component {
                     { //2-я волна
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
+
                 var boar = new Boar(50, 780, true, 1);
                 boar.isWillUseSpecialAbility = true;
                 boar.health--;
                 Monsters.all.push(boar);
+
+                var boar2 = new Boar(1850, 780, false, 1);
+                boar2.isWillUseSpecialAbility = true;
+                boar2.health--;
+                Monsters.all.push(boar2);
 
                 break;
 

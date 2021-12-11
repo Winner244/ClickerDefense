@@ -116,10 +116,10 @@ export class Buildings{
 				0, //crop from y
 				this.explosionImage.width / this.explosionFrames, //crop by width
 				this.explosionImage.height,    //crop by height
-				explosion.location.x, //draw from x
-				explosion.location.y + explosion.size.height - newHeight,  //draw from y
-				explosion.size.width, //draw by width 
-				newHeight); //draw by height
+				explosion.location.x, //x
+				explosion.location.y + explosion.size.height - newHeight,  //y
+				explosion.size.width, //displayed width 
+				newHeight); //displayed height
 			Draw.ctx.globalAlpha = 1;
 
 		});

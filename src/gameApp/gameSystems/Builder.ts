@@ -71,10 +71,10 @@ export class Builder {
 					0, //crop from y
 					this.smokeImage.width / this.smokeFrames, //crop by width
 					this.smokeImage.height,    //crop by height
-					this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2, //draw from x
-					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight,  //draw from y
-					smokeWidth, //draw by width 
-					newHeight); //draw by height
+					this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2, //x
+					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight,  //y
+					smokeWidth, //displayed width 
+					newHeight); //displayed height
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{

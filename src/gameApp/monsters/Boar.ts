@@ -4,6 +4,7 @@ import {Helper} from '../helpers/Helper';
 import Boar1Image from '../../assets/img/monsters/boar.png';
 import BoarAttack1Image from '../../assets/img/monsters/boarAttack.png';
 import BoarSpecial1Image from '../../assets/img/monsters/boarSpecial.png';
+import BoarSpecialSmokeImage from '../../assets/img/monsters/boarSpecial_Smoke.png';
 
 import {Building} from "../gameObjects/Building";
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
@@ -19,6 +20,12 @@ export class Boar extends Monster{
 
 	static specialAbilityImages: HTMLImageElement[] = [];
 	static specialAbilityImageFrames = 12;
+	static specialAbilityImageFrameWidth = 375;
+
+	static specialAbilitySmokeImage: HTMLImageElement;
+	static specialAbilitySmokeImageFrames = 16;
+	static specialAbilitySmokeImageFrameWidth = 90;
+	static specialAbilitySmokeImageDisplayedWidth = 180;
 
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
@@ -27,6 +34,7 @@ export class Boar extends Monster{
 	static maxDistanceActivateSpecialAbility = 700; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static minDistanceActivateSpecialAbility = 150; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static timeAnimatedSpecialAbility = 1000; //(milliseconds) время анимации способности
+	static timeAnimatedSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	specialAbilityImage: HTMLImageElement; //анимация спец способности
@@ -75,6 +83,9 @@ export class Boar extends Monster{
 			//Boar.attackImages.push(new Image()); Boar.attackImages[2].src = BoarAttack3Image;
 
 			Boar.specialAbilityImages.push(new Image()); Boar.specialAbilityImages[0].src = BoarSpecial1Image;
+
+			Boar.specialAbilitySmokeImage = new Image(); 
+			Boar.specialAbilitySmokeImage.src = BoarSpecialSmokeImage;
 		}
 	}
 
@@ -128,17 +139,19 @@ export class Boar extends Monster{
 			}
 
 			//передвижение
-			let currentFrame = isGameOver ? 0 : Math.floor((Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimatedSpecialAbility * Boar.specialAbilityImageFrames);
-			console.log('currentFrame', currentFrame);
+			let currentFrame = isGameOver 
+				? 0 
+				: Math.floor((Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimatedSpecialAbility * Boar.specialAbilityImageFrames);
 			Draw.ctx.drawImage(this.specialAbilityImage,
-				375 * currentFrame, //crop from x
+				Boar.specialAbilityImageFrameWidth * currentFrame, //crop from x
 				0, //crop from y
-				375, 	   //crop by width
+				Boar.specialAbilityImageFrameWidth, 	   //crop by width
 				this.specialAbilityImage.height, //crop by height
-				scale * this.x,  //draw from x
-				this.y,  		 //draw from y
-				scale * this.width, //draw by width
-				this.height); //draw by height
+				scale * this.x,  //x
+				this.y,  		 //y
+				scale * this.width, //displayed width
+				this.height); //displayed height
+
 
 			if(isInvert){
 				Draw.ctx.restore();
@@ -147,6 +160,35 @@ export class Boar extends Monster{
 			super.drawHealth();
 		}
 		else{
+			if(this.isActivatedSpecialAbility){
+				let isInvert = this.isLeftSide;
+				let scale = isInvert ? -1 : 1;
+	
+				if(isInvert){
+					Draw.ctx.save();
+					Draw.ctx.scale(-1, 1);
+				}
+
+				//дым от бега
+				let smokeCurrentFrame = isGameOver 
+					? 0 
+					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityActivated) % Boar.timeAnimatedSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimatedSpecialAbilitySmoke);
+				Draw.ctx.drawImage(Boar.specialAbilitySmokeImage,
+					Boar.specialAbilitySmokeImageFrameWidth * smokeCurrentFrame, //crop from x
+					0, //crop from y
+					Boar.specialAbilitySmokeImageFrameWidth, 	   //crop by width
+					Boar.specialAbilitySmokeImage.height, //crop by height
+					scale * this.x + this.width / 3 + (Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
+					this.y,  		 //y
+					scale * Boar.specialAbilitySmokeImageDisplayedWidth, //displayed width
+					this.height); //displayed height
+
+
+				if(isInvert){
+					Draw.ctx.restore();
+				}
+			}
+			
 			super.draw(isGameOver);
 		}
 	}

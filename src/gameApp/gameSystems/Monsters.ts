@@ -117,10 +117,10 @@ export class Monsters{
 				0, //crop from y
 				this.explosionImage.width / this.explosionFrames, //crop by width
 				this.explosionImage.height,    //crop by height
-				x.location.x - (newWidth - x.size.width) / 2, //draw from x
-				x.location.y,  //draw from y
-				newWidth, //draw by width 
-				x.size.height); //draw by height 
+				x.location.x - (newWidth - x.size.width) / 2, //x
+				x.location.y,  //y
+				newWidth, //displayed width 
+				x.size.height); //displayed height 
 
 		});
 

@@ -193,10 +193,10 @@ export class Monster{
 				0, //crop from y
 				this.attackWidthFrame, 		  //crop by width
 				this.attackImage.height,  //crop by height
-				scale * this.x,  //draw from x
-				this.y,  		 //draw from y
-				scale * this.attackWidth, //draw by width 
-				this.attackHeight); //draw by height
+				scale * this.x,  //x
+				this.y,  		 //y
+				scale * this.attackWidth, //displayed width 
+				this.attackHeight); //displayed height
 		}
 		else{
 			//передвижение
@@ -206,10 +206,10 @@ export class Monster{
 				0, //crop from y
 				this.widthFrame, 	   //crop by width
 				this.image.height, //crop by height
-				scale * this.x,  //draw from x
-				this.y,  		 //draw from y
-				scale * this.width, //draw by width 
-				this.height); //draw by height
+				scale * this.x,  //x
+				this.y,  		 //y
+				scale * this.width, //displayed width 
+				this.height); //displayed height
 		}
 
 		if(isInvert){

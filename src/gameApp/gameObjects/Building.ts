@@ -67,10 +67,10 @@ export class Building extends ShopItem{
 				0, //crop from y
 				this.image.width / this.frames, //crop by width
 				this.image.height,    //crop by height
-				this.x, //draw from x
-				this.y,  //draw from y
-				this.width, //draw by width 
-				this.height); //draw by height 
+				this.x, //x
+				this.y,  //y
+				this.width, //displayed width 
+				this.height); //displayed height 
 		}
 		else{
 			if(this.width > 0 && this.height > 0){
