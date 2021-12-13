@@ -62,14 +62,14 @@ export class Boar extends Monster{
 			2,
 			5,
 			4 * scaleSize,
-			3,
+			3 * scaleSize,
 			150);
 
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
 		this.specialAbilityImage = selectedSpecialImage;
 		this.isActivatedSpecialAbility = false;
 		this.timeSpecialAbilityActivated = 0;
-		this.specialAbilityAdditionalDamage = 10;
+		this.specialAbilityAdditionalDamage = 10 * scaleSize;
 	}
 
 	static init(isLoadImage: boolean = true): void{
@@ -178,7 +178,7 @@ export class Boar extends Monster{
 					0, //crop from y
 					Boar.specialAbilitySmokeImageFrameWidth, 	   //crop by width
 					Boar.specialAbilitySmokeImage.height, //crop by height
-					scale * this.x + this.width / 3 + (Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
+					scale * this.x + (scale > 0 ? -this.width / 8 : this.width / 3) + (Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
 					this.y,  		 //y
 					scale * Boar.specialAbilitySmokeImageDisplayedWidth, //displayed width
 					this.height); //displayed height
