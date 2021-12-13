@@ -30,7 +30,7 @@ export class Boar extends Monster{
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
 		 спец способность отменяется при нанесении урона монстру */
-	static probabilitySpecialAbilityPercentage = 33; //(%) Вероятность срабатывания спец способности
+	static probabilitySpecialAbilityPercentage = 40; //(%) Вероятность срабатывания спец способности
 	static maxDistanceActivateSpecialAbility = 700; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static minDistanceActivateSpecialAbility = 150; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
