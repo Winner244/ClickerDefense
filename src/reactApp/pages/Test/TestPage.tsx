@@ -85,7 +85,7 @@ class TestPage extends React.Component {
                 boar.health--;
                 Monsters.all.push(boar);
 
-                var boar2 = new Boar(1850, 780, false,1);
+                var boar2 = new Boar(1850, 780, false, 1);
                 boar2.isWillUseSpecialAbility = true;
                 boar2.health--;
                 Monsters.all.push(boar2);

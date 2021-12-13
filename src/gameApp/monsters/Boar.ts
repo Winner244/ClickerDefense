@@ -33,8 +33,9 @@ export class Boar extends Monster{
 	static probabilitySpecialAbilityPercentage = 33; //(%) Вероятность срабатывания спец способности
 	static maxDistanceActivateSpecialAbility = 700; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static minDistanceActivateSpecialAbility = 150; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
-	static timeAnimatedSpecialAbility = 1000; //(milliseconds) время анимации способности
-	static timeAnimatedSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
+	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
+	static timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
+	static timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	specialAbilityImage: HTMLImageElement; //анимация спец способности
@@ -91,7 +92,7 @@ export class Boar extends Monster{
 
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number) {
 		if(this.isActivatedSpecialAbility){
-			if(Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimatedSpecialAbility){
+			if(Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimateSpecialAbility){
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this.isAttack && this.buildingGoal){
@@ -129,7 +130,7 @@ export class Boar extends Monster{
 	}
 
 	draw(isGameOver: boolean) {
-		if(this.isActivatedSpecialAbility && Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimatedSpecialAbility){
+		if(this.isActivatedSpecialAbility && Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimateSpecialAbility){
 			let isInvert = this.isLeftSide;
 			let scale = isInvert ? -1 : 1;
 
@@ -141,7 +142,7 @@ export class Boar extends Monster{
 			//передвижение
 			let currentFrame = isGameOver 
 				? 0 
-				: Math.floor((Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimatedSpecialAbility * Boar.specialAbilityImageFrames);
+				: Math.floor((Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimateSpecialAbility * Boar.specialAbilityImageFrames);
 			Draw.ctx.drawImage(this.specialAbilityImage,
 				Boar.specialAbilityImageFrameWidth * currentFrame, //crop from x
 				0, //crop from y
@@ -170,18 +171,21 @@ export class Boar extends Monster{
 				}
 
 				//дым от бега
+				let smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + Date.now() - this.timeSpecialAbilityActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
 				let smokeCurrentFrame = isGameOver 
 					? 0 
-					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityActivated) % Boar.timeAnimatedSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimatedSpecialAbilitySmoke);
+					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityActivated) % Boar.timeAnimateSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimateSpecialAbilitySmoke);
 				Draw.ctx.drawImage(Boar.specialAbilitySmokeImage,
 					Boar.specialAbilitySmokeImageFrameWidth * smokeCurrentFrame, //crop from x
 					0, //crop from y
 					Boar.specialAbilitySmokeImageFrameWidth, 	   //crop by width
 					Boar.specialAbilitySmokeImage.height, //crop by height
-					scale * this.x + (scale > 0 ? -this.width / 8 : this.width / 3) + (Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
-					this.y,  		 //y
-					scale * Boar.specialAbilitySmokeImageDisplayedWidth, //displayed width
-					this.height); //displayed height
+					scale > 0 
+						? this.x + this.width / 3
+						: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
+					this.y + (1 - smokeScaleSize) * this.height,  		 //y
+					smokeScaleSize * scale * Boar.specialAbilitySmokeImageDisplayedWidth, //displayed width
+					smokeScaleSize * this.height); //displayed height
 
 
 				if(isInvert){
