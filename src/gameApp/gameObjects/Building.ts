@@ -14,14 +14,14 @@ export class Building extends ShopItem{
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маяковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маякового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
+	protected _maxImpulse: number; //максимальное значение импульса для здания
+	protected _impulseForceDecreaseing: number; //сила уменьшения импульса
 
 	x: number;
 	y: number;
 
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
 	isLand: boolean; //наземное? (иначе - воздушное)
-
-	static impulseForceDecreaseing = 0.5; //сила уменьшения импульса
 
 	constructor(
 		x: number, 
@@ -58,11 +58,16 @@ export class Building extends ShopItem{
 
 		this._impulse = this._impulsePharos = 0;
 		this._impulsePharosSign = false;
+		this._maxImpulse = 10;
+		this._impulseForceDecreaseing = 1;
 	}
 
 
 	set impulse(value: number){
-		console.log('set impulse', value);
+		if(value > this._maxImpulse){
+			value = this._maxImpulse;
+		}
+
 		this._impulse = this._impulsePharos = value;
 		this._impulsePharosSign = false;
 	}
@@ -112,17 +117,17 @@ export class Building extends ShopItem{
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){
 		if(this._impulse > 1){
-			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * Building.impulseForceDecreaseing);
-			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * Building.impulseForceDecreaseing * 10);
+			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * this._impulseForceDecreaseing);
+			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * this._impulseForceDecreaseing * 5);
 
 			if(this._impulsePharos < -this._impulse){
 				this._impulsePharosSign = !this._impulsePharosSign;
-				this._impulsePharos += this._impulse;
+				this._impulsePharos = -this._impulse;
 			}
 
 			if(this._impulsePharos > this._impulse){
 				this._impulsePharosSign = !this._impulsePharosSign;
-				this._impulsePharos -= this._impulse;
+				this._impulsePharos = this._impulse;
 			}
 		}
 	}
