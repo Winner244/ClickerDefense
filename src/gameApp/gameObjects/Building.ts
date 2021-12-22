@@ -11,12 +11,17 @@ export class Building extends ShopItem{
 	
 	healthMax: number; //максимум хп
 	health: number;
+	protected _impulse: number; //импульс от сверх ударов и сотрясений
+	protected _impulsePharos: number; //маяковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
+	protected _impulsePharosSign: boolean; //знак маякового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
 
 	x: number;
 	y: number;
 
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
 	isLand: boolean; //наземное? (иначе - воздушное)
+
+	static impulseForceDecreaseing = 0.5; //сила уменьшения импульса
 
 	constructor(
 		x: number, 
@@ -50,6 +55,23 @@ export class Building extends ShopItem{
 
 		this.isLeftSide = isLeftSide; 
 		this.isLand = isLand; 
+
+		this._impulse = this._impulsePharos = 0;
+		this._impulsePharosSign = false;
+	}
+
+
+	set impulse(value: number){
+		console.log('set impulse', value);
+		this._impulse = this._impulsePharos = value;
+		this._impulsePharosSign = false;
+	}
+	get impulse(): number{
+		if(this._impulse <= 1){
+			return 0;
+		}
+
+		return this._impulse;
 	}
 
 	get centerX(){
@@ -88,5 +110,20 @@ export class Building extends ShopItem{
 		}
 	}
 
-	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){}
+	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){
+		if(this._impulse > 1){
+			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * Building.impulseForceDecreaseing);
+			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * Building.impulseForceDecreaseing * 10);
+
+			if(this._impulsePharos < -this._impulse){
+				this._impulsePharosSign = !this._impulsePharosSign;
+				this._impulsePharos += this._impulse;
+			}
+
+			if(this._impulsePharos > this._impulse){
+				this._impulsePharosSign = !this._impulsePharosSign;
+				this._impulsePharos -= this._impulse;
+			}
+		}
+	}
 }

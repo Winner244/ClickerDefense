@@ -36,10 +36,11 @@ export class Boar extends Monster{
 	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
 	static timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
+	static specialAbilityDamage = 10; //начальный урон от спец способности (единократный)
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	specialAbilityImage: HTMLImageElement; //анимация спец способности
-	specialAbilityAdditionalDamage: number; //Доп урон от спец способности (единократный)
+	specialAbilityDamage: number; //Доп урон от спец способности (единократный)
 	timeSpecialAbilityActivated: number; //время активации спец способности
 
 
@@ -70,7 +71,7 @@ export class Boar extends Monster{
 		this.specialAbilityImage = selectedSpecialImage;
 		this.isActivatedSpecialAbility = false;
 		this.timeSpecialAbilityActivated = 0;
-		this.specialAbilityAdditionalDamage = 10 * scaleSize;
+		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 	}
 
 	static init(isLoadImage: boolean = true): void{
@@ -96,7 +97,8 @@ export class Boar extends Monster{
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this.isAttack && this.buildingGoal){
-				this.buildingGoal.health -= this.specialAbilityAdditionalDamage; //наносим доп урон
+				this.buildingGoal.health -= this.specialAbilityDamage; //наносим урон от спец способности
+				this.buildingGoal.impulse += this.specialAbilityDamage; //добавляем импульс постройке от удара
 				this.stopSpecialAbility();
 			}
 		}

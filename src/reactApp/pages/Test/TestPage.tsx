@@ -28,7 +28,6 @@ class TestPage extends React.Component {
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Buildings.all.push(new Tower(200));
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 300);
-
             break;
 
             case 2: //стрелы
@@ -64,7 +63,6 @@ class TestPage extends React.Component {
                     Builder.selectedBuildingForBuild = new Tower(0);
                     Builder.mouseLogic(200, 0, true, false)
                 }, 300);
-
                 break;
 
             case 4: //спец способность кабана
@@ -89,7 +87,46 @@ class TestPage extends React.Component {
                 boar2.isWillUseSpecialAbility = true;
                 boar2.health--;
                 Monsters.all.push(boar2);
+                break;
 
+            case 5: //передача импульса от спец способность кабана к башне
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                Buildings.all.push(new Tower(700));
+
+                var boar = new Boar(50, 780, true, 1);
+                boar.isWillUseSpecialAbility = true;
+                boar.health--;
+                Monsters.all.push(boar);
+                break;
+
+            case 6: // башня получила импульс
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                Buildings.all.push(new Tower(700));
+                Buildings.all[Buildings.all.length - 1].impulse = 10;
+                //Buildings.all[Buildings.all.length - 1].impulse = 5;
+                //Buildings.all[Buildings.all.length - 1].impulse = 1.5;
                 break;
 
             default: //кабаны

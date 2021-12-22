@@ -31,8 +31,8 @@ export class Tower extends Building{
 			true, 
 			'Сторожевая башня', 
 			Tower.image, 0, Tower.width, Tower.height, 15, 
-			25, 
-			50,
+			100, //health max
+			50, // price
 			'Стреляет по наземным и воздушным монстрам в радиусе действия.');
 	}
 
@@ -49,6 +49,8 @@ export class Tower extends Building{
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number)
 	{
+		super.logic(millisecondsDifferent, monsters, bottomShiftBorder);
+
 		if(this.rechargeLeft > 0){ //перезарядка
 			this.rechargeLeft -= millisecondsDifferent;
 		}
@@ -132,6 +134,15 @@ export class Tower extends Building{
 			Draw.ctx.stroke();
 		}
 
-		super.draw(millisecondsFromStart, isGameOver, isBuildingMode);
+		if(this.impulse > 0){
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
+			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
+			Draw.ctx.drawImage(this.image, - this.width / 2, - this.height, this.width, this.height);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+		}
+		else{
+			super.draw(millisecondsFromStart, isGameOver, isBuildingMode);
+		}
 	}
 }
