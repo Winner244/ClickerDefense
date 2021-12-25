@@ -29,8 +29,10 @@ export class Boar extends Monster{
 	static specialAbilitySmokeImageDisplayedWidth = 180;
 
 	static specialAbilityDamageParticlesImage: HTMLImageElement;
-	static specialAbilityDamageParticlesImageFrames = 6;
+	static specialAbilityDamageParticlesImageFrames = 7;
 	static specialAbilityDamageParticlesImageFrameWidth = 200;
+	static specialAbilityDamageParticlesImageDisplayedWidth = 100;
+	static specialAbilityDamageParticlesImageDisplayedHeight = 100;
 
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
@@ -41,7 +43,7 @@ export class Boar extends Monster{
 	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
 	static timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
-	static timeAnimateSpecialDamageParticles = 400; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
+	static timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
 	static specialAbilityDamage = 10; //начальный урон от спец способности (единократный)
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
@@ -224,9 +226,9 @@ export class Boar extends Monster{
 					Boar.specialAbilityDamageParticlesImageFrameWidth, 	//crop by width
 					Boar.specialAbilityDamageParticlesImage.height, 	//crop by height
 					scale > 0 ? this.x - this.width : -this.x,
-					this.y + this.height / 2 - Boar.specialAbilityDamageParticlesImage.height / 2 / 2,
-					scale * Boar.specialAbilityDamageParticlesImageFrameWidth / 2, //displayed width
-					Boar.specialAbilityDamageParticlesImage.height / 2); //displayed height
+					this.y + this.height / 2 - Boar.specialAbilityDamageParticlesImageDisplayedHeight / 2,
+					scale * Boar.specialAbilityDamageParticlesImageDisplayedWidth, //displayed width
+					Boar.specialAbilityDamageParticlesImageDisplayedHeight); //displayed height
 
 				if(!isInvert){
 					Draw.ctx.restore();
