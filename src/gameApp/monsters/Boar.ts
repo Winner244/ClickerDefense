@@ -225,7 +225,7 @@ export class Boar extends Monster{
 					0, //crop from y
 					Boar.specialAbilityDamageParticlesImageFrameWidth, 	//crop by width
 					Boar.specialAbilityDamageParticlesImage.height, 	//crop by height
-					scale > 0 ? this.x - this.width : -this.x,
+					scale > 0 ? this.x + this.width - Boar.specialAbilityDamageParticlesImageDisplayedWidth : -this.x,
 					this.y + this.height / 2 - Boar.specialAbilityDamageParticlesImageDisplayedHeight / 2,
 					scale * Boar.specialAbilityDamageParticlesImageDisplayedWidth, //displayed width
 					Boar.specialAbilityDamageParticlesImageDisplayedHeight); //displayed height
