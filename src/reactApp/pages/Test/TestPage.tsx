@@ -20,6 +20,17 @@ import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 class TestPage extends React.Component {
     componentDidMount(){
+        var waitLoadingImage = function(image: HTMLImageElement, callback: Function){
+            setTimeout(() => {
+                if(image.complete){
+                    callback();
+                }
+                else{
+                    waitLoadingImage(image, callback);
+                }
+            }, 100);
+        }
+
         let variant: any = Helper.getUrlQuery()['variant'];
         switch(+variant){
             case 1: //разрушение башни
@@ -104,10 +115,12 @@ class TestPage extends React.Component {
 
                 Buildings.all.push(new Tower(700));
 
-                var boar = new Boar(50, 780, true, 1);
-                boar.isWillUseSpecialAbility = true;
-                boar.health--;
-                Monsters.all.push(boar);
+                waitLoadingImage(Boar.images[0], () => {
+                    var boar = new Boar(50, 780, true, 1);
+                    boar.isWillUseSpecialAbility = true;
+                    boar.health--;
+                    Monsters.all.push(boar);
+                });
                 break;
 
             case 6: //передача импульса от спец способность кабана к башне (справа)
@@ -125,10 +138,12 @@ class TestPage extends React.Component {
 
                 Buildings.all.push(new Tower(1100));
 
-                var boar2 = new Boar(1850, 780, false, 1);
-                boar2.isWillUseSpecialAbility = true;
-                boar2.health--;
-                Monsters.all.push(boar2);
+                waitLoadingImage(Boar.images[0], () => {
+                    var boar2 = new Boar(1850, 780, false, 1);
+                    boar2.isWillUseSpecialAbility = true;
+                    boar2.health--;
+                    Monsters.all.push(boar2);
+                });
                 break;
 
             case 7: // башня получила импульс
