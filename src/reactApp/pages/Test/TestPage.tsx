@@ -89,7 +89,7 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar2);
                 break;
 
-            case 5: //передача импульса от спец способность кабана к башне
+            case 5: //передача импульса от спец способность кабана к башне (слева)
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -110,7 +110,28 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar);
                 break;
 
-            case 6: // башня получила импульс
+            case 6: //передача импульса от спец способность кабана к башне (справа)
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                Buildings.all.push(new Tower(1100));
+
+                var boar2 = new Boar(1850, 780, false, 1);
+                boar2.isWillUseSpecialAbility = true;
+                boar2.health--;
+                Monsters.all.push(boar2);
+                break;
+
+            case 7: // башня получила импульс
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;

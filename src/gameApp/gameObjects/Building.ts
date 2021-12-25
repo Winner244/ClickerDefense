@@ -12,10 +12,11 @@ export class Building extends ShopItem{
 	healthMax: number; //максимум хп
 	health: number;
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
-	protected _impulsePharos: number; //маяковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
-	protected _impulsePharosSign: boolean; //знак маякового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
+	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
+	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
 	protected _maxImpulse: number; //максимальное значение импульса для здания
-	protected _impulseForceDecreaseing: number; //сила уменьшения импульса
+	protected _impulseForceDecreasing: number; //сила уменьшения импульса
+	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 
 	x: number;
 	y: number;
@@ -59,7 +60,8 @@ export class Building extends ShopItem{
 		this._impulse = this._impulsePharos = 0;
 		this._impulsePharosSign = false;
 		this._maxImpulse = 10;
-		this._impulseForceDecreaseing = 1;
+		this._impulseForceDecreasing = 1;
+		this._impulsePharosForceDecreasing = 5;
 	}
 
 
@@ -67,9 +69,13 @@ export class Building extends ShopItem{
 		if(value > this._maxImpulse){
 			value = this._maxImpulse;
 		}
+		if(value < this._maxImpulse * -1){
+			value = this._maxImpulse * -1;
+		}
 
-		this._impulse = this._impulsePharos = value;
-		this._impulsePharosSign = false;
+		this._impulsePharosSign = value < 0 ? true : false;
+		this._impulsePharos = value;
+		this._impulse = Math.abs(value);
 	}
 	get impulse(): number{
 		if(this._impulse <= 1){
@@ -117,8 +123,8 @@ export class Building extends ShopItem{
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){
 		if(this._impulse > 1){
-			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * this._impulseForceDecreaseing);
-			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * this._impulseForceDecreaseing * 5);
+			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * this._impulseForceDecreasing);
+			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
 
 			if(this._impulsePharos < -this._impulse){
 				this._impulsePharosSign = !this._impulsePharosSign;

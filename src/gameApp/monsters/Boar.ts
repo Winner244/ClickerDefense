@@ -5,6 +5,7 @@ import Boar1Image from '../../assets/img/monsters/boar.png';
 import BoarAttack1Image from '../../assets/img/monsters/boarAttack.png';
 import BoarSpecial1Image from '../../assets/img/monsters/boarSpecial.png';
 import BoarSpecialSmokeImage from '../../assets/img/monsters/boarSpecial_Smoke.png';
+import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boarSpecial_DamageParticles.png';
 
 import {Building} from "../gameObjects/Building";
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
@@ -27,6 +28,10 @@ export class Boar extends Monster{
 	static specialAbilitySmokeImageFrameWidth = 90;
 	static specialAbilitySmokeImageDisplayedWidth = 180;
 
+	static specialAbilityDamageParticlesImage: HTMLImageElement;
+	static specialAbilityDamageParticlesImageFrames = 6;
+	static specialAbilityDamageParticlesImageFrameWidth = 200;
+
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
 		 спец способность отменяется при нанесении урона монстру */
@@ -36,12 +41,15 @@ export class Boar extends Monster{
 	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
 	static timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
+	static timeAnimateSpecialDamageParticles = 400; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
 	static specialAbilityDamage = 10; //начальный урон от спец способности (единократный)
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
+	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
 	specialAbilityImage: HTMLImageElement; //анимация спец способности
 	specialAbilityDamage: number; //Доп урон от спец способности (единократный)
-	timeSpecialAbilityActivated: number; //время активации спец способности
+	timeSpecialAbilityWasActivated: number; //время когда спец способности была активирована
+	timeSpecialDamageWasActivated: number; //время когда урона от спец способности был активирован
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -70,7 +78,8 @@ export class Boar extends Monster{
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
 		this.specialAbilityImage = selectedSpecialImage;
 		this.isActivatedSpecialAbility = false;
-		this.timeSpecialAbilityActivated = 0;
+		this.isActivatedSpecialDamage = false;
+		this.timeSpecialAbilityWasActivated = this.timeSpecialDamageWasActivated = 0;
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 	}
 
@@ -88,18 +97,23 @@ export class Boar extends Monster{
 
 			Boar.specialAbilitySmokeImage = new Image(); 
 			Boar.specialAbilitySmokeImage.src = BoarSpecialSmokeImage;
+
+			Boar.specialAbilityDamageParticlesImage = new Image();
+			Boar.specialAbilityDamageParticlesImage.src = BoarSpecialDamageParticlesImage;
 		}
 	}
 
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number) {
 		if(this.isActivatedSpecialAbility){
-			if(Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimateSpecialAbility){
+			if(Date.now() - this.timeSpecialAbilityWasActivated < Boar.timeAnimateSpecialAbility){
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this.isAttack && this.buildingGoal){
 				this.buildingGoal.health -= this.specialAbilityDamage; //наносим урон от спец способности
-				this.buildingGoal.impulse += this.specialAbilityDamage; //добавляем импульс постройке от удара
+				this.buildingGoal.impulse += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
 				this.stopSpecialAbility();
+				this.isActivatedSpecialDamage = true;
+				this.timeSpecialDamageWasActivated = Date.now();
 			}
 		}
 		else if(this.isWillUseSpecialAbility){
@@ -110,9 +124,8 @@ export class Boar extends Monster{
 				Math.abs(this.buildingGoal.x - this.x) > Boar.minDistanceActivateSpecialAbility)
 			{
 				this.isActivatedSpecialAbility = true;
-				this.timeSpecialAbilityActivated = Date.now();
+				this.timeSpecialAbilityWasActivated = Date.now();
 				this.modifiers.push(new BoarSpecialAbility());
-				console.log('start');
 			}
 		}
 
@@ -127,24 +140,23 @@ export class Boar extends Monster{
 		this.modifiers = this.modifiers.filter(x => x.name != BoarSpecialAbility.name);
 		this.isWillUseSpecialAbility = false;
 		this.isActivatedSpecialAbility = false;
-		this.timeSpecialAbilityActivated = 0;
-		console.log('stopSpecialAbility');
+		this.timeSpecialAbilityWasActivated = 0;
 	}
 
 	draw(isGameOver: boolean) {
-		if(this.isActivatedSpecialAbility && Date.now() - this.timeSpecialAbilityActivated < Boar.timeAnimateSpecialAbility){
-			let isInvert = this.isLeftSide;
-			let scale = isInvert ? -1 : 1;
+		let isInvert = this.isLeftSide;
+		let scale = isInvert ? -1 : 1;
 
+		//анимация начала спец способности - когда кабан стоит на месте и ногами как бык взбивает пыль
+		if(this.isActivatedSpecialAbility && Date.now() - this.timeSpecialAbilityWasActivated < Boar.timeAnimateSpecialAbility){
 			if(isInvert){
 				Draw.ctx.save();
 				Draw.ctx.scale(-1, 1);
 			}
 
-			//передвижение
 			let currentFrame = isGameOver 
 				? 0 
-				: Math.floor((Date.now() - this.timeSpecialAbilityActivated) / Boar.timeAnimateSpecialAbility * Boar.specialAbilityImageFrames);
+				: Math.floor((Date.now() - this.timeSpecialAbilityWasActivated) / Boar.timeAnimateSpecialAbility * Boar.specialAbilityImageFrames);
 			Draw.ctx.drawImage(this.specialAbilityImage,
 				Boar.specialAbilityImageFrameWidth * currentFrame, //crop from x
 				0, //crop from y
@@ -163,25 +175,22 @@ export class Boar extends Monster{
 			super.drawHealth();
 		}
 		else{
+			//дым от бега 
 			if(this.isActivatedSpecialAbility){
-				let isInvert = this.isLeftSide;
-				let scale = isInvert ? -1 : 1;
-	
 				if(isInvert){
 					Draw.ctx.save();
 					Draw.ctx.scale(-1, 1);
 				}
 
-				//дым от бега
-				let smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + Date.now() - this.timeSpecialAbilityActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
+				let smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + Date.now() - this.timeSpecialAbilityWasActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
 				let smokeCurrentFrame = isGameOver 
 					? 0 
-					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityActivated) % Boar.timeAnimateSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimateSpecialAbilitySmoke);
+					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityWasActivated) % Boar.timeAnimateSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimateSpecialAbilitySmoke);
 				Draw.ctx.drawImage(Boar.specialAbilitySmokeImage,
 					Boar.specialAbilitySmokeImageFrameWidth * smokeCurrentFrame, //crop from x
 					0, //crop from y
-					Boar.specialAbilitySmokeImageFrameWidth, 	   //crop by width
-					Boar.specialAbilitySmokeImage.height, //crop by height
+					Boar.specialAbilitySmokeImageFrameWidth, 	//crop by width
+					Boar.specialAbilitySmokeImage.height, 		//crop by height
 					scale > 0 
 						? this.x + this.width / 3
 						: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
@@ -196,6 +205,33 @@ export class Boar extends Monster{
 			}
 			
 			super.draw(isGameOver);
+
+			
+			if(this.isActivatedSpecialDamage && Date.now() - this.timeSpecialDamageWasActivated < Boar.timeAnimateSpecialDamageParticles){
+				scale = scale * -1;
+				if(!isInvert){
+					Draw.ctx.save();
+					Draw.ctx.scale(-1, 1);
+				}
+
+				let currentFrame = isGameOver 
+					? 0 
+					: Math.floor((Math.abs(Date.now() - this.timeSpecialDamageWasActivated) % Boar.timeAnimateSpecialDamageParticles * Boar.specialAbilityDamageParticlesImageFrames) / Boar.timeAnimateSpecialDamageParticles);
+				
+				Draw.ctx.drawImage(Boar.specialAbilityDamageParticlesImage,
+					Boar.specialAbilityDamageParticlesImageFrameWidth * currentFrame, //crop from x
+					0, //crop from y
+					Boar.specialAbilityDamageParticlesImageFrameWidth, 	//crop by width
+					Boar.specialAbilityDamageParticlesImage.height, 	//crop by height
+					scale > 0 ? this.x - this.width : -this.x,
+					this.y + this.height / 2 - Boar.specialAbilityDamageParticlesImage.height / 2 / 2,
+					scale * Boar.specialAbilityDamageParticlesImageFrameWidth / 2, //displayed width
+					Boar.specialAbilityDamageParticlesImage.height / 2); //displayed height
+
+				if(!isInvert){
+					Draw.ctx.restore();
+				}
+			}
 		}
 	}
 }
