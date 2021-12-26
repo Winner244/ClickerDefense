@@ -206,9 +206,10 @@ export class Boar extends Monster{
 				}
 			}
 			
+			//сама модель быка
 			super.draw(isGameOver);
 
-			
+			//обломки от спец атаки
 			if(this.isActivatedSpecialDamage && Date.now() - this.timeSpecialDamageWasActivated < Boar.timeAnimateSpecialDamageParticles){
 				scale = scale * -1;
 				if(!isInvert){
