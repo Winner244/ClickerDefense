@@ -165,6 +165,28 @@ class TestPage extends React.Component {
                 //Buildings.all[Buildings.all.length - 1].impulse = 1.5;
                 break;
 
+            case 8: //спец способность кабана. тест на расстояние срабатывания
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                for(var i = 0; i < 10; i++){
+                    var boar = new Boar(0, 780, true, 1);
+                    boar.isWillUseSpecialAbility = true;
+                    boar.health--;
+                    Monsters.all.push(boar);
+                }
+                break;
+
+
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();

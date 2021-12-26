@@ -37,9 +37,9 @@ export class Boar extends Monster{
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
 		 спец способность отменяется при нанесении урона монстру */
-	static probabilitySpecialAbilityPercentage = 40; //(%) Вероятность срабатывания спец способности
-	static maxDistanceActivateSpecialAbility = 700; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
-	static minDistanceActivateSpecialAbility = 150; //(px) Дистанция до ближайшего строения - цели, при котором активируется спец способность
+	static probabilitySpecialAbilityPercentage = 70; //(%) Вероятность срабатывания спец способности
+	static maxDistanceActivateSpecialAbility = 700; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется спец способность
+	static minDistanceActivateSpecialAbility = 200; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
 	static timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
@@ -121,9 +121,9 @@ export class Boar extends Monster{
 		else if(this.isWillUseSpecialAbility){
 			//активация спец способности
 			if(this.buildingGoal != null &&
-				this.buildingGoal.health > 0 &&
 				Math.abs(this.buildingGoal.x - this.x) <= Boar.maxDistanceActivateSpecialAbility &&
-				Math.abs(this.buildingGoal.x - this.x) > Boar.minDistanceActivateSpecialAbility)
+				Math.abs(this.buildingGoal.x - this.x) > Boar.minDistanceActivateSpecialAbility && 
+				Math.random() < 0.1 * millisecondsDifferent / 100)
 			{
 				this.isActivatedSpecialAbility = true;
 				this.timeSpecialAbilityWasActivated = Date.now();
