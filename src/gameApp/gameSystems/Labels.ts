@@ -10,6 +10,10 @@ export class Labels{
 		this.labels = [];
 	}
 
+	static createYellow(x: number, y: number, text: string, lifeTime: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 255, 255, 0, lifeTime));
+	}
+
 	static createGreen(x: number, y: number, text: string, lifeTime: number = Labels.labelLifetime): void{
 		Labels.labels.push(new Label(x, y, text, 0, 255, 0, lifeTime));
 	}

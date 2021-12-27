@@ -23,6 +23,7 @@ import {Menu} from '../../reactApp/components/Menu/Menu';
 import GrassImage from '../../assets/img/grass1.png'; 
 import ShopItem from '../../models/ShopItem';
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
+import { Boar } from '../monsters/Boar';
 
 
 export class Game {
@@ -67,6 +68,11 @@ export class Game {
 		Game.images.push(Coin.image);
 		Zombie.images.forEach(image => Game.images.push(image));
 		Zombie.attackImages.forEach(attackImage => Game.images.push(attackImage));
+		Boar.images.forEach(image => Game.images.push(image));
+		Boar.attackImages.forEach(attackImage => Game.images.push(attackImage));
+		Boar.specialAbilityImages.forEach(image => Game.images.push(image));
+		Game.images.push(Boar.specialAbilitySmokeImage);
+		Game.images.push(Boar.specialAbilityDamageParticlesImage);
 
 		Cursor.setCursor(Cursor.default);
 

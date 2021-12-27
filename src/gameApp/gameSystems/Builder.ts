@@ -32,7 +32,7 @@ export class Builder {
 			this.selectedBuildingForBuild.x = mouseX - this.selectedBuildingForBuild.width / 2;
 			if(isClick){
 				Gamer.coins -= this.selectedBuildingForBuild.price;
-				Labels.createRed(
+				Labels.createYellow(
 					this.selectedBuildingForBuild.x + this.selectedBuildingForBuild.width, 
 					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height / 3, 
 					'-' + this.selectedBuildingForBuild.price,

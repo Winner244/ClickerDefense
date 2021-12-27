@@ -15,6 +15,7 @@ import {Monster} from '../gameObjects/Monster';
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 import {Draw } from './Draw';
 import {Size} from "../../models/Size";
+import { Game } from './Game';
 
 export class Monsters{
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
@@ -53,6 +54,7 @@ export class Monsters{
 				if(isClick){
 					monster.health -= Gamer.cursorDamage;
 					monster.onClicked();
+					Labels.createRed(mouseX, mouseY - 10, -Gamer.cursorDamage + '')
 					Cursor.setCursor(Cursor.swordRed);
 				}
 
@@ -68,7 +70,7 @@ export class Monsters{
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
 				if(monster.health <= 0){
-					Labels.createGreen(monster.x, monster.y, '+1');
+					Labels.createYellow(monster.x, monster.y, '+1');
 					Monsters.all.splice(i, 1);
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
@@ -98,7 +100,7 @@ export class Monsters{
 				availableMonsters.forEach(monster => {
 					for(let i = 0; i < Coins.all.length; i++){
 						if(Coins.all[i].y > monster.y && monster.x < Coins.all[i].x + Coin.image.width / 2 && monster.x + monster.width > Coins.all[i].x + Coin.image.width / 2){
-							Labels.createRed(Coins.all[i].x + 10, Coins.all[i].y + 10, '-');
+							//Labels.createRed(Coins.all[i].x + 10, Coins.all[i].y + 10, '-');
 							Coins.delete(i);
 						}
 					}

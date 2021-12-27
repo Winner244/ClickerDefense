@@ -14,37 +14,37 @@ import {Draw} from "../gameSystems/Draw";
 export class Boar extends Monster{
 
 	static images: HTMLImageElement[] = [];
-	static imageFrames = 8;
+	static readonly imageFrames = 8;
 
 	static attackImages: HTMLImageElement[] = [];
-	static attackImageFrames = 3;
+	static readonly attackImageFrames = 3;
 
 	static specialAbilityImages: HTMLImageElement[] = [];
-	static specialAbilityImageFrames = 12;
-	static specialAbilityImageFrameWidth = 375;
+	static readonly specialAbilityImageFrames = 12;
+	static readonly specialAbilityImageFrameWidth = 375;
 
 	static specialAbilitySmokeImage: HTMLImageElement;
-	static specialAbilitySmokeImageFrames = 16;
-	static specialAbilitySmokeImageFrameWidth = 90;
-	static specialAbilitySmokeImageDisplayedWidth = 180;
+	static readonly specialAbilitySmokeImageFrames = 16;
+	static readonly specialAbilitySmokeImageFrameWidth = 90;
+	static readonly specialAbilitySmokeImageDisplayedWidth = 180;
 
 	static specialAbilityDamageParticlesImage: HTMLImageElement;
-	static specialAbilityDamageParticlesImageFrames = 7;
-	static specialAbilityDamageParticlesImageFrameWidth = 200;
-	static specialAbilityDamageParticlesImageDisplayedWidth = 100;
-	static specialAbilityDamageParticlesImageDisplayedHeight = 100;
+	static readonly specialAbilityDamageParticlesImageFrames = 7;
+	static readonly specialAbilityDamageParticlesImageFrameWidth = 200;
+	static readonly specialAbilityDamageParticlesImageDisplayedWidth = 100;
+	static readonly specialAbilityDamageParticlesImageDisplayedHeight = 100;
 
 	/* Спец Способность - каждый некоторый кабан останавливается перед атакуемым зданием на расстоянии z пикселей,
 		активирует анимацию "злой бык" и начинает бежать с ускорением с доп анимацией "Пыль", первая атака наносит 10x урон
 		 спец способность отменяется при нанесении урона монстру */
-	static probabilitySpecialAbilityPercentage = 70; //(%) Вероятность срабатывания спец способности
-	static maxDistanceActivateSpecialAbility = 700; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется спец способность
-	static minDistanceActivateSpecialAbility = 200; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется спец способность
-	static timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
-	static timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
-	static timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
-	static timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
-	static specialAbilityDamage = 10; //начальный урон от спец способности (единократный)
+	static readonly probabilitySpecialAbilityPercentage = 70; //(%) Вероятность срабатывания спец способности
+	static readonly maxDistanceActivateSpecialAbility = 700; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется спец способность
+	static readonly minDistanceActivateSpecialAbility = 200; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется спец способность
+	static readonly timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
+	static readonly timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
+	static readonly timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
+	static readonly timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
+	static readonly specialAbilityDamage = 10; //начальный урон от спец способности (единократный)
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
