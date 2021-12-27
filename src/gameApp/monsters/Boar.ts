@@ -44,7 +44,7 @@ export class Boar extends Monster{
 	static readonly timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static readonly timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
 	static readonly timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
-	static readonly specialAbilityDamage = 10; //начальный урон от спец способности (единократный)
+	static readonly specialAbilityDamage = 20; //начальный урон от спец способности (единократный)
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
@@ -74,7 +74,8 @@ export class Boar extends Monster{
 			2,
 			5,
 			4 * scaleSize,
-			3 * scaleSize,
+			300 * scaleSize,
+			500,
 			150);
 
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
@@ -111,11 +112,14 @@ export class Boar extends Monster{
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this.isAttack && this.buildingGoal){
-				this.buildingGoal.health -= this.specialAbilityDamage; //наносим урон от спец способности
+				super.attack(this.specialAbilityDamage); //наносим урон от спец способности
 				this.buildingGoal.impulse += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
 				this.stopSpecialAbility();
 				this.isActivatedSpecialDamage = true;
 				this.timeSpecialDamageWasActivated = Date.now();
+			}
+			else{
+				this.lastAttackedTime = Date.now(); //что бы не сработала первая обычная атака в базовом методе
 			}
 		}
 		else if(this.isWillUseSpecialAbility){

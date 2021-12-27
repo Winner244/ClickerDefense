@@ -186,6 +186,41 @@ class TestPage extends React.Component {
                 }
                 break;
 
+            case 9: //атака зомби
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var zombie = new Zombie(800, 780, true, 1);
+                Monsters.all.push(zombie);
+                break;
+
+            case 9: //атака кабана
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var boar = new Boar(1000, 780, true, 1);
+                boar.isWillUseSpecialAbility = false;
+                Monsters.all.push(boar);
+                break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

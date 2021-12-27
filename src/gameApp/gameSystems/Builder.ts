@@ -36,7 +36,7 @@ export class Builder {
 					this.selectedBuildingForBuild.x + this.selectedBuildingForBuild.width, 
 					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height / 3, 
 					'-' + this.selectedBuildingForBuild.price,
-					2);
+					2000);
 				
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;

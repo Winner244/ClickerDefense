@@ -39,7 +39,8 @@ export class Zombie extends Monster{
 			1,
 			5,
 			3 * scaleSize,
-			1 * scaleSize,
+			100 * scaleSize,
+			990,
 			50);
 	}
 

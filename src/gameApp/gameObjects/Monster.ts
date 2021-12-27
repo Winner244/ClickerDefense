@@ -44,6 +44,9 @@ export class Monster{
 
 	modifiers: Modifier[]; //бафы/дебафы
 
+	lastAttackedTime: number; //последнее время атаки (unixtime)
+	attackTimeWaiting: number; //частота атаки (выражается вовремени ожидания после атаки)
+
 	constructor(
 		x: number, 
 		y: number, 
@@ -61,6 +64,7 @@ export class Monster{
 		reduceHover: number, 
 		healthMax: number, 
 		damage: number, 
+		attackTimeWaiting: number,
 		speed: number)
 	{
 		this.name = name;
@@ -97,6 +101,9 @@ export class Monster{
 
 		this.buildingGoal = null;
 		this.modifiers = [];
+
+		this.lastAttackedTime = 0;
+		this.attackTimeWaiting = attackTimeWaiting;
 	}
 
 	get centerX(){
@@ -145,12 +152,12 @@ export class Monster{
 		//логика атаки
 		if(this.isAttack) //если атакует
 		{
-			var damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
-			var damage = this.damage * (millisecondsDifferent / 1000);
-			damage += damage * damageMultiplier;
-			if(damage > 0){
-				this.buildingGoal.health -= damage; //наносим урон
-				//Labels.createBlack(this.isLeftSide ? this.x + this.width : this.x, this.y + this.height / 2, '-' + damage.toFixed(1));
+			//атака
+			if(this.lastAttackedTime + this.attackTimeWaiting < Date.now()){
+				var damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
+				var damage = this.damage * (millisecondsDifferent / 1000);
+				damage += damage * damageMultiplier;
+				this.attack(damage);
 			}
 
 			//гравитация
@@ -173,6 +180,14 @@ export class Monster{
 					this.y+=2;
 				}
 			}
+		}
+	}
+
+	attack(damage: number): void{
+		if(damage > 0 && this.buildingGoal != null){
+			this.buildingGoal.health -= damage; //наносим урон
+			this.lastAttackedTime = Date.now();
+			Labels.createRed(this.isLeftSide ? this.x + this.width : this.x, this.y + this.height / 2, '-' + damage.toFixed(1), 100);
 		}
 	}
 
