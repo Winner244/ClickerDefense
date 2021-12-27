@@ -3,6 +3,7 @@ import {Building} from './Building';
 import sortBy from 'lodash/sortBy';
 import {Modifier} from "./Modifier";
 import {Helper} from "../helpers/Helper";
+import { Labels } from '../gameSystems/Labels';
 
 export class Monster{
 	name: string;
@@ -149,6 +150,7 @@ export class Monster{
 			damage += damage * damageMultiplier;
 			if(damage > 0){
 				this.buildingGoal.health -= damage; //наносим урон
+				//Labels.createBlack(this.isLeftSide ? this.x + this.width : this.x, this.y + this.height / 2, '-' + damage.toFixed(1));
 			}
 
 			//гравитация

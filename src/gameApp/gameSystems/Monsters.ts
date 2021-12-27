@@ -15,7 +15,6 @@ import {Monster} from '../gameObjects/Monster';
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 import {Draw } from './Draw';
 import {Size} from "../../models/Size";
-import { Game } from './Game';
 
 export class Monsters{
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
@@ -54,7 +53,7 @@ export class Monsters{
 				if(isClick){
 					monster.health -= Gamer.cursorDamage;
 					monster.onClicked();
-					Labels.createRed(mouseX, mouseY - 10, -Gamer.cursorDamage + '')
+					Labels.createRed(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
 				}
 
@@ -66,6 +65,7 @@ export class Monsters{
 	}
 
 	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number): void{
+		//гибель монстров
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
@@ -79,7 +79,7 @@ export class Monsters{
 			}
 		}
 
-		//логика взрывов погибших монстров
+		//логика исчезновение погибших монстров
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
 				this.explosions[i].lifeTime -= millisecondsDifferent;
@@ -100,7 +100,7 @@ export class Monsters{
 				availableMonsters.forEach(monster => {
 					for(let i = 0; i < Coins.all.length; i++){
 						if(Coins.all[i].y > monster.y && monster.x < Coins.all[i].x + Coin.image.width / 2 && monster.x + monster.width > Coins.all[i].x + Coin.image.width / 2){
-							//Labels.createRed(Coins.all[i].x + 10, Coins.all[i].y + 10, '-');
+							Labels.createYellow(Coins.all[i].x + 10, Coins.all[i].y + 10, '-');
 							Coins.delete(i);
 						}
 					}
@@ -110,7 +110,7 @@ export class Monsters{
 	}
 
 	static draw(isGameOver: boolean): void{
-		//взрыв погибших монстров
+		//исчезновение погибших монстров
 		this.explosions.forEach(x => {
 			let frame = Math.floor((this.explosionLifeTime - x.lifeTime) / this.explosionLifeTime * this.explosionFrames);
 			let newWidth = (this.explosionImage.width / this.explosionFrames) * (x.size.height / (this.explosionImage.height));

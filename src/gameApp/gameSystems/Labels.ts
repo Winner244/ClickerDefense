@@ -22,6 +22,10 @@ export class Labels{
 		Labels.labels.push(new Label(x, y, text, 255, 0, 0, lifeTime));
 	}
 
+	static createBlack(x: number, y: number, text: string, lifeTime: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 0, 0, 0, lifeTime));
+	}
+
 	static logic(): void{
 		//контроль за временем жизни
 		for(let i = 0; i < Labels.labels.length; i++){
