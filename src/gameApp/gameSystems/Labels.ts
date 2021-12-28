@@ -20,6 +20,10 @@ export class Labels{
 		Labels.labels.push(new Label(x, y, text, 0, 255, 0, lifeTimeMilliseconds));
 	}
 
+	static createPurple(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 200, 0, 255, lifeTimeMilliseconds));
+	}
+
 	static createRed(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
 		Labels.labels.push(new Label(x, y, text, 255, 0, 0, lifeTimeMilliseconds));
 	}

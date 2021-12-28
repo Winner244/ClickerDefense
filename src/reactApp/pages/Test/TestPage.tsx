@@ -221,6 +221,15 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar);
                 break;
 
+            case 10: //вторая волна
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.waveCurrent = 2;
+                Buildings.all.push(new Tower(700));
+                Buildings.all.push(new Tower(1200));
+                break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

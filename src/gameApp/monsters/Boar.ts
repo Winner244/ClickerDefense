@@ -74,7 +74,7 @@ export class Boar extends Monster{
 			2,
 			5,
 			4 * scaleSize,
-			300 * scaleSize,
+			200 * scaleSize, //damage
 			500,
 			150);
 
