@@ -65,7 +65,7 @@ export class Monsters{
 	}
 
 	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number): void{
-		//гибель монстров
+		//уничтожение монстров
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];

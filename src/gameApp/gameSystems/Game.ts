@@ -215,7 +215,7 @@ export class Game {
 		
 		Coins.logic(millisecondsDifferent, Game.bottomShiftBorder);
 		
-		Labels.logic();
+		Labels.logic(millisecondsDifferent);
 
 		FPS.counting();
 

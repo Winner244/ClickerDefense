@@ -36,9 +36,9 @@ export class Draw{
 	
 	/** Прорисовка исчезающей надписи */
 	static drawLabel(label: Label, labelLifetime: number){
-		let leftTime = Date.now() - (label.timeCreated + labelLifetime * 1000);
+		let leftTime = Date.now() - (label.timeCreated + labelLifetime);
 
-		Draw.ctx.fillStyle = `rgba(${label.red},${label.green},${label.blue},${Math.abs(leftTime / 1000 / labelLifetime)})`;
+		Draw.ctx.fillStyle = `rgba(${label.red},${label.green},${label.blue},${Math.abs(leftTime / labelLifetime)})`;
 		Draw.ctx.font = "14px Calibri";
 		Draw.ctx.fillText(label.text, label.x, label.y);
 	}

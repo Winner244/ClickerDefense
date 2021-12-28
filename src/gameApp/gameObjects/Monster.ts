@@ -187,7 +187,7 @@ export class Monster{
 		if(damage > 0 && this.buildingGoal != null){
 			this.buildingGoal.health -= damage; //наносим урон
 			this.lastAttackedTime = Date.now();
-			Labels.createRed(this.isLeftSide ? this.x + this.width : this.x, this.y + this.height / 2, '-' + damage.toFixed(1), 100);
+			Labels.createRed(this.isLeftSide ? this.x + this.width : this.x, this.y + this.height / 2, '-' + damage.toFixed(1), 1000);
 		}
 	}
 

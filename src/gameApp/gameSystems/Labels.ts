@@ -2,7 +2,9 @@ import {Draw} from './Draw';
 import {Label} from '../../models/Label';
 
 export class Labels{
-	static readonly labelLifetime: number = 1000; //время жизни сообщения (в миллисекунлх)
+	static readonly labelLifetime: number = 1000; //время жизни сообщения (в миллисекундах)
+	static readonly isUpToTop: boolean = true; //всплывать надписям вверх?
+	static readonly speedOfUppingToTop: number = 10; //скорость всплывания (пикселей в секунду)
 	
 	static labels: Label[] = []; // мини надписи, типо "+1" при сборе монеток
 
@@ -26,7 +28,7 @@ export class Labels{
 		Labels.labels.push(new Label(x, y, text, 0, 0, 0, lifeTimeMilliseconds));
 	}
 
-	static logic(): void{
+	static logic(millisecondsDifferent: number): void{
 		//контроль за временем жизни
 		for(let i = 0; i < Labels.labels.length; i++){
 			let leftTime = Date.now() - (Labels.labels[i].timeCreated + Labels.labels[i].lifeTimeMilliseconds);
@@ -34,6 +36,10 @@ export class Labels{
 				Labels.labels.splice(i, 1);
 				i--;
 				continue;
+			}
+
+			if(this.isUpToTop){
+				Labels.labels[i].y -= millisecondsDifferent * this.speedOfUppingToTop / 1000;
 			}
 		}
 	}
