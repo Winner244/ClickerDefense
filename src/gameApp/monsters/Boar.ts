@@ -45,7 +45,7 @@ export class Boar extends Monster{
 	static readonly timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static readonly timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
 	static readonly timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
-	static readonly specialAbilityDamage = 20; //начальный урон от спец способности (единократный)
+	static readonly specialAbilityDamage = 18; //начальный урон от спец способности (единократный)
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
@@ -75,7 +75,7 @@ export class Boar extends Monster{
 			2,
 			5,
 			4 * scaleSize,
-			200 * scaleSize, //damage
+			180 * scaleSize, //damage
 			500,
 			150);
 

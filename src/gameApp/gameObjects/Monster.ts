@@ -187,7 +187,7 @@ export class Monster{
 		if(damage > 0 && this.buildingGoal != null){
 			this.buildingGoal.health -= damage; //монстр наносит урон
 			this.lastAttackedTime = Date.now();
-			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width : this.x, this.y + this.height / 2, '-' + damage.toFixed(1), 3000);
+			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 15, this.y + this.height / 2, '-' + damage.toFixed(1), 3000);
 		}
 	}
 
