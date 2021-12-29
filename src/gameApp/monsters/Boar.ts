@@ -10,6 +10,7 @@ import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boarSpeci
 import {Building} from "../gameObjects/Building";
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
 import {Draw} from "../gameSystems/Draw";
+import { Game } from '../gameSystems/Game';
 
 export class Boar extends Monster{
 
@@ -188,7 +189,7 @@ export class Boar extends Monster{
 					Draw.ctx.scale(-1, 1);
 				}
 
-				let smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + Date.now() - this.timeSpecialAbilityWasActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
+				let smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + (isGameOver ? Game.gameOverTime : Date.now()) - this.timeSpecialAbilityWasActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
 				let smokeCurrentFrame = isGameOver 
 					? 0 
 					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityWasActivated) % Boar.timeAnimateSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimateSpecialAbilitySmoke);

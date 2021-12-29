@@ -38,6 +38,8 @@ export class Game {
 	static isEndAfterGameOver: boolean = false; //игра закончилась
 	static isWasInit: boolean = false; //инициализация уже была?
 
+	static gameOverTime: number = 0; //время окончания игры
+
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
 	static animationId: number = 0; //техническая переменная для браузера
 
@@ -200,6 +202,7 @@ export class Game {
 		else{
 			if(Buildings.flyEarthRope.health <= 0){
 				Game.isGameOver = true;
+				Game.gameOverTime = Date.now();
 			}
 
 			Builder.logic();
