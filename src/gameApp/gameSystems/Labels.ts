@@ -12,8 +12,8 @@ export class Labels{
 	}
 
 	//монетки
-	static createYellow(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
-		Labels.labels.push(new Label(x, y, text, 255, 255, 0, lifeTimeMilliseconds));
+	static createCoinLabel(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 255, 255, 0, lifeTimeMilliseconds, false, true, 0, 0, 0));
 	}
 
 	//урон
@@ -56,6 +56,6 @@ export class Labels{
 	}
 
 	static draw(): void{
-		Labels.labels.forEach(label => Draw.drawLabel(label, label.lifeTimeMilliseconds));
+		Labels.labels.forEach(label => label.draw());
 	}
 }

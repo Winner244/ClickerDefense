@@ -25,7 +25,7 @@ export class Coins{
 				Cursor.setCursor(Cursor.hand);
 
 				if(isClick){
-					Labels.createYellow(mouseX - 10, mouseY - 10, '+1');
+					Labels.createCoinLabel(mouseX - 10, mouseY - 10, '+1');
 					Coins.delete(i);
 					Gamer.coins++;
 				}
