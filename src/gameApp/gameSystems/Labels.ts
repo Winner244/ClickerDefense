@@ -17,26 +17,11 @@ export class Labels{
 	}
 
 	//урон
-	static createRed(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
-		Labels.labels.push(new Label(x, y, text, 255, 0, 0, lifeTimeMilliseconds));
+	static createMonsterDamageLabel(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 255, 0, 0, lifeTimeMilliseconds, true));
 	}
-
-
-	//not used
-	static createGreen(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
-		Labels.labels.push(new Label(x, y, text, 0, 255, 0, lifeTimeMilliseconds));
-	}
-	//not used
-	static createPurple(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
-		Labels.labels.push(new Label(x, y, text, 200, 0, 255, lifeTimeMilliseconds));
-	}
-	//not used
-	static createTurquoise(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
-		Labels.labels.push(new Label(x, y, text, 48, 213, 200, lifeTimeMilliseconds));
-	}
-	//not used
-	static createBlack(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
-		Labels.labels.push(new Label(x, y, text, 0, 0, 0, lifeTimeMilliseconds));
+	static createGamerDamageLabel(x: number, y: number, text: string, lifeTimeMilliseconds: number = Labels.labelLifetime): void{
+		Labels.labels.push(new Label(x, y, text, 255, 0, 0, lifeTimeMilliseconds, true, true, 0, 0, 0));
 	}
 
 

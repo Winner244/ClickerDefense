@@ -54,7 +54,7 @@ export class Monsters{
 				if(isClick){
 					monster.health -= Gamer.cursorDamage;
 					monster.onClicked();
-					Labels.createRed(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
+					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
 				}
 

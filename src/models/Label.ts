@@ -49,8 +49,8 @@ export class Label{
 
 	draw(){
 		let leftTime = Date.now() - (this.timeCreated + this.lifeTimeMilliseconds);
-		let opacity = this.isDecreaseOpacity 
-			? Math.abs(leftTime / this.lifeTimeMilliseconds) 
+		let opacity = this.isDecreaseOpacity && leftTime < this.lifeTimeMilliseconds / 2
+			? Math.abs(leftTime / (this.lifeTimeMilliseconds / 2))
 			: 1;
 
 		if(this.isDisplayBackground){
