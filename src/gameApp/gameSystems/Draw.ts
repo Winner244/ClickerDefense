@@ -38,7 +38,11 @@ export class Draw{
 	static drawLabel(label: Label, labelLifetime: number){
 		let leftTime = Date.now() - (label.timeCreated + labelLifetime);
 
-		Draw.ctx.fillStyle = `rgba(${label.red},${label.green},${label.blue},${Math.abs(leftTime / labelLifetime)})`;
+		Draw.ctx.fillStyle = `rgba(0,0,0,${Math.abs(leftTime / labelLifetime)})`;
+		Draw.ctx.font = "15px Calibri";
+		Draw.ctx.fillText(label.text, label.x -1, label.y - 1);
+
+		Draw.ctx.fillStyle = `rgba(${label.red},${label.green},${label.blue},1)`;
 		Draw.ctx.font = "14px Calibri";
 		Draw.ctx.fillText(label.text, label.x, label.y);
 	}

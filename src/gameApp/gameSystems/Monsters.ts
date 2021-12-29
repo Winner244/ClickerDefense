@@ -50,6 +50,7 @@ export class Monsters{
 			{
 				Cursor.setCursor(Cursor.sword);
 
+				//игрок наносит урон по монстру
 				if(isClick){
 					monster.health -= Gamer.cursorDamage;
 					monster.onClicked();
