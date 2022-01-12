@@ -5,6 +5,7 @@ import {Buildings} from './Buildings';
 import {Draw} from './Draw';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
+import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
 
 /** Режим строительства */
 export class Builder {
@@ -15,12 +16,15 @@ export class Builder {
 	static buildTime: number; //время постройки
 	static readonly smokeFrames: number = 10; 
 	static readonly smokeLifeTime: number = 1000; //в миллисекундах
+	static buildSound: HTMLAudioElement; //звук при размещении постройки
 
 	static init(isLoadImage: boolean = true){
 		if(isLoadImage){
 			this.smokeImage.src = SmokeImage;
 		}
 		this.selectedBuildingForBuild = null;
+		this.buildSound = new Audio(BuildSoundUrl);
+		this.buildSound.volume = 0.2;
 	}
 
 	static finish(){
@@ -41,6 +45,7 @@ export class Builder {
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
 				this.buildTime = Date.now();
+				this.buildSound.play();
 				return;
 			}
 			else if(isRightClick){
@@ -65,7 +70,7 @@ export class Builder {
 				let frame = isGameOver ? 0 : Math.floor((Date.now() - this.buildTime) / this.smokeLifeTime * this.smokeFrames);
 				let smokeWidth = this.selectedBuildingForBuild.width * 2;
 				let newHeight = this.smokeImage.height * (smokeWidth / (this.smokeImage.width / this.smokeFrames));
-				Draw.ctx.globalAlpha = Math.max(0, (this.smokeLifeTime - (Date.now() - this.buildTime)) / this.smokeLifeTime); //better
+				//Draw.ctx.globalAlpha = Math.max(0, (this.smokeLifeTime - (Date.now() - this.buildTime)) / this.smokeLifeTime);  // opacity
 				Draw.ctx.drawImage(this.smokeImage,
 					this.smokeImage.width / this.smokeFrames * frame, //crop from x
 					0, //crop from y

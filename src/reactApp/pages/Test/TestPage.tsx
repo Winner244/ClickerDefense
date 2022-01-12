@@ -17,6 +17,7 @@ import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
 import {Monsters} from "../../../gameApp/gameSystems/Monsters";
 import {Builder} from "../../../gameApp/gameSystems/Builder";
+import Menu from '../../components/Menu/Menu';
 
 class TestPage extends React.Component {
     componentDidMount(){
@@ -66,7 +67,17 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
                 break;
 
-            case 3: //строительство башни
+            case 3: //магазин
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.isStarted = false;
+                Gamer.coins = 200;
+                Menu.displayShopButton();
+				Menu.displayNewWaveButton();
+                break;
+
+            case 4: //строительство башни - автоматом
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -76,7 +87,7 @@ class TestPage extends React.Component {
                 }, 300);
                 break;
 
-            case 4: //спец способность кабана
+            case 5: //спец способность кабана
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -100,7 +111,7 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar2);
                 break;
 
-            case 5: //передача импульса от спец способность кабана к башне (слева)
+            case 6: //передача импульса от спец способность кабана к башне (слева)
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -123,7 +134,7 @@ class TestPage extends React.Component {
                 });
                 break;
 
-            case 6: //передача импульса от спец способность кабана к башне (справа)
+            case 7: //передача импульса от спец способность кабана к башне (справа)
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -146,7 +157,7 @@ class TestPage extends React.Component {
                 });
                 break;
 
-            case 7: // башня получила импульс
+            case 8: // башня получила импульс
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -165,7 +176,7 @@ class TestPage extends React.Component {
                 //Buildings.all[Buildings.all.length - 1].impulse = 1.5;
                 break;
 
-            case 8: //спец способность кабана. тест на расстояние срабатывания
+            case 9: //спец способность кабана. тест на расстояние срабатывания
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -186,7 +197,7 @@ class TestPage extends React.Component {
                 }
                 break;
 
-            case 9: //атака зомби
+            case 10: //атака зомби
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -203,7 +214,7 @@ class TestPage extends React.Component {
                 Monsters.all.push(zombie);
                 break;
 
-            case 9: //атака кабана
+            case 11: //атака кабана
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -221,7 +232,7 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar);
                 break;
 
-            case 10: //вторая волна
+            case 12: //вторая волна
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;

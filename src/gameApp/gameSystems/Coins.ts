@@ -3,6 +3,8 @@ import {Coin} from '../gameObjects/Coin';
 import {Labels} from './Labels';
 import {Gamer} from '../gameObjects/Gamer';
 
+import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
+
 export class Coins{
 	static all: Coin[] = [];
 
@@ -28,6 +30,9 @@ export class Coins{
 					Labels.createCoinLabel(mouseX - 10, mouseY - 10, '+1');
 					Coins.delete(i);
 					Gamer.coins++;
+					
+					const coinGetSound: HTMLAudioElement = new Audio(CoinGetSoundUrl);
+					coinGetSound.play(); //звук при сборе монетки
 				}
 
 				return true;
