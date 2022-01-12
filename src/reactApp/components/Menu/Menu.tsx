@@ -14,6 +14,8 @@ import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import './Menu.scss';
 
+import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+
 interface Prop {
   isOpen?: boolean
 }
@@ -45,16 +47,25 @@ export class Menu extends React.Component<Props, {}> {
     App.Store.dispatch(MenuStore.actionCreators.close());
   }
 
+  private selectSoundPlay(){
+    const selectingSound: HTMLAudioElement = new Audio(SelectingSoundUrl);
+    selectingSound.volume = 0.2;
+    selectingSound.play();
+  }
+
   onClickNewGame(){
+    this.selectSoundPlay();
     this.props.startGame();
     Game.startNew();
   }
 
   onClickShow(){
+    this.selectSoundPlay();
     Game.pause();
   }
 
   onClickContinue(){
+    this.selectSoundPlay();
     this.props.close();
     Game.continue();
   }
@@ -67,6 +78,7 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   onClickShopOpen(){
+    this.selectSoundPlay();
     Game.pause();
     Waves.delayEndTimeLeft = 0;
     this.props.close();
