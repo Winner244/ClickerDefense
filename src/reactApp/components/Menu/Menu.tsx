@@ -40,32 +40,33 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   static show(): void{
+    Menu.selectSoundPlay();
     App.Store.dispatch(MenuStore.actionCreators.open());
   }
   static hide(): void{
+    Menu.selectSoundPlay();
     Game.isBlockMouseLogic = false;
     App.Store.dispatch(MenuStore.actionCreators.close());
   }
 
-  private selectSoundPlay(){
+  private static selectSoundPlay(){
     const selectingSound: HTMLAudioElement = new Audio(SelectingSoundUrl);
     selectingSound.volume = 0.2;
     selectingSound.play();
   }
 
   onClickNewGame(){
-    this.selectSoundPlay();
+    Menu.selectSoundPlay();
     this.props.startGame();
     Game.startNew();
   }
 
   onClickShow(){
-    this.selectSoundPlay();
     Game.pause();
   }
 
   onClickContinue(){
-    this.selectSoundPlay();
+    Menu.selectSoundPlay();
     this.props.close();
     Game.continue();
   }
@@ -78,7 +79,6 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   onClickShopOpen(){
-    this.selectSoundPlay();
     Game.pause();
     Waves.delayEndTimeLeft = 0;
     this.props.close();
