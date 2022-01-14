@@ -89,15 +89,15 @@ export class Shop extends React.Component<Props, {}> {
             </div>
             <div className="shop__categories">
                 <img 
-                  className={"shop__category " + (this.props.selectedCategory == ShopCategoryEnum.MAGIC ? 'shop__category-active' : '')} 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.MAGIC ? 'shop__category-active' : '')} 
                   src={CategoryMagicImage} 
                   onClick={() => this.onClickSelectCategory(ShopCategoryEnum.MAGIC)}/>
                 <img 
-                  className={"shop__category " + (this.props.selectedCategory == ShopCategoryEnum.BUILDINGS ? 'shop__category-active' : '')} 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.BUILDINGS ? 'shop__category-active' : '')} 
                   src={CategoryBuldingImage} 
                   onClick={() => this.onClickSelectCategory(ShopCategoryEnum.BUILDINGS)}/>
                 <img 
-                  className={"shop__category " + (this.props.selectedCategory == ShopCategoryEnum.UNITS ? 'shop__category-active' : '')} 
+                  className={"shop__category nodrag " + (this.props.selectedCategory == ShopCategoryEnum.UNITS ? 'shop__category-active' : '')} 
                   src={CategoryUnitImage} 
                   onClick={() => this.onClickSelectCategory(ShopCategoryEnum.UNITS)}/>
             </div>
@@ -109,7 +109,7 @@ export class Shop extends React.Component<Props, {}> {
                         {items.map(item => (
                           <div className={"shop__item " + (this.props.selectedItemNames.includes(item.name) ? 'shop__item--info ' : '')} key={item.name}>
                               <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(item.name)}>
-                                  <img className="shop__item-img" src={item.image.src} />
+                                  <img className="shop__item-img nodrag" src={item.image.src} />
                                   <div className="shop__item-info">
                                       <p>{item.description}</p>
                                   </div>
