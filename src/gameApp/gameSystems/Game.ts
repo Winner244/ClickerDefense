@@ -19,11 +19,12 @@ import {FPS} from '../FPS';
 import {Mouse} from '../Mouse';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
-
-import GrassImage from '../../assets/img/grass1.png'; 
+import {Shop} from '../../reactApp/components/Shop/Shop';
 import ShopItem from '../../models/ShopItem';
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 import { Boar } from '../monsters/Boar';
+
+import GrassImage from '../../assets/img/grass1.png'; 
 
 
 export class Game {
@@ -237,6 +238,7 @@ export class Game {
 			else{
 				Game.continue();
 				Menu.hide();
+				Shop.hide();
 			}
 		}
 	}
