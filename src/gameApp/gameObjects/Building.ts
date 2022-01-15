@@ -92,6 +92,10 @@ export class Building extends ShopItem{
 		return this.y + this.height / 2;
 	}
 
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean {
+		return false;
+	}
+
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		if(this.frames > 1){
 			let frame = isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / this.frames)) % this.frames;

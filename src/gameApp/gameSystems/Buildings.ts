@@ -57,24 +57,11 @@ export class Buildings{
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
-		if(mouseX > this.flyEarth.x + this.flyEarth.reduceHover && 
-			mouseX < this.flyEarth.x + FlyEarth.width - this.flyEarth.reduceHover &&
-			mouseY > this.flyEarth.y + this.flyEarth.reduceHover && 
-			mouseY < this.flyEarth.y + FlyEarth.height - this.flyEarth.reduceHover)
-		{
-			Cursor.setCursor(Cursor.pick);
-	
-			if(isClick){
-				let coinX = this.flyEarth.x + this.flyEarth.reduceHover + Math.random() * (FlyEarth.width - this.flyEarth.reduceHover * 2);
-				let coinY = this.flyEarth.y + FlyEarth.height / 2;
-				Coins.create(coinX, coinY);
-				Cursor.setCursor(Cursor.pickYellow);
-			}
-			
-			return true;
-		}
+		let isSetCursor = false;
+		
+		isSetCursor = this.flyEarth.mouseLogic(mouseX, mouseY, isClick);
 
-		return false;
+		return isSetCursor;
 	}
 
 	static logic(millisecondsDifferent: number, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){
