@@ -3,18 +3,17 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
-import * as ShopStore from '../Shop/ShopStore';
 
 import { App } from '../../App';
 import { Shop } from '../Shop/Shop';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Waves} from '../../../gameApp/gameSystems/Waves';
-import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import './Menu.scss';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import { Settings } from '../../../gameApp/Settings';
 
 interface Prop {
   isOpen?: boolean
@@ -40,23 +39,23 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   static show(): void{
-    Menu.selectSoundPlay();
+    Menu.playSoundSelect();
     App.Store.dispatch(MenuStore.actionCreators.open());
   }
   static hide(): void{
-    Menu.selectSoundPlay();
+    Menu.playSoundSelect();
     Game.isBlockMouseLogic = false;
     App.Store.dispatch(MenuStore.actionCreators.close());
   }
 
-  private static selectSoundPlay(){
+  private static playSoundSelect(){
     const selectingSound: HTMLAudioElement = new Audio(SelectingSoundUrl);
-    selectingSound.volume = 0.2;
+    selectingSound.volume = 0.2 * Settings.soundVolume;
     selectingSound.play();
   }
 
   onClickNewGame(){
-    Menu.selectSoundPlay();
+    Menu.playSoundSelect();
     this.props.startGame();
     Game.startNew();
   }
@@ -66,7 +65,7 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   onClickContinue(){
-    Menu.selectSoundPlay();
+    Menu.playSoundSelect();
     this.props.close();
     Game.continue();
   }

@@ -21,6 +21,7 @@ import { Gamer } from '../../../gameApp/gameObjects/Gamer';
 import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import { Settings } from '../../../gameApp/Settings';
 
 interface Prop {
   isOpen?: boolean
@@ -44,25 +45,25 @@ export class Shop extends React.Component<Props, {}> {
     App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
   }
 
-  private selectSoundPlay(){
+  private static playSoundSelect(){
     const selectingSound: HTMLAudioElement = new Audio(SelectingSoundUrl);
-    selectingSound.volume = 0.2;
+    selectingSound.volume = 0.2 * Settings.soundVolume;;
     selectingSound.play();
   }
 
   onClickClose(){
-    this.selectSoundPlay();
+    Shop.playSoundSelect();
     Shop.hide();
     Game.continue();
   }
 
   onClickSelectCategory(category: string){
-    this.selectSoundPlay();
+    Shop.playSoundSelect();
     this.props.selectCategory(category);
   }
 
   onClickSelectItem(itemName: string){
-    this.selectSoundPlay();
+    Shop.playSoundSelect();
     this.props.selectItem(itemName);
   }
 

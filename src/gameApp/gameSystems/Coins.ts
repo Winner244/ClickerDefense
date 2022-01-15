@@ -4,6 +4,7 @@ import {Labels} from './Labels';
 import {Gamer} from '../gameObjects/Gamer';
 
 import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
+import { Settings } from '../Settings';
 
 export class Coins{
 	static all: Coin[] = [];
@@ -21,6 +22,12 @@ export class Coins{
 		Coins.all.splice(i, 1);
 	}
 
+	private static playSoundGet(){
+		const coinGetSound: HTMLAudioElement = new Audio(CoinGetSoundUrl);
+		coinGetSound.volume *= Settings.soundVolume;
+		coinGetSound.play(); //звук при сборе монетки
+	}
+
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
 		for(let i = 0; i < Coins.all.length; i++){
 			if(Math.pow(mouseX - Coins.all[i].x - Coin.image.width / 2, 2) + Math.pow(mouseY - Coins.all[i].y - Coin.image.height / 2, 2) < Math.pow(Coin.image.width / 2, 2)){
@@ -30,9 +37,7 @@ export class Coins{
 					Labels.createCoinLabel(mouseX - 10, mouseY - 10, '+1');
 					Coins.delete(i);
 					Gamer.coins++;
-					
-					const coinGetSound: HTMLAudioElement = new Audio(CoinGetSoundUrl);
-					coinGetSound.play(); //звук при сборе монетки
+					Coins.playSoundGet();
 				}
 
 				return true;

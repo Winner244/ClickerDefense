@@ -6,6 +6,7 @@ import {Draw} from './Draw';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
+import { Settings } from '../Settings';
 
 /** Режим строительства */
 export class Builder {
@@ -23,8 +24,12 @@ export class Builder {
 			this.smokeImage.src = SmokeImage;
 		}
 		this.selectedBuildingForBuild = null;
-		this.buildSound = new Audio(BuildSoundUrl);
-		this.buildSound.volume = 0.2;
+	}
+
+	private static playSoundBuild(){
+		const buildSound = new Audio(BuildSoundUrl);
+		buildSound.volume = 0.2 *  Settings.soundVolume;
+		buildSound.play();
 	}
 
 	static finish(){
@@ -45,7 +50,7 @@ export class Builder {
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
 				this.buildTime = Date.now();
-				this.buildSound.play();
+				Builder.playSoundBuild();
 				return;
 			}
 			else if(isRightClick){

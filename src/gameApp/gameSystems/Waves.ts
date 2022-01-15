@@ -114,6 +114,7 @@ export class Waves{
 				let x = isLeftSide ? -monsterSize.width * scaleMonsterSize : Draw.canvas.width;
 				let y = Draw.canvas.height - bottomShiftBorder - monsterSize.height * scaleMonsterSize;
 
+				console.log('createNewMonster', y, scaleMonsterSize, bottomShiftBorder, Draw.canvas.height, monsterSize.height, x, isLeftSide);
 				Monsters.add(key, x, y, isLeftSide, scaleMonsterSize);
 
 				waveData.wasCreated++;
