@@ -9,11 +9,11 @@ import { Shop } from '../Shop/Shop';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Waves} from '../../../gameApp/gameSystems/Waves';
+import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 
 import './Menu.scss';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
-import { Settings } from '../../../gameApp/Settings';
 
 interface Prop {
   isOpen?: boolean
@@ -48,53 +48,8 @@ export class Menu extends React.Component<Props, {}> {
     App.Store.dispatch(MenuStore.actionCreators.close());
   }
 
-  static soundSelectBuffer: AudioBuffer;
-
   private static playSoundSelect(){
-    if(Menu.soundSelectBuffer){
-      console.log('repeat');
-        var context = new AudioContext();
-        var source = context.createBufferSource();
-        source.buffer = Menu.soundSelectBuffer;
-        source.connect(context.destination);
-        source.start(0); 
-        console.log('start 2');
-        return;
-    }
-
-    console.log('load new audio');
-    var context = new AudioContext();
-    var request = new XMLHttpRequest();
-    request.open('GET', SelectingSoundUrl, true);
-    request.responseType = 'arraybuffer';
-    request.onload = function() {
-        console.log('uploaded audio data', request);
-        context.decodeAudioData(request.response, function(buffer) {
-          console.log('decoded audio data', request);
-            Menu.soundSelectBuffer = buffer;
-            var source = context.createBufferSource();
-            source.buffer = buffer;
-            source.connect(context.destination);
-            source.start(0); 
-            console.log('start 1');
-        }, function(err) { console.log('error of decoding', err); });
-    };
-    request.send();
-  }
-
-  private static playSoundSelect2(){
-    var id = "selectingSound1";
-    var selectingSound: HTMLAudioElement = document.getElementById(id) as HTMLAudioElement;
-    if(!selectingSound){
-      selectingSound = new Audio(SelectingSoundUrl);
-      selectingSound.volume = 0.2 * Settings.soundVolume;
-      selectingSound.id = id;
-      selectingSound.play();
-      document.getElementsByTagName('body')[0].appendChild(selectingSound);
-    }
-    else{
-      selectingSound.play();
-    }
+    AudioSystem.play(SelectingSoundUrl, 0.2);
   }
 
   onClickNewGame(){

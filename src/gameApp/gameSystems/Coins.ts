@@ -4,7 +4,7 @@ import {Labels} from './Labels';
 import {Gamer} from '../gameObjects/Gamer';
 
 import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
-import { Settings } from '../Settings';
+import { AudioSystem } from './AudioSystem';
 
 export class Coins{
 	static all: Coin[] = [];
@@ -23,9 +23,7 @@ export class Coins{
 	}
 
 	private static playSoundGet(){
-		const coinGetSound: HTMLAudioElement = new Audio(CoinGetSoundUrl);
-		coinGetSound.volume *= Settings.soundVolume;
-		coinGetSound.play(); //звук при сборе монетки
+		AudioSystem.play(CoinGetSoundUrl);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{

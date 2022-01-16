@@ -21,7 +21,7 @@ import { Gamer } from '../../../gameApp/gameObjects/Gamer';
 import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
-import { Settings } from '../../../gameApp/Settings';
+import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 
 interface Prop {
   isOpen?: boolean
@@ -48,9 +48,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   private static playSoundSelect(){
-    const selectingSound: HTMLAudioElement = new Audio(SelectingSoundUrl);
-    selectingSound.volume = 0.2 * Settings.soundVolume;;
-    selectingSound.play();
+		AudioSystem.play(SelectingSoundUrl, 0.2);
   }
 
   onClickClose(){

@@ -1,7 +1,6 @@
 import {Building} from '../gameObjects/Building';
 import { Cursor } from '../Cursor';
 import { Coins } from '../gameSystems/Coins';
-import { Settings } from '../Settings';
 
 import flyEarthImage from '../../assets/img/buildings/flyEarth.png';  
 import PickSoundUrl1 from '../../assets/sounds/buildings/flyEarth/pick1.mp3'; 
@@ -9,6 +8,7 @@ import PickSoundUrl2 from '../../assets/sounds/buildings/flyEarth/pick2.mp3';
 import PickSoundUrl3 from '../../assets/sounds/buildings/flyEarth/pick3.mp3'; 
 import PickSoundUrl4 from '../../assets/sounds/buildings/flyEarth/pick4.mp3'; 
 import { Helper } from '../helpers/Helper';
+import { AudioSystem } from '../gameSystems/AudioSystem';
 
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -26,9 +26,8 @@ export class FlyEarth extends Building{
 			PickSoundUrl3,
 			PickSoundUrl4
 		];
-		const sound: HTMLAudioElement = new Audio(listOfSounds[Helper.getRandom(0, listOfSounds.length - 1)]);
-		sound.volume = 0.2 * Settings.soundVolume;
-		sound.play();
+		var audioUrl = listOfSounds[Helper.getRandom(0, listOfSounds.length - 1)];
+		AudioSystem.play(audioUrl, 0.2);
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{

@@ -6,7 +6,7 @@ import {Draw} from './Draw';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
-import { Settings } from '../Settings';
+import { AudioSystem } from './AudioSystem';
 
 /** Режим строительства */
 export class Builder {
@@ -27,9 +27,7 @@ export class Builder {
 	}
 
 	private static playSoundBuild(){
-		const buildSound = new Audio(BuildSoundUrl);
-		buildSound.volume = 0.2 *  Settings.soundVolume;
-		buildSound.play();
+		AudioSystem.play(BuildSoundUrl, 0.2);
 	}
 
 	static finish(){
