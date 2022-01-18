@@ -6,6 +6,8 @@ export class AudioSystem{
 
 	static play(pathToAudioFile: string, volume: number = 1, isMusic: boolean = false): void{
 		var context = new AudioContext();
+
+		//volume
 		var gainNode = context.createGain()
 		var volumeSettings = isMusic 
 			? AudioSystem.musicVolume 
@@ -13,35 +15,37 @@ export class AudioSystem{
 		gainNode.gain.value = volume * volumeSettings;
 		gainNode.connect(context.destination)
 
+		//is saved ?
 		var buffer = AudioSystem.Buffers[pathToAudioFile];
 		if(buffer){
-			var source = context.createBufferSource();
-			source.buffer = buffer;
-			//source.connect(context.destination);
-			source.connect(gainNode)
-
-			source.start(0); 
+			AudioSystem._play(context, buffer, gainNode);
 			return;
 		}
 	
 		//load audio file
 		var request = new XMLHttpRequest();
-		request.open('GET', pathToAudioFile, true);
+		request.open('GET', pathToAudioFile, true); 
 		request.responseType = 'arraybuffer';
 		request.onload = function() {
 			context.decodeAudioData(request.response, 
 				function(buffer) {
 					AudioSystem.Buffers[pathToAudioFile] = buffer;
-					var source = context.createBufferSource();
-					source.buffer = buffer;
-					//source.connect(context.destination);
-					source.connect(gainNode)
-					source.start(0); 
+					AudioSystem._play(context, buffer, gainNode);
 				}, 
 				function(err) { 
-					console.log('error of decoding audio file: ' + pathToAudioFile, err); 
+					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
 				});
 		};
+		request.onerror = function(err){
+			console.error('error of loading audio file: ' + pathToAudioFile, err); 
+		};
 		request.send();
+	}
+
+	private static _play(context: AudioContext, buffer: AudioBuffer, gainNode: GainNode){
+		var source = context.createBufferSource();
+		source.buffer = buffer;
+		source.connect(gainNode)
+		source.start(0); 
 	}
 }
