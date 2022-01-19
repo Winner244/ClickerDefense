@@ -11,13 +11,12 @@ import { AudioSystem } from './AudioSystem';
 /** Режим строительства */
 export class Builder {
 
-	static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
-	static smokeImage: HTMLImageElement = new Image();  
-	static isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
-	static buildTime: number; //время постройки
-	static readonly smokeFrames: number = 10; 
-	static readonly smokeLifeTime: number = 1000; //в миллисекундах
-	static buildSound: HTMLAudioElement; //звук при размещении постройки
+	private static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
+	private static smokeImage: HTMLImageElement = new Image();  
+	private static isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
+	private static buildTime: number; //время постройки
+	private static readonly smokeFrames: number = 10; 
+	private static readonly smokeLifeTime: number = 1000; //в миллисекундах
 
 	static init(isLoadImage: boolean = true){
 		if(isLoadImage){
@@ -28,6 +27,12 @@ export class Builder {
 
 	private static playSoundBuild(){
 		AudioSystem.play(BuildSoundUrl, 0.2);
+	}
+
+	static addBuilding(building: Building, y: number){
+		this.selectedBuildingForBuild = building;
+		this.selectedBuildingForBuild.y = y;
+		this.isDrawSmoke = false;
 	}
 
 	static finish(){
@@ -48,7 +53,7 @@ export class Builder {
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
 				this.buildTime = Date.now();
-				Builder.playSoundBuild();
+				this.playSoundBuild();
 				return;
 			}
 			else if(isRightClick){

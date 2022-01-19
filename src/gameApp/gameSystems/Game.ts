@@ -278,8 +278,8 @@ export class Game {
 	static buyThing(item: ShopItem){
 		Game.continue();
 		if(item.category == ShopCategoryEnum.BUILDINGS){
-			Builder.selectedBuildingForBuild = <Building>item;
-			Builder.selectedBuildingForBuild.y = Draw.canvas.height - Builder.selectedBuildingForBuild.height + Game.bottomShiftBorder;
+			var building = <Building>item;
+			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 	}
 }

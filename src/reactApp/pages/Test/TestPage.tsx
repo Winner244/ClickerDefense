@@ -83,7 +83,8 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 setTimeout(() => {
-                    Builder.selectedBuildingForBuild = new Tower(0);
+                    var tower = new Tower(0);
+                    Builder.addBuilding(tower, Draw.canvas.height - tower.height + Game.bottomShiftBorder);
                     Builder.mouseLogic(200, 0, true, false)
                 }, 300);
                 break;
