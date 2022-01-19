@@ -28,7 +28,7 @@ export class Tower extends Building{
 		super(x, 
 			(Draw.canvas ? Draw.canvas.height : 0) - Tower.height + 10, 
 			false,
-			true, 
+			true, //isLand
 			'Сторожевая башня', 
 			Tower.image, 0, Tower.width, Tower.height, 15, 
 			100, //health max

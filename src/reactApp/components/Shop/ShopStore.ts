@@ -1,6 +1,7 @@
 import { Reducer } from 'redux';
 
 import {ShopCategoryEnum} from '../../../enum/ShopCategoryEnum';
+import { Barricade } from '../../../gameApp/buildings/Barricade';
 import { Tower } from '../../../gameApp/buildings/Tower';
 import ShopItem from '../../../models/ShopItem';
 
@@ -47,6 +48,7 @@ function getDefaultState(): ShopState{
         items: {
             [ShopCategoryEnum.MAGIC]: [],
             [ShopCategoryEnum.BUILDINGS]: [
+                new Barricade(0),
                 new Tower(0)
             ],
             [ShopCategoryEnum.UNITS]: []

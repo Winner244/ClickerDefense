@@ -71,11 +71,6 @@ export class Game {
 		Game.images.push(Coin.image);
 		Zombie.images.forEach(image => Game.images.push(image));
 		Zombie.attackImages.forEach(attackImage => Game.images.push(attackImage));
-		Boar.images.forEach(image => Game.images.push(image));
-		Boar.attackImages.forEach(attackImage => Game.images.push(attackImage));
-		Boar.specialAbilityImages.forEach(image => Game.images.push(image));
-		Game.images.push(Boar.specialAbilitySmokeImage);
-		Game.images.push(Boar.specialAbilityDamageParticlesImage);
 
 		Cursor.setCursor(Cursor.default);
 

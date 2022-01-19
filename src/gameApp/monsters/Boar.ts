@@ -14,13 +14,13 @@ import { Game } from '../gameSystems/Game';
 
 export class Boar extends Monster{
 
-	static images: HTMLImageElement[] = [];
+	static images: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly imageFrames = 8;
 
-	static attackImages: HTMLImageElement[] = [];
+	static attackImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly attackImageFrames = 3;
 
-	static specialAbilityImages: HTMLImageElement[] = [];
+	static specialAbilityImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly specialAbilityImageFrames = 12;
 	static readonly specialAbilityImageFrameWidth = 375;
 

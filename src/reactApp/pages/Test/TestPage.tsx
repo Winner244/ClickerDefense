@@ -18,6 +18,7 @@ import {Boar} from "../../../gameApp/monsters/Boar";
 import {Monsters} from "../../../gameApp/gameSystems/Monsters";
 import {Builder} from "../../../gameApp/gameSystems/Builder";
 import Menu from '../../components/Menu/Menu';
+import { Barricade } from '../../../gameApp/buildings/Barricade';
 
 class TestPage extends React.Component {
     componentDidMount(){
@@ -240,6 +241,32 @@ class TestPage extends React.Component {
                 Buildings.all.push(new Tower(700));
                 Buildings.all.push(new Tower(1200));
                 break;
+
+            case 13: //баррикада
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Buildings.all.push(new Barricade(200));
+                Buildings.all.push(new Tower(500));
+            break;
+
+            case 14: //баррикады (с двух сторон) и проверка на кабанов
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Buildings.all.push(new Barricade(200));
+                Buildings.all.push(new Barricade(1600));
+
+                var boar = new Boar(50, 780, true, 1);
+                boar.isWillUseSpecialAbility = false;
+                Monsters.all.push(boar);
+
+                var boar = new Boar(1800, 780, false, 1);
+                boar.isWillUseSpecialAbility = false;
+                Monsters.all.push(boar);
+
+                Waves.isStarted = false;
+            break;
 
 
             default: //кабаны

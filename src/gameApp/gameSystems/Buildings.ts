@@ -3,15 +3,13 @@ import {FlyEarthRope} from '../buildings/FlyEarthRope';
 import {Tower} from '../buildings/Tower';
 import {SimpleObject} from '../../models/SimpleObject';
 
-import {Cursor} from '../Cursor';
-
 import {Draw} from './Draw';
 
 import {Building} from '../gameObjects/Building';
-import {Coins} from './Coins';
 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
 import { Monster } from '../gameObjects/Monster';
+import { Barricade } from '../buildings/Barricade';
 
 export class Buildings{
 	static all: Building[] = []; //все строения
@@ -30,6 +28,7 @@ export class Buildings{
 		FlyEarth.init(isLoadImage);
 		FlyEarthRope.init(isLoadImage);
 		Tower.init(isLoadImage);
+		Barricade.init(isLoadImage);
 
 		if(isLoadImage){
 			this.explosionImage.src = ExplosionImage;

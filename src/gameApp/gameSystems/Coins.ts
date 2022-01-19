@@ -1,10 +1,10 @@
 import {Cursor} from '../Cursor';
 import {Coin} from '../gameObjects/Coin';
 import {Labels} from './Labels';
+import {AudioSystem} from './AudioSystem';
 import {Gamer} from '../gameObjects/Gamer';
 
 import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
-import { AudioSystem } from './AudioSystem';
 
 export class Coins{
 	static all: Coin[] = [];

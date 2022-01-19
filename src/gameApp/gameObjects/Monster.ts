@@ -4,6 +4,7 @@ import sortBy from 'lodash/sortBy';
 import {Modifier} from "./Modifier";
 import {Helper} from "../helpers/Helper";
 import { Labels } from '../gameSystems/Labels';
+import { Barricade } from '../buildings/Barricade';
 
 export class Monster{
 	name: string;
@@ -187,7 +188,13 @@ export class Monster{
 		if(damage > 0 && this.buildingGoal != null){
 			this.buildingGoal.health -= damage; //монстр наносит урон
 			this.lastAttackedTime = Date.now();
-			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 15, this.y + this.height / 2, '-' + damage.toFixed(1), 3000);
+			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + damage.toFixed(1), 3000);
+
+			if(this.buildingGoal instanceof  Barricade){
+				var mirrorDamage = damage / 100 * Barricade.damageMirrorPercentage;
+				this.health -= mirrorDamage;
+				Labels.createMonsterDamageLabel(this.x + this.width / 2 + (this.isLeftSide ? 0: -17), this.y + this.height / 2, '-' + mirrorDamage.toFixed(1), 3000);
+			}
 		}
 	}
 

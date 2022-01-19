@@ -4,13 +4,8 @@ import { App } from '../../App';
 import * as MenuStore from '../../components/Menu/MenuStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {Buildings} from '../../../gameApp/gameSystems/Buildings';
-import {Tower} from '../../../gameApp/buildings/Tower';
 import { Waves } from '../../../gameApp/gameSystems/Waves';
 
-import { Helper } from '../../helpers/Helper';
-import { Draw } from '../../../gameApp/gameSystems/Draw';
-import { MovingObject } from '../../../models/MovingObject';
 import {Zombie} from "../../../gameApp/monsters/Zombie";
 import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
