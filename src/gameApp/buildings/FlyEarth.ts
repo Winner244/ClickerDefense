@@ -1,14 +1,14 @@
 import {Building} from '../gameObjects/Building';
-import { Cursor } from '../Cursor';
 import { Coins } from '../gameSystems/Coins';
+import { AudioSystem } from '../gameSystems/AudioSystem';
+import { Cursor } from '../Cursor';
+import { Helper } from '../helpers/Helper';
 
 import flyEarthImage from '../../assets/img/buildings/flyEarth.png';  
 import PickSoundUrl1 from '../../assets/sounds/buildings/flyEarth/pick1.mp3'; 
 import PickSoundUrl2 from '../../assets/sounds/buildings/flyEarth/pick2.mp3'; 
 import PickSoundUrl3 from '../../assets/sounds/buildings/flyEarth/pick3.mp3'; 
 import PickSoundUrl4 from '../../assets/sounds/buildings/flyEarth/pick4.mp3'; 
-import { Helper } from '../helpers/Helper';
-import { AudioSystem } from '../gameSystems/AudioSystem';
 
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();

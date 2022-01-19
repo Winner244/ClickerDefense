@@ -3,10 +3,10 @@ import {Gamer} from '../gameObjects/Gamer';
 import {Labels} from './Labels';
 import {Buildings} from './Buildings';
 import {Draw} from './Draw';
+import {AudioSystem} from './AudioSystem';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
-import { AudioSystem } from './AudioSystem';
 
 /** Режим строительства */
 export class Builder {
@@ -23,10 +23,6 @@ export class Builder {
 			this.smokeImage.src = SmokeImage;
 		}
 		this.selectedBuildingForBuild = null;
-	}
-
-	private static playSoundBuild(){
-		AudioSystem.play(BuildSoundUrl, 0.2);
 	}
 
 	static addBuilding(building: Building, y: number){
@@ -94,5 +90,11 @@ export class Builder {
 				this.selectedBuildingForBuild.draw(millisecondsFromStart, isGameOver, true);
 			}
 		}
+	}
+
+	
+
+	private static playSoundBuild(){
+		AudioSystem.play(BuildSoundUrl, 0.2);
 	}
 }

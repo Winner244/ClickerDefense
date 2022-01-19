@@ -13,10 +13,10 @@ import ZombieAttack4Image from '../../assets/img/monsters/zombieAttack4.png';
 
 export class Zombie extends Monster{
 
-	static images: HTMLImageElement[] = []; //разные окраски монстра
+	static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	static readonly imageFrames = 12;
 
-	static attackImages: HTMLImageElement[] = [];  //разные окраски монстра
+	static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly attackImageFrames = 4;
 
 

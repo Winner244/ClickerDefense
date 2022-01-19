@@ -21,8 +21,8 @@ export class Tower extends Building{
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
 
-	rechargeLeft: number = 0; //сколько осталось времени перезарядки
-	arrows: MovingObject[] = [];
+	private rechargeLeft: number = 0; //сколько осталось времени перезарядки
+	private arrows: MovingObject[] = [];
 
 	constructor(x: number) {
 		super(x, 
