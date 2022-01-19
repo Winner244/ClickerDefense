@@ -18,7 +18,6 @@ import {Size} from "../../models/Size";
 
 export class Monsters{
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
-	static typeSizes: { [id: string] : Size; } = {}; //размеры монстров
 	
 	static explosionImage: HTMLImageElement = new Image(); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
@@ -30,13 +29,17 @@ export class Monsters{
 		Boar.init(isLoadImage);
 
 		this.all = [];
-		this.typeSizes = {
-			[Zombie.name]: new Size(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height),
-			[Boar.name]: new Size(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height)
-		};
 
 		if(isLoadImage){
 			this.explosionImage.src = ExplosionImage;
+		}
+	}
+
+	//размеры монстров (используется перед созданием монстра для задания высоты появления)
+	static get sizes() {
+		return {
+			[Zombie.name]: new Size(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height),
+			[Boar.name]: new Size(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height)
 		}
 	}
 

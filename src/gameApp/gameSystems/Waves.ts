@@ -108,13 +108,12 @@ export class Waves{
 			let periodTime = 1000 * 60 / waveData.frequencyCreating;
 			if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2))
 			{
-				let monsterSize = Monsters.typeSizes[key];
+				let monsterSize = Monsters.sizes[key];
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
 				let isLeftSide = Math.random() < 0.5;
 				let x = isLeftSide ? -monsterSize.width * scaleMonsterSize : Draw.canvas.width;
 				let y = Draw.canvas.height - bottomShiftBorder - monsterSize.height * scaleMonsterSize;
 
-				console.log('createNewMonster', y, scaleMonsterSize, bottomShiftBorder, Draw.canvas.height, monsterSize.height, x, isLeftSide);
 				Monsters.add(key, x, y, isLeftSide, scaleMonsterSize);
 
 				waveData.wasCreated++;
