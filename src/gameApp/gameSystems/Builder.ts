@@ -17,6 +17,7 @@ export class Builder {
 	private static buildTime: number; //время постройки
 	private static readonly smokeFrames: number = 10; 
 	private static readonly smokeLifeTime: number = 1000; //в миллисекундах
+	private static isAnotherBuilding: boolean = false; //курсор наведён на другое здание?
 
 	static init(isLoadImage: boolean = true){
 		if(isLoadImage){
@@ -38,7 +39,8 @@ export class Builder {
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean){
 		if(this.selectedBuildingForBuild && !this.isDrawSmoke){
 			this.selectedBuildingForBuild.x = mouseX - this.selectedBuildingForBuild.width / 2;
-			if(isClick){
+			this.isAnotherBuilding = Buildings.all.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
+			if(isClick && !this.isAnotherBuilding){
 				Gamer.coins -= this.selectedBuildingForBuild.price;
 				Labels.createCoinLabel(
 					this.selectedBuildingForBuild.x + this.selectedBuildingForBuild.width, 
@@ -87,7 +89,11 @@ export class Builder {
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{
+				if(this.isAnotherBuilding){
+					Draw.ctx.filter="grayscale(1) ";
+				}
 				this.selectedBuildingForBuild.draw(millisecondsFromStart, isGameOver, true);
+				Draw.ctx.filter="none";
 			}
 		}
 	}
