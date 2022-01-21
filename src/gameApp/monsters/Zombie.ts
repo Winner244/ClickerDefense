@@ -1,15 +1,15 @@
 import {Monster} from '../gameObjects/Monster';
 import {Helper} from '../helpers/Helper';
 
-import Zombie1Image from '../../assets/img/monsters/zombie.png'; 
-import Zombie2Image from '../../assets/img/monsters/zombie2.png'; 
-import Zombie3Image from '../../assets/img/monsters/zombie3.png'; 
-import Zombie4Image from '../../assets/img/monsters/zombie4.png'; 
+import Zombie1Image from '../../assets/img/monsters/zombie/zombie.png'; 
+import Zombie2Image from '../../assets/img/monsters/zombie/zombie2.png'; 
+import Zombie3Image from '../../assets/img/monsters/zombie/zombie3.png'; 
+import Zombie4Image from '../../assets/img/monsters/zombie/zombie4.png'; 
 
-import ZombieAttack1Image from '../../assets/img/monsters/zombieAttack.png'; 
-import ZombieAttack2Image from '../../assets/img/monsters/zombieAttack2.png'; 
-import ZombieAttack3Image from '../../assets/img/monsters/zombieAttack3.png'; 
-import ZombieAttack4Image from '../../assets/img/monsters/zombieAttack4.png'; 
+import ZombieAttack1Image from '../../assets/img/monsters/zombie/zombieAttack.png'; 
+import ZombieAttack2Image from '../../assets/img/monsters/zombie/zombieAttack2.png'; 
+import ZombieAttack3Image from '../../assets/img/monsters/zombie/zombieAttack3.png'; 
+import ZombieAttack4Image from '../../assets/img/monsters/zombie/zombieAttack4.png'; 
 
 export class Zombie extends Monster{
 
@@ -27,7 +27,7 @@ export class Zombie extends Monster{
 
 		super(x, y,
 			isLeftSide,
-			true,
+			true, //isLand
 			Zombie.name,
 			selectedImage,
 			Zombie.imageFrames,
@@ -38,10 +38,10 @@ export class Zombie extends Monster{
 			selectedAttackImage.width / Zombie.attackImageFrames * scaleSize,
 			1,
 			5,
-			3 * scaleSize,
-			100 * scaleSize,
-			990,
-			50);
+			3 * scaleSize,  //health
+			100 * scaleSize,   //damage
+			990, //time attack wait
+			50); //speed
 	}
 
 	static init(isLoadImage: boolean = true): void{

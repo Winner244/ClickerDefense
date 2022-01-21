@@ -44,6 +44,15 @@ class TestPage extends React.Component {
             break;
 
             case 2:
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.waveCurrent = 2;
+                Game.images.push(...Boar.images);
+
+                var boar = new Boar(50, 780, true, 1);
+                boar.isWillUseSpecialAbility = false;
+                Monsters.all.push(boar);
                 break;
 
             case 3: //магазин

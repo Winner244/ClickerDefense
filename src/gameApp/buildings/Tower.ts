@@ -33,7 +33,7 @@ export class Tower extends Building{
 			Tower.image, 0, Tower.width, Tower.height, 15, 
 			100, //health max
 			50, // price
-			'Стреляет по наземным и воздушным монстрам в радиусе действия.');
+			'Стреляет по наземным монстрам в радиусе действия.');
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
 	}

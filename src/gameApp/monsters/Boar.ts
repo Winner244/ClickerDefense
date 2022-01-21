@@ -1,11 +1,12 @@
 import {Monster} from '../gameObjects/Monster';
 import {Helper} from '../helpers/Helper';
 
-import Boar1Image from '../../assets/img/monsters/boar.png';
-import BoarAttack1Image from '../../assets/img/monsters/boarAttack.png';
-import BoarSpecial1Image from '../../assets/img/monsters/boarSpecial.png';
-import BoarSpecialSmokeImage from '../../assets/img/monsters/boarSpecial_Smoke.png';
-import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boarSpecial_DamageParticles.png';
+import Boar1Image from '../../assets/img/monsters/boar/boar.png';
+import Boar2Image from '../../assets/img/monsters/boar/boar2.png';
+import BoarAttack1Image from '../../assets/img/monsters/boar/boarAttack.png';
+import BoarSpecial1Image from '../../assets/img/monsters/boar/boarSpecial.png';
+import BoarSpecialSmokeImage from '../../assets/img/monsters/boar/boarSpecial_Smoke.png';
+import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boar/boarSpecial_DamageParticles.png';
 
 import {Building} from "../gameObjects/Building";
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
@@ -58,12 +59,12 @@ export class Boar extends Monster{
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Boar.images.length) - 1;
 		let selectedImage = Boar.images[random];
-		let selectedAttackImage = Boar.attackImages[random];
-		let selectedSpecialImage = Boar.specialAbilityImages[random];
+		let selectedAttackImage = Boar.attackImages[0];
+		let selectedSpecialImage = Boar.specialAbilityImages[0];
 
 		super(x, y,
 			isLeftSide,
-			true,
+			true, //isLand
 			Boar.name,
 			selectedImage,
 			Boar.imageFrames,
@@ -74,10 +75,10 @@ export class Boar extends Monster{
 			selectedAttackImage.width / Boar.attackImageFrames * scaleSize,
 			2,
 			5,
-			4 * scaleSize,
+			4 * scaleSize,  //health
 			180 * scaleSize, //damage
-			500,
-			150);
+			500,  //time attack wait
+			150); //speed
 
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
 		this.specialAbilityImage = selectedSpecialImage;
