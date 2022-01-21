@@ -97,6 +97,16 @@ export class Building extends ShopItem{
 	}
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+		let x = this.x;
+		let y = this.y;
+
+		if(this.impulse > 0){
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
+			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
+			x = -this.width / 2;
+			y = -this.height;
+		}
+
 		if(this.frames > 1){
 			let frame = isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / this.frames)) % this.frames;
 			Draw.ctx.drawImage(this.image, 
@@ -104,18 +114,23 @@ export class Building extends ShopItem{
 				0, //crop from y
 				this.image.width / this.frames, //crop by width
 				this.image.height,    //crop by height
-				this.x, //x
-				this.y,  //y
+				x, //x
+				y,  //y
 				this.width, //displayed width 
 				this.height); //displayed height 
 		}
 		else{
 			if(this.width > 0 && this.height > 0){
-				Draw.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+				Draw.ctx.drawImage(this.image, x, y, this.width, this.height);
 			}
 			else{
-				Draw.ctx.drawImage(this.image, this.x, this.y);
+				Draw.ctx.drawImage(this.image, x, y);
 			}
+		}
+
+		if(this.impulse > 0){
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
 		}
 	}
 

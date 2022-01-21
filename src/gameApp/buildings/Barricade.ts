@@ -20,7 +20,8 @@ export class Barricade extends Building{
 			250, //health max
 			25, // price
 			'Колючая, сдерживает монстров часть времени');
-		this._maxImpulse = 0;
+		this._maxImpulse = 2;
+		this._impulseForceDecreasing = 5;
 	}
 
 	static init(isLoadImage: boolean = true): void{

@@ -114,6 +114,7 @@ export class Tower extends Building{
 	}
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+		//стрелы
 		for(let i = 0; i < this.arrows.length; i++)
 		{
 			let arrow = this.arrows[i];
@@ -136,15 +137,6 @@ export class Tower extends Building{
 			Draw.ctx.stroke();
 		}
 
-		if(this.impulse > 0){
-			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
-			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
-			Draw.ctx.drawImage(this.image, - this.width / 2, - this.height, this.width, this.height);
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
-		}
-		else{
-			super.draw(millisecondsFromStart, isGameOver, isBuildingMode);
-		}
+		super.draw(millisecondsFromStart, isGameOver, isBuildingMode);
 	}
 }

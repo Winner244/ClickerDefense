@@ -247,6 +247,24 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
             break;
 
+            case 15: //баррикады (с двух сторон) и проверка наспец способность кабанов
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(new Barricade(1200));
+
+                var boar = new Boar(0, 780, true, 1);
+                boar.isWillUseSpecialAbility = true;
+                Monsters.all.push(boar);
+
+                var boar = new Boar(1900, 780, false, 1);
+                boar.isWillUseSpecialAbility = true;
+                Monsters.all.push(boar);
+
+                Waves.isStarted = false;
+            break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
