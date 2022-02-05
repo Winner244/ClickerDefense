@@ -36,6 +36,8 @@ export class Tower extends Building{
 			'Стреляет по наземным монстрам в радиусе действия.');
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
+
+		Tower.init(true);
 	}
 
 	static init(isLoadImage: boolean = true): void{

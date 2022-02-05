@@ -21,7 +21,7 @@ export class Builder {
 
 	static init(isLoadImage: boolean = true){
 		if(isLoadImage){
-			this.smokeImage.src = SmokeImage;
+			this.smokeImage.src = SmokeImage; //load image only once
 		}
 		this.selectedBuildingForBuild = null;
 	}

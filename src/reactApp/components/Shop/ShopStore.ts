@@ -40,7 +40,20 @@ export const actionCreators = {
     selectItem: (itemName: string) => <SelectItemAction>{ type: 'SHOP__SELECT_ITEM', itemName: itemName},
 };
 
-function getDefaultState(): ShopState{
+function getDefaultClosedState(): ShopState{
+    return {
+        isOpen: false,
+        selectedCategory: ShopCategoryEnum.ALL,
+        selectedItemNames: [],
+        items: {
+            [ShopCategoryEnum.MAGIC]: [],
+            [ShopCategoryEnum.BUILDINGS]: [],
+            [ShopCategoryEnum.UNITS]: []
+        }
+    };
+}
+
+function getDefaultOpenState(): ShopState{
     return {
         isOpen: false,
         selectedCategory: ShopCategoryEnum.ALL,
@@ -60,9 +73,9 @@ function getDefaultState(): ShopState{
 export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action: KnownAction) => {
     switch (action.type) {
         case 'SHOP__OPEN':
-            return Object.assign({}, getDefaultState(), { isOpen: true });
+            return Object.assign({}, getDefaultOpenState(), { isOpen: true });
         case 'SHOP__CLOSE':
-            return getDefaultState();
+            return getDefaultClosedState();
         case 'SHOP__SELECT_CATEGORY':
             return Object.assign({}, state, { selectedCategory: action.category == state?.selectedCategory ? ShopCategoryEnum.ALL : action.category });
         case 'SHOP__SELECT_ITEM':
@@ -79,5 +92,5 @@ export const reducer: Reducer<ShopState> = (state: ShopState | undefined, action
             const exhaustiveCheck: never = action;
     }
 
-    return state || getDefaultState();
+    return state || getDefaultClosedState();
 };

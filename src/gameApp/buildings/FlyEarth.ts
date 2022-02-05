@@ -17,11 +17,13 @@ export class FlyEarth extends Building{
 
 	constructor(x: number, y: number) {
 		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100, 0, '');
+
+		FlyEarth.init(true);
 	}
 
 	static init(isLoadImage: boolean = true): void{
 		if(isLoadImage){
-			this.image.src = flyEarthImage; 
+			this.image.src = flyEarthImage;  //load image only once
 		}
 	}
 

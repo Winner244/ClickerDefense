@@ -22,11 +22,13 @@ export class Barricade extends Building{
 			'Колючая и непроходимая. Сдерживает монстров и возвращает часть полученного урона, обратно, монстрам');
 		this._maxImpulse = 2;
 		this._impulseForceDecreasing = 5;
+
+		Barricade.init(true);
 	}
 
 	static init(isLoadImage: boolean = true): void{
 		if(isLoadImage){
-			this.image.src = towerImage; 
+			this.image.src = towerImage;  //load image only once
 		}
 	}
 
