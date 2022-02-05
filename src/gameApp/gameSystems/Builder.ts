@@ -27,6 +27,7 @@ export class Builder {
 	}
 
 	static addBuilding(building: Building, y: number){
+		this.init(true);
 		this.selectedBuildingForBuild = building;
 		this.selectedBuildingForBuild.y = y;
 		this.isDrawSmoke = false;

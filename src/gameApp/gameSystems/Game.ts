@@ -61,7 +61,6 @@ export class Game {
 		Gamer.init();
 		Labels.init();
 		Waves.init(isLoadImage);
-		Builder.init(isLoadImage);
 
 		if(isLoadImage){
 			Game.grassImage.src = GrassImage;
