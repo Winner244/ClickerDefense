@@ -19,6 +19,12 @@ export class FlyEarth extends Building{
 		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100, 0, '');
 	}
 
+	static init(isLoadImage: boolean = true): void{
+		if(isLoadImage){
+			this.image.src = flyEarthImage; 
+		}
+	}
+
 	private static playSoundPick(){
 		var listOfSounds = [
 			PickSoundUrl1,
@@ -50,11 +56,5 @@ export class FlyEarth extends Building{
 		}
 
 		return false;
-	}
-
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
-			this.image.src = flyEarthImage; 
-		}
 	}
 }

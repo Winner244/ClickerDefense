@@ -84,7 +84,7 @@ export class Game {
 	/** Начать новую игру */
 	static startNew(){
 		Game.init(Draw.canvas, false);
-		Draw.canvas.style.display = 'block';
+		Draw.canvas.classList.remove("hide");
 		Waves.startFirstWave();
 	}
 		

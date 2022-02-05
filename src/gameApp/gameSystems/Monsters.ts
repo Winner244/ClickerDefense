@@ -1,26 +1,29 @@
+import {SimpleObject} from '../../models/SimpleObject';
+import {Size} from "../../models/Size";
+
 import {FlyEarth} from '../buildings/FlyEarth';
+
 import {Zombie} from '../monsters/Zombie';
 import {Boar} from '../monsters/Boar';
-import {Cursor} from '../Cursor';
 
-import {Gamer} from '../gameObjects/Gamer';
-import {Labels} from './Labels';
-import {Coin} from '../gameObjects/Coin';
-import {Coins} from './Coins';
 import {Building} from '../gameObjects/Building';
-import {SimpleObject} from '../../models/SimpleObject';
-
 import {Monster} from '../gameObjects/Monster';
+import {Gamer} from '../gameObjects/Gamer';
+import {Coin} from '../gameObjects/Coin';
+
+import {Cursor} from '../Cursor';
+import {Labels} from './Labels';
+import {Coins} from './Coins';
+import {Draw} from './Draw';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
-import {Draw } from './Draw';
-import {Size} from "../../models/Size";
 
 export class Monsters{
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
 	
 	static explosionImage: HTMLImageElement = new Image(); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
+
 	static readonly explosionLifeTime = 700; //время жизни анимации гибели монстра (в миллисекундах)
 	static readonly explosionFrames = 27;
 

@@ -25,7 +25,7 @@ class GameDisplay extends React.Component {
   }
 
   render() {
-    return <canvas width="1920" height="882" className='game-canvas' ref={this.canvas}></canvas>
+    return <canvas width="1920" height="882" className='game-canvas hide' ref={this.canvas}></canvas>
   }
 }
 	
