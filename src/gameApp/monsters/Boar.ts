@@ -3,6 +3,7 @@ import {Helper} from '../helpers/Helper';
 
 import Boar1Image from '../../assets/img/monsters/boar/boar.png';
 import Boar2Image from '../../assets/img/monsters/boar/boar2.png';
+import Boar3Image from '../../assets/img/monsters/boar/boar3.png';
 import BoarAttack1Image from '../../assets/img/monsters/boar/boarAttack.png';
 import BoarSpecial1Image from '../../assets/img/monsters/boar/boarSpecial.png';
 import BoarSpecialSmokeImage from '../../assets/img/monsters/boar/boarSpecial_Smoke.png';
@@ -12,6 +13,7 @@ import {Building} from "../gameObjects/Building";
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
 import {Draw} from "../gameSystems/Draw";
 import { Game } from '../gameSystems/Game';
+import { ImageHandler } from '../ImageHandler';
 
 export class Boar extends Monster{
 
@@ -25,12 +27,12 @@ export class Boar extends Monster{
 	static readonly specialAbilityImageFrames = 12;
 	static readonly specialAbilityImageFrameWidth = 375;
 
-	static specialAbilitySmokeImage: HTMLImageElement;
+	static specialAbilitySmokeImage: HTMLImageElement = new Image();
 	static readonly specialAbilitySmokeImageFrames = 16;
 	static readonly specialAbilitySmokeImageFrameWidth = 90;
 	static readonly specialAbilitySmokeImageDisplayedWidth = 180;
 
-	static specialAbilityDamageParticlesImage: HTMLImageElement;
+	static specialAbilityDamageParticlesImage: HTMLImageElement = new Image();
 	static readonly specialAbilityDamageParticlesImageFrames = 7;
 	static readonly specialAbilityDamageParticlesImageFrameWidth = 200;
 	static readonly specialAbilityDamageParticlesImageDisplayedWidth = 100;
@@ -55,30 +57,35 @@ export class Boar extends Monster{
 	timeSpecialAbilityWasActivated: number; //время когда спец способности была активирована
 	timeSpecialDamageWasActivated: number; //время когда урона от спец способности был активирован
 
+	private static readonly imageHandler: ImageHandler = new ImageHandler();
+	private static wasInit: boolean; //вызов функции init уже произошёл?
+
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
+		Boar.init(true); //reserve init
+
 		let random = Helper.getRandom(1, Boar.images.length) - 1;
-		let selectedImage = Boar.images[random];
+		let selectedImage = Boar.images[0];
 		let selectedAttackImage = Boar.attackImages[0];
 		let selectedSpecialImage = Boar.specialAbilityImages[0];
 
 		super(x, y,
+			scaleSize,
 			isLeftSide,
 			true, //isLand
 			Boar.name,
 			selectedImage,
 			Boar.imageFrames,
-			selectedImage.width / Boar.imageFrames * scaleSize,
 			2,
 			selectedAttackImage,
 			Boar.attackImageFrames,
-			selectedAttackImage.width / Boar.attackImageFrames * scaleSize,
 			2,
 			5,
-			4 * scaleSize,  //health
-			180 * scaleSize, //damage
+			4,  //health
+			180, //damage
 			500,  //time attack wait
-			150); //speed
+			150,  //speed
+			Boar.imageHandler);
 
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
 		this.specialAbilityImage = selectedSpecialImage;
@@ -88,43 +95,48 @@ export class Boar extends Monster{
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
-			Boar.images.push(new Image()); Boar.images[0].src = Boar1Image;
-			//Boar.images.push(new Image()); Boar.images[1].src = Boar2Image;
-			//Boar.images.push(new Image()); Boar.images[2].src = Boar3Image;
+	static init(isLoadImage: boolean = true): void {
+		if(isLoadImage && !Boar.wasInit) {
+			Boar.wasInit = true;
 
-			Boar.attackImages.push(new Image()); Boar.attackImages[0].src = BoarAttack1Image;
-			//Boar.attackImages.push(new Image()); Boar.attackImages[1].src = BoarAttack2Image;
-			//Boar.attackImages.push(new Image()); Boar.attackImages[2].src = BoarAttack3Image;
+			Boar.imageHandler.add(Boar.images).src = Boar1Image;
+			//Boar.imageHandler.add(Boar.images).src = Boar2Image;
+			//Boar.imageHandler.add(Boar.images).src = Boar3Image;
 
-			Boar.specialAbilityImages.push(new Image()); Boar.specialAbilityImages[0].src = BoarSpecial1Image;
+			Boar.imageHandler.add(Boar.attackImages).src = BoarAttack1Image;
+			//Boar.imageHandler.add(Boar.attackImages).src = BoarAttack2Image;
+			//Boar.imageHandler.add(Boar.attackImages).src = BoarAttack3Image;
 
-			Boar.specialAbilitySmokeImage = new Image(); 
-			Boar.specialAbilitySmokeImage.src = BoarSpecialSmokeImage;
+			Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial1Image;
+			//Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial2Image;
+			//Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial3Image;
 
-			Boar.specialAbilityDamageParticlesImage = new Image();
-			Boar.specialAbilityDamageParticlesImage.src = BoarSpecialDamageParticlesImage;
+			Boar.imageHandler.new(Boar.specialAbilitySmokeImage).src = BoarSpecialSmokeImage;
+			Boar.imageHandler.new(Boar.specialAbilityDamageParticlesImage).src = BoarSpecialDamageParticlesImage;
 		}
 	}
 
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number) {
-		if(this.isActivatedSpecialAbility){
-			if(Date.now() - this.timeSpecialAbilityWasActivated < Boar.timeAnimateSpecialAbility){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		if(this.isActivatedSpecialAbility) {
+			if(Date.now() - this.timeSpecialAbilityWasActivated < Boar.timeAnimateSpecialAbility) {
 				return; //игнорируем базовую логику движения и атаки
 			}
-			else if(this.isAttack && this.buildingGoal){
+			else if(this.isAttack && this.buildingGoal) {
 				super.attack(this.specialAbilityDamage); //наносим урон от спец способности
 				this.buildingGoal.impulse += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
 				this.stopSpecialAbility();
 				this.isActivatedSpecialDamage = true;
 				this.timeSpecialDamageWasActivated = Date.now();
 			}
-			else{
+			else {
 				this.lastAttackedTime = Date.now(); //что бы не сработала первая обычная атака в базовом методе
 			}
 		}
-		else if(this.isWillUseSpecialAbility){
+		else if(this.isWillUseSpecialAbility) {
 			//активация спец способности
 			if(this.buildingGoal != null &&
 				Math.abs(this.buildingGoal.x - this.x) <= Boar.maxDistanceActivateSpecialAbility &&
@@ -152,6 +164,10 @@ export class Boar extends Monster{
 	}
 
 	draw(isGameOver: boolean) {
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
 		let isInvert = this.isLeftSide;
 		let scale = isInvert ? -1 : 1;
 

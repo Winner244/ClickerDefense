@@ -25,10 +25,7 @@ export class Monsters{
 	static readonly explosionFrames = 27;
 
 	static init(isLoadImage: boolean = true){
-		Zombie.init(isLoadImage);
-		Boar.init(isLoadImage);
-
-		this.all = [];
+		Monsters.all = [];
 
 		if(isLoadImage){
 			this.explosionImage.src = ExplosionImage;
@@ -36,10 +33,19 @@ export class Monsters{
 	}
 
 	//размеры монстров (используется перед созданием монстра для задания высоты появления)
-	static get sizes() {
-		return {
-			[Zombie.name]: new Size(Zombie.images[0].width / Zombie.imageFrames, Zombie.images[0].height),
-			[Boar.name]: new Size(Boar.images[0].width / Boar.imageFrames, Boar.images[0].height)
+	static getMonsterSize(monsterName: string): Size {
+		switch(monsterName) {
+			case Zombie.name: return new Size((Zombie.images[0]?.width || 0) / Zombie.imageFrames, Zombie.images[0]?.height);
+			case Boar.name: return new Size((Boar.images[0]?.width || 0) / Boar.imageFrames, Boar.images[0]?.height);
+			default: throw `unexpected name of the monster (getMonsterSize(${monsterName})).`;
+		}
+	}
+
+	static initMonster(monsterName: string): void {
+		switch(monsterName) {
+			case Zombie.name: Zombie.init(true); break;
+			case Boar.name: Boar.init(true); break;
+			default: throw `unexpected name of the monster (initMonster(${monsterName})).`;
 		}
 	}
 
@@ -139,7 +145,7 @@ export class Monsters{
 		switch (name){
 			case Zombie.name: newMonster = new Zombie(x, y, isLeftSide, scaleSize); break;
 			case Boar.name: newMonster = new Boar(x, y, isLeftSide, scaleSize); break;
-			default: throw 'unexpected name of monster.';
+			default: throw `unexpected name the monster (add(${name}, ...)).`;
 		}
 
 		Monsters.all.push(newMonster);

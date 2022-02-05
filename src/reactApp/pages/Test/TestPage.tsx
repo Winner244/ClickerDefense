@@ -48,7 +48,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.waveCurrent = 2;
-                Game.images.push(...Boar.images);
 
                 var boar = new Boar(50, 780, true, 1);
                 boar.isWillUseSpecialAbility = false;
@@ -270,6 +269,26 @@ class TestPage extends React.Component {
                 var boar = new Boar(1900, 780, false, 1);
                 boar.isWillUseSpecialAbility = true;
                 Monsters.all.push(boar);
+
+                Waves.isStarted = false;
+            break;
+
+            case 16: //Image Handler, loading images, waiting images
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(new Tower(1200));
+                setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
+
+                var boar = new Boar(0, 780, true, 1);
+                boar.isWillUseSpecialAbility = true;
+                boar.name = 'boar1';
+                Monsters.all.push(boar);
+
+                var z = new Zombie(1780, 780, false, 1);
+                Monsters.all.push(z);
+                setTimeout(() => Monsters.all.forEach(x => x.health--), 300);
 
                 Waves.isStarted = false;
             break;

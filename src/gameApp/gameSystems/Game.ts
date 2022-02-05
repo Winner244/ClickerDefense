@@ -9,8 +9,6 @@ import {Labels} from './Labels';
 import {Builder} from './Builder';
 import {Waves} from './Waves';
 
-import {Zombie} from '../monsters/Zombie';
-
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
@@ -22,17 +20,17 @@ import {Menu} from '../../reactApp/components/Menu/Menu';
 import {Shop} from '../../reactApp/components/Shop/Shop';
 import ShopItem from '../../models/ShopItem';
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
-import { Boar } from '../monsters/Boar';
 
 import GrassImage from '../../assets/img/grass1.png'; 
 
 
 export class Game {
+	private static primaryImages: HTMLImageElement[] = [];  // изображения (кроме курсоров) загрузку которых нужно дождаться перед началом игры
+	private static grassImage: HTMLImageElement = new Image(); //трава
+	private static animationId: number = 0; //техническая переменная для браузера
+
+
 	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
-
-	static images: HTMLImageElement[] = [];  //все изображения (кроме курсоров)
-
-	static grassImage: HTMLImageElement = new Image(); //трава
 
 	static isGameRun: boolean = true; //если false - значит на паузе 
 	static isGameOver: boolean = false; //игра заканчивается
@@ -40,19 +38,20 @@ export class Game {
 	static isWasInit: boolean = false; //инициализация уже была?
 
 	static gameOverTime: number = 0; //время окончания игры
-
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
-	static animationId: number = 0; //техническая переменная для браузера
 
 	static isBlockMouseLogic: boolean = false; //if user's mouse enter to interface buttons (menu/shop/nextWave)
 
 	/** Инициализация игры */
 	static init(canvas: HTMLCanvasElement, isLoadImage: boolean = true): void{
+		Game.isWasInit = true;
 		Game.isGameRun = true;
 		Game.isGameOver = false;
 		Game.isEndAfterGameOver = false;
+		Game.isBlockMouseLogic = false;
 		Game.lastDrawTime = 0;
-		Game.grassImage.src = GrassImage;
+
+		Cursor.setCursor(Cursor.default);
 
 		Draw.init(canvas);
 		Mouse.init();
@@ -64,27 +63,22 @@ export class Game {
 		Waves.init(isLoadImage);
 		Builder.init(isLoadImage);
 
-		Game.images = [];
-		Game.images.push(Game.grassImage);
-		Game.images.push(FlyEarth.image);
-		Game.images.push(FlyEarthRope.image);
-		Game.images.push(Coin.image);
-		Zombie.images.forEach(image => Game.images.push(image));
-		Zombie.attackImages.forEach(attackImage => Game.images.push(attackImage));
+		if(isLoadImage){
+			Game.grassImage.src = GrassImage;
 
-		Cursor.setCursor(Cursor.default);
+			Game.primaryImages = [];
+			Game.primaryImages.push(Game.grassImage);
+			Game.primaryImages.push(FlyEarth.image);
+			Game.primaryImages.push(FlyEarthRope.image);
+			Game.primaryImages.push(Coin.image);
+		}
 
 		window.removeEventListener('keypress', Game.onKey);
 		window.addEventListener('keypress', Game.onKey);
 
-		if(Game.animationId == 0){
+		if(Game.animationId == 0 && Game.primaryImages.length){
 			Game.animationId = window.requestAnimationFrame(Game.go);
 		}
-
-		Game.isWasInit = true;
-		Game.isBlockMouseLogic = false;
-
-		Cursor.setCursor(Cursor.default);
 	}
 
 	/** Начать новую игру */
@@ -176,7 +170,7 @@ export class Game {
 		}
 
 		//проверка что все изображения загружены - иначе будет краш хрома
-		if(Game.images.some(x => !x.complete)){
+		if(Game.primaryImages.some(x => !x.complete)){
 			Game.animationId = window.requestAnimationFrame(Game.go);
 			return;
 		}

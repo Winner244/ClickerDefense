@@ -10,6 +10,7 @@ import ZombieAttack1Image from '../../assets/img/monsters/zombie/zombieAttack.pn
 import ZombieAttack2Image from '../../assets/img/monsters/zombie/zombieAttack2.png'; 
 import ZombieAttack3Image from '../../assets/img/monsters/zombie/zombieAttack3.png'; 
 import ZombieAttack4Image from '../../assets/img/monsters/zombie/zombieAttack4.png'; 
+import { ImageHandler } from '../ImageHandler';
 
 export class Zombie extends Monster{
 
@@ -19,42 +20,49 @@ export class Zombie extends Monster{
 	static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly attackImageFrames = 4;
 
+	private static readonly imageHandler: ImageHandler = new ImageHandler();
+	private static wasInit: boolean; //вызов функции init уже произошёл?
+
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
+		Zombie.init(true); //reserve init
+
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
 		let selectedImage = Zombie.images[random];
 		let selectedAttackImage = Zombie.attackImages[random];
 
 		super(x, y,
+			scaleSize,
 			isLeftSide,
 			true, //isLand
 			Zombie.name,
 			selectedImage,
 			Zombie.imageFrames,
-			selectedImage.width / Zombie.imageFrames * scaleSize,
 			1,
 			selectedAttackImage,
 			Zombie.attackImageFrames,
-			selectedAttackImage.width / Zombie.attackImageFrames * scaleSize,
 			1,
 			5,
-			3 * scaleSize,  //health
-			100 * scaleSize,   //damage
+			3,  //health
+			100,   //damage
 			990, //time attack wait
-			50); //speed
+			50,  //speed
+			Zombie.imageHandler); 
 	}
 
 	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
-			Zombie.images.push(new Image()); Zombie.images[0].src = Zombie1Image;
-			Zombie.images.push(new Image()); Zombie.images[1].src = Zombie2Image;
-			Zombie.images.push(new Image()); Zombie.images[2].src = Zombie3Image;
-			Zombie.images.push(new Image()); Zombie.images[3].src = Zombie4Image;
+		if(isLoadImage && !Zombie.wasInit){
+			Zombie.wasInit = true;
+
+			Zombie.imageHandler.add(Zombie.images).src = Zombie1Image;
+			Zombie.imageHandler.add(Zombie.images).src = Zombie2Image;
+			Zombie.imageHandler.add(Zombie.images).src = Zombie3Image;
+			Zombie.imageHandler.add(Zombie.images).src = Zombie4Image;
 			
-			Zombie.attackImages.push(new Image()); Zombie.attackImages[0].src = ZombieAttack1Image;
-			Zombie.attackImages.push(new Image()); Zombie.attackImages[1].src = ZombieAttack2Image;
-			Zombie.attackImages.push(new Image()); Zombie.attackImages[2].src = ZombieAttack3Image;
-			Zombie.attackImages.push(new Image()); Zombie.attackImages[3].src = ZombieAttack4Image;
+			Zombie.imageHandler.add(Zombie.attackImages).src = ZombieAttack1Image;
+			Zombie.imageHandler.add(Zombie.attackImages).src = ZombieAttack2Image;
+			Zombie.imageHandler.add(Zombie.attackImages).src = ZombieAttack3Image;
+			Zombie.imageHandler.add(Zombie.attackImages).src = ZombieAttack4Image;
 		}
 	}
 }

@@ -5,6 +5,7 @@ import {Modifier} from "./Modifier";
 import {Helper} from "../helpers/Helper";
 import { Labels } from '../gameSystems/Labels';
 import { Barricade } from '../buildings/Barricade';
+import { ImageHandler } from '../ImageHandler';
 
 export class Monster{
 	name: string;
@@ -14,14 +15,6 @@ export class Monster{
 
 	frames: number; //сколько изображений в image?
 	attackFrames: number; //сколько изображений атаки в attackImage?
-
-	width: number; //текущая ширина
-	widthFrame: number; //ширина кадра
-	height: number; //текущая высота (расчитывается по текущей ширине)
-
-	attackWidth: number; //текущая ширина attack
-	attackWidthFrame: number; //ширина attack фрейма
-	attackHeight: number; //текущая высота attack (расчитывается по текущей ширине attack)
 
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
 
@@ -34,6 +27,7 @@ export class Monster{
 
 	x: number;
 	y: number;
+	scaleSize: number; //1 - размер монстра по размеру картинки, 0.5 - монстр в 2 раза меньше картинки по высоте и ширине, 1.5 - монстр в 2 раза больше.
 
 	isAttack: boolean; //атакует?
 	isLeftSide: boolean; // с левой стороны движется?
@@ -48,73 +42,95 @@ export class Monster{
 	lastAttackedTime: number; //последнее время атаки (unixtime)
 	attackTimeWaiting: number; //частота атаки (выражается вовремени ожидания после атаки)
 
+	imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
+
 	constructor(
 		x: number, 
 		y: number, 
+		scaleSize: number,
 		isLeftSide: boolean, 
 		isLand: boolean, 
 		name: string, 
 		image: HTMLImageElement, 
 		frames: number, 
-		width: number,
 		speedAnimation: number,
 		imageAttack: HTMLImageElement, 
 		attackFrames: number, 
-		attackWidth: number,
 		speedAnimationAttack: number,
 		reduceHover: number, 
 		healthMax: number, 
 		damage: number, 
 		attackTimeWaiting: number,
-		speed: number)
+		speed: number,
+		imageHandler: ImageHandler)
 	{
+		this.x = x;
+		this.y = y;
+		this.isLeftSide = isLeftSide; // с левой стороны движется?
+		this.isLand = isLand; //наземный?
+		this.scaleSize = scaleSize;
 		this.name = name;
 
 		this.image = image; //содержит несколько изображений для анимации
 		this.frames = frames; //сколько изображений в image?
-		this.width = width; //ширина image
-		this.widthFrame = image.width / frames;
-		this.height = this.width / this.widthFrame * this.image.height;
 		this.speedAnimation = speedAnimation;
 
 		this.attackImage = imageAttack;  //содержит несколько изображений для анимации
 		this.attackFrames = attackFrames; //сколько изображений атаки в attackImage?
-		this.attackWidth = attackWidth; //ширина attack image
-		this.attackWidthFrame = imageAttack.width / attackFrames;
-		this.attackHeight = this.attackWidth / this.attackWidthFrame * this.attackImage.height;
 		this.speedAnimationAttack = speedAnimationAttack;
 
 		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
 
-		this.healthMax = healthMax; //максимум хп
-		this.health = healthMax;
-		this.damage = damage; //урон (в секунду)
+		this.healthMax = healthMax * scaleSize; //максимум хп
+		this.health = healthMax * scaleSize;
+
+		this.damage = damage * scaleSize; //урон (в секунду)
+		this.attackTimeWaiting = attackTimeWaiting;
 		this.speed = speed; //скорость (пикселей в секунду)
 
-		this.x = x;
-		this.y = y;
+		this.imageHandler = imageHandler;
+
 
 		this.isAttack = false; //атакует?
-		this.isLeftSide = isLeftSide; // с левой стороны движется?
-		this.isLand = isLand; //наземный?
-
-		this.createdTime = Date.now();
-
 		this.buildingGoal = null;
 		this.modifiers = [];
-
 		this.lastAttackedTime = 0;
-		this.attackTimeWaiting = attackTimeWaiting;
+		this.createdTime = Date.now();
 	}
 
-	get centerX(){
+	get height(): number {
+		return this.width / this.widthFrame * this.image.height;
+	}
+	get attackHeight(): number {
+		return this.attackWidth / this.attackWidthFrame * this.attackImage.height;
+	}
+
+	get widthFrame(): number {
+		return this.image.width / this.frames;
+	}
+	get attackWidthFrame(): number {
+		return this.attackImage.width / this.attackFrames;
+	}
+
+	get width(): number {
+		return this.image.width / this.frames * this.scaleSize;
+	}
+	get attackWidth(): number {
+		return this.attackImage.width / this.attackFrames * this.scaleSize;
+	}
+
+	get centerX(): number {
 		return this.x + this.width / 2;
 	}
-	get centerY(){
+	get centerY(): number {
 		return this.y + this.height / 2;
 	}
 
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
 		//логика передвижения
 		if(this.buildingGoal == null || this.buildingGoal.health <= 0){
 			let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
@@ -201,6 +217,10 @@ export class Monster{
 	onClicked(): void{}
 
 	draw(isGameOver: boolean): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
 		let isInvert = this.isLeftSide;
 		let scale = isInvert ? -1 : 1;
 
@@ -244,6 +264,10 @@ export class Monster{
 	}
 
 	drawHealth(){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
 		if(this.health != this.healthMax){
 			Draw.drawHealth(this.x + 10, this.y - 2, this.width - 20, this.healthMax, this.health);
 		}

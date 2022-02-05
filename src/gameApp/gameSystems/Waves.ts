@@ -40,16 +40,16 @@ export class Waves{
 			this.iconCountKilledMonsters.src = MonsterImage;
 		}
 		
-		this.all = [ //монстры на волнах
+		Waves.all = [ //монстры на волнах
 			{ //1-я волна
 				[Zombie.name]: new WaveData(15, 30, 0),
 			},
 			{ //2-я волна
-				[Zombie.name]: new WaveData( 15, 80, 0),
+				[Zombie.name]: new WaveData(15, 80, 0),
 				[Boar.name]: new WaveData(15, 30, 5)
 			},
 			{ //3-я волна
-				[Zombie.name]: new WaveData( 30, 100, 0),
+				[Zombie.name]: new WaveData(30, 100, 0),
 				[Boar.name]: new WaveData(35, 40, 1)
 			}];
 	}
@@ -65,6 +65,11 @@ export class Waves{
 		this.isStarted = true;
 		this.waveTimeMs = 0;
 		this.delayEndTimeLeft = 0;
+
+		//call "init" in are used classes in new wave to preload lazy images
+		let currentWave = Waves.all[Waves.waveCurrent];
+		let monstersName = Object.keys(currentWave);
+		monstersName.forEach(monsterName => Monsters.initMonster(monsterName));
 	}
 
 	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
@@ -88,7 +93,7 @@ export class Waves{
 			Menu.displayShopButton();
 			this.isStarted = false;
 			this.delayEndTimeLeft = this.delayEndTime;
-			if(this.all.length > this.waveCurrent + 1){
+			if(Waves.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
 			}
 			return;
@@ -108,7 +113,7 @@ export class Waves{
 			let periodTime = 1000 * 60 / waveData.frequencyCreating;
 			if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2))
 			{
-				let monsterSize = Monsters.sizes[key];
+				let monsterSize = Monsters.getMonsterSize(key);
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
 				let isLeftSide = Math.random() < 0.5;
 				let x = isLeftSide ? -monsterSize.width * scaleMonsterSize : Draw.canvas.width;
