@@ -2,8 +2,6 @@ import {Monster} from '../gameObjects/Monster';
 import {Helper} from '../helpers/Helper';
 
 import Boar1Image from '../../assets/img/monsters/boar/boar.png';
-import Boar2Image from '../../assets/img/monsters/boar/boar2.png';
-import Boar3Image from '../../assets/img/monsters/boar/boar3.png';
 import BoarAttack1Image from '../../assets/img/monsters/boar/boarAttack.png';
 import BoarSpecial1Image from '../../assets/img/monsters/boar/boarSpecial.png';
 import BoarSpecialSmokeImage from '../../assets/img/monsters/boar/boarSpecial_Smoke.png';
@@ -65,9 +63,9 @@ export class Boar extends Monster{
 		Boar.init(true); //reserve init
 
 		let random = Helper.getRandom(1, Boar.images.length) - 1;
-		let selectedImage = Boar.images[0];
-		let selectedAttackImage = Boar.attackImages[0];
-		let selectedSpecialImage = Boar.specialAbilityImages[0];
+		let selectedImage = Boar.images[random];
+		let selectedAttackImage = Boar.attackImages[random];
+		let selectedSpecialImage = Boar.specialAbilityImages[random];
 
 		super(x, y,
 			scaleSize,
@@ -100,16 +98,10 @@ export class Boar extends Monster{
 			Boar.wasInit = true;
 
 			Boar.imageHandler.add(Boar.images).src = Boar1Image;
-			//Boar.imageHandler.add(Boar.images).src = Boar2Image;
-			//Boar.imageHandler.add(Boar.images).src = Boar3Image;
 
 			Boar.imageHandler.add(Boar.attackImages).src = BoarAttack1Image;
-			//Boar.imageHandler.add(Boar.attackImages).src = BoarAttack2Image;
-			//Boar.imageHandler.add(Boar.attackImages).src = BoarAttack3Image;
 
 			Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial1Image;
-			//Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial2Image;
-			//Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial3Image;
 
 			Boar.imageHandler.new(Boar.specialAbilitySmokeImage).src = BoarSpecialSmokeImage;
 			Boar.imageHandler.new(Boar.specialAbilityDamageParticlesImage).src = BoarSpecialDamageParticlesImage;
