@@ -195,7 +195,7 @@ export class Monster{
 					this.y--;
 				}
 				else if(this.y < bottomBorder - this.attackHeight){
-					this.y+=2;
+					this.y+=3;
 				}
 			}
 		}
@@ -206,7 +206,7 @@ export class Monster{
 					this.y--;
 				}
 				else if(this.y < bottomBorder - this.height){
-					this.y+=2;
+					this.y+=3;
 				}
 			}
 		}

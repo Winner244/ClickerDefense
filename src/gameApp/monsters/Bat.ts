@@ -1,11 +1,11 @@
 import {Monster} from '../gameObjects/Monster';
+import {Building} from '../gameObjects/Building';
 import {Helper} from '../helpers/Helper';
 import { ImageHandler } from '../ImageHandler';
 
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
-
 import BatAttack1Image from '../../assets/img/monsters/bat/bat.png'; 
-import { Building } from '../gameObjects/Building';
+
 
 export class Bat extends Monster{
 
@@ -18,6 +18,9 @@ export class Bat extends Monster{
 	private static readonly imageHandler: ImageHandler = new ImageHandler();
 	private static wasInit: boolean; //вызов функции init уже произошёл?
 
+	private zigzagLength: number;
+	private isZigzagToTop: boolean;
+	private static readonly zigzagThreshold: number = 20;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Bat.init(true);
@@ -43,6 +46,9 @@ export class Bat extends Monster{
 			200, //time attack wait
 			200, //speed
 			Bat.imageHandler);
+
+		this.zigzagLength = 0;
+		this.isZigzagToTop = !!Helper.getRandom(0, 1);
 	}
 
 	static init(isLoadImage: boolean = true): void{
@@ -68,6 +74,16 @@ export class Bat extends Monster{
 			else {
 				this.y--;
 			}
+
+			//Зигзагообразное перемещение
+			var changes = millisecondsDifferent / 10 * (this.isZigzagToTop ? 1 : -1);
+			this.y += changes;
+			this.zigzagLength += changes;
+			if(Math.abs(this.zigzagLength) > Bat.zigzagThreshold){
+				this.zigzagLength = 0;
+				this.isZigzagToTop = !this.isZigzagToTop;
+			}
+			
 		}
 	}
 

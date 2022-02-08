@@ -56,7 +56,7 @@ export class Waves{
 			{ //3-я волна
 				[Zombie.name]: new WaveData(30, 100, 0),
 				[Boar.name]: new WaveData(35, 40, 1),
-				[Bat.name]: new WaveData(16, 40, 2)
+				[Bat.name]: new WaveData(30, 60, 2)
 			}];
 	}
 
