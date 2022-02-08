@@ -59,17 +59,16 @@ export class Bat extends Monster{
 			return;
 		}
 
-		if(this.buildingGoal){
-			if(this.y < this.buildingGoal.y){
+		super.logic(millisecondsDifferent, buildings, bottomBorder);
+
+		if(this.buildingGoal && !this.isAttack){
+			if(this.y < this.buildingGoal.centerY){
 				this.y++;
 			}
-			else if(this.y > this.buildingGoal.y + this.buildingGoal.height){
+			else {
 				this.y--;
 			}
 		}
-
-
-		super.logic(millisecondsDifferent, buildings, bottomBorder);
 	}
 
 }

@@ -145,23 +145,35 @@ export class Monster{
 		this.isAttack = false;
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
-			if (this.x + this.width < this.buildingGoal.x + this.width / 5) { //ещё не дошёл
+			var condition = this.isLand 
+				? this.x + this.width < this.buildingGoal.x + this.width / 5
+				: this.buildingGoal.width / 2 - this.buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY);
+
+			if (condition) { //ещё не дошёл
 				this.x += speed;
 			}
 			else //дошёл
 			{
-				this.x = this.buildingGoal.x - this.width + this.width / 5;
+				if(this.isLand){
+					this.x = this.buildingGoal.x - this.width + this.width / 5;
+				}
 				this.isAttack = true; //атакует
 			}
 		}
 		else 
 		{
-			if (this.x > this.buildingGoal.x + this.buildingGoal.width - this.width / 5) { //ещё не дошёл
+			var condition = this.isLand 
+				? this.x > this.buildingGoal.x + this.buildingGoal.width - this.width / 5
+				: this.buildingGoal.width / 2 - this.buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY);
+
+			if (condition) { //ещё не дошёл
 				this.x -= speed;
 			}
 			else //дошёл
 			{
-				this.x = this.buildingGoal.x + this.buildingGoal.width - this.width / 5;
+				if(this.isLand){
+					this.x = this.buildingGoal.x + this.buildingGoal.width - this.width / 5;
+				}
 				this.isAttack = true; //атакует
 			}
 		}
