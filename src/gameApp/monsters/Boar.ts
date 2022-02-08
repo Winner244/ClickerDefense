@@ -15,22 +15,22 @@ import { ImageHandler } from '../ImageHandler';
 
 export class Boar extends Monster{
 
-	static images: HTMLImageElement[] = [];  //разные окраски монстра
+	static readonly images: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly imageFrames = 8;
 
-	static attackImages: HTMLImageElement[] = [];  //разные окраски монстра
+	static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly attackImageFrames = 3;
 
-	static specialAbilityImages: HTMLImageElement[] = [];  //разные окраски монстра
+	static readonly specialAbilityImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly specialAbilityImageFrames = 12;
 	static readonly specialAbilityImageFrameWidth = 375;
 
-	static specialAbilitySmokeImage: HTMLImageElement = new Image();
+	static readonly specialAbilitySmokeImage: HTMLImageElement = new Image();
 	static readonly specialAbilitySmokeImageFrames = 16;
 	static readonly specialAbilitySmokeImageFrameWidth = 90;
 	static readonly specialAbilitySmokeImageDisplayedWidth = 180;
 
-	static specialAbilityDamageParticlesImage: HTMLImageElement = new Image();
+	static readonly specialAbilityDamageParticlesImage: HTMLImageElement = new Image();
 	static readonly specialAbilityDamageParticlesImageFrames = 7;
 	static readonly specialAbilityDamageParticlesImageFrameWidth = 200;
 	static readonly specialAbilityDamageParticlesImageDisplayedWidth = 100;
@@ -47,6 +47,7 @@ export class Boar extends Monster{
 	static readonly timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
 	static readonly timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
 	static readonly specialAbilityDamage = 18; //начальный урон от спец способности (единократный)
+	
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён

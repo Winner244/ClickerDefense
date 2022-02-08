@@ -11,18 +11,19 @@ export class Building extends ShopItem{
 	
 	healthMax: number; //максимум хп
 	health: number;
-	protected _impulse: number; //импульс от сверх ударов и сотрясений
-	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
-	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
-	protected _maxImpulse: number; //максимальное значение импульса для здания
-	protected _impulseForceDecreasing: number; //сила уменьшения импульса
-	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 
 	x: number;
 	y: number;
 
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
 	isLand: boolean; //наземное? (иначе - воздушное)
+
+	protected _impulse: number; //импульс от сверх ударов и сотрясений
+	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
+	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
+	protected _maxImpulse: number; //максимальное значение импульса для здания
+	protected _impulseForceDecreasing: number; //сила уменьшения импульса
+	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 
 	constructor(
 		x: number, 

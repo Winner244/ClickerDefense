@@ -6,11 +6,11 @@ import * as MenuStore from '../../components/Menu/MenuStore';
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Buildings} from '../../../gameApp/gameSystems/Buildings';
 import {Tower} from '../../../gameApp/buildings/Tower';
-import { Waves } from '../../../gameApp/gameSystems/Waves';
+import {Waves} from '../../../gameApp/gameSystems/Waves';
 
-import { Helper } from '../../helpers/Helper';
-import { Draw } from '../../../gameApp/gameSystems/Draw';
-import { MovingObject } from '../../../models/MovingObject';
+import {Helper} from '../../helpers/Helper';
+import {Draw} from '../../../gameApp/gameSystems/Draw';
+import {MovingObject} from '../../../models/MovingObject';
 import {Gamer} from "../../../gameApp/gameObjects/Gamer";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
 import {WaveData} from "../../../models/WaveData";
@@ -18,7 +18,8 @@ import {Boar} from "../../../gameApp/monsters/Boar";
 import {Monsters} from "../../../gameApp/gameSystems/Monsters";
 import {Builder} from "../../../gameApp/gameSystems/Builder";
 import Menu from '../../components/Menu/Menu';
-import { Barricade } from '../../../gameApp/buildings/Barricade';
+import {Barricade} from '../../../gameApp/buildings/Barricade';
+import {Bat} from '../../../gameApp/monsters/Bat';
 
 class TestPage extends React.Component {
     componentDidMount(){
@@ -292,6 +293,35 @@ class TestPage extends React.Component {
 
                 Waves.isStarted = false;
             break;
+
+            case 17: //волна 3 с летучей мышкой 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.waveCurrent = 2;
+
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(new Tower(700));
+
+                Buildings.all.push(new Barricade(1300));
+                Buildings.all.push(new Tower(1200));
+                break;
+
+            case 18: //летучая мышка
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.isStarted = false;
+
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(new Tower(700));
+
+                Buildings.all.push(new Barricade(1300));
+                Buildings.all.push(new Tower(1200));
+
+                var bat = new Bat(0, 100, true, 0.5);
+                Monsters.all.push(bat);
+                break;
 
 
             default: //кабаны

@@ -4,6 +4,7 @@ import {Size} from "../../models/Size";
 import {FlyEarth} from '../buildings/FlyEarth';
 
 import {Zombie} from '../monsters/Zombie';
+import {Bat} from '../monsters/Bat';
 import {Boar} from '../monsters/Boar';
 
 import {Building} from '../gameObjects/Building';
@@ -35,19 +36,12 @@ export class Monsters{
 		}
 	}
 
-	//размеры монстров (используется перед созданием монстра для задания высоты появления)
-	static getMonsterSize(monsterName: string): Size {
-		switch(monsterName) {
-			case Zombie.name: return new Size((Zombie.images[0]?.width || 0) / Zombie.imageFrames, Zombie.images[0]?.height);
-			case Boar.name: return new Size((Boar.images[0]?.width || 0) / Boar.imageFrames, Boar.images[0]?.height);
-			default: throw `unexpected name of the monster (getMonsterSize(${monsterName})).`;
-		}
-	}
-
+	//pre load monsters
 	static initMonster(monsterName: string): void {
 		switch(monsterName) {
 			case Zombie.name: Zombie.init(true); break;
 			case Boar.name: Boar.init(true); break;
+			case Bat.name: Bat.init(true); break;
 			default: throw `unexpected name of the monster (initMonster(${monsterName})).`;
 		}
 	}
@@ -142,15 +136,20 @@ export class Monsters{
 		Monsters.all.forEach(monster => monster.draw(isGameOver));
 	}
 
-	static add(name: string, x: number, y: number, isLeftSide: boolean, scaleSize: number){
+	static create(name: string, isLeftSide: boolean, scaleSize: number): Monster{
 		var newMonster: Monster;
 
 		switch (name){
-			case Zombie.name: newMonster = new Zombie(x, y, isLeftSide, scaleSize); break;
-			case Boar.name: newMonster = new Boar(x, y, isLeftSide, scaleSize); break;
-			default: throw `unexpected name the monster (add(${name}, ...)).`;
+			case Zombie.name: newMonster = new Zombie(0, 0, isLeftSide, scaleSize); break;
+			case Boar.name: newMonster = new Boar(0, 0, isLeftSide, scaleSize); break;
+			case Bat.name: newMonster = new Bat(0, 0, isLeftSide, scaleSize); break;
+			default: throw `unexpected name of the monster (add(${name}, ...)).`;
 		}
 
-		Monsters.all.push(newMonster);
+		return newMonster;
+	}
+
+	static add(monster: Monster){
+		Monsters.all.push(monster);
 	}
 }
