@@ -111,7 +111,7 @@ export class Game {
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
 
 		let isSetCursor = false;
-		if(Waves.isStarted && Waves.delayStartTimeLeft < 0){
+		if(Waves.isStarted && Waves.delayStartTimeLeft <= 0){
 			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick);
 		}
 
@@ -179,6 +179,9 @@ export class Game {
 		}
 
 		let millisecondsDifferent = millisecondsFromStart - Game.lastDrawTime; //сколько времени прошло с прошлой прорисовки
+		if(millisecondsDifferent > 100) { //защита от долгого отсутствия
+			millisecondsDifferent = 100;
+		}
 
 		///** logics **//
 		if(Game.isGameOver){
