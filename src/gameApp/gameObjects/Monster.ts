@@ -191,22 +191,22 @@ export class Monster{
 
 			//гравитация
 			if(this.isLand){
-				if(this.y > bottomBorder - this.attackHeight){
-					this.y--;
+				if(this.y > bottomBorder - this.attackHeight + 2){
+					this.y-=3;
 				}
 				else if(this.y < bottomBorder - this.attackHeight){
-					this.y+=3;
+					this.y++;
 				}
 			}
 		}
 		else {
 			//гравитация
 			if(this.isLand){
-				if(this.y > bottomBorder - this.height){
-					this.y--;
+				if(this.y > bottomBorder - this.height + 2){
+					this.y-=3;
 				}
 				else if(this.y < bottomBorder - this.height){
-					this.y+=3;
+					this.y++;
 				}
 			}
 		}
