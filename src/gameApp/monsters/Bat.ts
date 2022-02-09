@@ -1,19 +1,15 @@
 import {Monster} from '../gameObjects/Monster';
 import {Building} from '../gameObjects/Building';
 import {Helper} from '../helpers/Helper';
-import { ImageHandler } from '../ImageHandler';
+import {ImageHandler} from '../ImageHandler';
 
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
-import BatAttack1Image from '../../assets/img/monsters/bat/bat.png'; 
 
 
 export class Bat extends Monster{
 
 	static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	static readonly imageFrames = 6;
-
-	static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
-	static readonly attackImageFrames = 6;
 
 	private static readonly imageHandler: ImageHandler = new ImageHandler();
 	private static wasInit: boolean; //вызов функции init уже произошёл?
@@ -27,7 +23,6 @@ export class Bat extends Monster{
 
 		let random = Helper.getRandom(1, Bat.images.length) - 1;
 		let selectedImage = Bat.images[random];
-		let selectedAttackImage = Bat.attackImages[random];
 
 		super(x, y,
 			scaleSize,
@@ -37,8 +32,8 @@ export class Bat extends Monster{
 			selectedImage,
 			Bat.imageFrames,
 			3,  //speed anumation
-			selectedAttackImage,
-			Bat.attackImageFrames,
+			selectedImage,
+			Bat.imageFrames,
 			3,  //speed anumation attack
 			5,  //reduce hover
 			1,  //health
@@ -55,8 +50,6 @@ export class Bat extends Monster{
 		if(isLoadImage && !Bat.wasInit){
 			Bat.wasInit = true;
 			Bat.images.push(new Image()); Bat.images[0].src = Bat1Image;
-			
-			Bat.attackImages.push(new Image()); Bat.attackImages[0].src = BatAttack1Image;
 		}
 	}
 
