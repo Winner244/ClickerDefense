@@ -3,6 +3,8 @@ import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
 	width: number;  //ширина image
@@ -27,8 +29,7 @@ export class Building extends ShopItem{
 	protected _maxImpulse: number; //максимальное значение импульса для здания
 	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
-	protected _isDrawButtonRepair: boolean;
-	protected _isDrawButtonUpgrade: boolean;
+	protected _isDrawButtons: boolean;
 
 	constructor(
 		x: number, 
@@ -73,7 +74,7 @@ export class Building extends ShopItem{
 		this._maxImpulse = 10;
 		this._impulseForceDecreasing = 1;
 		this._impulsePharosForceDecreasing = 5;
-		this._isDrawButtonRepair = this._isDrawButtonUpgrade = false;
+		this._isDrawButtons = false;
 	}
 
 
@@ -105,16 +106,14 @@ export class Building extends ShopItem{
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
-		this._isDrawButtonRepair = this._isDrawButtonUpgrade = false;
-		
 		if(isWaveEnded && isMouseIn){
-			if(this.isSupportRepair){
-				this._isDrawButtonRepair = true;
+			if(!this._isDrawButtons && (this.isSupportRepair || this.isSupportUpgrade)){
+				this._isDrawButtons = true;
+				//BuildingButtons.show(this.x, this.y, this.width, this.height, this.isSupportRepair, this.isSupportUpgrade, this.price / 10);
 			}
-
-			if(this.isSupportUpgrade){
-				this._isDrawButtonUpgrade = true;
-			}
+		}
+		else{
+			this._isDrawButtons = false;
 		}
 		
 		return false;
@@ -123,9 +122,8 @@ export class Building extends ShopItem{
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		let x = this.x;
 		let y = this.y;
-		let isDrawButtons = this._isDrawButtonRepair || this._isDrawButtonUpgrade;
 		
-		if(isDrawButtons){
+		if(this._isDrawButtons){
 			Draw.ctx.filter = 'blur(3px)';
 		}
 
@@ -162,17 +160,8 @@ export class Building extends ShopItem{
 			Draw.ctx.rotate(0);
 		}
 
-		if(isDrawButtons){
+		if(this._isDrawButtons){
 			Draw.ctx.filter = 'none';
-			let countDisplayedButtons = (+this._isDrawButtonRepair) + (+this._isDrawButtonUpgrade);
-
-			if(this._isDrawButtonRepair){
-				
-			}
-	
-			if(this._isDrawButtonUpgrade){
-				
-			}
 		}
 	}
 

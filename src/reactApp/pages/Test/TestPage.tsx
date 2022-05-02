@@ -44,15 +44,17 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 300);
             break;
 
-            case 2:
+            case 2: //пауза после волны с постройками
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.waveCurrent = 2;
+                Waves.isStarted = false;
+                Gamer.coins = 200;
+                Menu.displayShopButton();
+				Menu.displayNewWaveButton();
+                Buildings.all.push(new Barricade(200));
+                Buildings.all.push(new Tower(500));
 
-                var boar = new Boar(50, 780, true, 1);
-                boar.isWillUseSpecialAbility = false;
-                Monsters.all.push(boar);
                 break;
 
             case 3: //магазин

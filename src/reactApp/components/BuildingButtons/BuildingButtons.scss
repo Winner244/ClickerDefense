@@ -1,0 +1,22 @@
+.building-buttons{
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+
+    &__button{
+        width: 50px;
+        height: 70px;
+        padding: 5px;
+        margin: 5px;
+
+        &-image{
+            width: 40px;
+            height: 40px;
+
+            &--coin{
+                width: 7px;
+                height: 7px;
+            }
+        }
+    }
+}
