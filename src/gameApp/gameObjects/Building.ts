@@ -18,12 +18,17 @@ export class Building extends ShopItem{
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
 	isLand: boolean; //наземное? (иначе - воздушное)
 
+	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
+	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
+
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
 	protected _maxImpulse: number; //максимальное значение импульса для здания
 	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
+	protected _isDrawButtonRepair: boolean;
+	protected _isDrawButtonUpgrade: boolean;
 
 	constructor(
 		x: number, 
@@ -38,7 +43,9 @@ export class Building extends ShopItem{
 		reduceHover: number, 
 		healthMax: number,
 		price: number,
-		description: string)
+		description: string,
+		isSupportRepair: boolean,
+		isSupportUpgrade: boolean)
 	{
 		super(name, image, price, description, ShopCategoryEnum.BUILDINGS);
 
@@ -58,11 +65,15 @@ export class Building extends ShopItem{
 		this.isLeftSide = isLeftSide; 
 		this.isLand = isLand; 
 
+		this.isSupportRepair = isSupportRepair;
+		this.isSupportUpgrade = isSupportUpgrade;
+
 		this._impulse = this._impulsePharos = 0;
 		this._impulsePharosSign = false;
 		this._maxImpulse = 10;
 		this._impulseForceDecreasing = 1;
 		this._impulsePharosForceDecreasing = 5;
+		this._isDrawButtonRepair = this._isDrawButtonUpgrade = false;
 	}
 
 
@@ -93,13 +104,30 @@ export class Building extends ShopItem{
 		return this.y + this.height / 2;
 	}
 
-	mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean {
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
+		this._isDrawButtonRepair = this._isDrawButtonUpgrade = false;
+		
+		if(isWaveEnded && isMouseIn){
+			if(this.isSupportRepair){
+				this._isDrawButtonRepair = true;
+			}
+
+			if(this.isSupportUpgrade){
+				this._isDrawButtonUpgrade = true;
+			}
+		}
+		
 		return false;
 	}
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		let x = this.x;
 		let y = this.y;
+		let isDrawButtons = this._isDrawButtonRepair || this._isDrawButtonUpgrade;
+		
+		if(isDrawButtons){
+			Draw.ctx.filter = 'blur(3px)';
+		}
 
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
@@ -132,6 +160,19 @@ export class Building extends ShopItem{
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
+		}
+
+		if(isDrawButtons){
+			Draw.ctx.filter = 'none';
+			let countDisplayedButtons = (+this._isDrawButtonRepair) + (+this._isDrawButtonUpgrade);
+
+			if(this._isDrawButtonRepair){
+				
+			}
+	
+			if(this._isDrawButtonUpgrade){
+				
+			}
 		}
 	}
 

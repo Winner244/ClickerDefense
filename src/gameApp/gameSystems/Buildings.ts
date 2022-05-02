@@ -48,12 +48,24 @@ export class Buildings{
 		Buildings.all.push(this.flyEarth);
 	}
 
-	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
-		let isSetCursor = false;
-		
-		isSetCursor = this.flyEarth.mouseLogic(mouseX, mouseY, isClick);
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
+		let isProcessed = false;
+		let buildings = this.all.slice().reverse();
+		for(var i = 0; i < buildings.length; i++){
+			let building = buildings[i];
+			let isMouseIn = 
+				mouseX > building.x + building.reduceHover && 
+				mouseX < building.x + building.width - building.reduceHover &&
+				mouseY > building.y + building.reduceHover && 
+				mouseY < building.y + building.height - building.reduceHover;
+			
+			isProcessed = building.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn);
+			if(isProcessed){
+				break;
+			}
+		}
 
-		return isSetCursor;
+		return isProcessed;
 	}
 
 	static logic(millisecondsDifferent: number, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){

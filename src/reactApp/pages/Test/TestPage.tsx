@@ -34,7 +34,7 @@ class TestPage extends React.Component {
             }, 100);
         }
 
-        let variant: any = Helper.getUrlQuery()['variant'];
+        let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
         switch(+variant){
             case 1: //разрушение башни
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

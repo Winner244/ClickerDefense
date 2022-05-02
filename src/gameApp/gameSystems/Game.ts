@@ -99,7 +99,7 @@ export class Game {
 		}
 	}
 
-	private static mouseLogic(millisecondsDifferent: number) : void{
+	private static mouseLogic(millisecondsDifferent: number) : void {
 		if(Game.isBlockMouseLogic){
 			return;
 		}
@@ -107,12 +107,14 @@ export class Game {
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+		let isWaveStarted = Waves.isStarted && Waves.delayStartTimeLeft <= 0;
+		let isWaveEnded = !Waves.isStarted;
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
 
 		let isSetCursor = false;
-		if(Waves.isStarted && Waves.delayStartTimeLeft <= 0){
-			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick);
+		if(!isSetCursor){
+			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick);
 		}
 
 		if(!isSetCursor){
@@ -120,7 +122,7 @@ export class Game {
 		}
 
 		if(!isSetCursor){
-			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick);
+			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isWaveStarted, isWaveEnded);
 		}
 
 		if(Cursor.cursorWait > 0){
@@ -240,6 +242,7 @@ export class Game {
 			return;
 		}
 
+		Cursor.setCursor(Cursor.default);
 		Game.isBlockMouseLogic = true;
 		cancelAnimationFrame(Game.animationId);
 		Game.animationId = 0;
