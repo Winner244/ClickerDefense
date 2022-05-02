@@ -58,7 +58,7 @@ export class BuildingButtons extends React.Component<Props, {}> {
     let styles = {
       width: this.props.width, 
       height: this.props.height, 
-      top: this.props.y, 
+      top: this.props.y + this.props.height / 2 - 0.5 * 0.37 * this.props.width, 
       left: this.props.x
     };
 
@@ -67,14 +67,12 @@ export class BuildingButtons extends React.Component<Props, {}> {
         {this.props.isDisplayRepairButton 
           ? <div className='building-buttons__button'>
               <img className='building-buttons__button-image' src={HummerImage}/>
-              <div>Repair ({this.props.repairCost} <img className='building-buttons__button-image--coin' src={CoinImage}/>)</div>
           </div>
           : null}
 
         {this.props.isDisplayUpgradeButton 
           ? <div className='building-buttons__button'>
             <img className='building-buttons__button-image' src={UpgradeImage}/>
-              <div>Upgrade</div>
             </div>
           : null}
       </div>
