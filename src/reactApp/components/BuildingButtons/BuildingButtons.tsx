@@ -11,9 +11,6 @@ import './BuildingButtons.scss';
 import CoinImage from '../../../assets/img/coin.png';
 import HummerImage from '../../../assets/img/buttons/hummer.png';
 import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
-import { Game } from '../../../gameApp/gameSystems/Game';
-import { Gamer } from '../../../gameApp/gameObjects/Gamer';
-import { Builder } from "../../../gameApp/gameSystems/Builder";
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
@@ -41,7 +38,6 @@ export class BuildingButtons extends React.Component<Props, {}> {
   }
 
   static hide(): void{
-    Game.isBlockMouseLogic = false;
     App.Store.dispatch(BuildingButtonsStore.actionCreators.close());
   }
 

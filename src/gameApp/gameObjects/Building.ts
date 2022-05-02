@@ -109,7 +109,12 @@ export class Building extends ShopItem{
 		if(isWaveEnded && isMouseIn){
 			if(!this._isDrawButtons && (this.isSupportRepair || this.isSupportUpgrade)){
 				this._isDrawButtons = true;
-				//BuildingButtons.show(this.x, this.y, this.width, this.height, this.isSupportRepair, this.isSupportUpgrade, this.price / 10);
+
+				let x = this.x * Draw.canvas.clientWidth / Draw.canvas.width;
+				let y = this.y * Draw.canvas.clientHeight / Draw.canvas.height;
+				let width = this.width * Draw.canvas.clientWidth / Draw.canvas.width;
+				let height = this.height * Draw.canvas.clientHeight / Draw.canvas.height;
+				BuildingButtons.show(x, y, width, height, this.isSupportRepair, this.isSupportUpgrade, this.price / 10);
 			}
 		}
 		else{
