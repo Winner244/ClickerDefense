@@ -6,8 +6,8 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
-import RepairingSoundUrl from '../../assets/sounds/buildings/repairing.m4a'; 
-import Repairing2SoundUrl from '../../assets/sounds/buildings/repairing_hammer.mp3'; 
+import RepairSoundUrl from '../../assets/sounds/buildings/repair.m4a'; 
+import RepairHammerSoundUrl from '../../assets/sounds/buildings/repair_hammer.mp3'; 
 
 import { AudioSystem } from '../gameSystems/AudioSystem';
 import { Labels } from '../gameSystems/Labels';
@@ -39,14 +39,14 @@ export class Building extends ShopItem{
 	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 	
-	protected _isDrawButtons: boolean; 
+	protected _isDrawButtons: boolean; //нужно ли сейчас отрисовывать кнопки?
 
 	protected _isDisplayRepairAnimation: boolean; //отображается ли сейчас анимация починки?
 	protected _repairAnimationStart: number; //время начала отображения анимации починки
 	protected _repairAnimationAngle: number; //угол поворота картинки в анимации
-	protected _repairAnimationSign: boolean;
+	protected _repairAnimationSign: boolean; //ударяет ли молоток? иначе возвращается обратно
 
-	static repairImage: HTMLImageElement;
+	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
 
 	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки в миллисекундах
 	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
@@ -101,7 +101,6 @@ export class Building extends ShopItem{
 	}
 
 	static init(isLoadImage: boolean = true): void{
-		Building.repairImage = new Image();
 		Building.repairImage.src = HammerImage;
 	}
 
@@ -135,16 +134,16 @@ export class Building extends ShopItem{
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
 		if(isWaveEnded && isMouseIn){
-			if(this.isSupportRepair && this.getRepairPrice() > 0 || this.isSupportUpgrade){
+			let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
+			if(isDisplayRepairButton || this.isSupportUpgrade){
 				if(!this._isDrawButtons){
 					this._isDrawButtons = true;
 	
-					let x = this.x * Draw.canvas.clientWidth / Draw.canvas.width + this.reduceHover;
-					let y = this.y * Draw.canvas.clientHeight / Draw.canvas.height + this.reduceHover;
-					let width = this.width * Draw.canvas.clientWidth / Draw.canvas.width - 2 * this.reduceHover;
-					let height = this.height * Draw.canvas.clientHeight / Draw.canvas.height - 2 * this.reduceHover;
+					let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
 					let repairPrice = this.getRepairPrice();
-					let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
 					BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade, repairPrice, this);
 				}
 			}
@@ -172,8 +171,8 @@ export class Building extends ShopItem{
 		if(this.isCanBeRepaired()){
 			Gamer.coins -= repairPrice;
 			this.health = this.healthMax;
-			AudioSystem.play(RepairingSoundUrl, 1);
-			AudioSystem.play(Repairing2SoundUrl, 0.3);
+			AudioSystem.play(RepairSoundUrl, 1);
+			AudioSystem.play(RepairHammerSoundUrl, 0.3);
 			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
 			this._isDisplayRepairAnimation = true;
 			this._repairAnimationStart = Date.now();

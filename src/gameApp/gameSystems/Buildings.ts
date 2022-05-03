@@ -21,6 +21,8 @@ export class Buildings{
 	static flyEarthRope: Building; //ключивое наземное здание
 
 	static init(isLoadImage: boolean = true): void{
+		Building.init(isLoadImage);
+		
 		this.all = [];
 		
 		if(isLoadImage){
@@ -46,7 +48,6 @@ export class Buildings{
 
 		Buildings.all.push(this.flyEarthRope);
 		Buildings.all.push(this.flyEarth);
-		Building.init(isLoadImage);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{

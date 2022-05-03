@@ -22,6 +22,7 @@ import ShopItem from '../../models/ShopItem';
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 
 import GrassImage from '../../assets/img/grass1.png'; 
+import BuildingButtons from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 
 export class Game {
@@ -264,6 +265,7 @@ export class Game {
 			Game.animationId = window.requestAnimationFrame(Game.go);
 		Mouse.isClick = false;
 		Game.isBlockMouseLogic = false;
+		BuildingButtons.hide();
 	}
 
 	/** Начать новую волну */

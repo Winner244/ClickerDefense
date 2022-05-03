@@ -126,6 +126,12 @@
 	
 	> проверить доступность свойств классов, может их закрыть private или только для чтения сделать readonly...
 
+	баланс на третей волне 
+		слабо
+				[Zombie.name]: new WaveData(15, 20, 0),
+				[Boar.name]: new WaveData(15, 20, 1),
+				[Bat.name]: new WaveData(15, 20, 2)
+
 Чулан:
 
 	https://www.artstation.com/artwork/q9ELee
