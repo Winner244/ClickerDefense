@@ -49,7 +49,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
-                Gamer.coins = 10;
+                Gamer.coins = 15;
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
                 Buildings.all.push(new Barricade(200));

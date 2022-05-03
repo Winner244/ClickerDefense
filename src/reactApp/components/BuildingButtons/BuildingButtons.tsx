@@ -9,7 +9,7 @@ import { App } from '../../App';
 import './BuildingButtons.scss';
 
 import CoinImage from '../../../assets/img/coin.png';
-import HummerImage from '../../../assets/img/buttons/hummer.png';
+import HammerImage from '../../../assets/img/buttons/hammer.png';
 import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
@@ -108,7 +108,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
                   className={'building-buttons__button ' + (isCanBeRepaired ? "" : "building-buttons__button--disabled")}
                   onClick={() => this.onClickRepair()}
                 >
-                <img className='building-buttons__button-image' src={HummerImage}/>
+                <img className='building-buttons__button-image' src={HammerImage}/>
                 <span className='building-buttons__button-repair-coin'>
                   {this.props.repairCost}
                   <img className='building-buttons__button-image--coin' src={CoinImage}/>
