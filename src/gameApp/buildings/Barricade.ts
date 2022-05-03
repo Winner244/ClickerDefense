@@ -20,7 +20,7 @@ export class Barricade extends Building{
 			250, //health max
 			25, // price
 			'Колючая и непроходимая. Сдерживает монстров и возвращает часть полученного урона, обратно, монстрам',
-			true, true);
+			true, false);
 		this._maxImpulse = 2;
 		this._impulseForceDecreasing = 5;
 
