@@ -63,7 +63,8 @@ export class BuildingButtons extends React.Component<Props, {}> {
     };
 
     let wrapperStyles = {
-      top: this.props.height / 2 - 0.5 * 0.37 * this.props.width, 
+      top: this.props.height / 2 - 0.5 * 0.35 * this.props.width, 
+      height: 0.35 * this.props.width
     }
 
     return (
@@ -72,6 +73,7 @@ export class BuildingButtons extends React.Component<Props, {}> {
           {this.props.isDisplayRepairButton 
             ? <div className='building-buttons__button'>
                 <img className='building-buttons__button-image' src={HummerImage}/>
+                <div className='building-buttons__button-repair-coin'>{this.props.repairCost}</div>
             </div>
             : null}
 

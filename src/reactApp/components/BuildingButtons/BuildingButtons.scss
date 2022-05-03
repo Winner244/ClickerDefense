@@ -1,6 +1,5 @@
 .building-buttons{
     position: absolute;
-    font-size: 50%;
     opacity: 0;
 
     &:hover{
@@ -15,9 +14,9 @@
     }
 
     &__button{
+        position: relative;
         width: calc(33% - 10px);
         max-width: 50px;
-        height: fit-content;
         padding: 5px;
         background-color: rgb(212, 183, 30);
         border: 1px solid #c10000;
@@ -35,6 +34,13 @@
                 width: 7px;
                 height: 7px;
             }
+        }
+
+        &-repair-coin{
+            position: absolute;
+            top: 60%;
+            right: 5px;
+            font-size: 50%;
         }
     }
 }
