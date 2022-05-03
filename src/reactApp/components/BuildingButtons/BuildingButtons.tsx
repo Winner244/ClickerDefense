@@ -16,6 +16,10 @@ import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3';
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import { Building } from '../../../gameApp/gameObjects/Building';
 
+interface IState {
+  isDisplayRepairButton: boolean;
+}
+
 interface Prop {
   isOpen?: boolean
 }
@@ -25,7 +29,22 @@ type Props =
   & BuildingButtonsStore.BuildingButtonsAction
   & Prop;
 
-export class BuildingButtons extends React.Component<Props, {}> {
+export class BuildingButtons extends React.Component<Props, IState> {
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = { 
+      isDisplayRepairButton: props.isDisplayRepairButton
+     };
+  }
+  
+  componentWillReceiveProps(nextProps: Props) {
+    if (nextProps.isDisplayRepairButton !== this.state.isDisplayRepairButton) {
+      this.setState({ isDisplayRepairButton: nextProps.isDisplayRepairButton });
+    }
+  }
+  
 
   static show(x: number, y: number, 
     width: number, height: number, 
@@ -48,9 +67,11 @@ export class BuildingButtons extends React.Component<Props, {}> {
   }
 
   onClickRepair(){
-    BuildingButtons.hide();
     if(this.props.building){
-      this.props.building.repair();
+      let isRepaired = this.props.building.repair();
+      if(isRepaired){
+        this.setState({ isDisplayRepairButton: false });
+      }
     }
   }
 
@@ -76,11 +97,16 @@ export class BuildingButtons extends React.Component<Props, {}> {
       height: 0.35 * this.props.width
     }
 
+    let isCanBeRepaired = this.props.building && this.props.building.isCanBeRepaired();
+
     return (
       <div className="building-buttons noselect" style={mainStyles}>
         <div className='building-buttons__wrapper' style={wrapperStyles}>
-          {this.props.isDisplayRepairButton 
-            ? <div className='building-buttons__button' onClick={() => this.onClickRepair()}>
+          {this.state.isDisplayRepairButton 
+            ? <div 
+                  className={'building-buttons__button ' + (isCanBeRepaired ? "" : "building-buttons__button--disabled")}
+                  onClick={() => this.onClickRepair()}
+                >
                 <img className='building-buttons__button-image' src={HummerImage}/>
                 <span className='building-buttons__button-repair-coin'>
                   {this.props.repairCost}

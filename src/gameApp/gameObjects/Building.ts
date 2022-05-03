@@ -130,19 +130,24 @@ export class Building extends ShopItem{
 		return false;
 	}
 
-	getRepairPrice(){
+	getRepairPrice() : number {
 		return Math.ceil(this.price / Building.repairDiscount * ((this.healthMax - this.health) / this.healthMax));
 	}
 
-	repair(){
-		let repairPrice = this.getRepairPrice();
+	isCanBeRepaired() : boolean {
+		return Gamer.coins >= this.getRepairPrice();
+	}
 
-		if(Gamer.coins >= repairPrice){
-			Gamer.coins -= repairPrice;
+	repair(): boolean{
+		if(this.isCanBeRepaired()){
+			Gamer.coins -= this.getRepairPrice();
 			this.health = this.healthMax;
 			//TODO: play sound
 			//TODO: display repair animation
+			return true;
 		}
+
+		return false;
 	}
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
