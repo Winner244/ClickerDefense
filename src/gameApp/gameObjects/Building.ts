@@ -7,6 +7,8 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 import RepairingSoundUrl from '../../assets/sounds/buildings/repairing.m4a'; 
+import Repairing2SoundUrl from '../../assets/sounds/buildings/repairing_hammer.mp3'; 
+
 import { AudioSystem } from '../gameSystems/AudioSystem';
 import { Labels } from '../gameSystems/Labels';
 
@@ -171,6 +173,7 @@ export class Building extends ShopItem{
 			Gamer.coins -= repairPrice;
 			this.health = this.healthMax;
 			AudioSystem.play(RepairingSoundUrl, 1);
+			AudioSystem.play(Repairing2SoundUrl, 0.3);
 			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
 			this._isDisplayRepairAnimation = true;
 			this._repairAnimationStart = Date.now();
