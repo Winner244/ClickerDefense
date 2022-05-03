@@ -6,6 +6,9 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
+import RepairingSoundUrl from '../../assets/sounds/buildings/repairing.m4a'; 
+import { AudioSystem } from '../gameSystems/AudioSystem';
+
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
 	width: number;  //ширина image
@@ -142,7 +145,7 @@ export class Building extends ShopItem{
 		if(this.isCanBeRepaired()){
 			Gamer.coins -= this.getRepairPrice();
 			this.health = this.healthMax;
-			//TODO: play sound
+			AudioSystem.play(RepairingSoundUrl, 1);
 			//TODO: display repair animation
 			return true;
 		}
