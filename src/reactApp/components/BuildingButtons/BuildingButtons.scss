@@ -1,9 +1,18 @@
 .building-buttons{
     position: absolute;
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
     font-size: 50%;
+    opacity: 0;
+
+    &:hover{
+        opacity: 1;
+    }
+
+    &__wrapper{
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
 
     &__button{
         width: calc(33% - 10px);
@@ -13,6 +22,11 @@
         background-color: rgb(212, 183, 30);
         border: 1px solid #c10000;
         box-shadow: 0 0 3px rgb(255, 0, 0), inset 0 0 15px 1px #ff3b3b;
+
+        &:hover{
+            background-color: rgb(212, 223, 30);
+            cursor: pointer;
+        }
 
         &-image{
             width: 100%;

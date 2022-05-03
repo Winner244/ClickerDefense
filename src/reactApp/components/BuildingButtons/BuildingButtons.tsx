@@ -55,26 +55,32 @@ export class BuildingButtons extends React.Component<Props, {}> {
       return null;
     }
 
-    let styles = {
+    let mainStyles = {
       width: this.props.width, 
       height: this.props.height, 
-      top: this.props.y + this.props.height / 2 - 0.5 * 0.37 * this.props.width, 
+      top: this.props.y, 
       left: this.props.x
     };
 
-    return (
-      <div className="building-buttons noselect" style={styles}>
-        {this.props.isDisplayRepairButton 
-          ? <div className='building-buttons__button'>
-              <img className='building-buttons__button-image' src={HummerImage}/>
-          </div>
-          : null}
+    let wrapperStyles = {
+      top: this.props.height / 2 - 0.5 * 0.37 * this.props.width, 
+    }
 
-        {this.props.isDisplayUpgradeButton 
-          ? <div className='building-buttons__button'>
-            <img className='building-buttons__button-image' src={UpgradeImage}/>
+    return (
+      <div className="building-buttons noselect" style={mainStyles}>
+        <div className='building-buttons__wrapper' style={wrapperStyles}>
+          {this.props.isDisplayRepairButton 
+            ? <div className='building-buttons__button'>
+                <img className='building-buttons__button-image' src={HummerImage}/>
             </div>
-          : null}
+            : null}
+
+          {this.props.isDisplayUpgradeButton 
+            ? <div className='building-buttons__button'>
+              <img className='building-buttons__button-image' src={UpgradeImage}/>
+              </div>
+            : null}
+        </div>
       </div>
     );
   }

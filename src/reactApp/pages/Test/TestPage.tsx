@@ -44,7 +44,7 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 300);
             break;
 
-            case 2: //пауза после волны с постройками
+            case 2: //пауза после волны с постройками (тест ремонта)
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -54,6 +54,11 @@ class TestPage extends React.Component {
 				Menu.displayNewWaveButton();
                 Buildings.all.push(new Barricade(200));
                 Buildings.all.push(new Tower(500));
+                Buildings.all.push(new Barricade(1400));
+                Buildings.all.push(new Tower(1200));
+
+                Buildings.all[Buildings.all.length - 1].health-=40;
+                Buildings.all[Buildings.all.length - 2].health-=100;
 
                 break;
 

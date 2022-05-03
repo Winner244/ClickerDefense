@@ -31,6 +31,9 @@ export class Building extends ShopItem{
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 	protected _isDrawButtons: boolean;
 
+
+	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
+
 	constructor(
 		x: number, 
 		y: number, 
@@ -110,11 +113,13 @@ export class Building extends ShopItem{
 			if(!this._isDrawButtons && (this.isSupportRepair || this.isSupportUpgrade)){
 				this._isDrawButtons = true;
 
-				let x = this.x * Draw.canvas.clientWidth / Draw.canvas.width;
-				let y = this.y * Draw.canvas.clientHeight / Draw.canvas.height;
-				let width = this.width * Draw.canvas.clientWidth / Draw.canvas.width;
-				let height = this.height * Draw.canvas.clientHeight / Draw.canvas.height;
-				BuildingButtons.show(x, y, width, height, this.isSupportRepair, this.isSupportUpgrade, this.price / 10);
+				let x = this.x * Draw.canvas.clientWidth / Draw.canvas.width + this.reduceHover;
+				let y = this.y * Draw.canvas.clientHeight / Draw.canvas.height + this.reduceHover;
+				let width = this.width * Draw.canvas.clientWidth / Draw.canvas.width - 2 * this.reduceHover;
+				let height = this.height * Draw.canvas.clientHeight / Draw.canvas.height - 2 * this.reduceHover;
+				let repairPrice = Math.ceil(this.price / Building.repairDiscount * ((this.healthMax - this.health) / this.healthMax));
+				let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
+				BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade, repairPrice);
 			}
 		}
 		else{
