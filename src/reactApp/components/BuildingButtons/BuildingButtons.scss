@@ -31,16 +31,16 @@
             width: 100%;
 
             &--coin{
-                width: 7px;
-                height: 7px;
+                width: 35%;
             }
         }
 
         &-repair-coin{
             position: absolute;
             top: 60%;
-            right: 5px;
+            right: 0px;
             font-size: 50%;
+            width: 50%;
         }
     }
 }

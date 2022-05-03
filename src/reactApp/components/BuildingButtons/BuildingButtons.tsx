@@ -73,7 +73,10 @@ export class BuildingButtons extends React.Component<Props, {}> {
           {this.props.isDisplayRepairButton 
             ? <div className='building-buttons__button'>
                 <img className='building-buttons__button-image' src={HummerImage}/>
-                <div className='building-buttons__button-repair-coin'>{this.props.repairCost}</div>
+                <span className='building-buttons__button-repair-coin'>
+                  {this.props.repairCost}
+                  <img className='building-buttons__button-image--coin' src={CoinImage}/>
+                </span>
             </div>
             : null}
 
