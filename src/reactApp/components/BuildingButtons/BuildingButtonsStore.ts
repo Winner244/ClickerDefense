@@ -1,4 +1,5 @@
 import { Reducer } from 'redux';
+import { Building } from '../../../gameApp/gameObjects/Building';
 
 // STATE
 export interface BuildingButtonsState {
@@ -9,7 +10,8 @@ export interface BuildingButtonsState {
     height: number;
     isDisplayRepairButton: boolean,
     isDisplayUpgradeButton: boolean,
-    repairCost: number
+    repairCost: number,
+    building: Building|null
 }
 
 // ACTIONS
@@ -18,7 +20,9 @@ interface OpenAction { type: 'BUILDING_BUTTON__OPEN',
     width: number, height: number, 
     isDisplayRepairButton: boolean, 
     isDisplayUpgradeButton: boolean, 
-    repairCost: number }
+    repairCost: number,
+    building: Building
+}
 interface CloseAction { type: 'BUILDING_BUTTON__CLOSE' }
 type KnownAction = CloseAction | OpenAction;
 
@@ -29,7 +33,8 @@ export interface BuildingButtonsAction {
         width: number, height: number, 
         isDisplayRepairButton: boolean, 
         isDisplayUpgradeButton: boolean, 
-        repairCost: number) => OpenAction;
+        repairCost: number,
+        building: Building) => OpenAction;
 
     close: () => CloseAction;
 }
@@ -38,10 +43,11 @@ export const actionCreators = {
         width: number, height: number, 
         isDisplayRepairButton: boolean, 
         isDisplayUpgradeButton: boolean, 
-        repairCost: number) => <OpenAction>{ type: 'BUILDING_BUTTON__OPEN', 
+        repairCost: number,
+        building: Building) => <OpenAction>{ type: 'BUILDING_BUTTON__OPEN', 
             x, y, 
             width, height, 
-            isDisplayRepairButton, isDisplayUpgradeButton, repairCost},
+            isDisplayRepairButton, isDisplayUpgradeButton, repairCost, building},
 
     close: () => <CloseAction>{ type: 'BUILDING_BUTTON__CLOSE' },
 };
@@ -55,7 +61,8 @@ function getDefaultState(): BuildingButtonsState{
         height: 0,
         isDisplayRepairButton: false,
         isDisplayUpgradeButton: false,
-        repairCost: 0
+        repairCost: 0,
+        building: null
     };
 }
 
@@ -68,7 +75,8 @@ export const reducer: Reducer<BuildingButtonsState> = (state: BuildingButtonsSta
                 width: action.width, height: action.height,
                 isDisplayRepairButton: action.isDisplayRepairButton,
                 isDisplayUpgradeButton: action.isDisplayUpgradeButton,
-                repairCost: action.repairCost
+                repairCost: action.repairCost,
+                building: action.building
               });
         case 'BUILDING_BUTTON__CLOSE':
             return getDefaultState();

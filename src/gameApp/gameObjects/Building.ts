@@ -1,6 +1,7 @@
 import {Draw} from '../gameSystems/Draw';
 import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
+import {Gamer} from './Gamer';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
@@ -117,9 +118,9 @@ export class Building extends ShopItem{
 				let y = this.y * Draw.canvas.clientHeight / Draw.canvas.height + this.reduceHover;
 				let width = this.width * Draw.canvas.clientWidth / Draw.canvas.width - 2 * this.reduceHover;
 				let height = this.height * Draw.canvas.clientHeight / Draw.canvas.height - 2 * this.reduceHover;
-				let repairPrice = Math.ceil(this.price / Building.repairDiscount * ((this.healthMax - this.health) / this.healthMax));
+				let repairPrice = this.getRepairPrice();
 				let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
-				BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade, repairPrice);
+				BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade, repairPrice, this);
 			}
 		}
 		else{
@@ -127,6 +128,21 @@ export class Building extends ShopItem{
 		}
 		
 		return false;
+	}
+
+	getRepairPrice(){
+		return Math.ceil(this.price / Building.repairDiscount * ((this.healthMax - this.health) / this.healthMax));
+	}
+
+	repair(){
+		let repairPrice = this.getRepairPrice();
+
+		if(Gamer.coins >= repairPrice){
+			Gamer.coins -= repairPrice;
+			this.health = this.healthMax;
+			//TODO: play sound
+			//TODO: display repair animation
+		}
 	}
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{

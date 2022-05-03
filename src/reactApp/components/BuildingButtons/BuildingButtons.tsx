@@ -14,6 +14,7 @@ import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+import { Building } from '../../../gameApp/gameObjects/Building';
 
 interface Prop {
   isOpen?: boolean
@@ -30,11 +31,12 @@ export class BuildingButtons extends React.Component<Props, {}> {
     width: number, height: number, 
     isDisplayRepairButton: boolean, 
     isDisplayUpgradeButton: boolean, 
-    repairCost: number): void
+    repairCost: number,
+    building: Building): void
   {
     App.Store.dispatch(BuildingButtonsStore.actionCreators.open(x, y, 
         width, height, 
-        isDisplayRepairButton, isDisplayUpgradeButton, repairCost));
+        isDisplayRepairButton, isDisplayUpgradeButton, repairCost, building));
   }
 
   static hide(): void{
@@ -45,7 +47,14 @@ export class BuildingButtons extends React.Component<Props, {}> {
 		AudioSystem.play(SelectingSoundUrl, 0.2);
   }
 
-  onClickClose(){
+  onClickRepair(){
+    BuildingButtons.hide();
+    if(this.props.building){
+      this.props.building.repair();
+    }
+  }
+
+  onClickUpgrade(){
     BuildingButtons.playSoundSelect();
     BuildingButtons.hide();
   }
@@ -71,7 +80,7 @@ export class BuildingButtons extends React.Component<Props, {}> {
       <div className="building-buttons noselect" style={mainStyles}>
         <div className='building-buttons__wrapper' style={wrapperStyles}>
           {this.props.isDisplayRepairButton 
-            ? <div className='building-buttons__button'>
+            ? <div className='building-buttons__button' onClick={() => this.onClickRepair()}>
                 <img className='building-buttons__button-image' src={HummerImage}/>
                 <span className='building-buttons__button-repair-coin'>
                   {this.props.repairCost}
@@ -81,7 +90,7 @@ export class BuildingButtons extends React.Component<Props, {}> {
             : null}
 
           {this.props.isDisplayUpgradeButton 
-            ? <div className='building-buttons__button'>
+            ? <div className='building-buttons__button' onClick={() => this.onClickUpgrade()}>
               <img className='building-buttons__button-image' src={UpgradeImage}/>
               </div>
             : null}
