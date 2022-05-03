@@ -44,7 +44,13 @@
         }
 
         &--disabled{
-            
+            background-color: gray !important;
+            border-color: rgb(77, 77, 77);
+            box-shadow: 0 0 3px black;
+
+            &:hover{
+                cursor: not-allowed;
+            }
         }
     }
 }
