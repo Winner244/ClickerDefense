@@ -8,6 +8,7 @@ import {BuildingButtons} from '../../reactApp/components/BuildingButtons/Buildin
 
 import RepairingSoundUrl from '../../assets/sounds/buildings/repairing.m4a'; 
 import { AudioSystem } from '../gameSystems/AudioSystem';
+import { Labels } from '../gameSystems/Labels';
 
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
@@ -142,10 +143,13 @@ export class Building extends ShopItem{
 	}
 
 	repair(): boolean{
+		let repairPrice = this.getRepairPrice();
 		if(this.isCanBeRepaired()){
-			Gamer.coins -= this.getRepairPrice();
+			Gamer.coins -= repairPrice;
 			this.health = this.healthMax;
 			AudioSystem.play(RepairingSoundUrl, 1);
+			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
+			//TODO: display Label
 			//TODO: display repair animation
 			return true;
 		}
