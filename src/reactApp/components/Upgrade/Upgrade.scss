@@ -76,5 +76,14 @@
 	&__main-box{
 		display: flex;
 		flex-direction: row;
+
+		& > div{
+			width: 50%;
+		}
+	}
+
+	&__upgrade-items{
+		background-color: saddlebrown;
+    	border: 1px solid #702900;
 	}
 }
