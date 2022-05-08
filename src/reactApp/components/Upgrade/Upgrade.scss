@@ -60,4 +60,21 @@
 		box-shadow: 0 0 125px #ff6a00;
 	}
 
+	&__parameter{
+		display: flex;
+		flex-direction: row;
+
+		&-name, &-value{
+			width: 50%;
+		}
+
+		&-name{
+			text-align: right;
+		}
+	}
+
+	&__main-box{
+		display: flex;
+		flex-direction: row;
+	}
 }
