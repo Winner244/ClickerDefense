@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
 import * as BuildingButtonsStore from './BuildingButtonsStore';
+import { Upgrade } from '../Upgrade/Upgrade';
 
 import { App } from '../../App';
 
@@ -79,6 +80,9 @@ export class BuildingButtons extends React.Component<Props, IState> {
   onClickUpgrade(){
     BuildingButtons.playSoundSelect();
     BuildingButtons.hide();
+    if(this.props.building){
+      Upgrade.show(this.props.building);
+    }
   }
 
   render() {
