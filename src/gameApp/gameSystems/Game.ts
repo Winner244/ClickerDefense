@@ -240,6 +240,7 @@ export class Game {
 			return;
 		}
 
+		Cursor.setCursor(Cursor.default);
 		Game.isBlockMouseLogic = true;
 		cancelAnimationFrame(Game.animationId);
 		Game.animationId = 0;
