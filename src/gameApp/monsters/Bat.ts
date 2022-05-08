@@ -4,6 +4,7 @@ import {Helper} from '../helpers/Helper';
 import {ImageHandler} from '../ImageHandler';
 
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
+import { Modifier } from '../gameObjects/Modifier';
 
 
 export class Bat extends Monster{
@@ -61,14 +62,11 @@ export class Bat extends Monster{
 		super.logic(millisecondsDifferent, buildings, bottomBorder);
 
 		if(this.buildingGoal && !this.isAttack){
-			if(this.centerX > this.buildingGoal.x && this.centerX < this.buildingGoal.x + this.buildingGoal.width){
-				if(this.y < this.buildingGoal.centerY){
-					this.y++;
-				}
-				else {
-					this.y--;
-				}
-			}
+
+			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+			let speed = this.speed * (millisecondsDifferent / 1000);
+			speed += speed * speedMultiplier;
+			this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * (speed / 2);
 
 			//Зигзагообразное перемещение
 			var changes = millisecondsDifferent / 10 * (this.isZigzagToTop ? 1 : -1);

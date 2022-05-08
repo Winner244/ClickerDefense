@@ -138,19 +138,23 @@ export class Monster{
 			this.buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
 		}
 
-		var speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-		var speed = this.speed * (millisecondsDifferent / 1000);
+		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+		let speed = this.speed * (millisecondsDifferent / 1000);
 		speed += speed * speedMultiplier;
 
 		this.isAttack = false;
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
-			var condition = this.isLand 
+			let condition = this.isLand 
 				? this.x + this.width < this.buildingGoal.x + this.width / 5
 				: this.buildingGoal.width / 2 - this.buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY);
 
 			if (condition) { //ещё не дошёл
 				this.x += speed;
+
+				if(!this.isLand){
+					//this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
+				}
 			}
 			else //дошёл
 			{
@@ -162,12 +166,16 @@ export class Monster{
 		}
 		else 
 		{
-			var condition = this.isLand 
+			let condition = this.isLand 
 				? this.x > this.buildingGoal.x + this.buildingGoal.width - this.width / 5
 				: this.buildingGoal.width / 2 - this.buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY);
 
 			if (condition) { //ещё не дошёл
 				this.x -= speed;
+
+				if(!this.isLand){
+					//this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
+				}
 			}
 			else //дошёл
 			{
@@ -183,8 +191,8 @@ export class Monster{
 		{
 			//атака
 			if(this.lastAttackedTime + this.attackTimeWaiting < Date.now()){
-				var damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
-				var damage = this.damage * (millisecondsDifferent / 1000);
+				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
+				let damage = this.damage * (millisecondsDifferent / 1000);
 				damage += damage * damageMultiplier;
 				this.attack(damage);
 			}
