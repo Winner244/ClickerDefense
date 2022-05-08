@@ -32,7 +32,7 @@ export class Bat extends Monster{
 			Bat.name,
 			selectedImage,
 			Bat.imageFrames,
-			3,  //speed anumation
+			3,  //speed animation
 			selectedImage,
 			Bat.imageFrames,
 			3,  //speed anumation attack
@@ -61,22 +61,32 @@ export class Bat extends Monster{
 
 		super.logic(millisecondsDifferent, buildings, bottomBorder);
 
-		if(this.buildingGoal && !this.isAttack){
-
+		if(this.buildingGoal){
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 			let speed = this.speed * (millisecondsDifferent / 1000);
 			speed += speed * speedMultiplier;
-			this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * (speed / 2);
 
-			//Зигзагообразное перемещение
-			var changes = millisecondsDifferent / 10 * (this.isZigzagToTop ? 1 : -1);
-			this.y += changes;
-			this.zigzagLength += changes;
-			if(Math.abs(this.zigzagLength) > Bat.zigzagThreshold){
-				this.zigzagLength = 0;
-				this.isZigzagToTop = !this.isZigzagToTop;
+			if(!this.isAttack){
+				this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
+	
+				//Зигзагообразное перемещение
+				var changes = millisecondsDifferent / 10 * (this.isZigzagToTop ? 1 : -1);
+				this.y += changes;
+				this.zigzagLength += changes;
+				if(Math.abs(this.zigzagLength) > Bat.zigzagThreshold){
+					this.zigzagLength = 0;
+					this.isZigzagToTop = !this.isZigzagToTop;
+				}
+				
 			}
-			
+			else{
+				if(this.y < this.buildingGoal.y + this.buildingGoal.reduceHover){
+					this.y++;
+				}
+				else if(this.y > this.buildingGoal.y + this.buildingGoal.height - this.buildingGoal.reduceHover){
+					this.y--;
+				}
+			}
 		}
 	}
 
