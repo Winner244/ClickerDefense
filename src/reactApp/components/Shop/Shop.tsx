@@ -127,8 +127,6 @@ export class Shop extends React.Component<Props, {}> {
                               </button>
                           </div>
                         ))}
-
-                        <div className="clear"></div>
                     </div>
                 </div>
             </div>

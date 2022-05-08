@@ -1,0 +1,56 @@
+.building-buttons{
+    position: absolute;
+    opacity: 0;
+
+    &:hover{
+        opacity: 1;
+    }
+
+    &__wrapper{
+        display: flex;
+        position: relative;
+        flex-direction: row;
+        justify-content: space-evenly;
+    }
+
+    &__button{
+        position: relative;
+        width: calc(33% - 10px);
+        max-width: 50px;
+        padding: 5px;
+        background-color: rgb(212, 183, 30);
+        border: 1px solid #c10000;
+        box-shadow: 0 0 3px rgb(255, 0, 0), inset 0 0 15px 1px #ff3b3b;
+
+        &:hover{
+            background-color: rgb(212, 223, 30);
+            cursor: pointer;
+        }
+
+        &-image{
+            width: 100%;
+
+            &--coin{
+                width: 35%;
+            }
+        }
+
+        &-repair-coin{
+            position: absolute;
+            top: 60%;
+            right: 0px;
+            font-size: 50%;
+            width: 50%;
+        }
+
+        &--disabled{
+            background-color: gray !important;
+            border-color: rgb(77, 77, 77);
+            box-shadow: 0 0 3px black;
+
+            &:hover{
+                cursor: not-allowed;
+            }
+        }
+    }
+}

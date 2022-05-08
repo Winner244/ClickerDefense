@@ -34,7 +34,7 @@ class TestPage extends React.Component {
             }, 100);
         }
 
-        let variant: any = Helper.getUrlQuery()['variant'];
+        let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
         switch(+variant){
             case 1: //разрушение башни
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -44,15 +44,22 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 300);
             break;
 
-            case 2:
+            case 2: //пауза после волны с постройками (тест ремонта)
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.waveCurrent = 2;
+                Waves.isStarted = false;
+                Gamer.coins = 15;
+                Menu.displayShopButton();
+				Menu.displayNewWaveButton();
+                Buildings.all.push(new Barricade(200));
+                Buildings.all.push(new Tower(500));
+                Buildings.all.push(new Barricade(1400));
+                Buildings.all.push(new Tower(1200));
 
-                var boar = new Boar(50, 780, true, 1);
-                boar.isWillUseSpecialAbility = false;
-                Monsters.all.push(boar);
+                Buildings.all[Buildings.all.length - 1].health-=40;
+                Buildings.all[Buildings.all.length - 2].health-=100;
+
                 break;
 
             case 3: //магазин

@@ -61,11 +61,13 @@ export class Bat extends Monster{
 		super.logic(millisecondsDifferent, buildings, bottomBorder);
 
 		if(this.buildingGoal && !this.isAttack){
-			if(this.y < this.buildingGoal.centerY){
-				this.y++;
-			}
-			else {
-				this.y--;
+			if(this.centerX > this.buildingGoal.x && this.centerX < this.buildingGoal.x + this.buildingGoal.width){
+				if(this.y < this.buildingGoal.centerY){
+					this.y++;
+				}
+				else {
+					this.y--;
+				}
 			}
 
 			//Зигзагообразное перемещение

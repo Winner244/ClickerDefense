@@ -16,7 +16,7 @@ export class FlyEarth extends Building{
 	static readonly height: number = 279;
 
 	constructor(x: number, y: number) {
-		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100, 0, '');
+		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, FlyEarth.width, FlyEarth.height, 15, 100, 0, '', false, false);
 
 		FlyEarth.init(true);
 	}
@@ -38,11 +38,8 @@ export class FlyEarth extends Building{
 		AudioSystem.play(audioUrl, 0.2);
 	}
 
-	mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
-		if(mouseX > this.x + this.reduceHover && 
-			mouseX < this.x + FlyEarth.width - this.reduceHover &&
-			mouseY > this.y + this.reduceHover && 
-			mouseY < this.y + FlyEarth.height - this.reduceHover)
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean{
+		if(isWaveStarted && isMouseIn)
 		{
 			Cursor.setCursor(Cursor.pick);
 	
@@ -57,6 +54,6 @@ export class FlyEarth extends Building{
 			return true;
 		}
 
-		return false;
+		return super.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn);
 	}
 }

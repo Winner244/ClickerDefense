@@ -1,7 +1,18 @@
 import {Draw} from '../gameSystems/Draw';
 import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
+import {Gamer} from './Gamer';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
+
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+
+import RepairSoundUrl from '../../assets/sounds/buildings/repair.m4a'; 
+import RepairHammerSoundUrl from '../../assets/sounds/buildings/repair_hammer.mp3'; 
+
+import { AudioSystem } from '../gameSystems/AudioSystem';
+import { Labels } from '../gameSystems/Labels';
+
+import HammerImage from '../../assets/img/buttons/hammer.png';
 
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
@@ -18,12 +29,27 @@ export class Building extends ShopItem{
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
 	isLand: boolean; //наземное? (иначе - воздушное)
 
+	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
+	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
+
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
 	protected _maxImpulse: number; //максимальное значение импульса для здания
 	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
+	
+	protected _isDrawButtons: boolean; //нужно ли сейчас отрисовывать кнопки?
+
+	protected _isDisplayRepairAnimation: boolean; //отображается ли сейчас анимация починки?
+	protected _repairAnimationStart: number; //время начала отображения анимации починки
+	protected _repairAnimationAngle: number; //угол поворота картинки в анимации
+	protected _repairAnimationSign: boolean; //ударяет ли молоток? иначе возвращается обратно
+
+	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
+
+	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки в миллисекундах
+	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
 
 	constructor(
 		x: number, 
@@ -38,7 +64,9 @@ export class Building extends ShopItem{
 		reduceHover: number, 
 		healthMax: number,
 		price: number,
-		description: string)
+		description: string,
+		isSupportRepair: boolean,
+		isSupportUpgrade: boolean)
 	{
 		super(name, image, price, description, ShopCategoryEnum.BUILDINGS);
 
@@ -58,11 +86,22 @@ export class Building extends ShopItem{
 		this.isLeftSide = isLeftSide; 
 		this.isLand = isLand; 
 
+		this.isSupportRepair = isSupportRepair;
+		this.isSupportUpgrade = isSupportUpgrade;
+
 		this._impulse = this._impulsePharos = 0;
 		this._impulsePharosSign = false;
 		this._maxImpulse = 10;
 		this._impulseForceDecreasing = 1;
 		this._impulsePharosForceDecreasing = 5;
+
+		this._isDrawButtons = false;
+		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
+		this._repairAnimationStart = this._repairAnimationAngle = 0;
+	}
+
+	static init(isLoadImage: boolean = true): void{
+		Building.repairImage.src = HammerImage;
 	}
 
 
@@ -93,13 +132,63 @@ export class Building extends ShopItem{
 		return this.y + this.height / 2;
 	}
 
-	mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean {
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
+		if(isWaveEnded && isMouseIn){
+			let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
+			if(isDisplayRepairButton || this.isSupportUpgrade){
+				if(!this._isDrawButtons){
+					this._isDrawButtons = true;
+	
+					let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let repairPrice = this.getRepairPrice();
+					BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade, repairPrice, this);
+				}
+			}
+			else{
+				this._isDrawButtons = false;
+			}
+		}
+		else{
+			this._isDrawButtons = false;
+		}
+		
+		return false;
+	}
+
+	getRepairPrice() : number {
+		return Math.ceil(this.price / Building.repairDiscount * ((this.healthMax - this.health) / this.healthMax));
+	}
+
+	isCanBeRepaired() : boolean {
+		return Gamer.coins >= this.getRepairPrice();
+	}
+
+	repair(): boolean{
+		let repairPrice = this.getRepairPrice();
+		if(this.isCanBeRepaired()){
+			Gamer.coins -= repairPrice;
+			this.health = this.healthMax;
+			AudioSystem.play(RepairSoundUrl, 1);
+			AudioSystem.play(RepairHammerSoundUrl, 0.3);
+			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
+			this._isDisplayRepairAnimation = true;
+			this._repairAnimationStart = Date.now();
+			return true;
+		}
+
 		return false;
 	}
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		let x = this.x;
 		let y = this.y;
+		
+		if(this._isDrawButtons){
+			//Draw.ctx.filter = 'blur(1px)';
+		}
 
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
@@ -133,6 +222,18 @@ export class Building extends ShopItem{
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
 		}
+
+		if(this._isDrawButtons){
+			Draw.ctx.filter = 'none';
+		}
+
+		if(this._isDisplayRepairAnimation){
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
+			Draw.ctx.rotate((this._repairAnimationAngle - 90) * Math.PI / 180);
+			Draw.ctx.drawImage(Building.repairImage, -25, -50, 50, 50);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+		}
 	}
 
 	drawHealth(): void{
@@ -154,6 +255,29 @@ export class Building extends ShopItem{
 			if(this._impulsePharos > this._impulse){
 				this._impulsePharosSign = !this._impulsePharosSign;
 				this._impulsePharos = this._impulse;
+			}
+		}
+
+		if(this._isDisplayRepairAnimation){
+			if(this._repairAnimationStart + Building.repairAnimationDurationMs < Date.now()){
+				this._isDisplayRepairAnimation = this._repairAnimationSign = false;
+				this._repairAnimationAngle = 0;
+			}
+			else{
+				if(this._repairAnimationSign){
+					this._repairAnimationAngle += 5;
+
+					if(this._repairAnimationAngle > 90){
+						this._repairAnimationSign = false;
+					}
+				}
+				else{
+					this._repairAnimationAngle-=2;
+
+					if(this._repairAnimationAngle < 0){
+						this._repairAnimationSign = true;
+					}
+				}
 			}
 		}
 	}
