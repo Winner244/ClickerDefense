@@ -62,13 +62,13 @@ export class Upgrade extends React.Component<Props, {}> {
                 <div className="upgrade__info">
                   <img className="upgrade__image" src={this.props.selectedBuilding.image.src} />
                   <ul>
-                    <li className="upgrade__parameter">
-                      <div className="upgrade__parameter-name">Здоровье</div>: 
-                      <div className="upgrade__parameter-value">
-                        {(this.props.selectedBuilding.health != this.props.selectedBuilding.healthMax ? `${this.props.selectedBuilding.health} из ` : "")}
-                        {this.props.selectedBuilding.healthMax}
-                      </div>
-                    </li>
+                    {this.props.selectedBuilding.infoItems.map((infoItem, i) => (
+                        <li className="upgrade__parameter" key={i}>
+                          <div className="upgrade__parameter-name">{infoItem.label}</div>: 
+                          <div className="upgrade__parameter-value">{infoItem.getValue()}</div>
+                        </li>
+                    ))}
+
                   </ul>
                 </div>
                 <div className="upgrade__upgrade-items"></div>

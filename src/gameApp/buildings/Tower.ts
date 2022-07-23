@@ -8,6 +8,7 @@ import arrowImage from '../../assets/img/buildings/tower/arrow.png';
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
 import { Helper } from '../helpers/Helper';
+import InfoItem from '../../models/InfoItem';
 
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -37,6 +38,10 @@ export class Tower extends Building{
 			true, true);
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
+		this.infoItems.push(new InfoItem('Урон', () => Tower.damage));
+		this.infoItems.push(new InfoItem('Радиус атаки', () => Tower.radiusAttack));
+		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек'));
+		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed));
 
 		Tower.init(true);
 	}

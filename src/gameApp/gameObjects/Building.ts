@@ -1,6 +1,7 @@
 import {Draw} from '../gameSystems/Draw';
 import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
+import InfoItem from '../../models/InfoItem';
 import {Gamer} from './Gamer';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
@@ -31,6 +32,8 @@ export class Building extends ShopItem{
 
 	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
 	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
+
+	infoItems: InfoItem[];  //информация отображаемая в окне строения
 
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
@@ -98,6 +101,16 @@ export class Building extends ShopItem{
 		this._isDrawButtons = false;
 		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
 		this._repairAnimationStart = this._repairAnimationAngle = 0;
+
+		this.infoItems = [
+			new InfoItem('Здоровье', () => {
+				let value = this.health != this.healthMax 
+					? `${this.health} из ` 
+					: '';
+				value +=  this.healthMax;
+				return value;
+			})
+		];
 	}
 
 	static init(isLoadImage: boolean = true): void{
