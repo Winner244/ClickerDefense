@@ -123,4 +123,8 @@ export class Buildings{
 	static drawHealth(): void{
 		Buildings.all.forEach(building => building.drawHealth());
 	}
+
+	static drawRepairingAnumation(): void{
+		Buildings.all.forEach(building => building.drawRepairingAnumation());
+	}
 }

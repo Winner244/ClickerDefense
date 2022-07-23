@@ -330,7 +330,7 @@ class TestPage extends React.Component {
                 Monsters.all.push(bat);
                 break;
 
-            case 19: //ремонт зданий
+            case 19: //кнопки для управления зданиями
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Gamer.coins = 500;
@@ -344,6 +344,21 @@ class TestPage extends React.Component {
                 Buildings.all.push(new Barricade(600));
                 Buildings.all.push(new Tower(700));
                 setTimeout(() => Buildings.all.forEach(x => x.health-= 10), 300);
+
+                Buildings.all.push(new Barricade(1300));
+                Buildings.all.push(new Tower(1200));
+                break;
+
+            case 20: //ремонт
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Gamer.coins = 500;
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.isStarted = false;
+
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(new Tower(700));
+                Buildings.all.forEach(x => x.health-= 40);
 
                 Buildings.all.push(new Barricade(1300));
                 Buildings.all.push(new Tower(1200));

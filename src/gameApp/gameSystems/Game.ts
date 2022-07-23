@@ -143,6 +143,7 @@ export class Game {
 	
 		Buildings.draw(millisecondsFromStart, Game.isGameOver);
 		Buildings.drawHealth();
+		Buildings.drawRepairingAnumation();
 
 		Builder.draw(millisecondsFromStart, Game.isGameOver);
 	

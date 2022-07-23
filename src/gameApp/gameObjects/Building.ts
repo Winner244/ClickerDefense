@@ -226,19 +226,21 @@ export class Building extends ShopItem{
 		if(this._isDrawButtons){
 			Draw.ctx.filter = 'none';
 		}
-
-		if(this._isDisplayRepairAnimation){
-			Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
-			Draw.ctx.rotate((this._repairAnimationAngle - 90) * Math.PI / 180);
-			Draw.ctx.drawImage(Building.repairImage, -25, -50, 50, 50);
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
-		}
 	}
 
 	drawHealth(): void{
 		if(this.health < this.healthMax && this.health > 0){
 			Draw.drawHealth(this.x + 15, this.y - 10, this.width - 30, this.healthMax, this.health);
+		}
+	}
+
+	drawRepairingAnumation(): void{
+		if(this._isDisplayRepairAnimation){
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
+			Draw.ctx.rotate((this._repairAnimationAngle - 45) * Math.PI / 180);
+			Draw.ctx.drawImage(Building.repairImage, -25, -50, 50, 50);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
 		}
 	}
 
@@ -265,14 +267,14 @@ export class Building extends ShopItem{
 			}
 			else{
 				if(this._repairAnimationSign){
-					this._repairAnimationAngle += 5;
+					this._repairAnimationAngle += 23;
 
 					if(this._repairAnimationAngle > 90){
 						this._repairAnimationSign = false;
 					}
 				}
 				else{
-					this._repairAnimationAngle-=2;
+					this._repairAnimationAngle-=8;
 
 					if(this._repairAnimationAngle < 0){
 						this._repairAnimationSign = true;
