@@ -109,7 +109,7 @@ export class Game {
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 		let isWaveStarted = Waves.isStarted && Waves.delayStartTimeLeft <= 0;
-		let isWaveEnded = !Waves.isStarted;
+		let isWaveEnded = !Waves.isStarted && Waves.delayEndTimeLeft <= 0;
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
 

@@ -330,6 +330,25 @@ class TestPage extends React.Component {
                 Monsters.all.push(bat);
                 break;
 
+            case 19: //ремонт зданий
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Gamer.coins = 500;
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.isStarted = true;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        [Zombie.name]: new WaveData(1, 30, 0),
+                    }];
+
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(new Tower(700));
+                setTimeout(() => Buildings.all.forEach(x => x.health-= 10), 300);
+
+                Buildings.all.push(new Barricade(1300));
+                Buildings.all.push(new Tower(1200));
+                break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
