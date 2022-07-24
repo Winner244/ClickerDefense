@@ -29,10 +29,15 @@ type Props =
 export class Upgrade extends React.Component<Props, {}> {
 
   static show(building: Building): void{
+    building.isDisplayedUpgradeWindow = true;
     App.Store.dispatch(UpgradeStore.actionCreators.open(building));
   }
 
   static hide(): void{
+    const building = App.Store.getState().upgrade?.selectedBuilding;
+    if(building){
+      building.isDisplayedUpgradeWindow = false;
+    }
     App.Store.dispatch(UpgradeStore.actionCreators.close());
   }
 

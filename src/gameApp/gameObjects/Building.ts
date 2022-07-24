@@ -32,6 +32,7 @@ export class Building extends ShopItem{
 
 	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
 	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
+	isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного здания? если да, то нужно подсвечивать данное здание
 
 	infoItems: InfoItem[];  //информация отображаемая в окне строения
 
@@ -101,6 +102,8 @@ export class Building extends ShopItem{
 		this._isDrawButtons = false;
 		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
 		this._repairAnimationStart = this._repairAnimationAngle = 0;
+
+		this.isDisplayedUpgradeWindow = false;
 
 		this.infoItems = [
 			new InfoItem('Здоровье', () => {
@@ -199,8 +202,8 @@ export class Building extends ShopItem{
 		let x = this.x;
 		let y = this.y;
 		
-		if(this._isDrawButtons){
-			//Draw.ctx.filter = 'blur(1px)';
+		if(this.isDisplayedUpgradeWindow){
+			Draw.ctx.filter = 'brightness(1.7)';
 		}
 
 		if(this.impulse > 0){
@@ -236,7 +239,7 @@ export class Building extends ShopItem{
 			Draw.ctx.rotate(0);
 		}
 
-		if(this._isDrawButtons){
+		if(this.isDisplayedUpgradeWindow){
 			Draw.ctx.filter = 'none';
 		}
 	}

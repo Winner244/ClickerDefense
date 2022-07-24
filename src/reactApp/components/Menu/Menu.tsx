@@ -6,6 +6,7 @@ import * as MenuStore from './MenuStore';
 
 import { App } from '../../App';
 import { Shop } from '../Shop/Shop';
+import { Upgrade } from '../Upgrade/Upgrade';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Waves} from '../../../gameApp/gameSystems/Waves';
@@ -39,6 +40,7 @@ export class Menu extends React.Component<Props, {}> {
   }
 
   static show(): void{
+    Upgrade.hide();
     Menu.playSoundSelect();
     App.Store.dispatch(MenuStore.actionCreators.open());
   }
