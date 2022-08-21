@@ -14,6 +14,7 @@ import { AudioSystem } from '../gameSystems/AudioSystem';
 import { Labels } from '../gameSystems/Labels';
 
 import HammerImage from '../../assets/img/buttons/hammer.png';
+import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 
 export class Building extends ShopItem{
 	frames: number; //сколько изображений в image?
@@ -32,7 +33,6 @@ export class Building extends ShopItem{
 
 	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
 	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
-	isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного здания? если да, то нужно подсвечивать данное здание
 
 	infoItems: InfoItem[];  //информация отображаемая в окне строения
 
@@ -49,8 +49,13 @@ export class Building extends ShopItem{
 	protected _repairAnimationStart: number; //время начала отображения анимации починки
 	protected _repairAnimationAngle: number; //угол поворота картинки в анимации
 	protected _repairAnimationSign: boolean; //ударяет ли молоток? иначе возвращается обратно
-
+	protected _isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного здания? если да, то нужно подсвечивать данное здание
+	protected _upgradeTimeStart: number; //время начала апгрейда
+	
 	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
+	static readonly upgradeAnimation: HTMLImageElement = new Image(); //анимация апгрейда
+	static readonly upgradeAnimationFrames = 90; //количество кадров анимации
+	static readonly upgradeAnimationDuration = 3000; //время полной анимации в миллисекундах
 
 	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки в миллисекундах
 	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
@@ -103,7 +108,8 @@ export class Building extends ShopItem{
 		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
 		this._repairAnimationStart = this._repairAnimationAngle = 0;
 
-		this.isDisplayedUpgradeWindow = false;
+		this._isDisplayedUpgradeWindow = false;
+		this._upgradeTimeStart = 0;
 
 		this.infoItems = [
 			new InfoItem('Здоровье', () => {
@@ -118,6 +124,7 @@ export class Building extends ShopItem{
 
 	static init(isLoadImage: boolean = true): void{
 		Building.repairImage.src = HammerImage;
+		Building.upgradeAnimation.src = UpgradeAnimation;
 	}
 
 
@@ -146,6 +153,14 @@ export class Building extends ShopItem{
 	}
 	get centerY(){
 		return this.y + this.height / 2;
+	}
+
+	set isDisplayedUpgradeWindow(value: boolean){
+		this._isDisplayedUpgradeWindow = value;
+		this._upgradeTimeStart = Date.now();
+	}
+	get isDisplayedUpgradeWindow(): boolean{
+		return this._isDisplayedUpgradeWindow;
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
@@ -201,8 +216,18 @@ export class Building extends ShopItem{
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		let x = this.x;
 		let y = this.y;
-		
+
 		if(this.isDisplayedUpgradeWindow){
+			let frame = isGameOver ? 0 : Math.floor((Date.now() - this._upgradeTimeStart) % Building.upgradeAnimationDuration / (Building.upgradeAnimationDuration / Building.upgradeAnimationFrames));
+			Draw.ctx.drawImage(Building.upgradeAnimation, 
+				Building.upgradeAnimation.width / Building.upgradeAnimationFrames * frame, //crop from x
+				0, //crop from y
+				Building.upgradeAnimation.width / Building.upgradeAnimationFrames, //crop by width
+				Building.upgradeAnimation.height,    //crop by height
+				x - this.width / 2, //x
+				y - this.height / 2,  //y
+				this.width * 2, //displayed width 
+				this.height * 2); //displayed height 
 			Draw.ctx.filter = 'brightness(1.7)';
 		}
 
@@ -239,6 +264,7 @@ export class Building extends ShopItem{
 			Draw.ctx.rotate(0);
 		}
 
+		
 		if(this.isDisplayedUpgradeWindow){
 			Draw.ctx.filter = 'none';
 		}

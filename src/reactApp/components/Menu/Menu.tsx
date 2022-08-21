@@ -16,6 +16,10 @@ import './Menu.scss';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 
+interface IState {
+  hoverItem: number;
+}
+
 interface Prop {
   isOpen?: boolean
 }
@@ -25,7 +29,15 @@ type Props =
   & MenuStore.MenuAction
   & Prop;
 
-export class Menu extends React.Component<Props, {}> {
+export class Menu extends React.Component<Props, IState> {
+
+  constructor(props: Props) {
+    super(props);
+
+    this.state = { 
+      hoverItem: -1
+    };
+  }
 
   static displayNewWaveButton():void{
     App.Store.dispatch(MenuStore.actionCreators.displayNewWaveButton());
@@ -52,6 +64,56 @@ export class Menu extends React.Component<Props, {}> {
 
   private static playSoundSelect(){
     AudioSystem.play(SelectingSoundUrl, 0.2);
+  }
+
+  onKey(event: KeyboardEvent){
+    if(!this.props.isOpen){
+      return;
+    }
+
+    switch (event.key){
+      case 'Enter':
+        if(!this.props.isDisplayButtonContinueGame){
+          this.onClickNewGame();
+        }
+        else{
+          if(this.state.hoverItem >= 0 && this.state.hoverItem < this.countButtons){
+            let menu = this.getItemsMenu();
+            let hoverItemMenu = menu[this.state.hoverItem];
+            hoverItemMenu.props.onClick();
+            this.setState({ hoverItem: -1 });
+          }
+        }
+        break;
+
+      case 'ArrowUp':
+        let newValue1 =  this.state.hoverItem <= 0 
+          ? this.countButtons - 1 
+          : this.state.hoverItem - 1;
+
+        this.setState({ hoverItem: newValue1 });
+        break;
+
+      case 'ArrowDown':
+        let newValue2 =  this.state.hoverItem >= this.countButtons - 1
+          ? 0  
+          : this.state.hoverItem + 1;
+        this.setState({ hoverItem: newValue2 });
+        break;
+    }
+  }
+
+  get countButtons(): number{
+    let countButtons = 1 + +this.props.isDisplayButtonContinueGame + +this.props.isDisplayNewWaveButton + +this.props.isDisplayButtonShop;
+    return countButtons;
+  }
+
+  componentDidMount() {
+		document.addEventListener('keydown', this.onKey.bind(this));
+  } 
+  
+  componentWillUnmount() {
+		document.removeEventListener('keydown', this.onKey.bind(this));
   }
 
   onClickNewGame(){
@@ -89,6 +151,30 @@ export class Menu extends React.Component<Props, {}> {
   }
   onMouseOutFromOutsideButtons(){
     Game.isBlockMouseLogic = false;
+  }
+
+  onMouseEnterInInsideButtons(event: React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    let element: HTMLButtonElement = event.target as HTMLButtonElement;
+    let index: number = parseInt(element.getAttribute('data-key') || '');
+    this.setState({ hoverItem: index });
+  }
+
+  getItemsMenu(){
+    let i = 0;
+    let itemsMenu = [
+      <button key={i} data-key={i} className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} onClick={() => this.onClickNewGame()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Новая игра</button>
+    ];
+    if(this.props.isDisplayButtonContinueGame){
+      itemsMenu.push(<button key={i} data-key={i} className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} onClick={() => this.onClickContinue()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Продолжить</button>);
+    }
+    if(this.props.isDisplayNewWaveButton){
+      itemsMenu.push(<button key={i} data-key={i} className={"menu__button menu__button-new-wave " + (this.state.hoverItem == i++ ? 'menu__button--hover menu__button-new-wave--hover' : '')} onClick={() => this.onClickStartNewWave()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Новая волна</button>);
+    }
+    if(this.props.isDisplayButtonShop){
+      itemsMenu.push(<button key={i} data-key={i} className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} onClick={() => this.onClickShopOpen()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Магазин</button>);
+    }
+
+    return itemsMenu;
   }
 
   render() {
@@ -138,22 +224,7 @@ export class Menu extends React.Component<Props, {}> {
                       <div className="menu__close-body">x</div>
                   </div>
 
-                  <button className="menu__button" onClick={() => this.onClickNewGame()}>Новая игра</button>
-
-                  {this.props.isDisplayButtonContinueGame 
-                    ? <button className="menu__button" onClick={() => this.onClickContinue()}>Продолжить</button>
-                    : null
-                  }
-
-                  {this.props.isDisplayNewWaveButton
-                    ? <button className="menu__button menu__button-new-wave" onClick={() => this.onClickStartNewWave()}>Новая волна</button>
-                    : null
-                  }
-                  
-                  {this.props.isDisplayButtonShop
-                    ? <button className="menu__button" onClick={() => this.onClickShopOpen()}>Магазин</button>
-                    : null
-                  }
+                  {this.getItemsMenu()}
               </div>
             </div>
           : null

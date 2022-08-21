@@ -37,7 +37,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
 
     this.state = { 
       isDisplayRepairButton: props.isDisplayRepairButton
-     };
+    };
   }
   
   componentWillReceiveProps(nextProps: Props) {

@@ -21,8 +21,9 @@ import {Shop} from '../../reactApp/components/Shop/Shop';
 import ShopItem from '../../models/ShopItem';
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+
 import GrassImage from '../../assets/img/grass1.png'; 
-import BuildingButtons from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 
 export class Game {
@@ -73,8 +74,8 @@ export class Game {
 			Game.primaryImages.push(Coin.image);
 		}
 
-		window.removeEventListener('keypress', Game.onKey);
-		window.addEventListener('keypress', Game.onKey);
+		document.removeEventListener('keydown', Game.onKey);
+		document.addEventListener('keydown', Game.onKey);
 
 		if(Game.animationId == 0 && Game.primaryImages.length){
 			Game.animationId = window.requestAnimationFrame(Game.go);
@@ -226,15 +227,17 @@ export class Game {
 	}
 
 	private static onKey(event: KeyboardEvent) : void{
-		if(event.key == ' '){
-			if(Game.isGameRun){
-				Game.pause();
-			}
-			else{
-				Game.continue();
-				Menu.hide();
-				Shop.hide();
-			}
+		switch(event.key){
+			case 'Escape':
+				if(Game.isGameRun){
+					Game.pause();
+				}
+				else{
+					Game.continue();
+					Menu.hide();
+					Shop.hide();
+				}
+			break;
 		}
 	}
 

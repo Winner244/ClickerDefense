@@ -36,7 +36,7 @@
 		cursor: pointer;
 		outline: none;
 
-		&:hover{
+		&:hover, &--hover{
 			color: #ff0404;
 			text-shadow: 0 0 5px #ce0000;
 		}
@@ -98,7 +98,7 @@
 	&__button-new-wave{
 		background-color: #9d0000;
 
-		&:hover{
+		&:hover, &--hover{
 			background-color: #640000;
 		}
 	}
