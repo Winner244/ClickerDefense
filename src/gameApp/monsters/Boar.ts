@@ -1,4 +1,3 @@
-import {Monster} from '../gameObjects/Monster';
 import {Helper} from '../helpers/Helper';
 
 import Boar1Image from '../../assets/img/monsters/boar/boar.png';
@@ -7,10 +6,15 @@ import BoarSpecial1Image from '../../assets/img/monsters/boar/boarSpecial.png';
 import BoarSpecialSmokeImage from '../../assets/img/monsters/boar/boarSpecial_Smoke.png';
 import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boar/boarSpecial_DamageParticles.png';
 
-import {Building} from "../gameObjects/Building";
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
+
+import {Monster} from '../gameObjects/Monster';
+import {Building} from "../gameObjects/Building";
 import {Draw} from "../gameSystems/Draw";
 import { Game } from '../gameSystems/Game';
+
+import Animation from '../../models/Animation';
+
 import { ImageHandler } from '../ImageHandler';
 
 export class Boar extends Monster{
@@ -25,9 +29,7 @@ export class Boar extends Monster{
 	static readonly specialAbilityImageFrames = 12;
 	static readonly specialAbilityImageFrameWidth = 375;
 
-	static readonly specialAbilitySmokeImage: HTMLImageElement = new Image();
-	static readonly specialAbilitySmokeImageFrames = 16;
-	static readonly specialAbilitySmokeImageFrameWidth = 90;
+	static readonly specialAbilitySmokeAnimation: Animation = new Animation(16, 1000);
 	static readonly specialAbilitySmokeImageDisplayedWidth = 180;
 
 	static readonly specialAbilityDamageParticlesImage: HTMLImageElement = new Image();
@@ -43,7 +45,6 @@ export class Boar extends Monster{
 	static readonly maxDistanceActivateSpecialAbility = 700; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static readonly minDistanceActivateSpecialAbility = 200; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static readonly timeAnimateSpecialAbility = 1000; //(milliseconds) время анимации способности
-	static readonly timeAnimateSpecialAbilitySmoke = 1000; //(milliseconds) время анимации пыли у способности
 	static readonly timeAnimateSpecialAbilitySmokeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
 	static readonly timeAnimateSpecialDamageParticles = 200; //(milliseconds) время анимации отлёта ошмётков от урона спец способности
 	static readonly specialAbilityDamage = 18; //начальный урон от спец способности (единократный)
@@ -104,7 +105,7 @@ export class Boar extends Monster{
 
 			Boar.imageHandler.add(Boar.specialAbilityImages).src = BoarSpecial1Image;
 
-			Boar.imageHandler.new(Boar.specialAbilitySmokeImage).src = BoarSpecialSmokeImage;
+			Boar.imageHandler.new(Boar.specialAbilitySmokeAnimation.image).src = BoarSpecialSmokeImage;
 			Boar.imageHandler.new(Boar.specialAbilityDamageParticlesImage).src = BoarSpecialDamageParticlesImage;
 		}
 	}
@@ -199,22 +200,13 @@ export class Boar extends Monster{
 					Draw.ctx.scale(-1, 1);
 				}
 
-				let smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + (isGameOver ? Game.gameOverTime : Date.now()) - this.timeSpecialAbilityWasActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
-				let smokeCurrentFrame = isGameOver 
-					? 0 
-					: Math.floor((Math.abs(Date.now() - this.timeSpecialAbilityWasActivated) % Boar.timeAnimateSpecialAbilitySmoke * Boar.specialAbilitySmokeImageFrames) / Boar.timeAnimateSpecialAbilitySmoke);
-				Draw.ctx.drawImage(Boar.specialAbilitySmokeImage,
-					Boar.specialAbilitySmokeImageFrameWidth * smokeCurrentFrame, //crop from x
-					0, //crop from y
-					Boar.specialAbilitySmokeImageFrameWidth, 	//crop by width
-					Boar.specialAbilitySmokeImage.height, 		//crop by height
-					scale > 0 
-						? this.x + this.width / 3
-						: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeImageDisplayedWidth - this.width),  //x
-					this.y + (1 - smokeScaleSize) * this.height,  		 //y
-					smokeScaleSize * scale * Boar.specialAbilitySmokeImageDisplayedWidth, //displayed width
-					smokeScaleSize * this.height); //displayed height
-
+				const smokeScaleSize = Math.min((Boar.timeAnimateSpecialAbilitySmokeGrowing + (isGameOver ? Game.gameOverTime : Date.now()) - this.timeSpecialAbilityWasActivated - Boar.timeAnimateSpecialAbility - Boar.timeAnimateSpecialAbilitySmokeGrowing) / Boar.timeAnimateSpecialAbilitySmokeGrowing, 1);
+				const x = scale > 0 
+					? this.x + this.width / 3
+					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeImageDisplayedWidth - this.width);
+				const y = this.y + (1 - smokeScaleSize) * this.height;
+				const width = smokeScaleSize * scale * Boar.specialAbilitySmokeImageDisplayedWidth;
+				Boar.specialAbilitySmokeAnimation.draw(isGameOver, x, y, width, smokeScaleSize * this.height);
 
 				if(isInvert){
 					Draw.ctx.restore();

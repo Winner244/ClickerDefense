@@ -1,3 +1,6 @@
+/**
+ * Динамическая загрузка картинок и их ожидание
+ */
 export class ImageHandler {
  	private	waitingImages: HTMLImageElement[] = []; //картинки, чью загрузку мы ожидаем 
 
