@@ -1,5 +1,5 @@
 import {SimpleObject} from '../../models/SimpleObject';
-import {Size} from "../../models/Size";
+import Animation from '../../models/Animation';
 
 import {FlyEarth} from '../buildings/FlyEarth';
 
@@ -22,17 +22,14 @@ import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png';
 export class Monsters{
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
 	
-	static explosionImage: HTMLImageElement = new Image(); //анимация после гибели монстра
+	static explosionAnimation: Animation = new Animation(27, 700); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
-
-	static readonly explosionLifeTime = 700; //время жизни анимации гибели монстра (в миллисекундах)
-	static readonly explosionFrames = 27;
 
 	static init(isLoadImage: boolean = true){
 		Monsters.all = [];
 
 		if(isLoadImage){
-			this.explosionImage.src = ExplosionImage;
+			this.explosionAnimation.image.src = ExplosionImage;
 		}
 	}
 
@@ -81,7 +78,7 @@ export class Monsters{
 					Monsters.all.splice(i, 1);
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
-					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionLifeTime));
+					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
 				}
 			}
 		}
@@ -119,18 +116,8 @@ export class Monsters{
 	static draw(isGameOver: boolean): void{
 		//исчезновение погибших монстров
 		this.explosions.forEach(x => {
-			let frame = Math.floor((this.explosionLifeTime - x.lifeTime) / this.explosionLifeTime * this.explosionFrames);
-			let newWidth = (this.explosionImage.width / this.explosionFrames) * (x.size.height / (this.explosionImage.height));
-			Draw.ctx.drawImage(this.explosionImage, 
-				this.explosionImage.width / this.explosionFrames * frame, //crop from x
-				0, //crop from y
-				this.explosionImage.width / this.explosionFrames, //crop by width
-				this.explosionImage.height,    //crop by height
-				x.location.x - (newWidth - x.size.width) / 2, //x
-				x.location.y,  //y
-				newWidth, //displayed width 
-				x.size.height); //displayed height 
-
+			let newWidth = (this.explosionAnimation.image.width / this.explosionAnimation.frames) * (x.size.height / (this.explosionAnimation.image.height));
+			this.explosionAnimation.draw(false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height, x.lifeTime);
 		});
 
 		Monsters.all.forEach(monster => monster.draw(isGameOver));

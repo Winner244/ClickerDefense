@@ -16,8 +16,11 @@ export default class Animation{
 		this._timeCreated = Date.now();
 	}
 
-	draw(isGameOver: boolean, x: number, y: number, width: number, height: number){
-		let frame = isGameOver ? 0 : Math.floor((Date.now() - this._timeCreated) % this.duration / (this.duration / this.frames));
+	draw(isGameOver: boolean, x: number, y: number, width: number, height: number, lifeTime: number|null = null){
+		let lifeTimeAnimation = lifeTime != null 
+			? this.duration - lifeTime 
+			: (Date.now() - this._timeCreated);
+		let frame = isGameOver ? 0 : Math.floor(lifeTimeAnimation % this.duration / (this.duration / this.frames));
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y
