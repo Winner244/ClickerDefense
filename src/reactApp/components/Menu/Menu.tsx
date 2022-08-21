@@ -154,6 +154,9 @@ export class Menu extends React.Component<Props, IState> {
     const index: number = parseInt(element.getAttribute('data-key') || '');
     this.setState({ hoverItem: index });
   }
+  onMouseLeaveInsideButtons(event: React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    this.setState({ hoverItem: -1 });
+  }
 
   getItemsMenu(){
     let i = 0;
@@ -164,6 +167,7 @@ export class Menu extends React.Component<Props, IState> {
         className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} 
         onClick={() => this.onClickNewGame()} 
         onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        onMouseLeave={(e) => this.onMouseLeaveInsideButtons(e)}
       >
         Новая игра
       </button>
@@ -176,6 +180,7 @@ export class Menu extends React.Component<Props, IState> {
         className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} 
         onClick={() => this.onClickContinue()} 
         onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        onMouseLeave={(e) => this.onMouseLeaveInsideButtons(e)}
         >
           Продолжить
         </button>);
@@ -188,6 +193,7 @@ export class Menu extends React.Component<Props, IState> {
         className={"menu__button menu__button-new-wave " + (this.state.hoverItem == i++ ? 'menu__button--hover menu__button-new-wave--hover' : '')} 
         onClick={() => this.onClickStartNewWave()} 
         onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        onMouseLeave={(e) => this.onMouseLeaveInsideButtons(e)}
         >
           Новая волна
         </button>);
@@ -200,6 +206,7 @@ export class Menu extends React.Component<Props, IState> {
         className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} 
         onClick={() => this.onClickShopOpen()} 
         onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        onMouseLeave={(e) => this.onMouseLeaveInsideButtons(e)}
         >
           Магазин
         </button>);
