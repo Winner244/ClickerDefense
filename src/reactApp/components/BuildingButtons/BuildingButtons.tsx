@@ -73,6 +73,9 @@ export class BuildingButtons extends React.Component<Props, IState> {
       if(isRepaired){
         this.setState({ isDisplayRepairButton: false });
         BuildingButtons.hide();
+        //update building info in Upgrade window
+        Upgrade.hide();
+        Upgrade.show(this.props.building);
       }
     }
   }

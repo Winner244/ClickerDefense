@@ -2,16 +2,12 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 
 import { ApplicationState } from '../../store';
-import * as MenuStore from '../Menu/MenuStore';
 import * as UpgradeStore from './UpgradeStore';
 
 import { App } from '../../App';
 
 import './Upgrade.scss';
 
-import CoinImage from '../../../assets/img/coin.png';
-import { Game } from '../../../gameApp/gameSystems/Game';
-import { Gamer } from '../../../gameApp/gameObjects/Gamer';
 import { Building } from '../../../gameApp/gameObjects/Building';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
@@ -39,6 +35,10 @@ export class Upgrade extends React.Component<Props, {}> {
       building.isDisplayedUpgradeWindow = false;
     }
     App.Store.dispatch(UpgradeStore.actionCreators.close());
+  }
+
+  static isOpened(): boolean{
+    return App.Store.getState().upgrade?.isOpen || false;
   }
 
   private static playSoundSelect(){

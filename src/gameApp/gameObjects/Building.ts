@@ -166,7 +166,7 @@ export class Building extends ShopItem{
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
 		if(isWaveEnded && isMouseIn){
 			let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
-			if(isDisplayRepairButton || this.isSupportUpgrade){
+			if(isDisplayRepairButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
 				if(!this._isDrawButtons){
 					this._isDrawButtons = true;
 	
@@ -175,7 +175,7 @@ export class Building extends ShopItem{
 					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
 					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
 					let repairPrice = this.getRepairPrice();
-					BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade, repairPrice, this);
+					BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, repairPrice, this);
 				}
 			}
 			else{

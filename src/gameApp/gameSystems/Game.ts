@@ -19,9 +19,11 @@ import {Mouse} from '../Mouse';
 import {Menu} from '../../reactApp/components/Menu/Menu';
 import {Shop} from '../../reactApp/components/Shop/Shop';
 import ShopItem from '../../models/ShopItem';
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+import {Upgrade} from '../../reactApp/components/Upgrade/Upgrade';
+
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 
-import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 import GrassImage from '../../assets/img/grass1.png'; 
 
@@ -229,13 +231,14 @@ export class Game {
 	private static onKey(event: KeyboardEvent) : void{
 		switch(event.key){
 			case 'Escape':
-				if(Game.isGameRun){
+				if(Game.isGameRun && !Upgrade.isOpened()){
 					Game.pause();
 				}
 				else{
 					Game.continue();
 					Menu.hide();
 					Shop.hide();
+					Upgrade.hide();
 				}
 			break;
 		}
