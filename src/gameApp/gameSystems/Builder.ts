@@ -1,5 +1,6 @@
 import {Building} from '../gameObjects/Building';
 import {Gamer} from '../gameObjects/Gamer';
+import Animation from '../../models/Animation';
 import {Labels} from './Labels';
 import {Buildings} from './Buildings';
 import {Draw} from './Draw';
@@ -12,16 +13,13 @@ import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3';
 export class Builder {
 
 	private static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
-	private static smokeImage: HTMLImageElement = new Image();  
+	private static smokeAnimation: Animation = new Animation(10, 1000);  
 	private static isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
-	private static buildTime: number; //время постройки
-	private static readonly smokeFrames: number = 10; 
-	private static readonly smokeLifeTime: number = 1000; //в миллисекундах
 	private static isAnotherBuilding: boolean = false; //курсор наведён на другое здание?
 
 	static init(isLoadImage: boolean = true){
 		if(isLoadImage){
-			this.smokeImage.src = SmokeImage; //load image only once
+			this.smokeAnimation.image.src = SmokeImage; //load image only once
 		}
 		this.selectedBuildingForBuild = null;
 	}
@@ -51,7 +49,7 @@ export class Builder {
 				
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
-				this.buildTime = Date.now();
+				this.smokeAnimation.timeCreated = Date.now();
 				this.playSoundBuild();
 				return;
 			}
@@ -64,7 +62,7 @@ export class Builder {
 
 	static logic(){
 		if(this.selectedBuildingForBuild && this.isDrawSmoke){
-			if(this.buildTime + this.smokeLifeTime < Date.now()){
+			if(this.smokeAnimation.timeCreated + this.smokeAnimation.duration < Date.now()){
 				this.selectedBuildingForBuild = null;
 				this.isDrawSmoke = false;
 			}
@@ -74,19 +72,11 @@ export class Builder {
 	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
 		if(this.selectedBuildingForBuild){
 			if(this.isDrawSmoke){
-				let frame = isGameOver ? 0 : Math.floor((Date.now() - this.buildTime) / this.smokeLifeTime * this.smokeFrames);
 				let smokeWidth = this.selectedBuildingForBuild.width * 2;
-				let newHeight = this.smokeImage.height * (smokeWidth / (this.smokeImage.width / this.smokeFrames));
-				//Draw.ctx.globalAlpha = Math.max(0, (this.smokeLifeTime - (Date.now() - this.buildTime)) / this.smokeLifeTime);  // opacity
-				Draw.ctx.drawImage(this.smokeImage,
-					this.smokeImage.width / this.smokeFrames * frame, //crop from x
-					0, //crop from y
-					this.smokeImage.width / this.smokeFrames, //crop by width
-					this.smokeImage.height,    //crop by height
-					this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2, //x
-					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight,  //y
-					smokeWidth, //displayed width 
-					newHeight); //displayed height
+				let newHeight = this.smokeAnimation.image.height * (smokeWidth / (this.smokeAnimation.image.width / this.smokeAnimation.frames));
+				const x = this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2;
+				const y = this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight;
+				this.smokeAnimation.draw(isGameOver, x, y, smokeWidth, newHeight);
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{
