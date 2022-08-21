@@ -14,10 +14,10 @@ export default class Animation{
 		this.timeCreated = Date.now();
 	}
 
-	draw(isGameOver: boolean, x: number, y: number, width: number, height: number, lifeTime: number|null = null){
+	draw(isGameOver: boolean, x: number, y: number, width: number, height: number, lifeTime: number|null = null, timeCreated: number|null = null){
 		let lifeTimeAnimation = lifeTime != null 
 			? this.duration - lifeTime 
-			: (Date.now() - this.timeCreated);
+			: (Date.now() - (timeCreated || this.timeCreated));
 		let frame = isGameOver ? 0 : Math.floor(lifeTimeAnimation % this.duration / (this.duration / this.frames));
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
