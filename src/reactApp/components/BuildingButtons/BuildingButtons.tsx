@@ -112,17 +112,17 @@ export class BuildingButtons extends React.Component<Props, IState> {
                   className={'building-buttons__button ' + (isCanBeRepaired ? "" : "building-buttons__button--disabled")}
                   onClick={() => this.onClickRepair()}
                 >
-                <img className='building-buttons__button-image' src={HammerImage}/>
+                <img className='building-buttons__button-image nodrag' src={HammerImage}/>
                 <span className='building-buttons__button-repair-coin'>
                   {this.props.repairCost}
-                  <img className='building-buttons__button-image--coin' src={CoinImage}/>
+                  <img className='building-buttons__button-image--coin nodrag' src={CoinImage}/>
                 </span>
             </div>
             : null}
 
           {this.props.isDisplayUpgradeButton 
             ? <div className='building-buttons__button' onClick={() => this.onClickUpgrade()}>
-              <img className='building-buttons__button-image' src={UpgradeImage}/>
+              <img className='building-buttons__button-image nodrag' src={UpgradeImage}/>
               </div>
             : null}
         </div>

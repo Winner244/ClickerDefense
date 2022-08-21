@@ -50,7 +50,7 @@ export class Shop extends React.Component<Props, {}> {
   private static playSoundSelect(){
 		AudioSystem.play(SelectingSoundUrl, 0.2);
   }
-  
+
   onKey(event: KeyboardEvent){
     if(!this.props.isOpen){
       return;
@@ -149,7 +149,7 @@ export class Shop extends React.Component<Props, {}> {
                                   : this.onClickBuyItem(item)}
                               >
                                 Купить {item.price}
-                                <img src={CoinImage}/>
+                                <img className='nodrag' src={CoinImage}/>
                               </button>
                           </div>
                         ))}
