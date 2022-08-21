@@ -17,7 +17,7 @@ import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
 import {Monsters} from "../../../gameApp/gameSystems/Monsters";
 import {Builder} from "../../../gameApp/gameSystems/Builder";
-import Menu from '../../components/Menu/Menu';
+import {Menu} from '../../components/Menu/Menu';
 import {Barricade} from '../../../gameApp/buildings/Barricade';
 import {Bat} from '../../../gameApp/monsters/Bat';
 

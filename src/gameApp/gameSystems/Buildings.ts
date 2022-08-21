@@ -1,21 +1,21 @@
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
+
 import {SimpleObject} from '../../models/SimpleObject';
+import Animation from '../../models/Animation';
 
 import {Draw} from './Draw';
 
 import {Building} from '../gameObjects/Building';
+import { Monster } from '../gameObjects/Monster';
 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
-import { Monster } from '../gameObjects/Monster';
 
 export class Buildings{
 	static all: Building[] = []; //все строения
 	
-	static explosionImage: HTMLImageElement = new Image(); //анимация после разрушения здания
+	static explosionANimation: Animation = new Animation(10, 1000); //анимация после разрушения здания
 	static explosions: SimpleObject[] = []; //анимации разрушения 
-	static readonly explosionLifeTime = 1000; //время жизни анимации разрушения (в миллисекундах)
-	static readonly explosionFrames = 10;
 
 	static flyEarth: Building; //ключевое воздушное здание
 	static flyEarthRope: Building; //ключивое наземное здание
@@ -26,7 +26,7 @@ export class Buildings{
 		this.all = [];
 		
 		if(isLoadImage){
-			this.explosionImage.src = ExplosionImage;
+			this.explosionANimation.image.src = ExplosionImage;
 		}
 
 		this.flyEarth = new FlyEarth(
@@ -87,7 +87,7 @@ export class Buildings{
 			{
 				let building = this.all[i];
 				if(this.all[i].health <= 0){ //проверка здоровья
-					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionLifeTime));
+					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionANimation.duration));
 					this.all.splice(i, 1);
 					i--;
 				}
@@ -101,18 +101,8 @@ export class Buildings{
 	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
 		//разрушения зданий
 		this.explosions.forEach(explosion => {
-			let frame = Math.floor((this.explosionLifeTime - explosion.lifeTime) / this.explosionLifeTime * this.explosionFrames);
-			let newHeight = this.explosionImage.height * (explosion.size.width / (this.explosionImage.width / this.explosionFrames));
-			//Draw.ctx.globalAlpha = Math.max(0, explosion.lifeTime / this.explosionLifeTime); //no better
-			Draw.ctx.drawImage(this.explosionImage, 
-				this.explosionImage.width / this.explosionFrames * frame, //crop from x
-				0, //crop from y
-				this.explosionImage.width / this.explosionFrames, //crop by width
-				this.explosionImage.height,    //crop by height
-				explosion.location.x, //x
-				explosion.location.y + explosion.size.height - newHeight,  //y
-				explosion.size.width, //displayed width 
-				newHeight); //displayed height
+			let newHeight = this.explosionANimation.image.height * (explosion.size.width / (this.explosionANimation.image.width / this.explosionANimation.frames));
+			this.explosionANimation.draw(false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight, explosion.lifeTime);
 			Draw.ctx.globalAlpha = 1;
 
 		});
