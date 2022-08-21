@@ -122,7 +122,7 @@ export class Waves{
 				let isLeftSide = Math.random() < 0.5;
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
 				let monster = Monsters.create(key, isLeftSide, scaleMonsterSize);
-				let monsterSize = new Size((monster.image.width || 0) / monster.frames, monster.image.height);
+				let monsterSize = new Size((monster.animation.image.width || 0) / monster.animation.frames, monster.animation.image.height);
 				let bottomPosition = Draw.canvas.height - bottomShiftBorder - monsterSize.height * scaleMonsterSize;
 				monster.x = isLeftSide ? -monsterSize.width * scaleMonsterSize : Draw.canvas.width;
 				monster.y = monster.isLand 

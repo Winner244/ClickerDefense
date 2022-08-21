@@ -1,20 +1,21 @@
-import {Draw} from '../gameSystems/Draw';
-import {Building} from './Building';
 import sortBy from 'lodash/sortBy';
+
+import {Draw} from '../gameSystems/Draw';
+import { Labels } from '../gameSystems/Labels';
+
+import Animation from '../../models/Animation';
+
+import {Building} from './Building';
 import {Modifier} from "./Modifier";
 import {Helper} from "../helpers/Helper";
-import { Labels } from '../gameSystems/Labels';
 import { Barricade } from '../buildings/Barricade';
 import { ImageHandler } from '../ImageHandler';
 
 export class Monster{
 	name: string;
 
-	image: HTMLImageElement; //содержит несколько изображений для анимации
-	attackImage: HTMLImageElement;  //содержит несколько изображений для анимации
-
-	frames: number; //сколько изображений в image?
-	attackFrames: number; //сколько изображений атаки в attackImage?
+	animation: Animation; //содержит несколько изображений для анимации
+	attackAnimation: Animation;  //содержит несколько изображений для анимации
 
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
 
@@ -22,8 +23,6 @@ export class Monster{
 	health: number;
 	damage: number; //урон (в секунду)
 	speed: number; //скорость передвижения (пикселей в секунду)
-	speedAnimation: number; //скорость анимации
-	speedAnimationAttack: number; //скорость анимации атаки
 
 	x: number;
 	y: number;
@@ -51,12 +50,15 @@ export class Monster{
 		isLeftSide: boolean, 
 		isLand: boolean, 
 		name: string, 
+
 		image: HTMLImageElement, 
 		frames: number, 
-		speedAnimation: number,
-		imageAttack: HTMLImageElement, 
+		animationDuration: number,
+
+		attackImage: HTMLImageElement, 
 		attackFrames: number, 
-		speedAnimationAttack: number,
+		attackAnimationDuration: number,
+
 		reduceHover: number, 
 		healthMax: number, 
 		damage: number, 
@@ -71,13 +73,8 @@ export class Monster{
 		this.scaleSize = scaleSize;
 		this.name = name;
 
-		this.image = image; //содержит несколько изображений для анимации
-		this.frames = frames; //сколько изображений в image?
-		this.speedAnimation = speedAnimation;
-
-		this.attackImage = imageAttack;  //содержит несколько изображений для анимации
-		this.attackFrames = attackFrames; //сколько изображений атаки в attackImage?
-		this.speedAnimationAttack = speedAnimationAttack;
+		this.animation = new Animation(frames, animationDuration, image); //анимация бега
+		this.attackAnimation = new Animation(attackFrames, attackAnimationDuration, attackImage);  //анимация атаки
 
 		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
 
@@ -99,24 +96,17 @@ export class Monster{
 	}
 
 	get height(): number {
-		return this.width / this.widthFrame * this.image.height;
+		return this.width / (this.animation.image.width / this.animation.frames) * this.animation.image.height;
 	}
 	get attackHeight(): number {
-		return this.attackWidth / this.attackWidthFrame * this.attackImage.height;
-	}
-
-	get widthFrame(): number {
-		return this.image.width / this.frames;
-	}
-	get attackWidthFrame(): number {
-		return this.attackImage.width / this.attackFrames;
+		return this.attackWidth / (this.attackAnimation.image.width / this.attackAnimation.frames) * this.attackAnimation.image.height;
 	}
 
 	get width(): number {
-		return this.image.width / this.frames * this.scaleSize;
+		return this.animation.image.width / this.animation.frames * this.scaleSize;
 	}
 	get attackWidth(): number {
-		return this.attackImage.width / this.attackFrames * this.scaleSize;
+		return this.attackAnimation.image.width / this.attackAnimation.frames * this.scaleSize;
 	}
 
 	get centerX(): number {
@@ -251,29 +241,11 @@ export class Monster{
 
 		if(this.isAttack){
 			//атака
-			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000 * this.speedAnimationAttack) / (1000 / this.attackFrames)) % this.attackFrames;
-			Draw.ctx.drawImage(this.attackImage, 
-				this.attackWidthFrame * currentFrame, //crop from x
-				0, //crop from y
-				this.attackWidthFrame, 		  //crop by width
-				this.attackImage.height,  //crop by height
-				scale * this.x,  //x
-				this.y,  		 //y
-				scale * this.attackWidth, //displayed width 
-				this.attackHeight); //displayed height
+			this.attackAnimation.draw(isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
 		}
 		else{
 			//передвижение
-			let currentFrame = isGameOver ? 0 : Math.floor(((Date.now() - this.createdTime) % 1000 * this.speedAnimation) / (1000 / this.frames)) % this.frames;
-			Draw.ctx.drawImage(this.image, 
-				this.widthFrame * currentFrame, //crop from x
-				0, //crop from y
-				this.widthFrame, 	   //crop by width
-				this.image.height, //crop by height
-				scale * this.x,  //x
-				this.y,  		 //y
-				scale * this.width, //displayed width 
-				this.height); //displayed height
+			this.animation.draw(isGameOver, scale * this.x, this.y, scale * this.width, this.height);
 		}
 
 		if(isInvert){

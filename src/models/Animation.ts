@@ -7,9 +7,9 @@ export default class Animation{
 
 	protected _timeCreated: number;
 
-	constructor(frames: number, duration: number)
+	constructor(frames: number, duration: number, image: HTMLImageElement|null = null)
 	{
-		this.image = new Image();
+		this.image = image || new Image();
 		this.frames = frames;
 		this.duration = duration;
 

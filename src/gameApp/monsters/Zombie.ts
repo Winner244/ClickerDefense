@@ -38,10 +38,10 @@ export class Zombie extends Monster{
 			Zombie.name,
 			selectedImage,
 			Zombie.imageFrames,
-			1,
+			900,
 			selectedAttackImage,
 			Zombie.attackImageFrames,
-			1,
+			1000,
 			5,
 			3,  //health
 			100,   //damage

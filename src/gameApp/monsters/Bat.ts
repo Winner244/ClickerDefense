@@ -32,10 +32,10 @@ export class Bat extends Monster{
 			Bat.name,
 			selectedImage,
 			Bat.imageFrames,
-			3,  //speed animation
+			300,  //speed animation
 			selectedImage,
 			Bat.imageFrames,
-			3,  //speed anumation attack
+			300,  //speed anumation attack
 			5,  //reduce hover
 			1,  //health
 			5,  //damage

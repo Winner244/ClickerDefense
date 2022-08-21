@@ -75,10 +75,10 @@ export class Boar extends Monster{
 			Boar.name,
 			selectedImage,
 			Boar.imageFrames,
-			2,
+			500,
 			selectedAttackImage,
 			Boar.attackImageFrames,
-			2,
+			500,
 			5,
 			4,  //health
 			180, //damage

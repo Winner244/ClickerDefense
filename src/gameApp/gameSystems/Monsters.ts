@@ -52,7 +52,7 @@ export class Monsters{
 			if(mouseX > monster.x + monster.reduceHover && 
 				mouseX < monster.x + monster.width - monster.reduceHover &&
 				mouseY > monster.y + monster.reduceHover && 
-				mouseY < monster.y + monster.image.height - monster.reduceHover)
+				mouseY < monster.y + monster.animation.image.height - monster.reduceHover)
 			{
 				Cursor.setCursor(Cursor.sword);
 
@@ -81,7 +81,7 @@ export class Monsters{
 					Monsters.all.splice(i, 1);
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
-					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.image.height, this.explosionLifeTime));
+					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionLifeTime));
 				}
 			}
 		}

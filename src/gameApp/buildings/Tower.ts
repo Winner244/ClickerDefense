@@ -111,7 +111,7 @@ export class Tower extends Building{
 				let arrowCenterY = arrow.location.y + arrow.size.height / 2;
 				let monsterGoal = monsters.find(monster => 
 					arrowCenterX > monster.x && arrowCenterX < monster.x + monster.width && 
-					arrowCenterY > monster.y && arrowCenterY < monster.y + monster.image.height);
+					arrowCenterY > monster.y && arrowCenterY < monster.y + monster.animation.image.height);
 				if(monsterGoal){
 					monsterGoal.health -= Tower.damage;
 					this.arrows.splice(i, 1);
