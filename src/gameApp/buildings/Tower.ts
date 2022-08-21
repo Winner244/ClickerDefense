@@ -31,7 +31,7 @@ export class Tower extends Building{
 			false,
 			true, //isLand
 			'Сторожевая башня', 
-			Tower.image, 0, Tower.width, Tower.height, 15, 
+			Tower.image, 0, 0, Tower.width, Tower.height, 15, 
 			100, //health max
 			50, // price
 			'Стреляет по монстрам в радиусе действия.',

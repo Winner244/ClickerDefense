@@ -14,7 +14,7 @@ import ExplosionImage from '../../assets/img/buildings/explosion.png';
 export class Buildings{
 	static all: Building[] = []; //все строения
 	
-	static explosionANimation: Animation = new Animation(10, 1000); //анимация после разрушения здания
+	static explosionAnimation: Animation = new Animation(10, 1000); //анимация после разрушения здания
 	static explosions: SimpleObject[] = []; //анимации разрушения 
 
 	static flyEarth: Building; //ключевое воздушное здание
@@ -26,7 +26,7 @@ export class Buildings{
 		this.all = [];
 		
 		if(isLoadImage){
-			this.explosionANimation.image.src = ExplosionImage;
+			this.explosionAnimation.image.src = ExplosionImage;
 		}
 
 		this.flyEarth = new FlyEarth(
@@ -87,7 +87,7 @@ export class Buildings{
 			{
 				let building = this.all[i];
 				if(this.all[i].health <= 0){ //проверка здоровья
-					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionANimation.duration));
+					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.duration));
 					this.all.splice(i, 1);
 					i--;
 				}
@@ -101,8 +101,8 @@ export class Buildings{
 	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
 		//разрушения зданий
 		this.explosions.forEach(explosion => {
-			let newHeight = this.explosionANimation.image.height * (explosion.size.width / (this.explosionANimation.image.width / this.explosionANimation.frames));
-			this.explosionANimation.draw(false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight, explosion.lifeTime);
+			let newHeight = this.explosionAnimation.image.height * (explosion.size.width / (this.explosionAnimation.image.width / this.explosionAnimation.frames));
+			this.explosionAnimation.draw(false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight, explosion.lifeTime);
 			Draw.ctx.globalAlpha = 1;
 
 		});

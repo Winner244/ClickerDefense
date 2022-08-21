@@ -7,7 +7,7 @@ export class FlyEarthRope extends Building{
 
 	constructor(x: number, y: number) {
 		super(x, y, false, true, FlyEarthRope.name, 
-			FlyEarthRope.image, 1, FlyEarthRope.image.width, FlyEarthRope.image.height, 0, 
+			FlyEarthRope.image, 0, 0, FlyEarthRope.image.width, FlyEarthRope.image.height, 0, 
 			100, 0, '', false, false);
 		this._maxImpulse = 0;
 		FlyEarthRope.init(true);

@@ -122,6 +122,7 @@ class TestPage extends React.Component {
 
                 Buildings.all.push(new Tower(700));
 
+                Boar.init();
                 waitLoadingImage(Boar.images[0], () => {
                     var boar = new Boar(50, 780, true, 1);
                     boar.isWillUseSpecialAbility = true;
@@ -145,6 +146,7 @@ class TestPage extends React.Component {
 
                 Buildings.all.push(new Tower(1100));
 
+                Boar.init();
                 waitLoadingImage(Boar.images[0], () => {
                     var boar2 = new Boar(1850, 780, false, 1);
                     boar2.isWillUseSpecialAbility = true;

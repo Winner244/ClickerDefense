@@ -18,7 +18,7 @@ import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 
 export class Building extends ShopItem{
-	frames: number; //сколько изображений в image?
+	animation: Animation;
 	width: number;  //ширина image
 	height: number; //высота image
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
@@ -67,6 +67,7 @@ export class Building extends ShopItem{
 		name: string, 
 		image: HTMLImageElement, 
 		frames: number, 
+		animationDuration: number,
 		width: number, 
 		height: number, 
 		reduceHover: number, 
@@ -78,9 +79,9 @@ export class Building extends ShopItem{
 	{
 		super(name, image, price, description, ShopCategoryEnum.BUILDINGS);
 
-		this.name = name;
+		this.animation = new Animation(frames, animationDuration, image);
 		this.image = image;
-		this.frames = frames;
+		this.name = name;
 		this.width = width;
 		this.height = height;
 		this.reduceHover = reduceHover; 
@@ -228,17 +229,8 @@ export class Building extends ShopItem{
 			y = -this.height;
 		}
 
-		if(this.frames > 1){
-			let frame = isGameOver ? 0 : Math.floor((millisecondsFromStart % 1000) / (500 / this.frames)) % this.frames;
-			Draw.ctx.drawImage(this.image, 
-				this.image.width / this.frames * frame, //crop from x
-				0, //crop from y
-				this.image.width / this.frames, //crop by width
-				this.image.height,    //crop by height
-				x, //x
-				y,  //y
-				this.width, //displayed width 
-				this.height); //displayed height 
+		if(this.animation.frames > 1){
+			this.animation.draw(isGameOver, x, y, this.width, this.height);
 		}
 		else{
 			if(this.width > 0 && this.height > 0){
