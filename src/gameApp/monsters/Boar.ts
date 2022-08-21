@@ -25,10 +25,9 @@ export class Boar extends Monster{
 	static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
 	static readonly attackImageFrames = 3;
 
+	specialAbilityAnimation: Animation; //анимация спец способности
 	static readonly specialAbilityImages: HTMLImageElement[] = [];  //разные окраски монстра
-	static readonly specialAbilityImageFrames = 12;
 	static readonly specialAbilityImageFrameWidth = 375;
-	static readonly specialAbilityDuration = 1000; //(milliseconds) время анимации способности
 
 	static readonly specialAbilitySmokeAnimation: Animation = new Animation(16, 1000);
 	static readonly specialAbilitySmokeAnimationDisplayWidth = 180;
@@ -45,12 +44,12 @@ export class Boar extends Monster{
 	static readonly maxDistanceActivateSpecialAbility = 700; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static readonly minDistanceActivateSpecialAbility = 200; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется спец способность
 	static readonly specialAbilityDamage = 18; //начальный урон от спец способности (единократный)
+	specialAbilityDamage: number; //Доп урон от спец способности (единократный) * размер особи
 	
 	isWillUseSpecialAbility: boolean;
 	isActivatedSpecialAbility: boolean;
 	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
-	specialAbilityImage: HTMLImageElement; //анимация спец способности
-	specialAbilityDamage: number; //Доп урон от спец способности (единократный)
+	
 	timeSpecialAbilityWasActivated: number; //время когда спец способности была активирована
 	timeSpecialDamageWasActivated: number; //время когда урона от спец способности был активирован
 
@@ -85,7 +84,7 @@ export class Boar extends Monster{
 			Boar.imageHandler);
 
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
-		this.specialAbilityImage = selectedSpecialImage;
+		this.specialAbilityAnimation = new Animation(12, 1000, selectedSpecialImage);
 		this.isActivatedSpecialAbility = false;
 		this.isActivatedSpecialDamage = false;
 		this.timeSpecialAbilityWasActivated = this.timeSpecialDamageWasActivated = 0;
@@ -113,7 +112,7 @@ export class Boar extends Monster{
 		}
 
 		if(this.isActivatedSpecialAbility) {
-			if(Date.now() - this.timeSpecialAbilityWasActivated < Boar.specialAbilityDuration) {
+			if(Date.now() - this.timeSpecialAbilityWasActivated < this.specialAbilityAnimation.duration) {
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this.isAttack && this.buildingGoal) {
@@ -163,25 +162,13 @@ export class Boar extends Monster{
 		let scale = isInvert ? -1 : 1;
 
 		//анимация начала спец способности - когда кабан стоит на месте и ногами как бык взбивает пыль
-		if(this.isActivatedSpecialAbility && Date.now() - this.timeSpecialAbilityWasActivated < Boar.specialAbilityDuration){
+		if(this.isActivatedSpecialAbility && Date.now() - this.timeSpecialAbilityWasActivated < this.specialAbilityAnimation.duration){
 			if(isInvert){
 				Draw.ctx.save();
 				Draw.ctx.scale(-1, 1);
 			}
 
-			let currentFrame = isGameOver 
-				? 0 
-				: Math.floor((Date.now() - this.timeSpecialAbilityWasActivated) / Boar.specialAbilityDuration * Boar.specialAbilityImageFrames);
-			Draw.ctx.drawImage(this.specialAbilityImage,
-				Boar.specialAbilityImageFrameWidth * currentFrame, //crop from x
-				0, //crop from y
-				Boar.specialAbilityImageFrameWidth, 	   //crop by width
-				this.specialAbilityImage.height, //crop by height
-				scale * this.x,  //x
-				this.y,  		 //y
-				scale * this.width, //displayed width
-				this.height); //displayed height
-
+			this.specialAbilityAnimation.draw(isGameOver, scale * this.x, this.y, scale * this.width, this.height, null, this.timeSpecialAbilityWasActivated);
 
 			if(isInvert){
 				Draw.ctx.restore();
@@ -197,7 +184,7 @@ export class Boar extends Monster{
 					Draw.ctx.scale(-1, 1);
 				}
 
-				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + (isGameOver ? Game.gameOverTime : Date.now()) - this.timeSpecialAbilityWasActivated - Boar.specialAbilityDuration - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
+				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + (isGameOver ? Game.gameOverTime : Date.now()) - this.timeSpecialAbilityWasActivated - this.specialAbilityAnimation.duration - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
 				const x = scale > 0 
 					? this.x + this.width / 3
 					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeAnimationDisplayWidth - this.width);
