@@ -24,7 +24,8 @@ interface OpenAction { type: 'BUILDING_BUTTON__OPEN',
     building: Building
 }
 interface CloseAction { type: 'BUILDING_BUTTON__CLOSE' }
-type KnownAction = CloseAction | OpenAction;
+interface HideUpgradeButtonAction { type: 'BUILDING_BUTTON__HIDE_UPGRADE_BUTTON' }
+type KnownAction = CloseAction | OpenAction | HideUpgradeButtonAction;
 
 // ACTION CREATORS
 //for TypeScript
@@ -37,6 +38,7 @@ export interface BuildingButtonsAction {
         building: Building) => OpenAction;
 
     close: () => CloseAction;
+    hideUpgradeButton: () => HideUpgradeButtonAction;
 }
 export const actionCreators = {
     open: (x: number, y: number, 
@@ -50,6 +52,7 @@ export const actionCreators = {
             isDisplayRepairButton, isDisplayUpgradeButton, repairCost, building},
 
     close: () => <CloseAction>{ type: 'BUILDING_BUTTON__CLOSE' },
+    hideUpgradeButton: () => <HideUpgradeButtonAction>{ type: 'BUILDING_BUTTON__HIDE_UPGRADE_BUTTON' },
 };
 
 function getDefaultState(): BuildingButtonsState{
@@ -80,6 +83,10 @@ export const reducer: Reducer<BuildingButtonsState> = (state: BuildingButtonsSta
               });
         case 'BUILDING_BUTTON__CLOSE':
             return getDefaultState();
+        case 'BUILDING_BUTTON__HIDE_UPGRADE_BUTTON':
+            return Object.assign({}, state, { 
+                isDisplayUpgradeButton: false
+              });
         default:
             const exhaustiveCheck: never = action;
     }
