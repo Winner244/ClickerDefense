@@ -29,6 +29,7 @@ export class Monster{
 	scaleSize: number; //1 - размер монстра по размеру картинки, 0.5 - монстр в 2 раза меньше картинки по высоте и ширине, 1.5 - монстр в 2 раза больше.
 
 	isAttack: boolean; //атакует?
+
 	isLeftSide: boolean; // с левой стороны движется?
 	isLand: boolean; //наземный?
 
@@ -132,7 +133,6 @@ export class Monster{
 		let speed = this.speed * (millisecondsDifferent / 1000);
 		speed += speed * speedMultiplier;
 
-		this.isAttack = false;
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
 			let condition = this.isLand 
@@ -145,11 +145,15 @@ export class Monster{
 				if(!this.isLand){
 					//this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
 				}
+				this.isAttack = false;
 			}
 			else //дошёл
 			{
 				if(this.isLand){
 					this.x = this.buildingGoal.x - this.width + this.width / 5;
+				}
+				if(!this.isAttack){
+					this.attackAnimation.timeCreated = Date.now();
 				}
 				this.isAttack = true; //атакует
 			}
@@ -166,11 +170,15 @@ export class Monster{
 				if(!this.isLand){
 					//this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
 				}
+				this.isAttack = false;
 			}
 			else //дошёл
 			{
 				if(this.isLand){
 					this.x = this.buildingGoal.x + this.buildingGoal.width - this.width / 5;
+				}
+				if(!this.isAttack){
+					this.attackAnimation.timeCreated = Date.now();
 				}
 				this.isAttack = true; //атакует
 			}
