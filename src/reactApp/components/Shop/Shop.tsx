@@ -50,6 +50,32 @@ export class Shop extends React.Component<Props, {}> {
   private static playSoundSelect(){
 		AudioSystem.play(SelectingSoundUrl, 0.2);
   }
+  
+  onKey(event: KeyboardEvent){
+    if(!this.props.isOpen){
+      return;
+    }
+
+
+    switch (event.key){
+      case 'Enter':
+        break;
+
+      case 'ArrowUp':
+        break;
+
+      case 'ArrowDown':
+        break;
+    }
+  }
+
+  componentDidMount() {
+		document.addEventListener('keydown', this.onKey.bind(this));
+  } 
+  
+  componentWillUnmount() {
+		document.removeEventListener('keydown', this.onKey.bind(this));
+  }
 
   onClickClose(){
     Shop.playSoundSelect();

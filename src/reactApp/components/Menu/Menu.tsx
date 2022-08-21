@@ -71,15 +71,16 @@ export class Menu extends React.Component<Props, IState> {
       return;
     }
 
+    const menu = this.getItemsMenu();
+
     switch (event.key){
       case 'Enter':
         if(!this.props.isDisplayButtonContinueGame){
           this.onClickNewGame();
         }
         else{
-          if(this.state.hoverItem >= 0 && this.state.hoverItem < this.countButtons){
-            let menu = this.getItemsMenu();
-            let hoverItemMenu = menu[this.state.hoverItem];
+          if(this.state.hoverItem >= 0 && this.state.hoverItem < menu.length){
+            const hoverItemMenu = menu[this.state.hoverItem];
             hoverItemMenu.props.onClick();
             this.setState({ hoverItem: -1 });
           }
@@ -87,25 +88,20 @@ export class Menu extends React.Component<Props, IState> {
         break;
 
       case 'ArrowUp':
-        let newValue1 =  this.state.hoverItem <= 0 
-          ? this.countButtons - 1 
+        const newValue1 =  this.state.hoverItem <= 0 
+          ? menu.length - 1 
           : this.state.hoverItem - 1;
 
         this.setState({ hoverItem: newValue1 });
         break;
 
       case 'ArrowDown':
-        let newValue2 =  this.state.hoverItem >= this.countButtons - 1
+        const newValue2 =  this.state.hoverItem >= menu.length - 1
           ? 0  
           : this.state.hoverItem + 1;
         this.setState({ hoverItem: newValue2 });
         break;
     }
-  }
-
-  get countButtons(): number{
-    let countButtons = 1 + +this.props.isDisplayButtonContinueGame + +this.props.isDisplayNewWaveButton + +this.props.isDisplayButtonShop;
-    return countButtons;
   }
 
   componentDidMount() {
@@ -154,24 +150,59 @@ export class Menu extends React.Component<Props, IState> {
   }
 
   onMouseEnterInInsideButtons(event: React.MouseEvent<HTMLButtonElement, MouseEvent>){
-    let element: HTMLButtonElement = event.target as HTMLButtonElement;
-    let index: number = parseInt(element.getAttribute('data-key') || '');
+    const element: HTMLButtonElement = event.target as HTMLButtonElement;
+    const index: number = parseInt(element.getAttribute('data-key') || '');
     this.setState({ hoverItem: index });
   }
 
   getItemsMenu(){
     let i = 0;
-    let itemsMenu = [
-      <button key={i} data-key={i} className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} onClick={() => this.onClickNewGame()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Новая игра</button>
+    const itemsMenu = [
+      <button 
+        key={i} 
+        data-key={i} 
+        className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} 
+        onClick={() => this.onClickNewGame()} 
+        onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+      >
+        Новая игра
+      </button>
     ];
+
     if(this.props.isDisplayButtonContinueGame){
-      itemsMenu.push(<button key={i} data-key={i} className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} onClick={() => this.onClickContinue()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Продолжить</button>);
+      itemsMenu.push(<button 
+        key={i} 
+        data-key={i} 
+        className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} 
+        onClick={() => this.onClickContinue()} 
+        onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        >
+          Продолжить
+        </button>);
     }
+
     if(this.props.isDisplayNewWaveButton){
-      itemsMenu.push(<button key={i} data-key={i} className={"menu__button menu__button-new-wave " + (this.state.hoverItem == i++ ? 'menu__button--hover menu__button-new-wave--hover' : '')} onClick={() => this.onClickStartNewWave()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Новая волна</button>);
+      itemsMenu.push(<button 
+        key={i} 
+        data-key={i} 
+        className={"menu__button menu__button-new-wave " + (this.state.hoverItem == i++ ? 'menu__button--hover menu__button-new-wave--hover' : '')} 
+        onClick={() => this.onClickStartNewWave()} 
+        onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        >
+          Новая волна
+        </button>);
     }
+
     if(this.props.isDisplayButtonShop){
-      itemsMenu.push(<button key={i} data-key={i} className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} onClick={() => this.onClickShopOpen()} onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}>Магазин</button>);
+      itemsMenu.push(<button 
+        key={i} 
+        data-key={i} 
+        className={"menu__button " + (this.state.hoverItem == i++ ? 'menu__button--hover' : '')} 
+        onClick={() => this.onClickShopOpen()} 
+        onMouseEnter={(e) => this.onMouseEnterInInsideButtons(e)}
+        >
+          Магазин
+        </button>);
     }
 
     return itemsMenu;
