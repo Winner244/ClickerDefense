@@ -2,6 +2,7 @@ import {Draw} from '../gameSystems/Draw';
 import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
 import InfoItem from '../../models/InfoItem';
+import Animation from '../../models/Animation';
 import {Gamer} from './Gamer';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
@@ -53,9 +54,7 @@ export class Building extends ShopItem{
 	protected _upgradeTimeStart: number; //время начала апгрейда
 	
 	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
-	static readonly upgradeAnimation: HTMLImageElement = new Image(); //анимация апгрейда
-	static readonly upgradeAnimationFrames = 90; //количество кадров анимации
-	static readonly upgradeAnimationDuration = 3000; //время полной анимации в миллисекундах
+	static readonly upgradeAnimation: Animation = new Animation(90, 3000); //анимация апгрейда
 
 	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки в миллисекундах
 	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
@@ -124,7 +123,7 @@ export class Building extends ShopItem{
 
 	static init(isLoadImage: boolean = true): void{
 		Building.repairImage.src = HammerImage;
-		Building.upgradeAnimation.src = UpgradeAnimation;
+		Building.upgradeAnimation.image.src = UpgradeAnimation;
 	}
 
 
@@ -218,16 +217,7 @@ export class Building extends ShopItem{
 		let y = this.y;
 
 		if(this.isDisplayedUpgradeWindow){
-			let frame = isGameOver ? 0 : Math.floor((Date.now() - this._upgradeTimeStart) % Building.upgradeAnimationDuration / (Building.upgradeAnimationDuration / Building.upgradeAnimationFrames));
-			Draw.ctx.drawImage(Building.upgradeAnimation, 
-				Building.upgradeAnimation.width / Building.upgradeAnimationFrames * frame, //crop from x
-				0, //crop from y
-				Building.upgradeAnimation.width / Building.upgradeAnimationFrames, //crop by width
-				Building.upgradeAnimation.height,    //crop by height
-				x - this.width / 2, //x
-				y - this.height / 2,  //y
-				this.width * 2, //displayed width 
-				this.height * 2); //displayed height 
+			Building.upgradeAnimation.draw(isGameOver, x - this.width / 2, y - this.height / 2, this.width * 2, this.height * 2)
 			Draw.ctx.filter = 'brightness(1.7)';
 		}
 
