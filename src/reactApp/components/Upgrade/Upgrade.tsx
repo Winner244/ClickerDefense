@@ -55,6 +55,23 @@ export class Upgrade extends React.Component<Props, {}> {
     Upgrade.hide();
   }
 
+  componentDidMount(){
+    document.addEventListener('mousemove', this.onMouseMove.bind(this));
+  }
+
+  onMouseMove(e: MouseEvent){
+    if(e.target instanceof Element){
+      const element: Element = e.target;
+      if(element.classList.contains('upgrade__title') || element.classList.contains('upgrade__body')){
+        console.log('onMouseMove element');
+      }
+    }
+  }
+
+  componentWillUnmount(){
+    document.removeEventListener('mousemove', this.onMouseMove.bind(this));
+  }
+
   render() {
     if(!this.props.isOpen || !this.props.selectedBuilding){
       return null;
