@@ -36,10 +36,10 @@ export class ImageHandler {
 	}
 
 	private onabort(e: any){
-		console.log('onabort', e);
+		console.error('onabort', e);
 	}
 
 	private onerror(e: any){
-		console.log('onerror', e);
+		console.error('onerror', e);
 	}
 }

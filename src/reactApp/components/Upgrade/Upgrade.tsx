@@ -24,6 +24,12 @@ type Props =
 
 export class Upgrade extends React.Component<Props, {}> {
 
+  static isMouseDown : boolean = false;
+  static mouseDownOffsetX : number = 0;
+  static mouseDownOffsetY : number = 0;
+  static offsetX : number = 0;
+  static offsetY : number = 0;
+
   static show(building: Building): void{
     const oldBuilding = App.Store.getState().upgrade?.selectedBuilding;
     if(oldBuilding){
@@ -57,19 +63,56 @@ export class Upgrade extends React.Component<Props, {}> {
 
   componentDidMount(){
     document.addEventListener('mousemove', this.onMouseMove.bind(this));
+    document.addEventListener('mousedown', this.onMouseDown.bind(this));
+    document.addEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
   onMouseMove(e: MouseEvent){
+    if(Upgrade.isMouseDown){
+      //without change state, because we should clear changes after closing this popup
+      const popup = document.getElementById('upgrade');
+      if(popup){
+        popup.style.left = Upgrade.offsetX + (e.pageX - Upgrade.mouseDownOffsetX) + 'px';
+        popup.style.top = Upgrade.offsetY + (e.pageY - Upgrade.mouseDownOffsetY) + 'px';
+      }
+    }
+  }
+
+  onMouseDown(e: MouseEvent){
     if(e.target instanceof Element){
       const element: Element = e.target;
       if(element.classList.contains('upgrade__title') || element.classList.contains('upgrade__body')){
-        console.log('onMouseMove element');
+        Upgrade.isMouseDown = true;
+        Upgrade.mouseDownOffsetX = e.pageX;
+        Upgrade.mouseDownOffsetY = e.pageY;
+
+        const popup = document.getElementById('upgrade');
+        if(popup){
+          const style = getComputedStyle(popup);
+          Upgrade.offsetX = parseInt(style.left);
+          Upgrade.offsetY = parseInt(style.top);
+        }
+      }
+    }
+  }
+
+  onMouseUp(e: MouseEvent){
+    if(e.target instanceof Element){
+      const element: Element = e.target;
+      if(element.classList.contains('upgrade__title') || element.classList.contains('upgrade__body')){
+        Upgrade.isMouseDown = false;
+        Upgrade.mouseDownOffsetX = 0
+        Upgrade.mouseDownOffsetY = 0;
+        Upgrade.offsetX = 0;
+        Upgrade.offsetY = 0;
       }
     }
   }
 
   componentWillUnmount(){
     document.removeEventListener('mousemove', this.onMouseMove.bind(this));
+    document.removeEventListener('mousedown', this.onMouseDown.bind(this));
+    document.removeEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
   render() {
