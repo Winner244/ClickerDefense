@@ -140,7 +140,7 @@ export class Game {
 		Mouse.isClick = false;
 	}
 
-	private static drawAll(millisecondsFromStart: number) : void{
+	private static drawAll(millisecondsFromStart: number, isPausedMode: boolean = false) : void{
 		Draw.clear(); //очищаем холст
 		Draw.drawBlackout(); //затемняем фон
 	
@@ -164,6 +164,11 @@ export class Game {
 	
 		if(Game.isGameOver && Buildings.flyEarth.y <= -FlyEarth.height){
 			Draw.drawGameOver();
+		}
+
+		if(isPausedMode){
+			Draw.drawBlackout(); //затемняем фон
+			Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 		}
 	
 		Game.lastDrawTime = millisecondsFromStart;
@@ -256,8 +261,7 @@ export class Game {
 		Game.animationId = 0;
 		Game.isGameRun = false;
 		Menu.show();
-		Game.drawAll(0);
-		Draw.drawBlackout();
+		Game.drawAll(0, true);
 	}
 
 	/** Продолжить игру */
