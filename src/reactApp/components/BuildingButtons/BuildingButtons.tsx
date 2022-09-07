@@ -54,9 +54,12 @@ export class BuildingButtons extends React.Component<Props, IState> {
     repairCost: number,
     building: Building): void
   {
-    App.Store.dispatch(BuildingButtonsStore.actionCreators.open(x, y, 
-        width, height, 
-        isDisplayRepairButton, isDisplayUpgradeButton, repairCost, building));
+    const store = App.Store.getState().buildingButtons;
+    if(store && (store.x != x || store.y != y)){
+      App.Store.dispatch(BuildingButtonsStore.actionCreators.open(x, y, 
+          width, height, 
+          isDisplayRepairButton, isDisplayUpgradeButton, repairCost, building));
+    }
   }
 
   static hide(): void{

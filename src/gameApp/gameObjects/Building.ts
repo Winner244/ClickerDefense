@@ -44,8 +44,6 @@ export class Building extends ShopItem{
 	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 	
-	protected _isDrawButtons: boolean; //нужно ли сейчас отрисовывать кнопки?
-
 	protected _isDisplayRepairAnimation: boolean; //отображается ли сейчас анимация починки?
 	protected _repairAnimationStart: number; //время начала отображения анимации починки
 	protected _repairAnimationAngle: number; //угол поворота картинки в анимации
@@ -104,7 +102,6 @@ export class Building extends ShopItem{
 		this._impulseForceDecreasing = 1;
 		this._impulsePharosForceDecreasing = 5;
 
-		this._isDrawButtons = false;
 		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
 		this._repairAnimationStart = this._repairAnimationAngle = 0;
 
@@ -167,23 +164,13 @@ export class Building extends ShopItem{
 		if(isWaveEnded && isMouseIn){
 			let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
 			if(isDisplayRepairButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
-				if(!this._isDrawButtons){
-					this._isDrawButtons = true;
-	
-					let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
-					let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
-					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
-					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
-					let repairPrice = this.getRepairPrice();
-					BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, repairPrice, this);
-				}
+				let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+				let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+				let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+				let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+				let repairPrice = this.getRepairPrice();
+				BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, repairPrice, this);
 			}
-			else{
-				this._isDrawButtons = false;
-			}
-		}
-		else{
-			this._isDrawButtons = false;
 		}
 		
 		return false;
