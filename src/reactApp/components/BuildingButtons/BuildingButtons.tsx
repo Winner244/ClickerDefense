@@ -70,6 +70,27 @@ export class BuildingButtons extends React.Component<Props, IState> {
 		AudioSystem.play(SelectingSoundUrl, 0.2);
   }
 
+  static isEnterMouse = false;
+
+  componentDidUpdate(){
+    const wrapper = document.getElementById('building-buttons__wrapper');
+    if(wrapper){
+      wrapper.removeEventListener('mouseenter', this.onMouseEnter);
+      wrapper.removeEventListener('mouseleave', this.onMouseOut);
+
+      wrapper.addEventListener('mouseenter', this.onMouseEnter);
+      wrapper.addEventListener('mouseleave', this.onMouseOut);
+    }
+  }
+
+  onMouseEnter(e: MouseEvent){
+    BuildingButtons.isEnterMouse = true;
+  }
+
+  onMouseOut(e: MouseEvent){
+    BuildingButtons.isEnterMouse = false;
+  }
+
   onClickRepair(){
     if(this.props.building){
       let isRepaired = this.props.building.repair();
@@ -114,7 +135,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
 
     return (
       <div className="building-buttons noselect" style={mainStyles}>
-        <div className='building-buttons__wrapper' style={wrapperStyles}>
+        <div className='building-buttons__wrapper' style={wrapperStyles} id='building-buttons__wrapper'>
           {this.state.isDisplayRepairButton 
             ? <div 
                   className={'building-buttons__button ' + (isCanBeRepaired ? "" : "building-buttons__button--disabled")}

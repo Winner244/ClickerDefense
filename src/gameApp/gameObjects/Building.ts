@@ -164,12 +164,14 @@ export class Building extends ShopItem{
 		if(isWaveEnded && isMouseIn){
 			let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
 			if(isDisplayRepairButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
-				let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
-				let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
-				let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
-				let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
-				let repairPrice = this.getRepairPrice();
-				BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, repairPrice, this);
+				if(!BuildingButtons.isEnterMouse){
+					let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let repairPrice = this.getRepairPrice();
+					BuildingButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, repairPrice, this);
+				}
 			}
 		}
 		
