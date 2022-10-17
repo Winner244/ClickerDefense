@@ -7,7 +7,8 @@ import Animation from '../../models/Animation';
 import {Draw} from './Draw';
 
 import {Building} from '../gameObjects/Building';
-import { Monster } from '../gameObjects/Monster';
+import {Monster} from '../gameObjects/Monster';
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
 
@@ -53,6 +54,7 @@ export class Buildings{
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
 		let isProcessed = false;
 		let buildings = this.all.slice().reverse();
+		let isAnyMouseIn = false;
 		for(var i = 0; i < buildings.length; i++){
 			let building = buildings[i];
 			let isMouseIn = 
@@ -60,11 +62,16 @@ export class Buildings{
 				mouseX < building.x + building.width - building.reduceHover &&
 				mouseY > building.y + building.reduceHover && 
 				mouseY < building.y + building.height - building.reduceHover;
+			isAnyMouseIn = isAnyMouseIn || isMouseIn;
 			
 			isProcessed = building.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn);
 			if(isProcessed){
 				break;
 			}
+		}
+
+		if(!isAnyMouseIn){
+			BuildingButtons.isEnterMouse = false;
 		}
 
 		return isProcessed;

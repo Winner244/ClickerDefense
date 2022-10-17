@@ -74,6 +74,11 @@
 
 		&-value{
 			padding-left: 5px;
+			display: flex;
+
+			& > div {
+				margin: auto 0;
+			}
 		}
 	}
 
