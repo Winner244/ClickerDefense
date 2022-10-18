@@ -60,6 +60,12 @@
 		box-shadow: 0 0 125px #ff6a00;
 	}
 
+	&__parameters-box {
+		& > li:nth-child(2n - 1){
+			background-color: rgba(0, 0, 0, 0.1);
+		}
+	}
+
 	&__parameter{
 		display: flex;
 		flex-direction: row;

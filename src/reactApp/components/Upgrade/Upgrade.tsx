@@ -131,7 +131,7 @@ export class Upgrade extends React.Component<Props, {}> {
               <div className="upgrade__main-box">
                 <div className="upgrade__info">
                   <img className="upgrade__image nodrag" src={this.props.selectedBuilding.image.src} />
-                  <ul>
+                  <ul className="upgrade__parameters-box">
                     {this.props.selectedBuilding.infoItems.map((infoItem, i) => (
                         <li className="upgrade__parameter" key={i}>
                           <div className="upgrade__parameter-name">{infoItem.label}</div>: 

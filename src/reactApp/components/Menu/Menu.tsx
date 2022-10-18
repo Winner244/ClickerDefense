@@ -66,6 +66,12 @@ export class Menu extends React.Component<Props, IState> {
     AudioSystem.play(SelectingSoundUrl, 0.2);
   }
 
+  componentWillUpdate(nextProps : Props, nextState : IState){
+    if(nextProps.isOpen != this.props.isOpen && this.state.hoverItem > -1){
+      this.setState({ hoverItem: -1 });
+    }
+  }
+
   onKey(event: KeyboardEvent){
     if(!this.props.isOpen){
       return;
