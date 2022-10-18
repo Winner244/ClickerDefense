@@ -4,11 +4,15 @@ import {Draw} from '../gameSystems/Draw';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
+import fireArrowImage from '../../assets/img/buildings/tower/fireArrowIcon.png';  
+import fireImage from '../../assets/img/icons/fireIcon.png';  
 
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
 import { Helper } from '../helpers/Helper';
 import InfoItem from '../../models/InfoItem';
+import Improvement from '../../models/Improvement';
+import ImprovementInfoItem from '../../models/ImprovementInfoItem';
 
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -22,8 +26,12 @@ export class Tower extends Building{
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
 
+
+	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
+
 	private rechargeLeft: number = 0; //сколько осталось времени перезарядки
 	private arrows: MovingObject[] = [];
+	private bowmans: number = 1; //кол-во лучников
 
 	constructor(x: number) {
 		super(x, 
@@ -42,6 +50,9 @@ export class Tower extends Building{
 		this.infoItems.push(new InfoItem('Радиус атаки', () => Tower.radiusAttack));
 		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек'));
 		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed));
+		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans));
+
+		this.improvements.push(Tower.improvementFireArrows);
 
 		Tower.init(true);
 	}
@@ -50,7 +61,11 @@ export class Tower extends Building{
 		if(isLoadImage){
 			this.image.src = towerImage; 
 			this.imageArrow.src = arrowImage; 
+			this.improvementFireArrows.image.src = fireArrowImage;
 		}
+		this.improvementFireArrows.infoItems = [
+			new ImprovementInfoItem('+', fireImage)
+		];
 	}
 
 	get centerY(){
@@ -80,7 +95,7 @@ export class Tower extends Building{
 					let dy = (y1 - y2) / (distance / Tower.arrowSpeed);
 
 					this.arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-					this.rechargeLeft = Tower.rechargeTime;
+					this.rechargeLeft = Tower.rechargeTime / this.bowmans;
 				}
 			}
 		}

@@ -3,6 +3,7 @@ import {Monster} from './Monster';
 import ShopItem from '../../models/ShopItem';
 import InfoItem from '../../models/InfoItem';
 import Animation from '../../models/Animation';
+import Improvement from '../../models/Improvement';
 import {Gamer} from './Gamer';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
@@ -16,6 +17,7 @@ import { Labels } from '../gameSystems/Labels';
 
 import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
+import HealthIcon from '../../assets/img/icons/healthIcon.png';
 
 export class Building extends ShopItem{
 	animation: Animation;
@@ -36,6 +38,7 @@ export class Building extends ShopItem{
 	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
 
 	infoItems: InfoItem[];  //информация отображаемая в окне строения
+	improvements: Improvement[]; //улучшения здания
 
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
@@ -115,8 +118,10 @@ export class Building extends ShopItem{
 					: '';
 				value +=  this.healthMax;
 				return value;
-			})
+			}, HealthIcon)
 		];
+
+		this.improvements = [];
 	}
 
 	static init(isLoadImage: boolean = true): void{
