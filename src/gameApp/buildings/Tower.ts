@@ -4,8 +4,9 @@ import {Draw} from '../gameSystems/Draw';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
-import fireArrowImage from '../../assets/img/buildings/tower/fireArrowIcon.png';  
-import fireImage from '../../assets/img/icons/fireIcon.png';  
+import fireArrowImage from '../../assets/img/buildings/tower/fireArrow.png';  
+import fireIcon from '../../assets/img/icons/fireIcon.png';  
+import swordIcon from '../../assets/img/icons/sword.png';  
 
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
@@ -46,7 +47,7 @@ export class Tower extends Building{
 			true, true);
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
-		this.infoItems.push(new InfoItem('Урон', () => Tower.damage));
+		this.infoItems.push(new InfoItem('Урон', () => Tower.damage, swordIcon));
 		this.infoItems.push(new InfoItem('Радиус атаки', () => Tower.radiusAttack));
 		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек'));
 		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed));
@@ -64,7 +65,7 @@ export class Tower extends Building{
 			this.improvementFireArrows.image.src = fireArrowImage;
 		}
 		this.improvementFireArrows.infoItems = [
-			new ImprovementInfoItem('+', fireImage)
+			new ImprovementInfoItem('+', fireIcon)
 		];
 	}
 
