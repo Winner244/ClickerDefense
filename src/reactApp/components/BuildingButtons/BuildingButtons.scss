@@ -13,11 +13,14 @@
         justify-content: space-evenly;
     }
 
-    &__button{
+    &__button{ 
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
         position: relative;
         width: calc(33% - 10px);
         max-width: 50px;
-        padding: 5px;
+        padding: 0 5px;
         background-color: rgb(212, 183, 30);
         border: 1px solid #c10000;
         box-shadow: 0 0 3px rgb(255, 0, 0), inset 0 0 15px 1px #ff3b3b;
