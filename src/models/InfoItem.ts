@@ -1,9 +1,20 @@
 export default class InfoItem{
-	label: string; //название информации
+	label: string; //название характеристики
 	icon: HTMLImageElement|null; //иконка характеристики 
 	getValue: () => string|number; //функция получения значения
 
-	constructor(label: string, getValue: () => string|number, iconSrc: string = ''){
+	improvePoints: number|null; //кол-во пунктов улучшения характеристики
+	priceToImprove: number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
+	private _improve: (improvePoints: number, priceToImprove: number) => boolean; //функция повышения характеристики
+
+	constructor(
+		label: string, 
+		getValue: () => string|number, 
+		iconSrc: string = '', 
+		improvePoints: number|null, 
+		priceToImprove: number|null, 
+		improve: (improvePoints: number, priceToImprove: number) => boolean)
+	{
 		this.label = label;
 		this.getValue = getValue;
 
@@ -14,5 +25,17 @@ export default class InfoItem{
 		else{
 			this.icon = null;
 		}
+		
+		this.improvePoints = improvePoints;
+		this.priceToImprove = priceToImprove;
+		this._improve = improve;
+	}
+
+	improve(): boolean {
+		if(this.improvePoints && this.priceToImprove){
+			return this._improve(this.improvePoints, this.priceToImprove);
+		}
+
+		return false;
 	}
 }

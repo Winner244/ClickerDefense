@@ -67,6 +67,7 @@
 	}
 
 	&__parameter{
+		position: relative;
 		display: flex;
 		flex-direction: row;
 
@@ -90,6 +91,16 @@
 			& > div {
 				margin: auto 0;
 			}
+		}
+
+		&-button{
+			width: 15px;
+			height: 15px;
+		}
+
+		&-buttons-box{
+			position: absolute;
+			right: 0;
 		}
 	}
 

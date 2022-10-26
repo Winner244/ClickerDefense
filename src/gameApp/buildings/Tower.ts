@@ -16,6 +16,7 @@ import { Helper } from '../helpers/Helper';
 import InfoItem from '../../models/InfoItem';
 import Improvement from '../../models/Improvement';
 import ImprovementInfoItem from '../../models/ImprovementInfoItem';
+import { Gamer } from '../gameObjects/Gamer';
 
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -24,17 +25,17 @@ export class Tower extends Building{
 
 	static readonly radiusAttack: number = 400; //радиус атаки
 	static readonly rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
-	static readonly damage: number = 1; //урон от 1 атаки
 
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
-
+	static readonly price: number = 50; //цена здания
 
 	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
 
 	private rechargeLeft: number = 0; //сколько осталось времени перезарядки
 	private arrows: MovingObject[] = [];
 	private bowmans: number = 1; //кол-во лучников
+	private damage: number = 1; //урон от одной атаки
 
 	constructor(x: number) {
 		super(x, 
@@ -44,16 +45,18 @@ export class Tower extends Building{
 			'Сторожевая башня', 
 			Tower.image, 0, 0, Tower.width, Tower.height, 15, 
 			100, //health max
-			50, // price
+			Tower.price, // price
 			'Стреляет по монстрам в радиусе действия.',
 			true, true);
+
+		this.damage = 1;
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
-		this.infoItems.push(new InfoItem('Урон', () => Tower.damage, swordIcon));
-		this.infoItems.push(new InfoItem('Радиус атаки', () => Tower.radiusAttack));
-		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
-		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed));
-		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
+		this.infoItems.push(new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
+		this.infoItems.push(new InfoItem('Радиус атаки', () => Tower.radiusAttack, '', null, null, () => false));
+		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon, null, null, () => false));
+		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed, '', null, null, () => false));
+		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans, bowmanIcon, null, null, () => false));
 
 		this.improvements.push(Tower.improvementFireArrows);
 
@@ -73,6 +76,16 @@ export class Tower extends Building{
 
 	get centerY(){
 		return this.y + this.height / 4;
+	}
+
+	improveDamage(improvePoints: number, priceToImprove: number) : boolean {
+		if(Gamer.coins >= priceToImprove){
+			Gamer.coins -= priceToImprove
+			this.damage += improvePoints;
+			return true;
+		}
+
+		return false;
 	}
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number)
@@ -131,7 +144,7 @@ export class Tower extends Building{
 					arrowCenterX > monster.x && arrowCenterX < monster.x + monster.width && 
 					arrowCenterY > monster.y && arrowCenterY < monster.y + monster.animation.image.height);
 				if(monsterGoal){
-					monsterGoal.health -= Tower.damage;
+					monsterGoal.health -= this.damage;
 					this.arrows.splice(i, 1);
 					i--;
 				}

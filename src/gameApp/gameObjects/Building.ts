@@ -60,6 +60,8 @@ export class Building extends ShopItem{
 	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки в миллисекундах
 	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
 
+	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
+
 	constructor(
 		x: number, 
 		y: number, 
@@ -112,13 +114,13 @@ export class Building extends ShopItem{
 		this._upgradeTimeStart = 0;
 
 		this.infoItems = [
-			new InfoItem('Здоровье', () => {
+			new InfoItem(Building.improveHealthLabel, () => {
 				let value = this.health != this.healthMax 
 					? `${this.health} из ` 
 					: '';
 				value +=  this.healthMax;
 				return value;
-			}, HealthIcon)
+			}, HealthIcon, healthMax, price, this.improveHealth.bind(this))
 		];
 
 		this.improvements = [];
@@ -163,6 +165,17 @@ export class Building extends ShopItem{
 	}
 	get isDisplayedUpgradeWindow(): boolean{
 		return this._isDisplayedUpgradeWindow;
+	}
+
+	improveHealth(improvePoints: number, priceToImprove: number) : boolean {
+		if(Gamer.coins >= priceToImprove){
+			Gamer.coins -= priceToImprove
+			this.health += improvePoints;
+			this.healthMax += improvePoints;
+			return true;
+		}
+
+		return false;
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {

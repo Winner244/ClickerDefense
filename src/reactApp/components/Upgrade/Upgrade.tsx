@@ -141,7 +141,17 @@ export class Upgrade extends React.Component<Props, {}> {
                               {infoItem.label}
                           </div>: 
                           <div className="upgrade__parameter-value">
-                            <div>{infoItem.getValue()}</div>
+                            <div>
+                              {infoItem.getValue()}
+                            </div>
+                            <div className='upgrade__parameter-buttons-box'>
+                              {infoItem.label == Building.improveHealthLabel 
+                                ? <button className='upgrade__parameter-button upgrade__parameter-button-repair'>r</button>
+                                : null}
+                              {infoItem.improvePoints && infoItem.priceToImprove 
+                                ? <button className='upgrade__parameter-button upgrade__parameter-button-improve'>+</button>
+                                : null}
+                            </div>
                           </div>
                         </li>
                     ))}
