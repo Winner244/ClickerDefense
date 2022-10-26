@@ -55,7 +55,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
     building: Building): void
   {
     const store = App.Store.getState().buildingButtons;
-    if(store && (store.x != x || store.y != y)){
+    if(store && (store.x != x || store.y != y || store.isDisplayUpgradeButton != isDisplayUpgradeButton)){
       App.Store.dispatch(BuildingButtonsStore.actionCreators.open(x, y, 
           width, height, 
           isDisplayRepairButton, isDisplayUpgradeButton, repairCost, building));
@@ -151,7 +151,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
 
           {this.props.isDisplayUpgradeButton 
             ? <div className='building-buttons__button' onClick={() => this.onClickUpgrade()}>
-              <img className='building-buttons__button-image nodrag' src={UpgradeImage}/>
+                <img className='building-buttons__button-image nodrag' src={UpgradeImage}/>
               </div>
             : null}
         </div>
