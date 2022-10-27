@@ -121,4 +121,11 @@
 		background-color: saddlebrown;
     	border: 1px solid #702900;
 	}
+
+	&__label{
+		position: absolute;
+		font-size: 14px;
+		font-family: Calibri;
+		color: rgb(255, 255, 0);
+	}
 }

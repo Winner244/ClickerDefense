@@ -33,6 +33,9 @@ export class Upgrade extends React.Component<Props, {}> {
   static offsetX : number = 0;
   static offsetY : number = 0;
 
+  coinLabel: React.RefObject<HTMLDivElement> = React.createRef();
+  popup: React.RefObject<HTMLDivElement> = React.createRef();
+
   static show(building: Building): void{
     const oldBuilding = App.Store.getState().upgrade?.selectedBuilding;
     if(oldBuilding){
@@ -123,9 +126,38 @@ export class Upgrade extends React.Component<Props, {}> {
     if(result){
       this.forceUpdate();
 			Labels.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
+      this.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
       AudioSystem.play(ImproveSoundUrl, 0.2);
       //set яркий style with transition затуханием цвета
       //эмуляция поднимающегося Label на основе div с прозрачным фоном
+    }
+  }
+
+  createCoinLabel(x: number, y: number, text: string, lifeTimeMilliseconds: number){
+    if(this.coinLabel.current && this.popup.current){
+      y -= 10;
+      x += 10;
+      this.coinLabel.current.style.display = 'block';
+      this.coinLabel.current.style.left = x - this.popup.current.offsetLeft + 'px';
+      this.coinLabel.current.style.top = y - this.popup.current.offsetTop + 'px';
+      this.coinLabel.current.innerHTML = text;
+
+      let timeUpdate = Date.now();
+      const interval = setInterval(() => {
+        if(this.coinLabel.current && lifeTimeMilliseconds > 0){
+          const difTime = Date.now() - timeUpdate;
+          timeUpdate = Date.now();
+          lifeTimeMilliseconds -= difTime;
+
+          this.coinLabel.current.style.top = (parseFloat(this.coinLabel.current.style.top.replace('px', '')) - difTime * Labels.speedOfUppingToTop / 1000) + 'px'; 
+        }
+        else{
+          clearInterval(interval);
+          if(this.coinLabel.current){
+            this.coinLabel.current.style.display = 'none';
+          }
+        }
+      }, 10);
     }
   }
 
@@ -142,7 +174,7 @@ export class Upgrade extends React.Component<Props, {}> {
     }
 
     return (
-      <div className="upgrade noselect" id="upgrade">
+      <div className="upgrade noselect" id="upgrade" ref={this.popup}>
         <div className="upgrade__body">
             <div className="upgrade__title">{this.props.selectedBuilding.name}</div>
             <div className="upgrade__close" onClick={() => this.onClickClose()}>
@@ -184,6 +216,8 @@ export class Upgrade extends React.Component<Props, {}> {
               <div className="upgrade__upgraded-box"></div>
             </div>
         </div>
+
+        <div className='upgrade__label' style={{display:'none'}} ref={this.coinLabel}></div>
     </div>
     );
   }
