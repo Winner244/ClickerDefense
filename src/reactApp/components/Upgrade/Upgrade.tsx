@@ -11,7 +11,10 @@ import './Upgrade.scss';
 import { Building } from '../../../gameApp/gameObjects/Building';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import ImproveSoundUrl from '../../../assets/sounds/buildings/placing.mp3'; 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+import InfoItem from '../../../models/InfoItem';
+import { Labels } from '../../../gameApp/gameSystems/Labels';
 
 interface Prop {
   isOpen?: boolean
@@ -115,6 +118,24 @@ export class Upgrade extends React.Component<Props, {}> {
     document.removeEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
+  improve(infoItem : InfoItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    const result = infoItem.improve();
+    if(result){
+      this.forceUpdate();
+			Labels.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
+      AudioSystem.play(ImproveSoundUrl, 0.2);
+      //set яркий style with transition затуханием цвета
+      //эмуляция поднимающегося Label на основе div с прозрачным фоном
+    }
+  }
+
+  repair(){
+    if(this.props.selectedBuilding) {
+      this.props.selectedBuilding?.repair();
+      this.forceUpdate();
+    }
+  }
+
   render() {
     if(!this.props.isOpen || !this.props.selectedBuilding){
       return null;
@@ -145,11 +166,11 @@ export class Upgrade extends React.Component<Props, {}> {
                               {infoItem.getValue()}
                             </div>
                             <div className='upgrade__parameter-buttons-box'>
-                              {infoItem.label == Building.improveHealthLabel 
-                                ? <button className='upgrade__parameter-button upgrade__parameter-button-repair'>r</button>
+                              {infoItem.label == Building.improveHealthLabel && this.props.selectedBuilding?.health != this.props.selectedBuilding?.healthMax
+                                ? <button className='upgrade__parameter-button upgrade__parameter-button-repair' onClick={() => this.repair()}>r</button>
                                 : null}
                               {infoItem.improvePoints && infoItem.priceToImprove 
-                                ? <button className='upgrade__parameter-button upgrade__parameter-button-improve'>+</button>
+                                ? <button className='upgrade__parameter-button upgrade__parameter-button-improve' onClick={(e) => this.improve(infoItem, e)}>+</button>
                                 : null}
                             </div>
                           </div>
