@@ -99,7 +99,7 @@
 			background-color: brown;
 			color: darkorange;
 			line-height: 1px;
-			padding-left: 2px;
+			padding-left: 1px;
 			margin-right: 2px;
 			border-radius: 3px;
 			border-width: 1px;
@@ -108,18 +108,32 @@
 				color: #fff700;
 				background-color: #ff0404;
 				cursor: pointer;
+
+				& > .upgrade__parameter-button-repair-image{
+					fill: #fff700;
+				}
 			}
 
 			&:active{
 				background-color: rgb(126, 28, 28);
 				color: #fff700;
 				cursor: pointer;
+
+				& > .upgrade__parameter-button-repair-image{
+					fill: #fff700;
+				}
 			}
 
 			&:disabled{
-				cursor: default;
+				cursor: not-allowed;
 				background-color: #b55a5a !important;
 				color: darkorange !important;
+			}
+
+			&-repair-image{
+				width: 10px;
+				fill: darkorange;
+				padding-left: 0;
 			}
 		}
 
