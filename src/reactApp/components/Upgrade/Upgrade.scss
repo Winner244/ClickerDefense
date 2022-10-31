@@ -96,9 +96,30 @@
 		&-button{
 			width: 15px;
 			height: 15px;
+			background-color: brown;
+			color: darkorange;
+			line-height: 1px;
+			padding-left: 2px;
+			margin-right: 2px;
+			border-radius: 3px;
+			border-width: 1px;
 
-			&-repair{
-				margin-right: 2px;
+			&:hover{
+				color: #fff700;
+				background-color: #ff0404;
+				cursor: pointer;
+			}
+
+			&:active{
+				background-color: rgb(126, 28, 28);
+				color: #fff700;
+				cursor: pointer;
+			}
+
+			&:disabled{
+				cursor: default;
+				background-color: #b55a5a !important;
+				color: darkorange !important;
 			}
 		}
 

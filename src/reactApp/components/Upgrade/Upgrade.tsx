@@ -15,6 +15,7 @@ import ImproveSoundUrl from '../../../assets/sounds/buildings/placing.mp3';
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import InfoItem from '../../../models/InfoItem';
 import { Labels } from '../../../gameApp/gameSystems/Labels';
+import { Gamer } from '../../../gameApp/gameObjects/Gamer';
 
 interface Prop {
   isOpen?: boolean
@@ -129,7 +130,6 @@ export class Upgrade extends React.Component<Props, {}> {
       this.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
       AudioSystem.play(ImproveSoundUrl, 0.2);
       //set яркий style with transition затуханием цвета
-      //эмуляция поднимающегося Label на основе div с прозрачным фоном
     }
   }
 
@@ -199,10 +199,10 @@ export class Upgrade extends React.Component<Props, {}> {
                             </div>
                             <div className='upgrade__parameter-buttons-box'>
                               {infoItem.label == Building.improveHealthLabel && this.props.selectedBuilding?.health != this.props.selectedBuilding?.healthMax
-                                ? <button className='upgrade__parameter-button upgrade__parameter-button-repair' onClick={() => this.repair()}>r</button>
+                                ? <button className='upgrade__parameter-button upgrade__parameter-button-repair' disabled={this.props.selectedBuilding?.isCanBeRepaired() != true} onClick={() => this.repair()}>r</button>
                                 : null}
                               {infoItem.improvePoints && infoItem.priceToImprove 
-                                ? <button className='upgrade__parameter-button upgrade__parameter-button-improve' onClick={(e) => this.improve(infoItem, e)}>+</button>
+                                ? <button className='upgrade__parameter-button upgrade__parameter-button-improve' disabled={infoItem.priceToImprove > Gamer.coins} onClick={(e) => this.improve(infoItem, e)}>+</button>
                                 : null}
                             </div>
                           </div>
