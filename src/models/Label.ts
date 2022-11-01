@@ -1,6 +1,8 @@
 import { Draw } from "../gameApp/gameSystems/Draw";
+import { Helper } from "../gameApp/helpers/Helper";
 
 export class Label{
+	id: string;
 	x: number;
 	y: number;
 	text: string;
@@ -28,6 +30,7 @@ export class Label{
 		isDisplayBackground: boolean = false,
 		backgroundRed: number = 0, backgroundGreen: number = 0, backgroundBlue: number = 0)
 	{
+		this.id = Helper.generateUid();
 		this.x = x;
 		this.y = y;
 		this.text = text;

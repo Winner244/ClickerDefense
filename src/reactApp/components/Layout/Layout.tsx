@@ -5,6 +5,7 @@ import Shop from "../Shop/Shop";
 import BuildingButtons from "../BuildingButtons/BuildingButtons";
 import GameDisplay from "../GameDisplay/GameDisplay";
 import Upgrade from "../Upgrade/Upgrade";
+import CoinLabels from "../CoinLabels/CoinLabels";
 
 export interface Props {
     children?: React.ReactNode;
@@ -18,6 +19,7 @@ export default class Layout extends React.Component<Props, {}> {
             <Shop />
             <BuildingButtons />
             <Upgrade />
+            <CoinLabels />
             {this.props.children}
         </div>;
     }

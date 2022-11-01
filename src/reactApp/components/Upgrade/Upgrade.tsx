@@ -17,6 +17,7 @@ import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import InfoItem from '../../../models/InfoItem';
 import { Labels } from '../../../gameApp/gameSystems/Labels';
 import { Gamer } from '../../../gameApp/gameObjects/Gamer';
+import {CoinLabels} from '../CoinLabels/CoinLabels';
 
 interface Prop {
   isOpen?: boolean
@@ -127,38 +128,10 @@ export class Upgrade extends React.Component<Props, {}> {
     const result = infoItem.improve();
     if(result){
       this.forceUpdate();
-			Labels.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
-      this.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
+      Labels.createCoinLabel(e.clientX, e.clientY, '-' + infoItem.priceToImprove, 2000);
+      CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove || 0, 2000);
       AudioSystem.play(ImproveSoundUrl, 0.2);
-      //set яркий style with transition затуханием цвета
-    }
-  }
-
-  createCoinLabel(x: number, y: number, text: string, lifeTimeMilliseconds: number){
-    if(this.coinLabel.current && this.popup.current){
-      y -= 10;
-      x += 10;
-      this.coinLabel.current.style.display = 'block';
-      this.coinLabel.current.style.left = x - this.popup.current.offsetLeft + 'px';
-      this.coinLabel.current.style.top = y - this.popup.current.offsetTop + 'px';
-      this.coinLabel.current.innerHTML = text;
-
-      let timeUpdate = Date.now();
-      const interval = setInterval(() => {
-        if(this.coinLabel.current && lifeTimeMilliseconds > 0){
-          const difTime = Date.now() - timeUpdate;
-          timeUpdate = Date.now();
-          lifeTimeMilliseconds -= difTime;
-
-          this.coinLabel.current.style.top = (parseFloat(this.coinLabel.current.style.top.replace('px', '')) - difTime * Labels.speedOfUppingToTop / 1000) + 'px'; 
-        }
-        else{
-          clearInterval(interval);
-          if(this.coinLabel.current){
-            this.coinLabel.current.style.display = 'none';
-          }
-        }
-      }, 10);
+      //TODO: set яркий style with transition затуханием цвета
     }
   }
 
@@ -221,8 +194,6 @@ export class Upgrade extends React.Component<Props, {}> {
               <div className="upgrade__upgraded-box"></div>
             </div>
         </div>
-
-        <div className='upgrade__label' style={{display:'none'}} ref={this.coinLabel}></div>
     </div>
     );
   }
