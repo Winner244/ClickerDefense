@@ -21,7 +21,7 @@ CoinLabelsStore.CoinLabelsState
 
 export class CoinLabels extends React.Component<Props, {}> {
 
-  static add(x: number, y: number, number: number, lifeTimeMilliseconds): void{
+  static add(x: number, y: number, number: number, lifeTimeMilliseconds: number): void{
     y -= 10;
     x += 10;
     const item = new Label(x, y, '-' + number, 255, 255, 0, lifeTimeMilliseconds);
@@ -52,9 +52,9 @@ export class CoinLabels extends React.Component<Props, {}> {
 
     return (
       <div className="coin-labels noselect">
-        {this.props.items.forEach(item => {
-          <div className="coin-labels-label" style={{color: `rgb(${item.red},${item.green},${item.blue})`, left: item.x + 'px', top: item.y + 'px'}}>{item.text}</div>
-        })}
+        {this.props.items.map(item => 
+          <div key={item.id} className="coin-labels__label" style={{left: item.x + 'px', top: item.y + 'px'}}>{item.text}</div>
+        )}
       </div>
     );
   }
