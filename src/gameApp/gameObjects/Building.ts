@@ -116,7 +116,7 @@ export class Building extends ShopItem{
 		this.infoItems = [
 			new InfoItem(Building.improveHealthLabel, () => {
 				let value = this.health != this.healthMax 
-					? `${this.health}<span> из ${this.healthMax}</span>` 
+					? `${this.health.toFixed(0)}<span> из ${this.healthMax}</span>` 
 					: this.healthMax;
 				return value;
 			}, HealthIcon, healthMax, price, this.improveHealth.bind(this))
