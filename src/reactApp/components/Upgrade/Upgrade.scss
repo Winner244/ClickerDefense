@@ -71,7 +71,7 @@
 		display: flex;
 		flex-direction: row;
 
-		&-name, &-value{
+		&-name, &-value-box{
 			width: 50%;
 		}
 
@@ -84,12 +84,30 @@
 			margin-right: 4px;
 		}
 
-		&-value{
+		&-value-box{
 			padding-left: 5px;
 			display: flex;
 
 			& > div {
 				margin: auto 0;
+			}
+
+			&:hover .upgrade__parameter-value > span {
+				display: none;
+			}
+		}
+
+		&-price{
+			display: none; 
+			font-size: 10px;
+			color: #12a300;
+
+			&-image{
+				width: 8px;
+			}
+
+			&--red{
+				color: #e10000;
 			}
 		}
 
@@ -109,8 +127,12 @@
 				background-color: #ff0404;
 				cursor: pointer;
 
-				& > .upgrade__parameter-button-repair-image{
+				& > .upgrade__parameter-button--repair-image{
 					fill: #fff700;
+				}
+
+				& ~ *{
+					display: inline;
 				}
 			}
 
@@ -119,7 +141,7 @@
 				color: #fff700;
 				cursor: pointer;
 
-				& > .upgrade__parameter-button-repair-image{
+				& > .upgrade__parameter-button--repair-image{
 					fill: #fff700;
 				}
 			}
@@ -130,7 +152,7 @@
 				color: darkorange !important;
 			}
 
-			&-repair-image{
+			&--repair-image{
 				width: 10px;
 				fill: darkorange;
 				padding-left: 0;
@@ -140,6 +162,14 @@
 		&-buttons-box{
 			position: absolute;
 			right: 0;
+
+			&-group{
+				display: inline-block;
+
+				&:hover > span {
+					display: inline;
+				}
+			}
 		}
 	}
 
