@@ -40,6 +40,8 @@ export class Building extends ShopItem{
 	infoItems: InfoItem[];  //информация отображаемая в окне строения
 	improvements: Improvement[]; //улучшения здания
 
+	repairPricePerHealth: number; //сколько стоит 1 хп починить
+
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
@@ -112,6 +114,8 @@ export class Building extends ShopItem{
 
 		this._isDisplayedUpgradeWindow = false;
 		this._upgradeTimeStart = 0;
+
+		this.repairPricePerHealth = this.price / this.healthMax / Building.repairDiscount;
 
 		this.infoItems = [
 			new InfoItem(Building.improveHealthLabel, () => {
@@ -196,7 +200,7 @@ export class Building extends ShopItem{
 	}
 
 	getRepairPrice() : number {
-		return Math.ceil(this.price / Building.repairDiscount * ((this.healthMax - this.health) / this.healthMax));
+		return Math.ceil((this.healthMax - this.health) * this.repairPricePerHealth);
 	}
 
 	isCanBeRepaired() : boolean {

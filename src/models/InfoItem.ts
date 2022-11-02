@@ -1,4 +1,7 @@
+import { Helper } from "../gameApp/helpers/Helper";
+
 export default class InfoItem{
+	id: string; //guid
 	label: string; //название характеристики
 	icon: HTMLImageElement|null; //иконка характеристики 
 	getValue: () => string|number; //функция получения значения
@@ -15,6 +18,7 @@ export default class InfoItem{
 		priceToImprove: number|null, 
 		improve: (improvePoints: number, priceToImprove: number) => boolean)
 	{
+		this.id = Helper.generateUid();
 		this.label = label;
 		this.getValue = getValue;
 

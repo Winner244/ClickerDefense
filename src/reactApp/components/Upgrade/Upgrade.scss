@@ -171,6 +171,13 @@
 				}
 			}
 		}
+
+		&--green{
+			background-color: #12a300 !important;
+		}
+		&--transition{
+			transition: background-color 1s linear;
+		}
 	}
 
 	&__main-box{
