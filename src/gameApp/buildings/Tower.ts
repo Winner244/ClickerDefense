@@ -9,6 +9,7 @@ import fireIcon from '../../assets/img/icons/fireIcon.png';
 import swordIcon from '../../assets/img/icons/sword.png';  
 import bowmanIcon from '../../assets/img/icons/bow.png';  
 import rechargeIcon from '../../assets/img/icons/recharge.png';  
+import radiusIcon from '../../assets/img/icons/radius.png';  
 
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
@@ -53,7 +54,7 @@ export class Tower extends Building{
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
 		this.infoItems.push(new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
-		this.infoItems.push(new InfoItem('Радиус атаки', () => this.radiusAttack, '', 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.push(new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
 		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed, ''));
 		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans, bowmanIcon));

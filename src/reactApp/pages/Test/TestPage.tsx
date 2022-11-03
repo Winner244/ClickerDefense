@@ -364,6 +364,8 @@ class TestPage extends React.Component {
 
                 Buildings.all.push(new Barricade(1300));
                 Buildings.all.push(new Tower(1200));
+                Menu.displayShopButton();
+				Menu.displayNewWaveButton();
                 break;
 
 
