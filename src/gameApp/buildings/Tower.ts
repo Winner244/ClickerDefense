@@ -23,7 +23,6 @@ export class Tower extends Building{
 	static readonly width: number = 200 * 0.7;
 	static readonly height: number = 425 * 0.7;
 
-	static readonly radiusAttack: number = 400; //радиус атаки
 	static readonly rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
 
 	static readonly imageArrow: HTMLImageElement = new Image();
@@ -36,6 +35,8 @@ export class Tower extends Building{
 	private arrows: MovingObject[] = [];
 	private bowmans: number = 1; //кол-во лучников
 	private damage: number = 1; //урон от одной атаки
+	private radiusAttack: number = 400; //радиус атаки
+	private isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 
 	constructor(x: number) {
 		super(x, 
@@ -49,14 +50,13 @@ export class Tower extends Building{
 			'Стреляет по монстрам в радиусе действия.',
 			true, true);
 
-		this.damage = 1;
 		this._maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
 		this.infoItems.push(new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
-		this.infoItems.push(new InfoItem('Радиус атаки', () => Tower.radiusAttack, '', null, null, () => false));
-		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon, null, null, () => false));
-		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed, '', null, null, () => false));
-		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans, bowmanIcon, null, null, () => false));
+		this.infoItems.push(new InfoItem('Радиус атаки', () => this.radiusAttack, '', 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
+		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed, ''));
+		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
 
 		this.improvements.push(Tower.improvementFireArrows);
 
@@ -78,14 +78,20 @@ export class Tower extends Building{
 		return this.y + this.height / 4;
 	}
 
-	improveDamage(improvePoints: number, priceToImprove: number) : boolean {
-		if(Gamer.coins >= priceToImprove){
-			Gamer.coins -= priceToImprove
-			this.damage += improvePoints;
-			return true;
-		}
+	improveDamage(improvePoints: number) : void {
+		this.damage += improvePoints;
+	}
 
-		return false;
+	improveRadiusAttack(improvePoints: number) : void {
+		this.radiusAttack += improvePoints;
+	}
+
+	displayRadius(){
+		this.isDisplayRadius = true;
+	}
+
+	hideRadius(){
+		this.isDisplayRadius = false;
 	}
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number)
@@ -97,7 +103,7 @@ export class Tower extends Building{
 		}
 		else{
 			if(monsters.length){
-				var monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < Tower.radiusAttack);
+				var monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < this.radiusAttack);
 				let monsterGoal = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)])[0];
 				if(monsterGoal){ //в радиусе атаки
 					let x1 = this.centerX - Tower.imageArrow.width / 2;
@@ -166,9 +172,9 @@ export class Tower extends Building{
 		}
 
 		//display radius attack
-		if(isBuildingMode){
+		if(isBuildingMode || this.isDisplayRadius){
 			Draw.ctx.beginPath();
-			Draw.ctx.arc(this.centerX, this.centerY, Tower.radiusAttack, 0, 2 * Math.PI, false);
+			Draw.ctx.arc(this.centerX, this.centerY, this.radiusAttack, 0, 2 * Math.PI, false);
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
 			Draw.ctx.fill();
 			Draw.ctx.lineWidth = 2;

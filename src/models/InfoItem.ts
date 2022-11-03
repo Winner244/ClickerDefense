@@ -1,3 +1,4 @@
+import { Gamer } from "../gameApp/gameObjects/Gamer";
 import { Helper } from "../gameApp/helpers/Helper";
 
 export default class InfoItem{
@@ -6,17 +7,22 @@ export default class InfoItem{
 	icon: HTMLImageElement|null; //иконка характеристики 
 	getValue: () => string|number; //функция получения значения
 
+	mouseIn: () => void; //наведении мышкой на параметр в UI
+	mouseOut: () => void; //увод мышкой от параметра в UI
+
 	improvePoints: number|null; //кол-во пунктов улучшения характеристики
 	priceToImprove: number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
-	private _improve: (improvePoints: number, priceToImprove: number) => boolean; //функция повышения характеристики
+	private _improve: (improvePoints: number) => void; //функция повышения характеристики
 
 	constructor(
 		label: string, 
 		getValue: () => string|number, 
 		iconSrc: string = '', 
-		improvePoints: number|null, 
-		priceToImprove: number|null, 
-		improve: (improvePoints: number, priceToImprove: number) => boolean)
+		improvePoints: number|null = null, 
+		priceToImprove: number|null = null, 
+		improve: (improvePoints: number) => void = () => {},
+		mouseIn: () => void = () => {},
+		mouseOut: () => void = () => {})
 	{
 		this.id = Helper.generateUid();
 		this.label = label;
@@ -33,11 +39,20 @@ export default class InfoItem{
 		this.improvePoints = improvePoints;
 		this.priceToImprove = priceToImprove;
 		this._improve = improve;
+
+		this.mouseIn = mouseIn;
+		this.mouseOut = mouseOut;
 	}
 
 	improve(): boolean {
 		if(this.improvePoints && this.priceToImprove){
-			return this._improve(this.improvePoints, this.priceToImprove);
+			if(Gamer.coins >= this.priceToImprove){
+				Gamer.coins -= this.priceToImprove
+				this._improve(this.improvePoints);
+				return true;
+			}
+
+			return false;
 		}
 
 		return false;

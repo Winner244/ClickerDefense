@@ -170,15 +170,9 @@ export class Building extends ShopItem{
 		return this._isDisplayedUpgradeWindow;
 	}
 
-	improveHealth(improvePoints: number, priceToImprove: number) : boolean {
-		if(Gamer.coins >= priceToImprove){
-			Gamer.coins -= priceToImprove
-			this.health += improvePoints;
-			this.healthMax += improvePoints;
-			return true;
-		}
-
-		return false;
+	improveHealth(improvePoints: number) : void {
+		this.health += improvePoints;
+		this.healthMax += improvePoints;
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
