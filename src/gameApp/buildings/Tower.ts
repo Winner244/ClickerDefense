@@ -5,7 +5,7 @@ import {Draw} from '../gameSystems/Draw';
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
 import fireArrowImage from '../../assets/img/buildings/tower/fireArrow.png';  
-import fireIcon from '../../assets/img/icons/fireIcon.png';  
+import fireIcon from '../../assets/img/icons/fire.png';  
 import swordIcon from '../../assets/img/icons/sword.png';  
 import bowmanIcon from '../../assets/img/icons/bow.png';  
 import rechargeIcon from '../../assets/img/icons/recharge.png';  
@@ -27,7 +27,6 @@ export class Tower extends Building{
 	static readonly rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
 
 	static readonly imageArrow: HTMLImageElement = new Image();
-	static readonly arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
 	static readonly price: number = 50; //цена здания
 
 	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
@@ -36,6 +35,7 @@ export class Tower extends Building{
 	private arrows: MovingObject[] = [];
 	private bowmans: number = 1; //кол-во лучников
 	private damage: number = 1; //урон от одной атаки
+	private arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
 	private radiusAttack: number = 400; //радиус атаки
 	private isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 
@@ -51,13 +51,13 @@ export class Tower extends Building{
 			'Стреляет по монстрам в радиусе действия.',
 			true, true);
 
-		this._maxImpulse = 5;
+		this.maxImpulse = 5;
 		this._impulseForceDecreasing = 5;
-		this.infoItems.push(new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
-		this.infoItems.push(new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
-		this.infoItems.push(new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
-		this.infoItems.push(new InfoItem('Скорость стрел', () => Tower.arrowSpeed, ''));
-		this.infoItems.push(new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
+		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
+		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
+		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
+		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 100, Tower.price, this.improveSpeedAttack.bind(this)));
 
 		this.improvements.push(Tower.improvementFireArrows);
 
@@ -87,6 +87,10 @@ export class Tower extends Building{
 		this.radiusAttack += improvePoints;
 	}
 
+	improveSpeedAttack(improvePoints: number) : void {
+		this.arrowSpeed += improvePoints;
+	}
+
 	displayRadius(){
 		this.isDisplayRadius = true;
 	}
@@ -114,8 +118,8 @@ export class Tower extends Building{
 
 					let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
 					let distance = Helper.getDistance(x1, y1, x2, y2);
-					let dx = (x1 - x2) / (distance / Tower.arrowSpeed);
-					let dy = (y1 - y2) / (distance / Tower.arrowSpeed);
+					let dx = (x1 - x2) / (distance / this.arrowSpeed);
+					let dy = (y1 - y2) / (distance / this.arrowSpeed);
 
 					this.arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
 					this.rechargeLeft = Tower.rechargeTime / this.bowmans;

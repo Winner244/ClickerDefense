@@ -17,7 +17,8 @@ import { Labels } from '../gameSystems/Labels';
 
 import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
-import HealthIcon from '../../assets/img/icons/healthIcon.png';
+import HealthIcon from '../../assets/img/icons/health.png';
+import ShieldIcon from '../../assets/img/icons/shield.png';
 
 export class Building extends ShopItem{
 	animation: Animation;
@@ -42,10 +43,13 @@ export class Building extends ShopItem{
 
 	repairPricePerHealth: number; //сколько стоит 1 хп починить
 
+	defense: number = 0; //защита (уменьшает урон)
+
+	maxImpulse: number; //максимальное значение импульса для здания
+
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
-	protected _maxImpulse: number; //максимальное значение импульса для здания
 	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 	
@@ -103,9 +107,9 @@ export class Building extends ShopItem{
 		this.isSupportRepair = isSupportRepair;
 		this.isSupportUpgrade = isSupportUpgrade;
 
+		this.maxImpulse = 10;
 		this._impulse = this._impulsePharos = 0;
 		this._impulsePharosSign = false;
-		this._maxImpulse = 10;
 		this._impulseForceDecreasing = 1;
 		this._impulsePharosForceDecreasing = 5;
 
@@ -123,7 +127,9 @@ export class Building extends ShopItem{
 					? `${this.health.toFixed(0)}<span> из ${this.healthMax}</span>` 
 					: this.healthMax;
 				return value;
-			}, HealthIcon, healthMax, price, this.improveHealth.bind(this))
+			}, HealthIcon, healthMax, price, this.improveHealth.bind(this)),
+
+			new InfoItem('Защита', () => this.defense, ShieldIcon, 1)
 		];
 
 		this.improvements = [];
@@ -136,11 +142,11 @@ export class Building extends ShopItem{
 
 
 	set impulse(value: number){
-		if(value > this._maxImpulse){
-			value = this._maxImpulse;
+		if(value > this.maxImpulse){
+			value = this.maxImpulse;
 		}
-		if(value < this._maxImpulse * -1){
-			value = this._maxImpulse * -1;
+		if(value < this.maxImpulse * -1){
+			value = this.maxImpulse * -1;
 		}
 
 		this._impulsePharosSign = value < 0 ? true : false;
