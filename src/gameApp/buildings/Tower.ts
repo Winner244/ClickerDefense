@@ -31,13 +31,14 @@ export class Tower extends Building{
 
 	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
 
-	private rechargeLeft: number = 0; //сколько осталось времени перезарядки
-	private arrows: MovingObject[] = [];
-	private bowmans: number = 1; //кол-во лучников
-	private damage: number = 1; //урон от одной атаки
-	private arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
-	private radiusAttack: number = 400; //радиус атаки
-	private isDisplayRadius: boolean = false; //рисовать радиус атаки? 
+	bowmans: number = 1; //кол-во лучников
+	damage: number = 1; //урон от одной атаки
+	arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
+	radiusAttack: number = 400; //радиус атаки
+
+	private _rechargeLeft: number = 0; //сколько осталось времени перезарядки
+	private _arrows: MovingObject[] = [];
+	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 
 	constructor(x: number) {
 		super(x, 
@@ -52,7 +53,8 @@ export class Tower extends Building{
 			true, true);
 
 		this.maxImpulse = 5;
-		this._impulseForceDecreasing = 5;
+		this.impulseForceDecreasing = 5;
+		
 		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
 		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
 		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
@@ -92,19 +94,19 @@ export class Tower extends Building{
 	}
 
 	displayRadius(){
-		this.isDisplayRadius = true;
+		this._isDisplayRadius = true;
 	}
 
 	hideRadius(){
-		this.isDisplayRadius = false;
+		this._isDisplayRadius = false;
 	}
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number)
 	{
 		super.logic(millisecondsDifferent, monsters, bottomShiftBorder);
 
-		if(this.rechargeLeft > 0){ //перезарядка
-			this.rechargeLeft -= millisecondsDifferent;
+		if(this._rechargeLeft > 0){ //перезарядка
+			this._rechargeLeft -= millisecondsDifferent;
 		}
 		else{
 			if(monsters.length){
@@ -121,15 +123,15 @@ export class Tower extends Building{
 					let dx = (x1 - x2) / (distance / this.arrowSpeed);
 					let dy = (y1 - y2) / (distance / this.arrowSpeed);
 
-					this.arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-					this.rechargeLeft = Tower.rechargeTime / this.bowmans;
+					this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
+					this._rechargeLeft = Tower.rechargeTime / this.bowmans;
 				}
 			}
 		}
 
-		for(let i = 0; i < this.arrows.length; i++)
+		for(let i = 0; i < this._arrows.length; i++)
 		{
-			let arrow = this.arrows[i];
+			let arrow = this._arrows[i];
 			let endMoving = true;
 			arrow.lifeTime -= millisecondsDifferent;
 
@@ -145,7 +147,7 @@ export class Tower extends Building{
 				arrow.location.y + arrow.size.height < 0 || arrow.location.y > Draw.canvas.height ||
 				arrow.lifeTime < 0)
 			{
-				this.arrows.splice(i, 1);
+				this._arrows.splice(i, 1);
 				i--;
 			}
 			else if(!endMoving){
@@ -156,7 +158,7 @@ export class Tower extends Building{
 					arrowCenterY > monster.y && arrowCenterY < monster.y + monster.animation.image.height);
 				if(monsterGoal){
 					monsterGoal.health -= this.damage;
-					this.arrows.splice(i, 1);
+					this._arrows.splice(i, 1);
 					i--;
 				}
 			}
@@ -165,9 +167,9 @@ export class Tower extends Building{
 
 	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		//стрелы
-		for(let i = 0; i < this.arrows.length; i++)
+		for(let i = 0; i < this._arrows.length; i++)
 		{
-			let arrow = this.arrows[i];
+			let arrow = this._arrows[i];
 
 			Draw.ctx.setTransform(1, 0, 0, 1, arrow.location.x + arrow.size.width / 2, arrow.location.y + arrow.size.height / 2); 
 			Draw.ctx.rotate(arrow.rotate * Math.PI / 180);
@@ -177,7 +179,7 @@ export class Tower extends Building{
 		}
 
 		//display radius attack
-		if(isBuildingMode || this.isDisplayRadius){
+		if(isBuildingMode || this._isDisplayRadius){
 			Draw.ctx.beginPath();
 			Draw.ctx.arc(this.centerX, this.centerY, this.radiusAttack, 0, 2 * Math.PI, false);
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';

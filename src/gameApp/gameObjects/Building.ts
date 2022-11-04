@@ -46,11 +46,11 @@ export class Building extends ShopItem{
 	defense: number = 0; //защита (уменьшает урон)
 
 	maxImpulse: number; //максимальное значение импульса для здания
+	impulseForceDecreasing: number; //сила уменьшения импульса
 
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
-	protected _impulseForceDecreasing: number; //сила уменьшения импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 	
 	protected _isDisplayRepairAnimation: boolean; //отображается ли сейчас анимация починки?
@@ -108,9 +108,10 @@ export class Building extends ShopItem{
 		this.isSupportUpgrade = isSupportUpgrade;
 
 		this.maxImpulse = 10;
+		this.impulseForceDecreasing = 1;
+		
 		this._impulse = this._impulsePharos = 0;
 		this._impulsePharosSign = false;
-		this._impulseForceDecreasing = 1;
 		this._impulsePharosForceDecreasing = 5;
 
 		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
@@ -280,7 +281,7 @@ export class Building extends ShopItem{
 
 	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){
 		if(this._impulse > 1){
-			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * this._impulseForceDecreasing);
+			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * this.impulseForceDecreasing);
 			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
 
 			if(this._impulsePharos < -this._impulse){
