@@ -107,10 +107,21 @@ export class Tower extends Building{
 			if(monsters.length){
 				let monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < this.radiusAttack);
 				if (monstersInRadius.length){
-					const sortedMonstersByDistance = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
-					const skipCount = this.bowmans <= sortedMonstersByDistance.length 
+
+					const skipCount = this.bowmans <= monstersInRadius.length 
 						? this.bowmans - this._bowmansWaiting 
-						: (this.bowmans - this._bowmansWaiting) % sortedMonstersByDistance.length;
+						: (this.bowmans - this._bowmansWaiting) % monstersInRadius.length;
+
+					let sortedMonstersByDistance: Monster[] = [];
+					if(this.bowmans > 1){
+						const landMonsters = sortBy(monstersInRadius.filter(x => x.isLand), [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
+						const flyMonsters = sortBy(monstersInRadius.filter(x => !x.isLand), [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
+						sortedMonstersByDistance = (skipCount % 2 == 0 ? landMonsters : flyMonsters).concat((skipCount % 2 == 0 ? flyMonsters : landMonsters));
+					}
+					else{
+						sortedMonstersByDistance = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
+					}
+					
 					const monsterGoal = sortedMonstersByDistance[skipCount];
 
 					if(monsterGoal){ //в радиусе атаки
