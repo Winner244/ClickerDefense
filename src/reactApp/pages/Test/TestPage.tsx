@@ -368,6 +368,21 @@ class TestPage extends React.Component {
 				Menu.displayNewWaveButton();
                 break;
 
+            case 21: //Tower bowmans count
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+
+                const tower1 = new Tower(700);
+                tower1.bowmans = 2;
+                Buildings.all.push(new Barricade(600));
+                Buildings.all.push(tower1);
+
+                Buildings.all.push(new Barricade(1300));
+                Buildings.all.push(new Tower(1200));
+                break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

@@ -38,6 +38,8 @@ export class Tower extends Building{
 
 	private _rechargeLeft: number = 0; //сколько осталось времени перезарядки
 	private _arrows: MovingObject[] = [];
+	private _bowmansWaiting: number = 0; //сколько стрелков ещё не отстрелялось?
+	private _bowmansDelayLeft: number = 0; //сколько осталось времени до стрельбы следующего лучника
 	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 
 	constructor(x: number) {
@@ -56,7 +58,7 @@ export class Tower extends Building{
 		this.impulseForceDecreasing = 5;
 
 		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, Tower.price, () => this.damage += 1));
-		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, Tower.price, () => this.bowmans += 1));
+		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, Tower.price * 3, () => this.bowmans += 1));
 		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, Tower.price, () => this.rechargeTime *= 0.9));
 		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, Tower.price, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', Tower.price, () => this.arrowSpeed += 150));
@@ -95,17 +97,22 @@ export class Tower extends Building{
 
 		if(this._rechargeLeft > 0){ //перезарядка
 			this._rechargeLeft -= millisecondsDifferent;
+			this._bowmansDelayLeft -= millisecondsDifferent;
 		}
 		else{
+			this._bowmansWaiting = this.bowmans;
+		}
+
+		if(this._bowmansDelayLeft <= 0 && this._bowmansWaiting > 0) {
 			if(monsters.length){
 				let monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < this.radiusAttack);
+				if (monstersInRadius.length){
+					const sortedMonstersByDistance = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
+					const skipCount = this.bowmans <= sortedMonstersByDistance.length 
+						? this.bowmans - this._bowmansWaiting 
+						: (this.bowmans - this._bowmansWaiting) % sortedMonstersByDistance.length;
+					const monsterGoal = sortedMonstersByDistance[skipCount];
 
-				//TODO: add logic by set targets by count of bowmans
-				//need to delay between strikes = rechargeTime / bowmansCount
-				for(let i = 0; i < this.bowmans; i++){
-					const monsterGoal = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)])[0];
-					monstersInRadius = monstersInRadius.filter(x => x.id != monsterGoal.id);
-					
 					if(monsterGoal){ //в радиусе атаки
 						let x1 = this.centerX - Tower.imageArrow.width / 2;
 						let y1 = this.centerY - Tower.imageArrow.height / 2;
@@ -118,7 +125,11 @@ export class Tower extends Building{
 						let dy = (y1 - y2) / (distance / this.arrowSpeed);
 	
 						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-						this._rechargeLeft = this.rechargeTime;
+						if(this._rechargeLeft <= 0){
+							this._rechargeLeft = this.rechargeTime;
+						}
+						this._bowmansDelayLeft = this.rechargeTime / 10 / this.bowmans;
+						this._bowmansWaiting--;
 					}
 				}
 			}
