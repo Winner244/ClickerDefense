@@ -123,14 +123,9 @@ export class Building extends ShopItem{
 		this.repairPricePerHealth = this.price / this.healthMax / Building.repairDiscount;
 
 		this.infoItems = [
-			new InfoItem(Building.improveHealthLabel, () => {
-				let value = this.health != this.healthMax 
-					? `${this.health.toFixed(0)}<span> из ${this.healthMax}</span>` 
-					: this.healthMax;
-				return value;
-			}, HealthIcon, healthMax, price, this.improveHealth.bind(this)),
+			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, price, () => this.improveHealth(healthMax)),
 
-			new InfoItem('Защита', () => this.defense, ShieldIcon, 1)
+			new InfoItem('Защита', () => this.defense, ShieldIcon)
 		];
 
 		this.improvements = [];
@@ -175,6 +170,20 @@ export class Building extends ShopItem{
 	}
 	get isDisplayedUpgradeWindow(): boolean{
 		return this._isDisplayedUpgradeWindow;
+	}
+
+	applyDamage(damage: number): number{
+		const realDamage = Math.max(0, Math.abs(damage) - this.defense);
+		this.health -= realDamage;
+		return realDamage;
+	}
+
+	improveHealthGetValue() : string {
+		let value = this.health != this.healthMax 
+			? `${this.health.toFixed(0)}<span> из ${this.healthMax}</span>` 
+			: this.healthMax;
+
+		return value + '';
 	}
 
 	improveHealth(improvePoints: number) : void {

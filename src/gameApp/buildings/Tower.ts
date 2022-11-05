@@ -55,11 +55,11 @@ export class Tower extends Building{
 		this.maxImpulse = 5;
 		this.impulseForceDecreasing = 5;
 
-		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
-		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
-		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, 0.9, Tower.price, this.improveRechargeSpeed.bind(this)));
-		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
-		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 150, Tower.price, this.improveSpeedAttack.bind(this)));
+		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, Tower.price, () => this.damage += 1));
+		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, Tower.price, () => this.bowmans += 1));
+		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, Tower.price, () => this.rechargeTime *= 0.9));
+		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, Tower.price, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', Tower.price, () => this.arrowSpeed += 150));
 
 		this.improvements.push(Tower.improvementFireArrows);
 
@@ -81,24 +81,8 @@ export class Tower extends Building{
 		return this.y + this.height / 4;
 	}
 
-	improveDamage(improvePoints: number) : void {
-		this.damage += improvePoints;
-	}
-
-	improveRadiusAttack(improvePoints: number) : void {
-		this.radiusAttack += improvePoints;
-	}
-
-	improveSpeedAttack(improvePoints: number) : void {
-		this.arrowSpeed += improvePoints;
-	}
-
 	displayRadius(){
 		this._isDisplayRadius = true;
-	}
-
-	improveRechargeSpeed(improvePoints: number) : void {
-		this.rechargeTime *= improvePoints;
 	}
 
 	hideRadius(){
@@ -114,21 +98,28 @@ export class Tower extends Building{
 		}
 		else{
 			if(monsters.length){
-				var monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < this.radiusAttack);
-				let monsterGoal = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)])[0];
-				if(monsterGoal){ //в радиусе атаки
-					let x1 = this.centerX - Tower.imageArrow.width / 2;
-					let y1 = this.centerY - Tower.imageArrow.height / 2;
-					let x2 = monsterGoal.centerX - Tower.imageArrow.width / 2;
-					let y2 = monsterGoal.centerY - Tower.imageArrow.height / 2;
+				let monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < this.radiusAttack);
 
-					let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
-					let distance = Helper.getDistance(x1, y1, x2, y2);
-					let dx = (x1 - x2) / (distance / this.arrowSpeed);
-					let dy = (y1 - y2) / (distance / this.arrowSpeed);
-
-					this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-					this._rechargeLeft = this.rechargeTime;
+				//TODO: add logic by set targets by count of bowmans
+				//need to delay between strikes = rechargeTime / bowmansCount
+				for(let i = 0; i < this.bowmans; i++){
+					const monsterGoal = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)])[0];
+					monstersInRadius = monstersInRadius.filter(x => x.id != monsterGoal.id);
+					
+					if(monsterGoal){ //в радиусе атаки
+						let x1 = this.centerX - Tower.imageArrow.width / 2;
+						let y1 = this.centerY - Tower.imageArrow.height / 2;
+						let x2 = monsterGoal.centerX - Tower.imageArrow.width / 2;
+						let y2 = monsterGoal.centerY - Tower.imageArrow.height / 2;
+	
+						let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
+						let distance = Helper.getDistance(x1, y1, x2, y2);
+						let dx = (x1 - x2) / (distance / this.arrowSpeed);
+						let dy = (y1 - y2) / (distance / this.arrowSpeed);
+	
+						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
+						this._rechargeLeft = this.rechargeTime;
+					}
 				}
 			}
 		}

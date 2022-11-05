@@ -205,7 +205,7 @@ export class Upgrade extends React.Component<Props, {}> {
                                   </div>
                                 : null}
 
-                                {infoItem.improvePoints && infoItem.priceToImprove
+                                {infoItem.priceToImprove
                                   ? <div className='upgrade__parameter-buttons-box-group'>
                                       <span className={'upgrade__parameter-price ' + (infoItem.priceToImprove > Gamer.coins ? 'upgrade__parameter-price--red' : '')}>
                                         {infoItem.priceToImprove}

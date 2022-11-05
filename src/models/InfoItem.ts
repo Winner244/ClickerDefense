@@ -10,17 +10,15 @@ export default class InfoItem{
 	mouseIn: () => void; //наведении мышкой на параметр в UI
 	mouseOut: () => void; //увод мышкой от параметра в UI
 
-	improvePoints: number|null; //кол-во пунктов улучшения характеристики
 	priceToImprove: number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
-	private _improve: (improvePoints: number) => void; //функция повышения характеристики
+	private _improve: () => void; //функция повышения характеристики
 
 	constructor(
 		label: string, 
 		getValue: () => string|number, 
 		iconSrc: string = '', 
-		improvePoints: number|null = null, 
 		priceToImprove: number|null = null, 
-		improve: (improvePoints: number) => void = () => {},
+		improve: () => void = () => {},
 		mouseIn: () => void = () => {},
 		mouseOut: () => void = () => {})
 	{
@@ -36,7 +34,6 @@ export default class InfoItem{
 			this.icon = null;
 		}
 		
-		this.improvePoints = improvePoints;
 		this.priceToImprove = priceToImprove;
 		this._improve = improve;
 
@@ -45,10 +42,10 @@ export default class InfoItem{
 	}
 
 	improve(): boolean {
-		if(this.improvePoints && this.priceToImprove){
+		if(this.priceToImprove){
 			if(Gamer.coins >= this.priceToImprove){
 				Gamer.coins -= this.priceToImprove
-				this._improve(this.improvePoints);
+				this._improve();
 				return true;
 			}
 

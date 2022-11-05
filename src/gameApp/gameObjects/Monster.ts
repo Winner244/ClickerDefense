@@ -12,6 +12,7 @@ import { Barricade } from '../buildings/Barricade';
 import { ImageHandler } from '../ImageHandler';
 
 export class Monster{
+	id: string;
 	name: string;
 
 	animation: Animation; //содержит несколько изображений для анимации
@@ -67,6 +68,7 @@ export class Monster{
 		speed: number,
 		imageHandler: ImageHandler)
 	{
+		this.id = Helper.generateUid();
 		this.x = x;
 		this.y = y;
 		this.isLeftSide = isLeftSide; // с левой стороны движется?
@@ -224,9 +226,9 @@ export class Monster{
 
 	attack(damage: number): void{
 		if(damage > 0 && this.buildingGoal != null){
-			this.buildingGoal.health -= damage; //монстр наносит урон
+			const realDamage = this.buildingGoal.applyDamage(damage); //монстр наносит урон
 			this.lastAttackedTime = Date.now();
-			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + damage.toFixed(1), 3000);
+			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
 
 			if(this.buildingGoal instanceof  Barricade){
 				var mirrorDamage = damage / 100 * Barricade.damageMirrorPercentage;
