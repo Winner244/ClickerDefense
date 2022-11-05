@@ -179,7 +179,7 @@ export class Upgrade extends React.Component<Props, {}> {
                   <img className="upgrade__image nodrag" src={this.props.selectedBuilding.image.src} />
                   <ul className="upgrade__parameters-box">
                     {this.props.selectedBuilding.infoItems.map((infoItem, i) => (
-                        <li className={"upgrade__parameter upgrade__parameter--" + infoItem.id} key={i} onMouseEnter={infoItem.mouseIn} onMouseLeave={infoItem.mouseOut}>
+                        <li className={"upgrade__parameter upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
                           <div className="upgrade__parameter-name">
                             {infoItem.icon 
                               ? <img className="upgrade__parameter-icon" src={infoItem.icon.src}/> 
@@ -223,7 +223,7 @@ export class Upgrade extends React.Component<Props, {}> {
 
                   </ul>
                 </div>
-                <div className="upgrade__upgrade-items"></div>
+                <div className="upgrade__upgrade-items" ></div>
               </div>
               <div className="upgrade__upgraded-box"></div>
             </div>

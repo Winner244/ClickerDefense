@@ -162,7 +162,7 @@ export class Game {
 
 		Waves.draw();
 	
-		if(Game.isGameOver && Buildings.flyEarth.y <= -FlyEarth.height){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.health <= 0)){
 			Draw.drawGameOver();
 		}
 
@@ -204,7 +204,7 @@ export class Game {
 			}
 		}
 		else{
-			if(Buildings.flyEarthRope.health <= 0){
+			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
 				Game.gameOverTime = Date.now();
 			}
@@ -284,6 +284,7 @@ export class Game {
 		Builder.finish();
 		Game.continue();
 		Waves.startNewWave();
+		Upgrade.hide();
 	}
 
 	/** Игрок купил вещь в магазине */

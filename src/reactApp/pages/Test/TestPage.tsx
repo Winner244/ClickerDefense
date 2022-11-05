@@ -351,10 +351,10 @@ class TestPage extends React.Component {
                 Buildings.all.push(new Tower(1200));
                 break;
 
-            case 20: //ремонт
+            case 20: //ремонт и апгрейд
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Gamer.coins = 500;
+                Gamer.coins = 1500;
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
 

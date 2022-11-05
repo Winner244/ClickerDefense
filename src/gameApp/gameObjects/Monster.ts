@@ -127,6 +127,10 @@ export class Monster{
 			let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
 			buildingsGoal = sortBy(buildingsGoal, [building => this.isLeftSide ? building.x : building.x + building.width]);
 			this.buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
+
+			if(this.buildingGoal == null){
+				return;
+			}
 		}
 
 		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);

@@ -24,7 +24,6 @@ export class Tower extends Building{
 	static readonly width: number = 200 * 0.7;
 	static readonly height: number = 425 * 0.7;
 
-	static readonly rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
 
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly price: number = 50; //цена здания
@@ -35,6 +34,7 @@ export class Tower extends Building{
 	damage: number = 1; //урон от одной атаки
 	arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
 	radiusAttack: number = 400; //радиус атаки
+	rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
 
 	private _rechargeLeft: number = 0; //сколько осталось времени перезарядки
 	private _arrows: MovingObject[] = [];
@@ -54,12 +54,12 @@ export class Tower extends Building{
 
 		this.maxImpulse = 5;
 		this.impulseForceDecreasing = 5;
-		
+
 		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 1, Tower.price, this.improveDamage.bind(this)));
 		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon));
-		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => Tower.rechargeTime / 1000 + ' сек', rechargeIcon));
+		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, 0.9, Tower.price, this.improveRechargeSpeed.bind(this)));
 		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 100, Tower.price, this.improveRadiusAttack.bind(this), this.displayRadius.bind(this), this.hideRadius.bind(this) ));
-		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 100, Tower.price, this.improveSpeedAttack.bind(this)));
+		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 150, Tower.price, this.improveSpeedAttack.bind(this)));
 
 		this.improvements.push(Tower.improvementFireArrows);
 
@@ -97,6 +97,10 @@ export class Tower extends Building{
 		this._isDisplayRadius = true;
 	}
 
+	improveRechargeSpeed(improvePoints: number) : void {
+		this.rechargeTime *= improvePoints;
+	}
+
 	hideRadius(){
 		this._isDisplayRadius = false;
 	}
@@ -124,7 +128,7 @@ export class Tower extends Building{
 					let dy = (y1 - y2) / (distance / this.arrowSpeed);
 
 					this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-					this._rechargeLeft = Tower.rechargeTime / this.bowmans;
+					this._rechargeLeft = this.rechargeTime;
 				}
 			}
 		}
