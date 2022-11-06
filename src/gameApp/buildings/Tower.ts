@@ -11,6 +11,14 @@ import bowmanIcon from '../../assets/img/icons/bow.png';
 import rechargeIcon from '../../assets/img/icons/recharge.png';  
 import radiusIcon from '../../assets/img/icons/radius.png';  
 
+import arrowStrike1Sound from '../../assets/sounds/buildings/tower/arrow_strike.m4a';  
+import arrowStrike2Sound from '../../assets/sounds/buildings/tower/arrow_strike2.m4a';  
+import arrowStrike3Sound from '../../assets/sounds/buildings/tower/arrow_strike3.m4a';  
+import arrowStrike4Sound from '../../assets/sounds/buildings/tower/arrow_strike4.m4a';  
+import arrowStrike5Sound from '../../assets/sounds/buildings/tower/arrow_strike5.mp3';  
+//import arrowStrike5Sound from '../../assets/sounds/buildings/tower/arrow_strike5.m4a';  
+//import arrowStrike6Sound from '../../assets/sounds/buildings/tower/arrow_strike6.m4a';  
+
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
 import { Helper } from '../helpers/Helper';
@@ -18,6 +26,7 @@ import InfoItem from '../../models/InfoItem';
 import Improvement from '../../models/Improvement';
 import ImprovementInfoItem from '../../models/ImprovementInfoItem';
 import { Gamer } from '../gameObjects/Gamer';
+import { AudioSystem } from '../gameSystems/AudioSystem';
 
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -58,7 +67,7 @@ export class Tower extends Building{
 		this.impulseForceDecreasing = 5;
 
 		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, Tower.price, () => this.damage += 1));
-		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, Tower.price * 3, () => this.bowmans += 1));
+		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, Tower.price * 2, () => this.bowmans += 1));
 		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, Tower.price, () => this.rechargeTime *= 0.9));
 		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, Tower.price, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', Tower.price, () => this.arrowSpeed += 150));
@@ -136,6 +145,13 @@ export class Tower extends Building{
 						let dy = (y1 - y2) / (distance / this.arrowSpeed);
 	
 						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
+						//AudioSystem.playRandom([arrowStrike4Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/]);
+						//AudioSystem.playRandom([arrowStrike3Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/]);
+						
+						//AudioSystem.playRandom([arrowStrike2Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [0.3, /*0.3, /*1, 1, 1, 1*/]);
+						
+						AudioSystem.playRandom([arrowStrike5Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/], false, this.arrowSpeed / 500 / 2);
+
 						if(this._rechargeLeft <= 0){
 							this._rechargeLeft = this.rechargeTime;
 						}

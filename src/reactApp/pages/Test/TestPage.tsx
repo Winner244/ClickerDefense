@@ -375,7 +375,7 @@ class TestPage extends React.Component {
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
                 const tower1 = new Tower(500);
-                tower1.bowmans = 5;
+                tower1.bowmans = 2;
                 Buildings.all.push(new Barricade(400));
                 Buildings.all.push(tower1);
 
