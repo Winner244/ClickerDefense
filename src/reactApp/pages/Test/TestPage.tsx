@@ -383,6 +383,20 @@ class TestPage extends React.Component {
                 Buildings.all.push(new Tower(1500));
                 break;
 
+            case 22: //Tower arrows speed sound
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 0;
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+
+                const tower2 = new Tower(500);
+                tower2.arrowSpeed = 2000;
+                Buildings.all.push(new Barricade(400));
+                Buildings.all.push(tower2);
+
+                Buildings.all.push(new Barricade(1500));
+                break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

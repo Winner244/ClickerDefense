@@ -60,7 +60,6 @@ export class AudioSystem{
 		else{
 			let source = new Tone.Player(buffer);
 			source.playbackRate = speed;
-			source.toDestination();
 			source.volume.value = (gainNode.gain.value - 1) * 20;
 			source.toDestination();
 			source.start(); 

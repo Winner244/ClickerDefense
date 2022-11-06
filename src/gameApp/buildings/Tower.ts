@@ -70,7 +70,7 @@ export class Tower extends Building{
 		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, Tower.price * 2, () => this.bowmans += 1));
 		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, Tower.price, () => this.rechargeTime *= 0.9));
 		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, Tower.price, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
-		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', Tower.price, () => this.arrowSpeed += 150));
+		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', Tower.price / 5, () => this.arrowSpeed += 150));
 
 		this.improvements.push(Tower.improvementFireArrows);
 
@@ -150,7 +150,7 @@ export class Tower extends Building{
 						
 						//AudioSystem.playRandom([arrowStrike2Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [0.3, /*0.3, /*1, 1, 1, 1*/]);
 						
-						AudioSystem.playRandom([arrowStrike5Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/], false, this.arrowSpeed / 500 / 2);
+						AudioSystem.playRandom([arrowStrike5Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/], false, this.arrowSpeed / 500);
 
 						if(this._rechargeLeft <= 0){
 							this._rechargeLeft = this.rechargeTime;
