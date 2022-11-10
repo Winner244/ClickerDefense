@@ -11,13 +11,9 @@ import bowmanIcon from '../../assets/img/icons/bow.png';
 import rechargeIcon from '../../assets/img/icons/recharge.png';  
 import radiusIcon from '../../assets/img/icons/radius.png';  
 
-import arrowStrike1Sound from '../../assets/sounds/buildings/tower/arrow_strike.m4a';  
-import arrowStrike2Sound from '../../assets/sounds/buildings/tower/arrow_strike2.m4a';  
-import arrowStrike3Sound from '../../assets/sounds/buildings/tower/arrow_strike3.m4a';  
-import arrowStrike4Sound from '../../assets/sounds/buildings/tower/arrow_strike4.m4a';  
-import arrowStrike5Sound from '../../assets/sounds/buildings/tower/arrow_strike5.mp3';  
-//import arrowStrike5Sound from '../../assets/sounds/buildings/tower/arrow_strike5.m4a';  
-//import arrowStrike6Sound from '../../assets/sounds/buildings/tower/arrow_strike6.m4a';  
+import arrowStrike1Sound from '../../assets/sounds/buildings/tower/arrow_strike1.mp3';  
+//import arrowStrike2Sound from '../../assets/sounds/buildings/tower/arrow_strike2.m4a';  
+//import arrowStrike3Sound from '../../assets/sounds/buildings/tower/arrow_strike3.m4a';  
 
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
@@ -36,12 +32,13 @@ export class Tower extends Building{
 
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly price: number = 50; //цена здания
+	static readonly initArrowSpeed: number = 500; 
 
 	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
 
 	bowmans: number = 1; //кол-во лучников
 	damage: number = 1; //урон от одной атаки
-	arrowSpeed: number = 500; //скорость полёта стрелы (в пикселях за секунду)
+	arrowSpeed: number = Tower.initArrowSpeed; //скорость полёта стрелы (в пикселях за секунду)
 	radiusAttack: number = 400; //радиус атаки
 	rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
 
@@ -145,12 +142,7 @@ export class Tower extends Building{
 						let dy = (y1 - y2) / (distance / this.arrowSpeed);
 	
 						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-						//AudioSystem.playRandom([arrowStrike4Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/]);
-						//AudioSystem.playRandom([arrowStrike3Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/]);
-						
-						//AudioSystem.playRandom([arrowStrike2Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [0.3, /*0.3, /*1, 1, 1, 1*/]);
-						
-						AudioSystem.playRandom([arrowStrike5Sound, /*arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound, /*arrowStrike5Sound, arrowStrike6Sound*/], [1, /*0.3, /*1, 1, 1, 1*/], false, this.arrowSpeed / 500);
+						AudioSystem.playRandom([arrowStrike1Sound, /*arrowStrike2Sound, arrowStrike3Sound*/], [1, /*0.3, 1*/], false, this.arrowSpeed / Tower.initArrowSpeed);
 
 						if(this._rechargeLeft <= 0){
 							this._rechargeLeft = this.rechargeTime;
