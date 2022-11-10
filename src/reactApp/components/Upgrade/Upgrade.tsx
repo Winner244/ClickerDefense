@@ -192,7 +192,7 @@ export class Upgrade extends React.Component<Props, {}> {
 
                               {infoItem.label == Building.improveHealthLabel && this.props.selectedBuilding?.health != this.props.selectedBuilding?.healthMax
                                 ? <div className='upgrade__parameter-buttons-box-group'>
-                                    <span className={'upgrade__parameter-price' + (this.props.selectedBuilding?.isCanBeRepaired() != true ? 'upgrade__parameter-price--red' : '')}>
+                                    <span className={'upgrade__parameter-price ' + (this.props.selectedBuilding?.isCanBeRepaired() != true ? 'upgrade__parameter-price--red' : '')}>
                                       {this.props.selectedBuilding?.getRepairPrice()}
                                       <img className='nodrag upgrade__parameter-price-image' src={CoinImage}/>
                                     </span>
