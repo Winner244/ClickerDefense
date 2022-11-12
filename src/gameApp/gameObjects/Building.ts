@@ -123,7 +123,7 @@ export class Building extends ShopItem{
 		this.repairPricePerHealth = this.price / this.healthMax / Building.repairDiscount;
 
 		this.infoItems = [
-			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, price, () => this.improveHealth(healthMax)),
+			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, price - price / 5, () => this.improveHealth(healthMax)),
 
 			new InfoItem('Защита', () => this.defense, ShieldIcon)
 		];
