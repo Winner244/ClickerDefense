@@ -12,12 +12,16 @@ import {Monster} from '../gameObjects/Monster';
 import {Gamer} from '../gameObjects/Gamer';
 import {Coin} from '../gameObjects/Coin';
 
+import {AudioSystem} from './AudioSystem';
 import {Cursor} from '../Cursor';
 import {Labels} from './Labels';
 import {Coins} from './Coins';
 import {Draw} from './Draw';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
+
+import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
+
 
 export class Monsters{
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
@@ -79,6 +83,7 @@ export class Monsters{
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
+					AudioSystem.play(ExplosionSound, 0.1);
 				}
 			}
 		}
