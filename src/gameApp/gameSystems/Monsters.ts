@@ -20,7 +20,9 @@ import {Draw} from './Draw';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 
-import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
+import Explosion1Sound from '../../assets/sounds/monsters/explosion1.mp3'; 
+//import Explosion2Sound from '../../assets/sounds/monsters/explosion2.mp3'; 
+//import Explosion3Sound from '../../assets/sounds/monsters/explosion3.mp3'; 
 
 
 export class Monsters{
@@ -83,7 +85,8 @@ export class Monsters{
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
-					AudioSystem.play(ExplosionSound, 0.1);
+					//AudioSystem.playRandom([Explosion1Sound, Explosion2Sound], [0.1, 0.2]);
+					AudioSystem.play(Explosion2Sound, 0.1);
 				}
 			}
 		}
