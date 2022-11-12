@@ -23,6 +23,7 @@ import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png';
 import Explosion1Sound from '../../assets/sounds/monsters/explosion1.mp3'; 
 //import Explosion2Sound from '../../assets/sounds/monsters/explosion2.mp3'; 
 import Explosion3Sound from '../../assets/sounds/monsters/explosion3.mp3'; 
+import SwordAttack1Sound from '../../assets/sounds/gamer/sword_attack.mp3'; 
 
 
 export class Monsters{
@@ -65,6 +66,7 @@ export class Monsters{
 					monster.onClicked();
 					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
+					AudioSystem.play(SwordAttack1Sound, 0.2);
 				}
 
 				return true;
