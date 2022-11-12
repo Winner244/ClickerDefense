@@ -136,7 +136,7 @@ export class Shop extends React.Component<Props, {}> {
                         {items.map(item => (
                           <div className={"shop__item " + (this.props.selectedItemNames.includes(item.name) ? 'shop__item--info ' : '')} key={item.name}>
                               <div className="shop__item-img-container" onClick={() => this.onClickSelectItem(item.name)}>
-                                  <img className="shop__item-img nodrag" src={item.image.src} />
+                                  <div className="shop__item-img nodrag" style={{backgroundImage: `url(${item.image.src})`}} />
                                   <div className="shop__item-info">
                                       <p>{item.description}</p>
                                   </div>
