@@ -23,7 +23,7 @@ export class Coins{
 	}
 
 	private static playSoundGet(){
-		AudioSystem.play(CoinGetSoundUrl);
+		AudioSystem.play(CoinGetSoundUrl, 0.4);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{

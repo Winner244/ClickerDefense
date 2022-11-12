@@ -63,7 +63,7 @@ export class Menu extends React.Component<Props, IState> {
   }
 
   private static playSoundSelect(){
-    AudioSystem.play(SelectingSoundUrl, 0.2);
+    AudioSystem.play(SelectingSoundUrl, 0.1);
   }
 
   componentWillUpdate(nextProps : Props, nextState : IState){

@@ -222,8 +222,8 @@ export class Building extends ShopItem{
 		if(this.isCanBeRepaired()){
 			Gamer.coins -= repairPrice;
 			this.health = this.healthMax;
-			AudioSystem.play(RepairSoundUrl, 1);
-			AudioSystem.play(RepairHammerSoundUrl, 0.3);
+			AudioSystem.play(RepairSoundUrl, 0.4);
+			AudioSystem.play(RepairHammerSoundUrl, 0.2);
 			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
 			this._isDisplayRepairAnimation = true;
 			this._repairAnimationStart = Date.now();

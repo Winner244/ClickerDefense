@@ -48,7 +48,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(SelectingSoundUrl, 0.2);
+		AudioSystem.play(SelectingSoundUrl, 0.1);
   }
 
   onKey(event: KeyboardEvent){

@@ -92,6 +92,6 @@ export class Builder {
 	
 
 	private static playSoundBuild(){
-		AudioSystem.play(BuildSoundUrl, 0.2);
+		AudioSystem.play(BuildSoundUrl, 0.15);
 	}
 }

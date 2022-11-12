@@ -12,8 +12,9 @@ import rechargeIcon from '../../assets/img/icons/recharge.png';
 import radiusIcon from '../../assets/img/icons/radius.png';  
 
 import arrowStrike1Sound from '../../assets/sounds/buildings/tower/arrow_strike1.mp3';  
-//import arrowStrike2Sound from '../../assets/sounds/buildings/tower/arrow_strike2.m4a';  
-//import arrowStrike3Sound from '../../assets/sounds/buildings/tower/arrow_strike3.m4a';  
+import arrowStrike2Sound from '../../assets/sounds/buildings/tower/arrow_strike2.mp3';  
+import arrowStrike3Sound from '../../assets/sounds/buildings/tower/arrow_strike3.mp3';  
+import arrowStrike4Sound from '../../assets/sounds/buildings/tower/arrow_strike4.mp3';  
 
 import sortBy from 'lodash/sortBy';
 import { MovingObject } from '../../models/MovingObject';
@@ -142,7 +143,7 @@ export class Tower extends Building{
 						let dy = (y1 - y2) / (distance / this.arrowSpeed);
 	
 						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-						AudioSystem.playRandom([arrowStrike1Sound, /*arrowStrike2Sound, arrowStrike3Sound*/], [1, /*0.3, 1*/], false, this.arrowSpeed / Tower.initArrowSpeed);
+						AudioSystem.playRandom([arrowStrike1Sound, arrowStrike2Sound, arrowStrike3Sound, arrowStrike4Sound], [1, 1, 1, 1], false, this.arrowSpeed / Tower.initArrowSpeed);
 
 						if(this._rechargeLeft <= 0){
 							this._rechargeLeft = this.rechargeTime;

@@ -64,7 +64,7 @@ export class Upgrade extends React.Component<Props, {}> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(SelectingSoundUrl, 0.2);
+		AudioSystem.play(SelectingSoundUrl, 0.1);
   }
 
   onClickClose(){
@@ -131,7 +131,7 @@ export class Upgrade extends React.Component<Props, {}> {
     if(result){
       this.forceUpdate();
       CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove || 0, 2000);
-      AudioSystem.play(ImproveSoundUrl, 0.2);
+      AudioSystem.play(ImproveSoundUrl, 0.15);
       this.setGreenTransition(infoItem.id);
     }
   }
