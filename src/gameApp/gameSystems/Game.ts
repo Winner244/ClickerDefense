@@ -12,6 +12,8 @@ import {Waves} from './Waves';
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
+import {Helper} from '../helpers/Helper';
+import {AudioSystem} from './AudioSystem';
 import {Cursor} from '../Cursor';
 import {FPS} from '../FPS';
 import {Mouse} from '../Mouse';
@@ -26,6 +28,9 @@ import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 
 
 import GrassImage from '../../assets/img/grass1.png'; 
+
+import SwordEmpty1Sound from '../../assets/sounds/gamer/sword_empty.mp3'; 
+
 
 
 export class Game {
@@ -135,6 +140,10 @@ export class Game {
 
 		if(!isSetCursor){
 			Cursor.setCursor(Cursor.default);
+		}
+
+		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < 100)){
+			AudioSystem.play(SwordEmpty1Sound, 0.5);
 		}
 
 		Mouse.isClick = false;
