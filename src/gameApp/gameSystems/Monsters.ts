@@ -30,7 +30,6 @@ import Explosion6Sound from '../../assets/sounds/monsters/explosion6.mp3';
 import SwordAttack1Sound from '../../assets/sounds/gamer/sword_attack1.mp3'; 
 import SwordAttack2Sound from '../../assets/sounds/gamer/sword_attack2.mp3'; 
 import SwordAttack3Sound from '../../assets/sounds/gamer/sword_attack3.mp3'; 
-import SwordAttack4Sound from '../../assets/sounds/gamer/sword_attack4.mp3'; 
 
 
 export class Monsters{
@@ -73,7 +72,7 @@ export class Monsters{
 					monster.onClicked();
 					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
-					AudioSystem.playRandom([SwordAttack1Sound, SwordAttack2Sound, SwordAttack3Sound, SwordAttack4Sound], [0.11, 0.1, 0.08, 0.04]);
+					AudioSystem.playRandom([SwordAttack1Sound, SwordAttack2Sound, SwordAttack3Sound], [0.1, 0.1, 0.1]);
 				}
 
 				return true;
