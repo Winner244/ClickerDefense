@@ -21,7 +21,7 @@ import {Draw} from './Draw';
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 
 import Explosion1Sound from '../../assets/sounds/monsters/explosion1.mp3'; 
-//import Explosion2Sound from '../../assets/sounds/monsters/explosion2.mp3'; 
+import Explosion2Sound from '../../assets/sounds/monsters/explosion2.mp3'; 
 import Explosion3Sound from '../../assets/sounds/monsters/explosion3.mp3'; 
 import SwordAttack1Sound from '../../assets/sounds/gamer/sword_attack.mp3'; 
 
@@ -66,7 +66,7 @@ export class Monsters{
 					monster.onClicked();
 					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
-					AudioSystem.play(SwordAttack1Sound, 0.2);
+					AudioSystem.play(SwordAttack1Sound, 0.1);
 				}
 
 				return true;
@@ -88,8 +88,9 @@ export class Monsters{
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
 					//AudioSystem.playRandom([Explosion1Sound, Explosion2Sound], [0.1, 0.2]);
-					AudioSystem.play(Explosion1Sound, 0.1);
-					AudioSystem.play(Explosion3Sound, 0.25);
+					//AudioSystem.play(Explosion1Sound, 0.4);
+					AudioSystem.play(Explosion2Sound, 0.1);
+					//AudioSystem.play(Explosion3Sound, 0.25);
 				}
 			}
 		}
