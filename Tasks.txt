@@ -205,7 +205,16 @@
 	интересный вариант: Draw.ctx.globalCompositeOperation = "xor";
 
 	
-
+	звук космический ну погоди
+	private static randomTone(context: AudioContext, gainNode: GainNode){
+		const oscillator = context.createOscillator();
+		oscillator.type = "sine";
+		oscillator.connect(gainNode);            
+		oscillator.frequency.value = Helper.getRandom(0, 1000);
+		const now = context.currentTime;
+		oscillator.start(now);  
+		oscillator.stop(now + 0.1);  
+	}
 
 -----------------------------------------------------------------------------------------------------------------------------------
 -----------------------------------------------------------------------------------------------------------------------------------
@@ -675,3 +684,5 @@ ok. добавить 4 звука меча
 Справочная
 	> кнопки ремонта и апгрейда находятся в /reactApp/components/BuildingButtons/BuildingButtons.tsx
 		Отображаются по логике в /gameApp/gameObjects/Building.ts -> mouseLogic
+		
+		

@@ -7,13 +7,14 @@ export class AudioSystem{
 	static context = new AudioContext();
 
 	private static Buffers: any = {};
+	private static waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
 
 	static playRandom(arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1): void {
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
 		AudioSystem.play(arrayPathesToAudioFiles[i], volumes[i], isMusic, speed);
 	}
 
-	static play(pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1): void{
+	static play(pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isRandomModify: boolean = false): void{
 
 		//volume
 		var gainNode = this.context.createGain()
@@ -26,7 +27,7 @@ export class AudioSystem{
 		//is saved ?
 		var buffer = AudioSystem.Buffers[pathToAudioFile];
 		if(buffer){
-			AudioSystem._play(this.context, buffer, gainNode, speed);
+			AudioSystem._play(this.context, buffer, gainNode, speed, isRandomModify);
 			return;
 		}
 	
@@ -38,7 +39,7 @@ export class AudioSystem{
 			AudioSystem.context.decodeAudioData(request.response, 
 				function(buffer) {
 					AudioSystem.Buffers[pathToAudioFile] = buffer;
-					AudioSystem._play(AudioSystem.context, buffer, gainNode, speed);
+					AudioSystem._play(AudioSystem.context, buffer, gainNode, speed, isRandomModify);
 				}, 
 				function(err) { 
 					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
@@ -50,7 +51,21 @@ export class AudioSystem{
 		request.send();
 	}
 
-	private static _play(context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number){
+	public static playRandomTone(volume: number, minFrequency: number = 0, maxFrequency: number = 10000){
+		const context = AudioSystem.context;
+		const oscillator = context.createOscillator();
+		const gainNode = context.createGain();
+		gainNode.gain.value = volume * AudioSystem.soundVolume;
+		gainNode.connect(context.destination)
+		gainNode.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 1); //new
+		oscillator.connect(gainNode);         
+		
+		oscillator.type = AudioSystem.waveForms[Helper.getRandom(0, AudioSystem.waveForms.length - 1)];   
+		oscillator.frequency.value = minFrequency + Math.random() * maxFrequency;
+		oscillator.start(0);  
+	}
+
+	private static _play(context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isRandomModify: boolean = false){
 		if(speed == 1){
 			var source = context.createBufferSource();
 			source.buffer = buffer;
