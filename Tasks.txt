@@ -685,4 +685,7 @@ ok. добавить 4 звука меча
 	> кнопки ремонта и апгрейда находятся в /reactApp/components/BuildingButtons/BuildingButtons.tsx
 		Отображаются по логике в /gameApp/gameObjects/Building.ts -> mouseLogic
 		
-		
+	> запуск хром без cross ограничений для окальных файло (если нужно потестить отдельно)
+		закрвыаем хром
+		 cd 'C:\Program Files\Google\Chrome\Application'
+		.\chrome.exe --allow-file-access-from-files

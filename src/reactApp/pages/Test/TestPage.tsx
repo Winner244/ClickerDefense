@@ -375,12 +375,14 @@ class TestPage extends React.Component {
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
                 const tower1 = new Tower(500);
-                tower1.bowmans = 2;
+                tower1.bowmans = 3;
                 Buildings.all.push(new Barricade(400));
                 Buildings.all.push(tower1);
 
+                const tower2 = new Tower(1500);
+                tower2.bowmans = 2;
                 Buildings.all.push(new Barricade(1600));
-                Buildings.all.push(new Tower(1500));
+                Buildings.all.push(tower2);
                 break;
 
             case 22: //Tower arrows speed sound
@@ -389,10 +391,10 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 0;
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
-                const tower2 = new Tower(500);
-                tower2.arrowSpeed = 2000;
+                const tower2_ = new Tower(500);
+                tower2_.arrowSpeed = 2000;
                 Buildings.all.push(new Barricade(400));
-                Buildings.all.push(tower2);
+                Buildings.all.push(tower2_);
 
                 Buildings.all.push(new Barricade(1500));
                 break;
