@@ -36,7 +36,7 @@ export class FlyEarth extends Building{
 		];
 		var audioUrl = listOfSounds[Helper.getRandom(0, listOfSounds.length - 1)];
 		AudioSystem.play(audioUrl, 0.05);
-		AudioSystem.playRingingRandomTone(0.01, 5000, 10000);
+		AudioSystem.playRandomTone(0.01, 5000, 10000);
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean{

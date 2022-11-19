@@ -399,6 +399,21 @@ class TestPage extends React.Component {
                 Buildings.all.push(new Barricade(1500));
                 break;
 
+            case 23: //test sound of sword
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                 Waves.waveCurrent = 0;
+                 Waves.all =[{ 
+                    [Zombie.name]: new WaveData(301, 70, 0),
+                    [Boar.name]: new WaveData(351, 25, 1)
+                }]
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+
+                Buildings.all.push(new Barricade(700));
+                Buildings.all.push(new Barricade(1200));
+                Buildings.all.forEach(x => x.healthMax = x.health = 2000);
+                break;
+
 
             default: //кабаны
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
