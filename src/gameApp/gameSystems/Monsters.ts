@@ -95,7 +95,7 @@ export class Monsters{
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
 					//AudioSystem.playRandom([Explosion1Sound, Explosion2Sound], [0.1, 0.2]);
 					AudioSystem.play(Explosion1Sound, 0.1);
-					//setTimeout(() => AudioSystem.playRandomTone(0.001, 0, 200, AudioSystem.iirFilters.low), 100);
+					AudioSystem.playRandomTone(0.001, 0, 200, AudioSystem.iirFilters.low);
 				}
 			}
 		}
