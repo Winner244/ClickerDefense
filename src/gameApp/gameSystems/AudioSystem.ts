@@ -1,6 +1,7 @@
 import { Helper } from "../helpers/Helper";
 import * as Tone from 'tone';
 import AudioIIRFilter from "../../models/AudioIIRFilter";
+import { BiquadFilter, BiquadFilterOptions } from "tone";
 
 export class AudioSystem{
 	static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
@@ -22,7 +23,7 @@ export class AudioSystem{
 		AudioSystem.play(arrayPathesToAudioFiles[i], volumes[i], isMusic, speed);
 	}
 
-	static play(pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isRandomModify: boolean = false): void{
+	static play(pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): void{
 
 		//volume
 		var gainNode = this.context.createGain()
@@ -35,7 +36,7 @@ export class AudioSystem{
 		//is saved ?
 		var buffer = AudioSystem.Buffers[pathToAudioFile];
 		if(buffer){
-			AudioSystem._play(this.context, buffer, gainNode, speed, isRandomModify);
+			AudioSystem._play(this.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
 			return;
 		}
 	
@@ -47,7 +48,7 @@ export class AudioSystem{
 			AudioSystem.context.decodeAudioData(request.response, 
 				function(buffer) {
 					AudioSystem.Buffers[pathToAudioFile] = buffer;
-					AudioSystem._play(AudioSystem.context, buffer, gainNode, speed, isRandomModify);
+					AudioSystem._play(AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
 				}, 
 				function(err) { 
 					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
@@ -58,6 +59,104 @@ export class AudioSystem{
 		};
 		request.send();
 	}
+
+	private static _play(context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null){
+		const iirFilterBuilded = this.getBuildedIIRFilter(IIRFilter);
+
+		if(speed == 1){
+			var source = context.createBufferSource();
+			source.buffer = buffer;
+
+			if(iirFilterBuilded){
+				source.connect(gainNode).connect(iirFilterBuilded).connect(context.destination);
+			}
+			else if(isUseBiquadFilterRandom) {
+				const distortion = context.createWaveShaper();
+				const convolver = context.createConvolver();
+				const biquadFilter = this.getRandomBiquadFilter(context);
+				source.connect(gainNode).connect(biquadFilter).connect(context.destination);
+			}
+			else{
+				source.connect(gainNode)
+			}
+
+			source.start(0); 
+		}
+		else{
+			let source = new Tone.Player(buffer);
+			if(isUseBiquadFilterRandom) {
+				const biquadFilter = this.getRandomBiquadFilter(context);
+				const option = {
+					frequency: biquadFilter.frequency.value,
+					Q: biquadFilter.Q.value,
+					type:  biquadFilter.type,
+					gain: biquadFilter.gain.value,
+				};
+				source.connect(new BiquadFilter(option));
+			}
+			source.playbackRate = speed;
+			source.volume.value = (gainNode.gain.value - 1) * 20;
+			source.toDestination();
+			source.start(); 
+		}
+	}
+
+	private static getRandomBiquadFilter(context: AudioContext){
+		const biquadFilter = context.createBiquadFilter();
+		const types: BiquadFilterType[] = ["allpass", "highpass", "highshelf", "lowpass", "lowshelf", "notch", "peaking"];
+
+		let frequency = 0;
+		let gain = 0;
+		let q = 0;
+
+		let type: BiquadFilterType = types[Helper.getRandom(0, types.length - 1)];
+		switch(type){
+			case 'lowpass':
+				frequency = Helper.getRandom(12000, 24000);
+				q = Helper.getRandom(0, 15);
+				break;
+
+			case 'highpass':
+				frequency = Helper.getRandom(0, 125);
+				q = Helper.getRandom(0, 15);
+				break;
+
+			case 'lowshelf':
+				frequency = Helper.getRandom(1000, 24000);
+				gain = Helper.getRandom(0, 4);
+				break;
+
+			case 'highshelf':
+				frequency = Helper.getRandom(5000, 24000);
+				gain = Helper.getRandom(0, 10);
+				break;
+
+			case 'peaking':
+				frequency = Helper.getRandom(12000, 24000);
+				q = Helper.getRandom(1000, 2500);
+				gain = Helper.getRandom(0, 10);
+				break;
+
+			case 'notch':
+				frequency = Helper.getRandom(1000, 24000);
+				q = Helper.getRandom(1, 200);
+				break;
+
+			case 'allpass':
+				frequency = Helper.getRandom(1000, 24000);
+				q = Helper.getRandom(1, 2000);
+				break;
+		}
+
+		biquadFilter.type = type;
+		biquadFilter.frequency.setValueAtTime(frequency, context.currentTime);
+		biquadFilter.gain.setValueAtTime(gain, context.currentTime);
+		biquadFilter.Q.setValueAtTime(q, context.currentTime);
+
+		return biquadFilter;
+	}
+
+
 
 	public static playRandomTone(volume: number, minFrequency: number = 0, maxFrequency: number = 10000, IIRFilter: AudioIIRFilter|null = null){
 		const iirFilterBuilded = this.getBuildedIIRFilter(IIRFilter);
@@ -90,21 +189,5 @@ export class AudioSystem{
 		const index = Object.values(this.iirFilters).findIndex(x => x.id == IIRFilter.id);
 		const iirFilterBuilded = this.iirFiltersBuilded[index];
 		return iirFilterBuilded;
-	}
-
-	private static _play(context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isRandomModify: boolean = false){
-		if(speed == 1){
-			var source = context.createBufferSource();
-			source.buffer = buffer;
-			source.connect(gainNode)
-			source.start(0); 
-		}
-		else{
-			let source = new Tone.Player(buffer);
-			source.playbackRate = speed;
-			source.volume.value = (gainNode.gain.value - 1) * 20;
-			source.toDestination();
-			source.start(); 
-		}
 	}
 }

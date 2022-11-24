@@ -20,11 +20,9 @@ import {Draw} from './Draw';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 
-import Explosion1Sound from '../../assets/sounds/monsters/explosion1.mp3'; 
+import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
+import SwordAttackSound from '../../assets/sounds/gamer/sword_attack.mp3'; 
 
-import SwordAttack1Sound from '../../assets/sounds/gamer/sword_attack1.mp3'; 
-import SwordAttack2Sound from '../../assets/sounds/gamer/sword_attack2.mp3'; 
-import SwordAttack3Sound from '../../assets/sounds/gamer/sword_attack3.mp3'; 
 import { Waves } from './Waves';
 import { Helper } from '../helpers/Helper';
 
@@ -34,9 +32,6 @@ export class Monsters{
 	
 	static explosionAnimation: Animation = new Animation(27, 700); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
-
-	static currentSoundSwordAttack= SwordAttack1Sound;
-	static currentWaveForSwordAttack = -1;
 
 	static init(isLoadImage: boolean = true){
 		Monsters.all = [];
@@ -72,7 +67,7 @@ export class Monsters{
 					monster.onClicked();
 					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
-					AudioSystem.play(this.currentSoundSwordAttack, 0.1, false, 1, true);
+					AudioSystem.play(SwordAttackSound, 0.1, false, 1, true);
 				}
 
 				return true;
@@ -93,8 +88,7 @@ export class Monsters{
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
-					//AudioSystem.playRandom([Explosion1Sound, Explosion2Sound], [0.1, 0.2]);
-					AudioSystem.play(Explosion1Sound, 0.1);
+					AudioSystem.play(ExplosionSound, 0.1, false, 1, true);
 					AudioSystem.playRandomTone(0.001, 0, 200, AudioSystem.iirFilters.low);
 				}
 			}
@@ -127,13 +121,6 @@ export class Monsters{
 					}
 				});
 			}
-		}
-
-		//смена звуков на следующую волну
-		if(this.currentWaveForSwordAttack != Waves.waveCurrent){
-			this.currentWaveForSwordAttack = Waves.waveCurrent;
-			var swordAttackSounds = [SwordAttack1Sound, SwordAttack2Sound, SwordAttack3Sound];
-			this.currentSoundSwordAttack = swordAttackSounds.filter(x => x != this.currentSoundSwordAttack)[Helper.getRandom(0, swordAttackSounds.length - 2)];
 		}
 	}
 

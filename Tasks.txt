@@ -160,7 +160,7 @@
 				> ConvolverNode  https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode
 				> WaveShaperNode https://developer.mozilla.org/en-US/docs/Web/API/WaveShaperNode
 				> PeriodicWave https://developer.mozilla.org/en-US/docs/Web/API/PeriodicWave
-				> BiquadFilterNode https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
+				ok. BiquadFilterNode https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
 					непоспевает фильтр сгенерироваться.. есть небольшие задержки иногда
 					
 					lowpass
@@ -203,7 +203,9 @@
 					allpass
 					слух:различия не обнаружились
 					
-					> рандомный вариант по разным типам
+					ok. рандомный вариант по разным типам
+					
+					> tone.js
 				
 				> DynamicsCompressorNode https://developer.mozilla.org/en-US/docs/Web/API/DynamicsCompressorNode
 				

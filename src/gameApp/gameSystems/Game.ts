@@ -29,7 +29,7 @@ import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 
 import GrassImage from '../../assets/img/grass1.png'; 
 
-import SwordEmpty1Sound from '../../assets/sounds/gamer/sword_empty.mp3'; 
+import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
 
 
 
@@ -143,7 +143,7 @@ export class Game {
 		}
 
 		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
-			AudioSystem.play(SwordEmpty1Sound, 0.5);
+			AudioSystem.play(SwordEmptySound, 0.5, false, 1, true);
 		}
 
 		Mouse.isClick = false;
