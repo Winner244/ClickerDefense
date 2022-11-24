@@ -182,13 +182,28 @@
 					gain from  0 to 4
 					слух: есть небольшие отличия
 					
-					highshelf
+					highshelf 
+					frequency from 5000 to 24000
+					gain from  0 to 10
+					слух: есть небольшие чёткие отличия
+					отличия как шлепки или дождь по линолиуму
 					
 					peaking
+					frequency from 12000 to 24000
+					Q from  1000 to 2500
+					gain from  0 to 10
+					слух: при завышении gain до 700 слышны писки, длина которых зависитот Q
+					при меньших значениям различий не слышно, кроме рандомного delay запуска трека
 					
 					notch
+					frequency from 1000 to 24000
+					Q from  1 to 200
+					слуш: отбивание мяса молотком (с этими параметрами более менее незаметно)
 					
 					allpass
+					слух:различия не обнаружились
+					
+					> рандомный вариант по разным типам
 				
 				> DynamicsCompressorNode https://developer.mozilla.org/en-US/docs/Web/API/DynamicsCompressorNode
 				
