@@ -157,9 +157,12 @@
 				> https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Advanced_techniques
 				
 				> AudioWorklet - для фоновой обработки https://developer.mozilla.org/en-US/docs/Web/API/Web_Audio_API/Using_AudioWorklet
+				
 				> ConvolverNode  https://developer.mozilla.org/en-US/docs/Web/API/ConvolverNode
 				> WaveShaperNode https://developer.mozilla.org/en-US/docs/Web/API/WaveShaperNode
 				> PeriodicWave https://developer.mozilla.org/en-US/docs/Web/API/PeriodicWave
+				> DynamicsCompressorNode https://developer.mozilla.org/en-US/docs/Web/API/DynamicsCompressorNode
+				
 				ok. BiquadFilterNode https://developer.mozilla.org/en-US/docs/Web/API/BiquadFilterNode
 					непоспевает фильтр сгенерироваться.. есть небольшие задержки иногда
 					
@@ -205,9 +208,7 @@
 					
 					ok. рандомный вариант по разным типам
 					
-					> tone.js
-				
-				> DynamicsCompressorNode https://developer.mozilla.org/en-US/docs/Web/API/DynamicsCompressorNode
+					ok. tone.js
 				
 				> examples: https://github.com/mdn/webaudio-examples
 						

@@ -92,7 +92,9 @@ export class AudioSystem{
 					type:  biquadFilter.type,
 					gain: biquadFilter.gain.value,
 				};
-				source.connect(new BiquadFilter(option));
+				//const distortion = new Tone.Distortion(0.5);
+				//source.chain(new BiquadFilter(option), distortion, Tone.Destination);
+				source.chain(new BiquadFilter(option), Tone.Destination);
 			}
 			source.playbackRate = speed;
 			source.volume.value = (gainNode.gain.value - 1) * 20;
