@@ -74,7 +74,7 @@ export class AudioSystem{
 				const distortion = context.createWaveShaper();
 				const convolver = context.createConvolver();
 				const biquadFilter = this.getRandomBiquadFilter(context);
-				source.connect(gainNode).connect(biquadFilter).connect(context.destination);
+				source.connect(biquadFilter).connect(gainNode).connect(context.destination);
 			}
 			else{
 				source.connect(gainNode)
@@ -111,6 +111,7 @@ export class AudioSystem{
 		let gain = 0;
 		let q = 0;
 
+		//почти незаметная для уха рандомизация звука
 		let type: BiquadFilterType = types[Helper.getRandom(0, types.length - 1)];
 		switch(type){
 			case 'lowpass':
