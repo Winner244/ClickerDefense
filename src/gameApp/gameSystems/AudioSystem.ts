@@ -62,7 +62,7 @@ export class AudioSystem{
 	}
 
 	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null){
-		const iirFilterBuilded = this.getBuildedIIRFilter(IIRFilter);
+		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 
 		const pannerValue = x == -1 
 			? 0 
@@ -79,10 +79,17 @@ export class AudioSystem{
 				source.connect(gainNode).connect(pannerNode).connect(iirFilterBuilded).connect(context.destination);
 			}
 			else if(isUseBiquadFilterRandom) {
-				const distortion = context.createWaveShaper();
-				const convolver = context.createConvolver();
 				const biquadFilter = this._getRandomBiquadFilter(context);
-				source.connect(biquadFilter).connect(gainNode).connect(pannerNode).connect(context.destination);
+				var chain = source.connect(biquadFilter);
+
+				if(Math.random() > 0.5){
+					var random = 2 + Math.random() * 5;
+					const distortion = context.createWaveShaper();
+					distortion.curve = this._getDistortionCurve(random);
+					distortion.oversample = "4x";
+					chain = chain.connect(distortion);
+				}
+				chain = chain.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 			else{
 				source.connect(gainNode).connect(pannerNode).connect(context.destination);
@@ -176,7 +183,7 @@ export class AudioSystem{
 
 
 	public static playRandomTone(x: number, volume: number, minFrequency: number = 0, maxFrequency: number = 10000, IIRFilter: AudioIIRFilter|null = null){
-		const iirFilterBuilded = this.getBuildedIIRFilter(IIRFilter);
+		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 		const context = AudioSystem.context;
 		const oscillator = context.createOscillator();
 
@@ -204,7 +211,7 @@ export class AudioSystem{
 		} 
 	}
 
-	private static getBuildedIIRFilter(IIRFilter: AudioIIRFilter|null = null){
+	private static _getBuildedIIRFilter(IIRFilter: AudioIIRFilter|null = null){
 		if(!IIRFilter){
 			return null;
 		}
@@ -212,5 +219,18 @@ export class AudioSystem{
 		const index = Object.values(this.iirFilters).findIndex(x => x.id == IIRFilter.id);
 		const iirFilterBuilded = this.iirFiltersBuilded[index];
 		return iirFilterBuilded;
+	}
+
+
+	private static _getDistortionCurve(amount: number) {
+		const n_samples = 44100;
+		const curve = new Float32Array(n_samples);
+		const deg = Math.PI / 180;
+	  
+		for (let i = 0; i < n_samples; i++) {
+		  const x = (i * 2) / n_samples - 1;
+		  curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
+		}
+		return curve;
 	}
 }
