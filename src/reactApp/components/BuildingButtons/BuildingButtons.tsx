@@ -16,6 +16,7 @@ import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import { Building } from '../../../gameApp/gameObjects/Building';
+import { Mouse } from '../../../gameApp/Mouse';
 
 interface IState {
   isDisplayRepairButton: boolean;
@@ -67,7 +68,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(SelectingSoundUrl, 0.1);
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
   }
 
   static isEnterMouse = false;

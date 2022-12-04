@@ -15,6 +15,8 @@ import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import './Menu.scss';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import { Mouse } from '../../../gameApp/Mouse';
+import { Keypad } from '../../../gameApp/Keypad';
 
 interface IState {
   hoverItem: number;
@@ -63,7 +65,7 @@ export class Menu extends React.Component<Props, IState> {
   }
 
   private static playSoundSelect(){
-    AudioSystem.play(SelectingSoundUrl, 0.1);
+    AudioSystem.play(Keypad.isEnter ? -1 : Mouse.x, SelectingSoundUrl, 0.1);
   }
 
   componentWillUpdate(nextProps : Props, nextState : IState){

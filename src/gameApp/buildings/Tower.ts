@@ -140,7 +140,7 @@ export class Tower extends Building{
 						let dy = (y1 - y2) / (distance / this.arrowSpeed);
 	
 						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
-						AudioSystem.play(arrowStrikeSound, 1, false, this.arrowSpeed / Tower.initArrowSpeed, true);
+						AudioSystem.play(this.centerX, arrowStrikeSound, 1, false, this.arrowSpeed / Tower.initArrowSpeed, true);
 
 						if(this._rechargeLeft <= 0){
 							this._rechargeLeft = this.rechargeTime;

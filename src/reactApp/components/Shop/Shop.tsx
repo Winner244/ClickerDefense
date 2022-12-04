@@ -22,6 +22,7 @@ import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+import { Mouse } from '../../../gameApp/Mouse';
 
 interface Prop {
   isOpen?: boolean
@@ -48,7 +49,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(SelectingSoundUrl, 0.1);
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
   }
 
   onKey(event: KeyboardEvent){
@@ -94,6 +95,7 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   onClickBuyItem(item: ShopItem){
+    Shop.playSoundSelect();
     Shop.hide();
     Game.buyThing(item);
   }

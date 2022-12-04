@@ -50,7 +50,7 @@ export class Builder {
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
 				this.smokeAnimation.timeCreated = Date.now();
-				this.playSoundBuild();
+				this.playSoundBuild(mouseX);
 				return;
 			}
 			else if(isRightClick){
@@ -91,7 +91,7 @@ export class Builder {
 
 	
 
-	private static playSoundBuild(){
-		AudioSystem.play(BuildSoundUrl, 0.15);
+	private static playSoundBuild(x: number){
+		AudioSystem.play(x, BuildSoundUrl, 0.15);
 	}
 }

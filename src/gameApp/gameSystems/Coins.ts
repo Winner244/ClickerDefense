@@ -22,8 +22,8 @@ export class Coins{
 		Coins.all.splice(i, 1);
 	}
 
-	private static playSoundGet(){
-		AudioSystem.play(CoinGetSoundUrl, 0.4);
+	private static playSoundGet(x: number){
+		AudioSystem.play(x, CoinGetSoundUrl, 0.4);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
@@ -35,7 +35,7 @@ export class Coins{
 					Labels.createCoinLabel(mouseX - 10, mouseY - 10, '+1');
 					Coins.delete(i);
 					Gamer.coins++;
-					Coins.playSoundGet();
+					Coins.playSoundGet(mouseX);
 				}
 
 				return true;

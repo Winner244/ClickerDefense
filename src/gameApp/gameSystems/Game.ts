@@ -30,6 +30,7 @@ import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
 import GrassImage from '../../assets/img/grass1.png'; 
 
 import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
+import { Keypad } from '../Keypad';
 
 
 
@@ -143,7 +144,7 @@ export class Game {
 		}
 
 		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
-			AudioSystem.play(SwordEmptySound, 0.5, false, 1, true);
+			AudioSystem.play(x, SwordEmptySound, 0.5, false, 1, true);
 		}
 
 		Mouse.isClick = false;
@@ -243,6 +244,7 @@ export class Game {
 	}
 
 	private static onKey(event: KeyboardEvent) : void{
+		Keypad.isEnter = true;
 		switch(event.key){
 			case 'Escape':
 				if(Game.isGameRun && !Upgrade.isOpened()){
@@ -256,6 +258,7 @@ export class Game {
 				}
 			break;
 		}
+		Keypad.isEnter = false;
 	}
 
 	/** Поставить игру на паузу */

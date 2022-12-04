@@ -27,7 +27,7 @@ export class FlyEarth extends Building{
 		}
 	}
 
-	private static playSoundPick(){
+	private static playSoundPick(x: number){
 		var listOfSounds = [
 			PickSoundUrl1,
 			PickSoundUrl2,
@@ -35,8 +35,8 @@ export class FlyEarth extends Building{
 			PickSoundUrl4
 		];
 		var audioUrl = listOfSounds[Helper.getRandom(0, listOfSounds.length - 1)];
-		AudioSystem.play(audioUrl, 0.05);
-		AudioSystem.playRandomTone(0.01, 5000, 10000);
+		AudioSystem.play(x, audioUrl, 0.05);
+		AudioSystem.playRandomTone(x, 0.01, 5000, 10000);
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean{
@@ -49,7 +49,7 @@ export class FlyEarth extends Building{
 				let coinY = this.y + FlyEarth.height / 2;
 				Coins.create(coinX, coinY);
 				Cursor.setCursor(Cursor.pickYellow);
-				FlyEarth.playSoundPick();
+				FlyEarth.playSoundPick(mouseX);
 			}
 			
 			return true;

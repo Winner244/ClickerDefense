@@ -67,7 +67,7 @@ export class Monsters{
 					monster.onClicked();
 					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
-					AudioSystem.play(SwordAttackSound, 0.1, false, 1, true);
+					AudioSystem.play(mouseX, SwordAttackSound, 0.1, false, 1, true);
 				}
 
 				return true;
@@ -88,8 +88,8 @@ export class Monsters{
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
-					AudioSystem.play(ExplosionSound, 0.1, false, 1, true);
-					AudioSystem.playRandomTone(0.001, 0, 200, AudioSystem.iirFilters.low);
+					AudioSystem.play(monster.centerX, ExplosionSound, 0.1, false, 1, true);
+					AudioSystem.playRandomTone(monster.centerX, 0.001, 0, 200, AudioSystem.iirFilters.low);
 				}
 			}
 		}

@@ -20,6 +20,7 @@ import InfoItem from '../../../models/InfoItem';
 import { Labels } from '../../../gameApp/gameSystems/Labels';
 import { Gamer } from '../../../gameApp/gameObjects/Gamer';
 import {CoinLabels} from '../CoinLabels/CoinLabels';
+import { Mouse } from '../../../gameApp/Mouse';
 
 interface Prop {
   isOpen?: boolean
@@ -64,7 +65,7 @@ export class Upgrade extends React.Component<Props, {}> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(SelectingSoundUrl, 0.1);
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
   }
 
   onClickClose(){
@@ -131,7 +132,7 @@ export class Upgrade extends React.Component<Props, {}> {
     if(result){
       this.forceUpdate();
       CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove || 0, 2000);
-      AudioSystem.play(ImproveSoundUrl, 0.15);
+      AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
       this.setGreenTransition(infoItem.id);
     }
   }

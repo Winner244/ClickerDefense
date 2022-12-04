@@ -1,7 +1,8 @@
 import { Helper } from "../helpers/Helper";
 import * as Tone from 'tone';
 import AudioIIRFilter from "../../models/AudioIIRFilter";
-import { BiquadFilter, BiquadFilterOptions } from "tone";
+import { BiquadFilter, BiquadFilterOptions, ToneOscillatorNode } from "tone";
+import { Draw } from "./Draw";
 
 export class AudioSystem{
 	static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
@@ -18,12 +19,12 @@ export class AudioSystem{
 	private static waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
 	private static iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem.context.createIIRFilter(x.feedforward, x.feedback));
 
-	static playRandom(arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1): void {
+	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1): void {
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
-		AudioSystem.play(arrayPathesToAudioFiles[i], volumes[i], isMusic, speed);
+		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed);
 	}
 
-	static play(pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): void{
+	public static play(x: number, pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): void{
 
 		//volume
 		var gainNode = this.context.createGain()
@@ -36,7 +37,7 @@ export class AudioSystem{
 		//is saved ?
 		var buffer = AudioSystem.Buffers[pathToAudioFile];
 		if(buffer){
-			AudioSystem._play(this.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
+			AudioSystem._play(x, this.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
 			return;
 		}
 	
@@ -48,7 +49,7 @@ export class AudioSystem{
 			AudioSystem.context.decodeAudioData(request.response, 
 				function(buffer) {
 					AudioSystem.Buffers[pathToAudioFile] = buffer;
-					AudioSystem._play(AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
+					AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
 				}, 
 				function(err) { 
 					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
@@ -60,32 +61,41 @@ export class AudioSystem{
 		request.send();
 	}
 
-	private static _play(context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null){
+	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null){
 		const iirFilterBuilded = this.getBuildedIIRFilter(IIRFilter);
 
+		const pannerValue = x == -1 
+			? 0 
+			: x / Draw.canvas.width * 2 - 1;
+
 		if(speed == 1){
-			var source = context.createBufferSource();
+			let source = context.createBufferSource();
 			source.buffer = buffer;
 
+			const pannerNode = context.createStereoPanner();
+			pannerNode.pan.value = pannerValue;
+
 			if(iirFilterBuilded){
-				source.connect(gainNode).connect(iirFilterBuilded).connect(context.destination);
+				source.connect(gainNode).connect(pannerNode).connect(iirFilterBuilded).connect(context.destination);
 			}
 			else if(isUseBiquadFilterRandom) {
 				const distortion = context.createWaveShaper();
 				const convolver = context.createConvolver();
-				const biquadFilter = this.getRandomBiquadFilter(context);
-				source.connect(biquadFilter).connect(gainNode).connect(context.destination);
+				const biquadFilter = this._getRandomBiquadFilter(context);
+				source.connect(biquadFilter).connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 			else{
-				source.connect(gainNode)
+				source.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 
 			source.start(0); 
 		}
 		else{
-			let source = new Tone.Player(buffer);
+			const sourceTone = new Tone.Player(buffer);
+			const panner = new Tone.Panner(pannerValue);
+			
 			if(isUseBiquadFilterRandom) {
-				const biquadFilter = this.getRandomBiquadFilter(context);
+				const biquadFilter = this._getRandomBiquadFilter(context);
 				const option = {
 					frequency: biquadFilter.frequency.value,
 					Q: biquadFilter.Q.value,
@@ -93,17 +103,21 @@ export class AudioSystem{
 					gain: biquadFilter.gain.value,
 				};
 				//const distortion = new Tone.Distortion(0.5);
-				//source.chain(new BiquadFilter(option), distortion, Tone.Destination);
-				source.chain(new BiquadFilter(option), Tone.Destination);
+				//sourceTone.chain(new BiquadFilter(option), distortion, Tone.Destination);
+				sourceTone.chain(new BiquadFilter(option), panner, Tone.Destination);
 			}
-			source.playbackRate = speed;
-			source.volume.value = (gainNode.gain.value - 1) * 20;
-			source.toDestination();
-			source.start(); 
+			else{
+				sourceTone.chain(panner, Tone.Destination);
+			}
+
+			sourceTone.playbackRate = speed;
+			sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
+			sourceTone.toDestination();
+			sourceTone.start(); 
 		}
 	}
 
-	private static getRandomBiquadFilter(context: AudioContext){
+	private static _getRandomBiquadFilter(context: AudioContext){
 		const biquadFilter = context.createBiquadFilter();
 		const types: BiquadFilterType[] = ["allpass", "highpass", "highshelf", "lowpass", "lowshelf", "notch", "peaking"];
 
@@ -161,19 +175,25 @@ export class AudioSystem{
 
 
 
-	public static playRandomTone(volume: number, minFrequency: number = 0, maxFrequency: number = 10000, IIRFilter: AudioIIRFilter|null = null){
+	public static playRandomTone(x: number, volume: number, minFrequency: number = 0, maxFrequency: number = 10000, IIRFilter: AudioIIRFilter|null = null){
 		const iirFilterBuilded = this.getBuildedIIRFilter(IIRFilter);
 		const context = AudioSystem.context;
 		const oscillator = context.createOscillator();
+
 		const gainNode = context.createGain();
 		gainNode.gain.value = volume * AudioSystem.soundVolume;
-		gainNode.connect(context.destination)
-		gainNode.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 1); //new
+		gainNode.gain.exponentialRampToValueAtTime(0.00001, context.currentTime + 1); 
+
+		const pannerNode = context.createStereoPanner();
+		pannerNode.pan.value = x == -1 
+			? 0 
+			: x / Draw.canvas.width * 2 - 1;
+
 		if(iirFilterBuilded){
-			oscillator.connect(gainNode).connect(iirFilterBuilded).connect(AudioSystem.context.destination);
+			oscillator.connect(gainNode).connect(pannerNode).connect(iirFilterBuilded).connect(AudioSystem.context.destination);
 		}
 		else{
-			oscillator.connect(gainNode);
+			oscillator.connect(gainNode).connect(pannerNode).connect(context.destination);
 		}
 		
 		oscillator.type = AudioSystem.waveForms[Helper.getRandom(0, AudioSystem.waveForms.length - 1)];   
