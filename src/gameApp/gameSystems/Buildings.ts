@@ -10,7 +10,9 @@ import {Building} from '../gameObjects/Building';
 import {Monster} from '../gameObjects/Monster';
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
+import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3'; 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
+import { AudioSystem } from './AudioSystem';
 
 export class Buildings{
 	static all: Building[] = []; //все строения
@@ -97,6 +99,7 @@ export class Buildings{
 					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.duration));
 					this.all.splice(i, 1);
 					i--;
+					AudioSystem.play(building.centerX, ExplosionSound, 0.1, false, 2);
 				}
 				else{
 					building.logic(millisecondsDifferent, monsters, bottomShiftBorder)
