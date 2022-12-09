@@ -24,6 +24,10 @@ export class FlyEarth extends Building{
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
 			this.image.src = flyEarthImage;  //load image only once
+			AudioSystem.load(PickSoundUrl1);
+			AudioSystem.load(PickSoundUrl2);
+			AudioSystem.load(PickSoundUrl3);
+			AudioSystem.load(PickSoundUrl4);
 		}
 	}
 

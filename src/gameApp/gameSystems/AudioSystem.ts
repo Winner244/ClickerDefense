@@ -22,8 +22,8 @@ export class AudioSystem{
 	public static load(pathToAudioFile: string){
 		return this._load(pathToAudioFile, (buffer) => {});
 	}
-	
-	public static _load(pathToAudioFile: string, callback: (buffer: AudioBuffer) => void){
+
+	private static _load(pathToAudioFile: string, callback: (buffer: AudioBuffer) => void){
 		var buffer = AudioSystem.Buffers[pathToAudioFile];
 		if(buffer){
 			if(callback){

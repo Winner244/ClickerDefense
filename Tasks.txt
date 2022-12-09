@@ -56,8 +56,9 @@
 
 	> проверить когда все ресурсы загружаются и составить карту здесь.
 		> images 
+			ok. flyEarth.image
 		> sounds 
-			> flyEarth.pick -> Game.init
+			ok. flyEarth.pick -> Game.init
 	
 Баги: -
 	
