@@ -55,11 +55,12 @@
 				sounds
 
 	> проверить когда все ресурсы загружаются и составить карту здесь.
-		> images 
+		> images   (поиск по "/assets/img/")
 			ok. flyEarth.image
-			> Tower.image need to load after first wave
+			> Barricade.image need to load after first wave (now loading after open Shop)
+			> Tower.image need to load after first wave (now loading after open Shop)
 			> Tower.imageArrow need to load after first building this build 
-		> sounds 
+		> sounds   (поиск по "/assets/sounds/")
 			ok. flyEarth.pick -> Game.init
 			> Tower.arrow need to load after first building this build  
 			> building.repair need to load after second wave (2>) if buildings.list is not empty OR after first building 
@@ -81,6 +82,12 @@
 Баги: -
 	
 Высокий приоритет:
+
+		> сделать загрузку данных (картинок и звуков для следущей волны во время текущей волны)
+			> после постройки здания - грузятся звуки для этого здания
+			> звуки ударов - должны грузиться во время первой волны 
+			> звук взрыва здания - после постройки первого здания 
+			проверить все остальные звуки (поиск по "/assets/sounds/")
 		
 		> добавить 4 звука зомби и рандомно производить их в рандомное время при наличии зомби 
 		> добавить 4 звук ударов по зомби 
@@ -181,12 +188,6 @@
 Средний приоритет:
 	> добавить управление кнопками в shop (стрелки - выбор элемента или категории, tab - переход между категориями и элементами)
 	> в меню добавить кнопку "Save" - а потом загружать то, что было сохранено
-
-	> сделать загрузку данных (картинок и звуков для следущей волны во время текущей волны)
-		> после постройки здания - грузятся звуки для этого здания
-		> звуки ударов - должны грузиться во время первой волны 
-		> звук взрыва здания - после постройки первого здания 
-		проверить все остальные звуки (поиск по "/assets/sounds/")
 
 Минимальный приоритет:
 			

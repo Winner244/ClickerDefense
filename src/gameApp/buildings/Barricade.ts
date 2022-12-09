@@ -1,7 +1,7 @@
 import {Building} from '../gameObjects/Building';
 import {Draw} from '../gameSystems/Draw';
 
-import towerImage from '../../assets/img/buildings/barricade/barricade.png';  
+import barricadeImage from '../../assets/img/buildings/barricade/barricade.png';  
 
 export class Barricade extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -30,7 +30,7 @@ export class Barricade extends Building{
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
-			this.image.src = towerImage;  //load image only once
+			this.image.src = barricadeImage;  //load image only once
 		}
 	}
 
