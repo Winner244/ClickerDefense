@@ -10,6 +10,19 @@ import {Modifier} from "./Modifier";
 import {Helper} from "../helpers/Helper";
 import { Barricade } from '../buildings/Barricade';
 import { ImageHandler } from '../ImageHandler';
+import { AudioSystem } from '../gameSystems/AudioSystem';
+
+import Hit1Sound from '../../assets/sounds/monsters/hit1.mp3'; 
+import Hit2Sound from '../../assets/sounds/monsters/hit2.mp3'; 
+import Hit3Sound from '../../assets/sounds/monsters/hit3.mp3'; 
+import Hit4Sound from '../../assets/sounds/monsters/hit4.mp3'; 
+import Hit5Sound from '../../assets/sounds/monsters/hit5.mp3'; 
+import Hit6Sound from '../../assets/sounds/monsters/hit6.mp3'; 
+import Hit7Sound from '../../assets/sounds/monsters/hit7.mp3'; 
+import Hit8Sound from '../../assets/sounds/monsters/hit8.mp3'; 
+import Hit9Sound from '../../assets/sounds/monsters/hit9.mp3'; 
+import Hit10Sound from '../../assets/sounds/monsters/hit10.mp3'; 
+import Hit11Sound from '../../assets/sounds/monsters/hit11.mp3'; 
 
 export class Monster{
 	id: string;
@@ -229,6 +242,8 @@ export class Monster{
 			const realDamage = this.buildingGoal.applyDamage(damage); //монстр наносит урон
 			this.lastAttackedTime = Date.now();
 			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
+			AudioSystem.playRandom(this.centerX, [Hit1Sound, Hit2Sound, Hit3Sound, Hit4Sound, Hit5Sound, Hit6Sound, Hit7Sound, Hit8Sound, Hit9Sound, Hit10Sound, Hit11Sound], 
+				[0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2, 0.2], false, 1, true);
 
 			if(this.buildingGoal instanceof  Barricade){
 				var mirrorDamage = damage / 100 * Barricade.damageMirrorPercentage;

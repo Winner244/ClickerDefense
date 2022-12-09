@@ -67,7 +67,7 @@ export class Monsters{
 					monster.onClicked();
 					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
 					Cursor.setCursor(Cursor.swordRed);
-					AudioSystem.play(mouseX, SwordAttackSound, 0.1, false, 1, true);
+					AudioSystem.play(mouseX, SwordAttackSound, 0.15, false, 1, true);
 				}
 
 				return true;

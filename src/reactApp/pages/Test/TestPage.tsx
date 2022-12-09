@@ -391,11 +391,14 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 0;
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
-                const tower2_ = new Tower(500);
-                tower2_.arrowSpeed = 2000;
+                const tower1_ = new Tower(500);
+                tower1_.arrowSpeed = 2000;
                 Buildings.all.push(new Barricade(400));
-                Buildings.all.push(tower2_);
+                Buildings.all.push(tower1_);
 
+                const tower2_ = new Tower(1500);
+                tower2_.arrowSpeed = 2000;
+                Buildings.all.push(tower2_);
                 Buildings.all.push(new Barricade(1500));
                 break;
 

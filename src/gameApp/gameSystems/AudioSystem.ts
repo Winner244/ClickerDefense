@@ -19,9 +19,9 @@ export class AudioSystem{
 	private static waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
 	private static iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem.context.createIIRFilter(x.feedforward, x.feedback));
 
-	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1): void {
+	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false): void {
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
-		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed);
+		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed, isUseBiquadFilterRandom);
 	}
 
 	public static play(x: number, pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): void{
