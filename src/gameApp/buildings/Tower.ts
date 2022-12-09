@@ -72,8 +72,8 @@ export class Tower extends Building{
 		Tower.init(true);
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true): void{
+		if(isLoadResources){
 			this.image.src = towerImage; 
 			this.imageArrow.src = arrowImage; 
 			this.improvementFireArrows.image.src = fireArrowImage;

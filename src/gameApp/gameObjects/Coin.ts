@@ -11,8 +11,8 @@ export class Coin {
 	impulseY: number;
 	lifeTimeLeft: number; //осталось времени жизни
 
-	static init(isLoadImage: boolean = true){
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true){
+		if(isLoadResources){
 			Coin.image.src = CoinImage;
 		}
 	}

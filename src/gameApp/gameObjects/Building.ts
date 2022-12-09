@@ -131,7 +131,7 @@ export class Building extends ShopItem{
 		this.improvements = [];
 	}
 
-	static init(isLoadImage: boolean = true): void{
+	static init(isLoadResources: boolean = true): void{
 		Building.repairImage.src = HammerImage;
 		Building.upgradeAnimation.image.src = UpgradeAnimation;
 	}

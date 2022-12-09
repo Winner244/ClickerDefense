@@ -21,8 +21,8 @@ export class FlyEarth extends Building{
 		FlyEarth.init(true);
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true): void{
+		if(isLoadResources){
 			this.image.src = flyEarthImage;  //load image only once
 		}
 	}

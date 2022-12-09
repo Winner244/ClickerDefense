@@ -42,7 +42,7 @@ export class Game {
 
 	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
-	static isGameRun: boolean = true; //если false - значит на паузе 
+	static isGameRun: boolean = false; //если false - значит на паузе 
 	static isGameOver: boolean = false; //игра заканчивается
 	static isEndAfterGameOver: boolean = false; //игра закончилась
 	static isWasInit: boolean = false; //инициализация уже была?
@@ -53,9 +53,9 @@ export class Game {
 	static isBlockMouseLogic: boolean = false; //if user's mouse enter to interface buttons (menu/shop/nextWave)
 
 	/** Инициализация игры */
-	static init(canvas: HTMLCanvasElement, isLoadImage: boolean = true): void{
+	static init(canvas: HTMLCanvasElement, isLoadResources: boolean = true): void{
 		Game.isWasInit = true;
-		Game.isGameRun = true;
+		Game.isGameRun = false;
 		Game.isGameOver = false;
 		Game.isEndAfterGameOver = false;
 		Game.isBlockMouseLogic = false;
@@ -65,14 +65,14 @@ export class Game {
 
 		Draw.init(canvas);
 		Mouse.init();
-		Buildings.init(isLoadImage);
-		Monsters.init(isLoadImage);
-		Coins.init(isLoadImage);
+		Buildings.init(isLoadResources);
+		Monsters.init(isLoadResources);
+		Coins.init(isLoadResources);
 		Gamer.init();
 		Labels.init();
-		Waves.init(isLoadImage);
+		Waves.init(isLoadResources);
 
-		if(isLoadImage){
+		if(isLoadResources){
 			Game.grassImage.src = GrassImage;
 
 			Game.primaryImages = [];
@@ -93,6 +93,7 @@ export class Game {
 	/** Начать новую игру */
 	static startNew(){
 		Game.init(Draw.canvas, false);
+		Game.continue();
 		Draw.canvas.classList.remove("hide");
 		Waves.startFirstWave();
 	}
@@ -187,6 +188,7 @@ export class Game {
 	/** основной цикл игры */
 	private static go(millisecondsFromStart: number) : void{
 		if(!Game.isGameRun){
+			Game.animationId = 0;
 			return;
 		}
 
@@ -263,7 +265,7 @@ export class Game {
 
 	/** Поставить игру на паузу */
 	static pause() : void{
-		if(!Game.isWasInit){
+		if(!Game.isWasInit || !Game.isGameRun){
 			return;
 		}
 

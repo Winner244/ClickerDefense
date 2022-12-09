@@ -17,8 +17,8 @@ export class Builder {
 	private static isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
 	private static isAnotherBuilding: boolean = false; //курсор наведён на другое здание?
 
-	static init(isLoadImage: boolean = true){
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true){
+		if(isLoadResources){
 			this.smokeAnimation.image.src = SmokeImage; //load image only once
 		}
 		this.selectedBuildingForBuild = null;

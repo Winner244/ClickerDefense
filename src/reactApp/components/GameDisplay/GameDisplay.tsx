@@ -22,6 +22,12 @@ class GameDisplay extends React.Component {
     }
     Game.init(this.canvas.current || new HTMLCanvasElement());
     Menu.showStartMenu();
+
+    document.addEventListener('visibilitychange', () => {
+      if(document.hidden){
+        Game.pause();
+      }
+    });
   }
 
   render() {

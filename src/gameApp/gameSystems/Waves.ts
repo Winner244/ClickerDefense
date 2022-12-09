@@ -40,8 +40,8 @@ export class Waves{
 		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.count))
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true): void{
+		if(isLoadResources){
 			this.iconCountKilledMonsters.src = MonsterImage;
 		}
 		

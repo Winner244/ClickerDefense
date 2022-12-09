@@ -91,8 +91,8 @@ export class Boar extends Monster{
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 	}
 
-	static init(isLoadImage: boolean = true): void {
-		if(isLoadImage && !Boar.wasInit) {
+	static init(isLoadResources: boolean = true): void {
+		if(isLoadResources && !Boar.wasInit) {
 			Boar.wasInit = true;
 
 			Boar.imageHandler.add(Boar.images).src = Boar1Image;

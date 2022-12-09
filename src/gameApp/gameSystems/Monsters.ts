@@ -33,10 +33,10 @@ export class Monsters{
 	static explosionAnimation: Animation = new Animation(27, 700); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
 
-	static init(isLoadImage: boolean = true){
+	static init(isLoadResources: boolean = true){
 		Monsters.all = [];
 
-		if(isLoadImage){
+		if(isLoadResources){
 			this.explosionAnimation.image.src = ExplosionImage;
 		}
 	}

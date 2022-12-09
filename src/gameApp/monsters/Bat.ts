@@ -47,8 +47,8 @@ export class Bat extends Monster{
 		this.isZigzagToTop = !!Helper.getRandom(0, 1);
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage && !Bat.wasInit){
+	static init(isLoadResources: boolean = true): void{
+		if(isLoadResources && !Bat.wasInit){
 			Bat.wasInit = true;
 			Bat.images.push(new Image()); Bat.images[0].src = Bat1Image;
 		}

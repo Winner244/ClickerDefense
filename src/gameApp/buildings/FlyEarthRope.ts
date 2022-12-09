@@ -13,8 +13,8 @@ export class FlyEarthRope extends Building{
 		FlyEarthRope.init(true);
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true): void{
+		if(isLoadResources){
 			FlyEarthRope.image.src = FlyEarthRopeImage;  //load image only once
 		}
 	}

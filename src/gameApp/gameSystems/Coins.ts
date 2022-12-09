@@ -9,9 +9,9 @@ import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3';
 export class Coins{
 	static all: Coin[] = [];
 
-	static init(isLoadImage: boolean = true): void{
+	static init(isLoadResources: boolean = true): void{
 		this.all = [];
-		Coin.init(isLoadImage);
+		Coin.init(isLoadResources);
 	}
 
 	static create(x: number, y: number): void{

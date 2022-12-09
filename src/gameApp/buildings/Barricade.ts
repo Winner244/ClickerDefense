@@ -28,8 +28,8 @@ export class Barricade extends Building{
 		Barricade.init(true);
 	}
 
-	static init(isLoadImage: boolean = true): void{
-		if(isLoadImage){
+	static init(isLoadResources: boolean = true): void{
+		if(isLoadResources){
 			this.image.src = towerImage;  //load image only once
 		}
 	}

@@ -23,12 +23,12 @@ export class Buildings{
 	static flyEarth: Building; //ключевое воздушное здание
 	static flyEarthRope: Building; //ключивое наземное здание
 
-	static init(isLoadImage: boolean = true): void{
-		Building.init(isLoadImage);
+	static init(isLoadResources: boolean = true): void{
+		Building.init(isLoadResources);
 		
 		this.all = [];
 		
-		if(isLoadImage){
+		if(isLoadResources){
 			this.explosionAnimation.image.src = ExplosionImage;
 		}
 
