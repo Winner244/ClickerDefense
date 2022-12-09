@@ -16,15 +16,12 @@ import {AudioSystem} from './AudioSystem';
 import {Cursor} from '../Cursor';
 import {Labels} from './Labels';
 import {Coins} from './Coins';
-import {Draw} from './Draw';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 
 import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
 import SwordAttackSound from '../../assets/sounds/gamer/sword_attack.mp3'; 
 
-import { Waves } from './Waves';
-import { Helper } from '../helpers/Helper';
 
 
 export class Monsters{
@@ -38,6 +35,8 @@ export class Monsters{
 
 		if(isLoadResources){
 			this.explosionAnimation.image.src = ExplosionImage;
+			AudioSystem.load(SwordAttackSound);
+			AudioSystem.load(ExplosionSound);
 		}
 	}
 

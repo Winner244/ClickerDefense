@@ -12,6 +12,9 @@ export class Coins{
 	static init(isLoadResources: boolean = true): void{
 		this.all = [];
 		Coin.init(isLoadResources);
+		if(isLoadResources){
+			AudioSystem.load(CoinGetSoundUrl);
+		}
 	}
 
 	static create(x: number, y: number): void{

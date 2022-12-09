@@ -57,8 +57,26 @@
 	> проверить когда все ресурсы загружаются и составить карту здесь.
 		> images 
 			ok. flyEarth.image
+			> Tower.image need to load after first wave
+			> Tower.imageArrow need to load after first building this build 
 		> sounds 
 			ok. flyEarth.pick -> Game.init
+			> Tower.arrow need to load after first building this build  
+			> building.repair need to load after second wave (2>) if buildings.list is not empty OR after first building 
+			> monster.hit1-11 need to load after start first wave 
+			> builder.build need to load after first wave 
+			> building.explosion need to load after first building 
+			ok. Coints.get_coin -> Game.init
+			ok. Game.sword_empty -> Game.init
+			ok. monsters.explosion -> Game.init
+			ok. monsters.sword_attack -> Game.init
+			> buildingButtons.select 
+			ok. Menu.select -> Game.init
+			ok. Shop.select -> Game.init
+			ok. Upgrade.select  -> Game.init
+			> Upgrade.improve 
+
+			Game.init запускается после открытия страницы с игрой, где меню с одной кнопкой отображается
 	
 Баги: -
 	

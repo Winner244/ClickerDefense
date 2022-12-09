@@ -73,6 +73,8 @@ export class Game {
 		Waves.init(isLoadResources);
 
 		if(isLoadResources){
+			Menu.loadSelectSound();
+			
 			Game.grassImage.src = GrassImage;
 
 			Game.primaryImages = [];
@@ -80,6 +82,8 @@ export class Game {
 			Game.primaryImages.push(FlyEarth.image);
 			Game.primaryImages.push(FlyEarthRope.image);
 			Game.primaryImages.push(Coin.image);
+
+			AudioSystem.load(SwordEmptySound);
 		}
 
 		document.removeEventListener('keydown', Game.onKey);

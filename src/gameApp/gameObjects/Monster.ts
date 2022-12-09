@@ -132,6 +132,20 @@ export class Monster{
 		return this.y + this.height / 2;
 	}
 
+	public static loadHitSounds(){
+		AudioSystem.load(Hit1Sound);
+		AudioSystem.load(Hit2Sound);
+		AudioSystem.load(Hit3Sound);
+		AudioSystem.load(Hit4Sound);
+		AudioSystem.load(Hit5Sound);
+		AudioSystem.load(Hit6Sound);
+		AudioSystem.load(Hit7Sound);
+		AudioSystem.load(Hit8Sound);
+		AudioSystem.load(Hit9Sound);
+		AudioSystem.load(Hit10Sound);
+		AudioSystem.load(Hit11Sound);
+	}
+
 	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;

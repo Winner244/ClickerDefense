@@ -19,7 +19,6 @@ import { Helper } from '../helpers/Helper';
 import InfoItem from '../../models/InfoItem';
 import Improvement from '../../models/Improvement';
 import ImprovementInfoItem from '../../models/ImprovementInfoItem';
-import { Gamer } from '../gameObjects/Gamer';
 import { AudioSystem } from '../gameSystems/AudioSystem';
 
 export class Tower extends Building{
