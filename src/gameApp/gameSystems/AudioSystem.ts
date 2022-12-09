@@ -19,6 +19,42 @@ export class AudioSystem{
 	private static waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
 	private static iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem.context.createIIRFilter(x.feedforward, x.feedback));
 
+	public static load(pathToAudioFile: string){
+		return this._load(pathToAudioFile, (buffer) => {});
+	}
+	
+	public static _load(pathToAudioFile: string, callback: (buffer: AudioBuffer) => void){
+		var buffer = AudioSystem.Buffers[pathToAudioFile];
+		if(buffer){
+			if(callback){
+				callback(buffer);
+			}
+			return;
+		}
+	
+		//load audio file
+		var request = new XMLHttpRequest();
+		request.open('GET', pathToAudioFile, true); 
+		request.responseType = 'arraybuffer';
+		request.onload = function() {
+			AudioSystem.context.decodeAudioData(request.response, 
+				function(buffer) {
+					AudioSystem.Buffers[pathToAudioFile] = buffer;
+					if(callback){
+						callback(buffer);
+					}
+				}, 
+				function(err) { 
+					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
+				});
+		};
+		request.onerror = function(err){
+			console.error('error of loading audio file: ' + pathToAudioFile, err); 
+		};
+		request.send();
+	}
+
+
 	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false): void {
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
 		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed, isUseBiquadFilterRandom);
@@ -34,31 +70,7 @@ export class AudioSystem{
 		gainNode.gain.value = volume * volumeSettings;
 		gainNode.connect(this.context.destination)
 
-		//is saved ?
-		var buffer = AudioSystem.Buffers[pathToAudioFile];
-		if(buffer){
-			AudioSystem._play(x, this.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
-			return;
-		}
-	
-		//load audio file
-		var request = new XMLHttpRequest();
-		request.open('GET', pathToAudioFile, true); 
-		request.responseType = 'arraybuffer';
-		request.onload = function() {
-			AudioSystem.context.decodeAudioData(request.response, 
-				function(buffer) {
-					AudioSystem.Buffers[pathToAudioFile] = buffer;
-					AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter);
-				}, 
-				function(err) { 
-					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
-				});
-		};
-		request.onerror = function(err){
-			console.error('error of loading audio file: ' + pathToAudioFile, err); 
-		};
-		request.send();
+		this._load(pathToAudioFile, (buffer) => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter));
 	}
 
 	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null){
