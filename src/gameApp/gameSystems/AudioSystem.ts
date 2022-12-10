@@ -1,8 +1,11 @@
-import { Helper } from "../helpers/Helper";
 import * as Tone from 'tone';
+
+import {Draw} from "./Draw";
+
+import {Helper} from "../helpers/Helper";
+
 import AudioIIRFilter from "../../models/AudioIIRFilter";
-import { BiquadFilter, BiquadFilterOptions, ToneOscillatorNode } from "tone";
-import { Draw } from "./Draw";
+
 
 export class AudioSystem{
 	static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
@@ -130,8 +133,8 @@ export class AudioSystem{
 					gain: biquadFilter.gain.value,
 				};
 				//const distortion = new Tone.Distortion(0.5);
-				//sourceTone.chain(new BiquadFilter(option), distortion, Tone.Destination);
-				sourceTone.chain(new BiquadFilter(option), panner, Tone.Destination);
+				//sourceTone.chain(new Tone.BiquadFilter(option), distortion, Tone.Destination);
+				sourceTone.chain(new Tone.BiquadFilter(option), panner, Tone.Destination);
 			}
 			else{
 				sourceTone.chain(panner, Tone.Destination);

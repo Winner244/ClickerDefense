@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Menu} from '../Menu/Menu';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import './GameDisplay.scss';
 

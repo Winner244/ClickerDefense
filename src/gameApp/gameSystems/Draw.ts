@@ -1,5 +1,3 @@
-import {Label} from '../../models/Label';
-
 export class Draw{
 	static canvas: HTMLCanvasElement;
 	static ctx: CanvasRenderingContext2D;

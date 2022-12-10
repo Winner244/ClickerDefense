@@ -1,4 +1,3 @@
-import {Draw} from './Draw';
 import {Label} from '../../models/Label';
 
 export class Labels{

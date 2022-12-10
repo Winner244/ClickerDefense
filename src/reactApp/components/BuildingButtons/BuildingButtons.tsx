@@ -9,14 +9,18 @@ import { App } from '../../App';
 
 import './BuildingButtons.scss';
 
+import { Mouse } from '../../../gameApp/Mouse';
+
+import { Building } from '../../../gameApp/gameObjects/Building';
+
+import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+
 import CoinImage from '../../../assets/img/coin.png';
 import HammerImage from '../../../assets/img/buttons/hammer.png';
 import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
-import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
-import { Building } from '../../../gameApp/gameObjects/Building';
-import { Mouse } from '../../../gameApp/Mouse';
+
 
 interface IState {
   isDisplayRepairButton: boolean;

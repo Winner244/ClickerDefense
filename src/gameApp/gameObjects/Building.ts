@@ -1,19 +1,21 @@
-import {Draw} from '../gameSystems/Draw';
+import {Gamer} from './Gamer';
 import {Monster} from './Monster';
+
 import ShopItem from '../../models/ShopItem';
 import InfoItem from '../../models/InfoItem';
 import Animation from '../../models/Animation';
 import Improvement from '../../models/Improvement';
-import {Gamer} from './Gamer';
+
+import {Draw} from '../gameSystems/Draw';
+import { Labels } from '../gameSystems/Labels';
+import { AudioSystem } from '../gameSystems/AudioSystem';
+
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 import RepairSoundUrl from '../../assets/sounds/buildings/repair.m4a'; 
 import RepairHammerSoundUrl from '../../assets/sounds/buildings/repair_hammer.mp3'; 
-
-import { AudioSystem } from '../gameSystems/AudioSystem';
-import { Labels } from '../gameSystems/Labels';
 
 import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
@@ -122,18 +124,27 @@ export class Building extends ShopItem{
 
 		this.repairPricePerHealth = this.price / this.healthMax / Building.repairDiscount;
 
-		this.infoItems = [
-			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, price - price / 5, () => this.improveHealth(healthMax)),
-
-			new InfoItem('Защита', () => this.defense, ShieldIcon)
-		];
+		this.infoItems = [];
 
 		this.improvements = [];
 	}
 
-	static init(isLoadResources: boolean = true): void{
+	static loadRepairResources(): void{
 		Building.repairImage.src = HammerImage;
+		AudioSystem.load(RepairSoundUrl);
+		AudioSystem.load(RepairHammerSoundUrl);
+	}
+
+	static loadUpgradeResources(): void{
 		Building.upgradeAnimation.image.src = UpgradeAnimation;
+	}
+
+	loadedResourcesAfterBuild(){
+		this.infoItems = [
+			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.healthMax)),
+
+			new InfoItem('Защита', () => this.defense, ShieldIcon)
+		];
 	}
 
 

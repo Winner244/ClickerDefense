@@ -1,10 +1,13 @@
+import {Cursor} from '../Cursor';
+
 import {Building} from '../gameObjects/Building';
-import { Coins } from '../gameSystems/Coins';
-import { AudioSystem } from '../gameSystems/AudioSystem';
-import { Cursor } from '../Cursor';
-import { Helper } from '../helpers/Helper';
+import {Coins} from '../gameSystems/Coins';
+import {AudioSystem} from '../gameSystems/AudioSystem';
+
+import {Helper} from '../helpers/Helper';
 
 import flyEarthImage from '../../assets/img/buildings/flyEarth.png';  
+
 import PickSoundUrl1 from '../../assets/sounds/buildings/flyEarth/pick1.mp3'; 
 import PickSoundUrl2 from '../../assets/sounds/buildings/flyEarth/pick2.mp3'; 
 import PickSoundUrl3 from '../../assets/sounds/buildings/flyEarth/pick3.mp3'; 

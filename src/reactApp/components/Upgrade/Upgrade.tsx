@@ -8,19 +8,22 @@ import { App } from '../../App';
 
 import './Upgrade.scss';
 
-import { Building } from '../../../gameApp/gameObjects/Building';
+import {CoinLabels} from '../CoinLabels/CoinLabels';
+
+import {Mouse} from '../../../gameApp/Mouse';
+
+import InfoItem from '../../../models/InfoItem';
+
+import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
+
+import {Gamer} from '../../../gameApp/gameObjects/Gamer';
+import {Building} from '../../../gameApp/gameObjects/Building';
 
 import CoinImage from '../../../assets/img/coin.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import ImproveSoundUrl from '../../../assets/sounds/buildings/placing.mp3'; 
 
-import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
-import InfoItem from '../../../models/InfoItem';
-import { Labels } from '../../../gameApp/gameSystems/Labels';
-import { Gamer } from '../../../gameApp/gameObjects/Gamer';
-import {CoinLabels} from '../CoinLabels/CoinLabels';
-import { Mouse } from '../../../gameApp/Mouse';
 
 interface Prop {
   isOpen?: boolean
@@ -66,6 +69,11 @@ export class Upgrade extends React.Component<Props, {}> {
 
   private static playSoundSelect(){
 		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
+  }
+
+  static loadResources(){
+    AudioSystem.load(SelectingSoundUrl);
+    AudioSystem.load(ImproveSoundUrl);
   }
 
   onClickClose(){

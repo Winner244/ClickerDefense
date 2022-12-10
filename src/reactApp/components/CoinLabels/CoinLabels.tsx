@@ -9,6 +9,7 @@ import { App } from '../../App';
 import './CoinLabels.scss';
 
 import { Label } from '../../../models/Label';
+
 import { Labels } from '../../../gameApp/gameSystems/Labels';
 
 interface Prop {

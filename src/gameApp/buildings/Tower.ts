@@ -1,6 +1,16 @@
-import {Building} from '../gameObjects/Building';
-import {Monster} from '../gameObjects/Monster';
+import sortBy from 'lodash/sortBy';
+
 import {Draw} from '../gameSystems/Draw';
+import {Monster} from '../gameObjects/Monster';
+import {Building} from '../gameObjects/Building';
+import { AudioSystem } from '../gameSystems/AudioSystem';
+
+import InfoItem from '../../models/InfoItem';
+import Improvement from '../../models/Improvement';
+import {MovingObject} from '../../models/MovingObject';
+import ImprovementInfoItem from '../../models/ImprovementInfoItem';
+
+import { Helper } from '../helpers/Helper';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
@@ -13,13 +23,6 @@ import radiusIcon from '../../assets/img/icons/radius.png';
 
 import arrowStrikeSound from '../../assets/sounds/buildings/tower/arrow_strike.mp3';   
 
-import sortBy from 'lodash/sortBy';
-import { MovingObject } from '../../models/MovingObject';
-import { Helper } from '../helpers/Helper';
-import InfoItem from '../../models/InfoItem';
-import Improvement from '../../models/Improvement';
-import ImprovementInfoItem from '../../models/ImprovementInfoItem';
-import { AudioSystem } from '../gameSystems/AudioSystem';
 
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
@@ -60,26 +63,35 @@ export class Tower extends Building{
 		this.maxImpulse = 5;
 		this.impulseForceDecreasing = 5;
 
-		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 40, () => this.damage += 1));
-		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, 40 * 2, () => this.bowmans += 1));
-		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, 40, () => this.rechargeTime *= 0.9));
-		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 40, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
-		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 10, () => this.arrowSpeed += 150));
-
 		this.improvements.push(Tower.improvementFireArrows);
 
-		Tower.init(true);
+		Tower.init(true); //reserve
 	}
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
 			this.image.src = towerImage; 
-			this.imageArrow.src = arrowImage; 
-			this.improvementFireArrows.image.src = fireArrowImage;
 		}
+	}
+	
+	static loadResourcesAfterBuild() {
+		this.imageArrow.src = arrowImage; 
+		this.improvementFireArrows.image.src = fireArrowImage;
+		AudioSystem.load(arrowStrikeSound);
+
 		this.improvementFireArrows.infoItems = [
 			new ImprovementInfoItem('+', fireIcon)
 		];
+	}
+
+	loadedResourcesAfterBuild(){
+		super.loadedResourcesAfterBuild();
+
+		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 40, () => this.damage += 1));
+		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, 40 * 2, () => this.bowmans += 1));
+		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, 40, () => this.rechargeTime *= 0.9));
+		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 40, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 10, () => this.arrowSpeed += 150));
 	}
 
 	get centerY(){

@@ -9,20 +9,23 @@ import { App } from '../../App';
 
 import './Shop.scss';
 
+import {Mouse} from '../../../gameApp/Mouse';
+
+import {Gamer} from '../../../gameApp/gameObjects/Gamer';
+
+import {Game} from '../../../gameApp/gameSystems/Game';
+import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
+
+import ShopItem from '../../../models/ShopItem';
+
 import {ShopCategoryEnum, ShopCategory} from '../../../enum/ShopCategoryEnum';
 
 import CoinImage from '../../../assets/img/coin.png';
 import CategoryMagicImage from '../../../assets/img/shop/shop-category-main/magic.png';
 import CategoryBuldingImage from '../../../assets/img/shop/shop-category-main/tower.png';
 import CategoryUnitImage from '../../../assets/img/shop/shop-category-main/unit.png';
-import { Game } from '../../../gameApp/gameSystems/Game';
-import ShopItem from '../../../models/ShopItem';
-import { Gamer } from '../../../gameApp/gameObjects/Gamer';
-import {Builder} from "../../../gameApp/gameSystems/Builder";
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
-import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
-import { Mouse } from '../../../gameApp/Mouse';
 
 interface Prop {
   isOpen?: boolean
@@ -38,6 +41,7 @@ export class Shop extends React.Component<Props, {}> {
   static show(): void{
     App.Store.dispatch(ShopStore.actionCreators.open());
     App.Store.dispatch(MenuStore.actionCreators.hideOutsideButtons());
+    AudioSystem.load(SelectingSoundUrl);
   }
 
   static hide(): void{

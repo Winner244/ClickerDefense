@@ -1,4 +1,15 @@
+import {ImageHandler} from '../ImageHandler';
+
 import {Helper} from '../helpers/Helper';
+
+import Animation from '../../models/Animation';
+
+import {Monster} from '../gameObjects/Monster';
+import {Building} from "../gameObjects/Building";
+import {Draw} from "../gameSystems/Draw";
+import {Game} from '../gameSystems/Game';
+
+import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
 
 import Boar1Image from '../../assets/img/monsters/boar/boar.png';
 import BoarAttack1Image from '../../assets/img/monsters/boar/boarAttack.png';
@@ -6,16 +17,8 @@ import BoarSpecial1Image from '../../assets/img/monsters/boar/boarSpecial.png';
 import BoarSpecialSmokeImage from '../../assets/img/monsters/boar/boarSpecial_Smoke.png';
 import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boar/boarSpecial_DamageParticles.png';
 
-import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
 
-import {Monster} from '../gameObjects/Monster';
-import {Building} from "../gameObjects/Building";
-import {Draw} from "../gameSystems/Draw";
-import { Game } from '../gameSystems/Game';
 
-import Animation from '../../models/Animation';
-
-import { ImageHandler } from '../ImageHandler';
 
 export class Boar extends Monster{
 

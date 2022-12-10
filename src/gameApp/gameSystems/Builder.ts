@@ -1,12 +1,16 @@
-import {Building} from '../gameObjects/Building';
-import {Gamer} from '../gameObjects/Gamer';
-import Animation from '../../models/Animation';
+import {Draw} from './Draw';
+import {Game} from './Game';
 import {Labels} from './Labels';
 import {Buildings} from './Buildings';
-import {Draw} from './Draw';
 import {AudioSystem} from './AudioSystem';
 
+import {Gamer} from '../gameObjects/Gamer';
+import {Building} from '../gameObjects/Building';
+
+import Animation from '../../models/Animation';
+
 import SmokeImage from '../../assets/img/smoke.png'; 
+
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
 
 /** Режим строительства */
@@ -20,6 +24,7 @@ export class Builder {
 	static init(isLoadResources: boolean = true){
 		if(isLoadResources){
 			this.smokeAnimation.image.src = SmokeImage; //load image only once
+			AudioSystem.load(BuildSoundUrl);
 		}
 		this.selectedBuildingForBuild = null;
 	}
@@ -50,7 +55,8 @@ export class Builder {
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
 				this.smokeAnimation.timeCreated = Date.now();
-				this.playSoundBuild(mouseX);
+				AudioSystem.play(mouseX, BuildSoundUrl, 0.15);
+				Game.loadResourcesAfterBuild(this.selectedBuildingForBuild);
 				return;
 			}
 			else if(isRightClick){
@@ -87,11 +93,5 @@ export class Builder {
 				Draw.ctx.filter="none";
 			}
 		}
-	}
-
-	
-
-	private static playSoundBuild(x: number){
-		AudioSystem.play(x, BuildSoundUrl, 0.15);
 	}
 }

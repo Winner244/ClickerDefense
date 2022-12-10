@@ -8,15 +8,16 @@ import { App } from '../../App';
 import { Shop } from '../Shop/Shop';
 import { Upgrade } from '../Upgrade/Upgrade';
 
+import {Mouse} from '../../../gameApp/Mouse';
+import {Keypad} from '../../../gameApp/Keypad';
+
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Waves} from '../../../gameApp/gameSystems/Waves';
-import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import './Menu.scss';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
-import { Mouse } from '../../../gameApp/Mouse';
-import { Keypad } from '../../../gameApp/Keypad';
 
 interface IState {
   hoverItem: number;

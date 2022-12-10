@@ -1,10 +1,13 @@
-import {Monster} from '../gameObjects/Monster';
-import {Building} from '../gameObjects/Building';
-import {Helper} from '../helpers/Helper';
 import {ImageHandler} from '../ImageHandler';
 
+import {Monster} from '../gameObjects/Monster';
+import {Building} from '../gameObjects/Building';
+
+import {Helper} from '../helpers/Helper';
+
+import {Modifier} from '../../models/Modifier';
+
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
-import { Modifier } from '../gameObjects/Modifier';
 
 
 export class Bat extends Monster{

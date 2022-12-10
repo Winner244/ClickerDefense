@@ -53,31 +53,6 @@
 				v0.5
 				upgrade-tower - can be deleted
 				sounds
-
-	> проверить когда все ресурсы загружаются и составить карту здесь.
-		> images   (поиск по "/assets/img/")
-			ok. flyEarth.image
-			> Barricade.image need to load after first wave (now loading after open Shop)
-			> Tower.image need to load after first wave (now loading after open Shop)
-			> Tower.imageArrow need to load after first building this build 
-		> sounds   (поиск по "/assets/sounds/")
-			ok. flyEarth.pick -> Game.init
-			> Tower.arrow need to load after first building this build  
-			> building.repair need to load after second wave (2>) if buildings.list is not empty OR after first building 
-			> monster.hit1-11 need to load after start first wave 
-			> builder.build need to load after first wave 
-			> building.explosion need to load after first building 
-			ok. Coints.get_coin -> Game.init
-			ok. Game.sword_empty -> Game.init
-			ok. monsters.explosion -> Game.init
-			ok. monsters.sword_attack -> Game.init
-			> buildingButtons.select 
-			ok. Menu.select -> Game.init
-			ok. Shop.select -> Game.init
-			ok. Upgrade.select  -> Game.init
-			> Upgrade.improve 
-
-			Game.init запускается после открытия страницы с игрой, где меню с одной кнопкой отображается
 	
 Баги: -
 	
@@ -878,6 +853,49 @@ ok. звук уничтожение здания
 ok. добавить звук исчезновения монстров 
 ok. покупка элемента в магазине
 ok. удары монстров по зданиям
+ok. проверить когда все ресурсы загружаются и составить карту здесь.
+	ok. images   (поиск по "/assets/img/")
+		ok. FlyEarth.image -> Game.init
+		ok. FlyEarthRope -> Game.init
+		ok. Coin -> Game.init
+		ok. Barricade.image Game.loadResourcesAfterEndOfWave endedWave == 0
+		ok. Tower.image Game.loadResourcesAfterEndOfWave endedWave == 0
+		ok. Tower.imageArrow -> Game.loadResourcesAfterBuild building == Tower
+		ok. Tower.upgrade icons -> need to load Game.loadResourcesAfterBuild building == Tower
+		ok. Wave.monstersIcon -> Game.init
+		ok. Builder.smoke -> Game.loadResourcesAfterEndOfWave endedWave == 0
+		ok. Buildings.explosion -> Game.loadResourcesAfterBuild
+		ok. Building.hummer -> Game.loadResourcesAfterEndOfWave if buildings.all.finx(x => x.health < x.healthMax)
+		ok. Building.upgrade -> Game.loadResourcesAfterBuild 
+		ok. Building.HealthIcon -> Game.loadResourcesAfterBuild 
+		ok. Building.ShieldIcon -> Game.loadResourcesAfterBuild 
+		ok. Monsters.explosion -> Game.init
+		ok. Bat -> Wave.startNewWave if monster in current wave
+		ok. Boar -> Wave.startNewWave if monster in current wave
+		ok. Boar.attack -> Wave.startNewWave if monster in current wave
+		ok. Boar.special -> Wave.startNewWave if monster in current wave
+		ok. Boar.specialSmoke -> Wave.startNewWave if monster in current wave
+		ok. Boar.specialDamageParticles -> Wave.startNewWave if monster in current wave
+		ok. Zombie -> Wave.startNewWave if monster in current wave
+	ok. sounds   (поиск по "/assets/sounds/")
+		ok. FlyEarth.pick -> Game.init
+		ok. Tower.arrow -> Game.loadResourcesAfterBuild building == Tower
+		ok. Building.hummer -> Game.loadResourcesAfterEndOfWave if buildings.all.finx(x => x.health < x.healthMax)
+		ok. Building.repair -> Game.loadResourcesAfterEndOfWave if buildings.all.finx(x => x.health < x.healthMax)
+		ok. monster.hit1-11 -> Game.loadResourcesAfterStartOfWave startedWave == 0
+		ok. Builder.build -> Game.loadResourcesAfterEndOfWave endedWave == 0
+		ok. Buildings.explosion -> Game.loadResourcesAfterBuild
+		ok. Coints.get_coin -> Game.init
+		ok. Game.sword_empty -> Game.loadResourcesAfterStartOfWave startedWave == 0
+		ok. Monsters.explosion -> Game.init
+		ok. Monsters.sword_attack -> Game.init
+		ok. Menu.select -> Game.init
+			ok. buildingButtons.select  -> Game.init (loaded in Menu)
+			ok. Shop.select -> Game.init (loaded in Menu)
+			ok. Upgrade.select  -> Game.init (loaded in Menu)
+		ok. Upgrade.improve -> Game.loadResourcesAfterBuild
+
+		Game.init запускается после открытия страницы с игрой, где меню с одной кнопкой отображается
 
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Справочная
@@ -891,3 +909,5 @@ ok. удары монстров по зданиям
 		
 	> AudioSystem.ts -> createIIRFilter функция - тяжеловесная, стопорит на ~1сек весь JS
 		> возможно стоит изучить AudioWorklet для фонового создания фильтров
+
+	

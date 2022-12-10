@@ -1,5 +1,7 @@
 import {Draw} from '../gameSystems/Draw';
+
 import {Helper} from '../helpers/Helper';
+
 import CoinImage from '../../assets/img/coin.png'; 
 
 export class Coin {

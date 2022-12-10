@@ -1,4 +1,4 @@
-import { Helper } from "../gameApp/helpers/Helper";
+import {Helper} from "../gameApp/helpers/Helper";
 
 export default class AudioIIRFilter{
 	id: string;

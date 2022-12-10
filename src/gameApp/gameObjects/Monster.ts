@@ -1,16 +1,18 @@
 import sortBy from 'lodash/sortBy';
 
+import {ImageHandler} from '../ImageHandler';
+import {Building} from './Building';
+
 import {Draw} from '../gameSystems/Draw';
-import { Labels } from '../gameSystems/Labels';
+import {Labels} from '../gameSystems/Labels';
+import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import Animation from '../../models/Animation';
+import {Modifier} from "../../models/Modifier";
 
-import {Building} from './Building';
-import {Modifier} from "./Modifier";
 import {Helper} from "../helpers/Helper";
-import { Barricade } from '../buildings/Barricade';
-import { ImageHandler } from '../ImageHandler';
-import { AudioSystem } from '../gameSystems/AudioSystem';
+
+import {Barricade} from '../buildings/Barricade';
 
 import Hit1Sound from '../../assets/sounds/monsters/hit1.mp3'; 
 import Hit2Sound from '../../assets/sounds/monsters/hit2.mp3'; 

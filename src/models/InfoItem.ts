@@ -1,5 +1,7 @@
-import { Gamer } from "../gameApp/gameObjects/Gamer";
-import { Helper } from "../gameApp/helpers/Helper";
+import {Gamer} from "../gameApp/gameObjects/Gamer";
+
+import {Helper} from "../gameApp/helpers/Helper";
+
 
 export default class InfoItem{
 	id: string; //guid

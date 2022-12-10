@@ -25,7 +25,7 @@ export class Barricade extends Building{
 		this.maxImpulse = 2;
 		this.impulseForceDecreasing = 5;
 
-		Barricade.init(true);
+		Barricade.init(true); //reserve
 	}
 
 	static init(isLoadResources: boolean = true): void{

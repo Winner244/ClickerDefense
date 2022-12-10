@@ -1,36 +1,42 @@
 import {Draw} from './Draw';
-import {Building} from '../gameObjects/Building';
-import {Buildings} from './Buildings';
-import {Monsters} from './Monsters';
 import {Coins} from './Coins';
-import {Coin} from '../gameObjects/Coin';
-import {Gamer} from '../gameObjects/Gamer';
+import {Waves} from './Waves';
 import {Labels} from './Labels';
 import {Builder} from './Builder';
-import {Waves} from './Waves';
+import {Monsters} from './Monsters';
+import {Buildings} from './Buildings';
+import {AudioSystem} from './AudioSystem';
 
+import {FPS} from '../FPS';
+import {Mouse} from '../Mouse';
+import {Keypad} from '../Keypad';
+import {Cursor} from '../Cursor';
+
+import {Coin} from '../gameObjects/Coin';
+import {Gamer} from '../gameObjects/Gamer';
+import {Monster} from '../gameObjects/Monster';
+import {Building} from '../gameObjects/Building';
+
+import {Tower} from '../buildings/Tower';
 import {FlyEarth} from '../buildings/FlyEarth';
+import {Barricade} from '../buildings/Barricade';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
 import {Helper} from '../helpers/Helper';
-import {AudioSystem} from './AudioSystem';
-import {Cursor} from '../Cursor';
-import {FPS} from '../FPS';
-import {Mouse} from '../Mouse';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 import {Shop} from '../../reactApp/components/Shop/Shop';
-import ShopItem from '../../models/ShopItem';
-import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 import {Upgrade} from '../../reactApp/components/Upgrade/Upgrade';
+import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+
+import ShopItem from '../../models/ShopItem';
 
 import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
-
 
 import GrassImage from '../../assets/img/grass1.png'; 
 
 import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
-import { Keypad } from '../Keypad';
+
 
 
 
@@ -82,8 +88,6 @@ export class Game {
 			Game.primaryImages.push(FlyEarth.image);
 			Game.primaryImages.push(FlyEarthRope.image);
 			Game.primaryImages.push(Coin.image);
-
-			AudioSystem.load(SwordEmptySound);
 		}
 
 		document.removeEventListener('keydown', Game.onKey);
@@ -92,6 +96,39 @@ export class Game {
 		if(Game.animationId == 0 && Game.primaryImages.length){
 			Game.animationId = window.requestAnimationFrame(Game.go);
 		}
+	}
+
+	static loadResourcesAfterStartOfWave(startedWave: number){
+		if (startedWave == 0){
+			Monster.loadHitSounds();
+			AudioSystem.load(SwordEmptySound);
+		}
+	}
+
+	static loadResourcesAfterEndOfWave(endedWave: number){
+		if (endedWave == 0){ //first wave
+			Tower.init(true);
+			Barricade.init(true);
+			Builder.init(true);
+		}
+		else{
+			if(Buildings.all.find(x => x.health < x.healthMax)){
+				Building.loadRepairResources();
+			}
+		}
+	}
+
+	static loadResourcesAfterBuild(building: Building){
+		building.loadedResourcesAfterBuild();
+		
+		if (building  instanceof  Tower){ 
+			Tower.loadResourcesAfterBuild();
+		}
+		//Barricade doesn't have this method
+
+		Buildings.loadResources();
+		Building.loadUpgradeResources();
+		Upgrade.loadResources();
 	}
 
 	/** основной цикл игры */

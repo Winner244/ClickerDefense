@@ -1,18 +1,20 @@
+import {Draw} from './Draw';
+import {AudioSystem} from './AudioSystem';
+
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
 import {SimpleObject} from '../../models/SimpleObject';
 import Animation from '../../models/Animation';
 
-import {Draw} from './Draw';
-
 import {Building} from '../gameObjects/Building';
 import {Monster} from '../gameObjects/Monster';
+
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
 import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3'; 
+
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
-import { AudioSystem } from './AudioSystem';
 
 export class Buildings{
 	static all: Building[] = []; //все строения
@@ -24,13 +26,7 @@ export class Buildings{
 	static flyEarthRope: Building; //ключивое наземное здание
 
 	static init(isLoadResources: boolean = true): void{
-		Building.init(isLoadResources);
-		
 		this.all = [];
-		
-		if(isLoadResources){
-			this.explosionAnimation.image.src = ExplosionImage;
-		}
 
 		this.flyEarth = new FlyEarth(
 			Draw.canvas.width / 2 - FlyEarth.width / 2, 
@@ -51,6 +47,11 @@ export class Buildings{
 
 		Buildings.all.push(this.flyEarthRope);
 		Buildings.all.push(this.flyEarth);
+	}
+
+	static loadResources(){
+		this.explosionAnimation.image.src = ExplosionImage;
+		AudioSystem.load(ExplosionSound);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{

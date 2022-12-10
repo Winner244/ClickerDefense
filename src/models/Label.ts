@@ -1,5 +1,7 @@
-import { Draw } from "../gameApp/gameSystems/Draw";
-import { Helper } from "../gameApp/helpers/Helper";
+import {Draw} from "../gameApp/gameSystems/Draw";
+
+import {Helper} from "../gameApp/helpers/Helper";
+
 
 export class Label{
 	id: string;

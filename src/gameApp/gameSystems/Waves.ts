@@ -1,20 +1,23 @@
-import {WaveData} from '../../models/WaveData';
+import sum from 'lodash/sum';
+
+import {Draw} from './Draw';
+import {Game} from './Game';
+import {Monsters} from './Monsters';
+
 import {Size} from '../../models/Size';
+import {WaveData} from '../../models/WaveData';
 
 import {Helper} from '../helpers/Helper';
 
-import {Draw} from './Draw';
-import {Monsters} from './Monsters';
-
-import {Zombie} from '../monsters/Zombie';
-import {Boar} from '../monsters/Boar';
 import {Bat} from '../monsters/Bat';
+import {Boar} from '../monsters/Boar';
+import {Zombie} from '../monsters/Zombie';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
-import sum from 'lodash/sum';
-
 import MonsterImage from '../../assets/img/monster.png'; 
+
+
 
 export class Waves{
 	static readonly iconCountKilledMonsters = new Image(); //иконка для интерфейса
@@ -76,6 +79,8 @@ export class Waves{
 		let currentWave = Waves.all[Waves.waveCurrent];
 		let monstersName = Object.keys(currentWave);
 		monstersName.forEach(monsterName => Monsters.initMonster(monsterName));
+
+		Game.loadResourcesAfterStartOfWave(this.waveCurrent);
 	}
 
 	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
@@ -95,6 +100,7 @@ export class Waves{
 
 		this.waveTimeMs += millisecondsDifferent;
 
+		//end of wave
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
 			Menu.displayShopButton();
 			this.isStarted = false;
@@ -102,6 +108,7 @@ export class Waves{
 			if(Waves.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
 			}
+			Game.loadResourcesAfterEndOfWave(Waves.waveCurrent);
 			return;
 		}
 

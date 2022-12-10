@@ -1,4 +1,7 @@
+import {ImageHandler} from '../ImageHandler';
+
 import {Monster} from '../gameObjects/Monster';
+
 import {Helper} from '../helpers/Helper';
 
 import Zombie1Image from '../../assets/img/monsters/zombie/zombie.png'; 
@@ -10,7 +13,6 @@ import ZombieAttack1Image from '../../assets/img/monsters/zombie/zombieAttack.pn
 import ZombieAttack2Image from '../../assets/img/monsters/zombie/zombieAttack2.png'; 
 import ZombieAttack3Image from '../../assets/img/monsters/zombie/zombieAttack3.png'; 
 import ZombieAttack4Image from '../../assets/img/monsters/zombie/zombieAttack4.png'; 
-import { ImageHandler } from '../ImageHandler';
 
 export class Zombie extends Monster{
 

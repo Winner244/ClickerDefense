@@ -1,4 +1,4 @@
-import { Draw } from "../gameApp/gameSystems/Draw";
+import {Draw} from "../gameApp/gameSystems/Draw";
 
 export default class Animation{
 	image: HTMLImageElement; //изображение с несколькими кадрами в ряд
