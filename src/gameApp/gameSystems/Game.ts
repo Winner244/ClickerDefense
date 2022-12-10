@@ -94,101 +94,6 @@ export class Game {
 		}
 	}
 
-	/** Начать новую игру */
-	static startNew(){
-		Game.init(Draw.canvas, false);
-		Game.continue();
-		Draw.canvas.classList.remove("hide");
-		Waves.startFirstWave();
-	}
-		
-	private static gameOverLogic(millisecondsDifferent: number) : void{
-		Cursor.setCursor(Cursor.default);
-
-		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
-			Buildings.flyEarthRope.y += 100 * millisecondsDifferent / 1000;
-		}
-
-		if(Buildings.flyEarth.y > -FlyEarth.height){
-			Buildings.flyEarth.y -= 100 * millisecondsDifferent / 1000;
-		}
-	}
-
-	private static mouseLogic(millisecondsDifferent: number) : void {
-		if(Game.isBlockMouseLogic){
-			return;
-		}
-
-		//при изменении размера canvas, мы должны масштабировать координаты мыши
-		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
-		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
-		let isWaveStarted = Waves.isStarted && Waves.delayStartTimeLeft <= 0;
-		let isWaveEnded = !Waves.isStarted && Waves.delayEndTimeLeft <= 0;
-
-		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
-
-		let isSetCursor = false;
-		if(!isSetCursor){
-			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick);
-		}
-
-		if(!isSetCursor){
-			isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick);
-		}
-
-		if(!isSetCursor){
-			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isWaveStarted, isWaveEnded);
-		}
-
-		if(Cursor.cursorWait > 0){
-			Cursor.cursorWait -= millisecondsDifferent;
-		}
-
-		if(!isSetCursor){
-			Cursor.setCursor(Cursor.default);
-		}
-
-		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
-			AudioSystem.play(x, SwordEmptySound, 0.5, false, 1, true);
-		}
-
-		Mouse.isClick = false;
-	}
-
-	private static drawAll(millisecondsFromStart: number, isPausedMode: boolean = false) : void{
-		Draw.clear(); //очищаем холст
-		Draw.drawBlackout(); //затемняем фон
-	
-		Buildings.draw(millisecondsFromStart, Game.isGameOver);
-		Buildings.drawHealth();
-		Buildings.drawRepairingAnumation();
-
-		Builder.draw(millisecondsFromStart, Game.isGameOver);
-	
-		Coins.draw();
-	
-		Monsters.draw(Game.isGameOver);
-	
-		Draw.drawGrass(Game.grassImage); 
-	
-		Labels.draw();
-	
-		Draw.drawCoinsInterface(Coin.image, Gamer.coins);
-
-		Waves.draw();
-	
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.health <= 0)){
-			Draw.drawGameOver();
-		}
-
-		if(isPausedMode){
-			Draw.drawBlackout(); //затемняем фон
-			Draw.drawCoinsInterface(Coin.image, Gamer.coins);
-		}
-	
-		Game.lastDrawTime = millisecondsFromStart;
-	}
-
 	/** основной цикл игры */
 	private static go(millisecondsFromStart: number) : void{
 		if(!Game.isGameRun){
@@ -249,6 +154,47 @@ export class Game {
 		}
 	}
 
+	private static mouseLogic(millisecondsDifferent: number) : void {
+		if(Game.isBlockMouseLogic){
+			return;
+		}
+
+		//при изменении размера canvas, мы должны масштабировать координаты мыши
+		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+		let isWaveStarted = Waves.isStarted && Waves.delayStartTimeLeft <= 0;
+		let isWaveEnded = !Waves.isStarted && Waves.delayEndTimeLeft <= 0;
+
+		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
+
+		let isSetCursor = false;
+		if(!isSetCursor){
+			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick);
+		}
+
+		if(!isSetCursor){
+			isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick);
+		}
+
+		if(!isSetCursor){
+			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isWaveStarted, isWaveEnded);
+		}
+
+		if(Cursor.cursorWait > 0){
+			Cursor.cursorWait -= millisecondsDifferent;
+		}
+
+		if(!isSetCursor){
+			Cursor.setCursor(Cursor.default);
+		}
+
+		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
+			AudioSystem.play(x, SwordEmptySound, 0.5, false, 1, true);
+		}
+
+		Mouse.isClick = false;
+	}
+
 	private static onKey(event: KeyboardEvent) : void{
 		Keypad.isEnter = true;
 		switch(event.key){
@@ -265,6 +211,64 @@ export class Game {
 			break;
 		}
 		Keypad.isEnter = false;
+	}
+
+	private static drawAll(millisecondsFromStart: number, isPausedMode: boolean = false) : void{
+		Draw.clear(); //очищаем холст
+		Draw.drawBlackout(); //затемняем фон
+	
+		Buildings.draw(millisecondsFromStart, Game.isGameOver);
+		Buildings.drawHealth();
+		Buildings.drawRepairingAnumation();
+
+		Builder.draw(millisecondsFromStart, Game.isGameOver);
+	
+		Coins.draw();
+	
+		Monsters.draw(Game.isGameOver);
+	
+		Draw.drawGrass(Game.grassImage); 
+	
+		Labels.draw();
+	
+		Draw.drawCoinsInterface(Coin.image, Gamer.coins);
+
+		Waves.draw();
+	
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.health <= 0)){
+			Draw.drawGameOver();
+		}
+
+		if(isPausedMode){
+			Draw.drawBlackout(); //затемняем фон
+			Draw.drawCoinsInterface(Coin.image, Gamer.coins);
+		}
+	
+		Game.lastDrawTime = millisecondsFromStart;
+	}
+		
+	private static gameOverLogic(millisecondsDifferent: number) : void{
+		Cursor.setCursor(Cursor.default);
+
+		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
+			Buildings.flyEarthRope.y += 100 * millisecondsDifferent / 1000;
+		}
+
+		if(Buildings.flyEarth.y > -FlyEarth.height){
+			Buildings.flyEarth.y -= 100 * millisecondsDifferent / 1000;
+		}
+	}
+
+
+
+
+	
+	/** Начать новую игру */
+	static startNew(){
+		Game.init(Draw.canvas, false);
+		Game.continue();
+		Draw.canvas.classList.remove("hide");
+		Waves.startFirstWave();
 	}
 
 	/** Поставить игру на паузу */
