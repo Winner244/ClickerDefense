@@ -7,6 +7,7 @@ import { Draw } from "./Draw";
 export class AudioSystem{
 	static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
 	static musicVolume: number = 1; //общий уровень звука фоновой музыки (0 - is min value, 1 - is max value)
+	static isEnabled: boolean = true;
 
 	public static iirFilters = {
 		low: new AudioIIRFilter(
@@ -56,11 +57,18 @@ export class AudioSystem{
 
 
 	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false): void {
+		if (!AudioSystem.isEnabled){
+			return;
+		}
+
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
 		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed, isUseBiquadFilterRandom);
 	}
 
 	public static play(x: number, pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): void{
+		if (!AudioSystem.isEnabled){
+			return;
+		}
 
 		//volume
 		var gainNode = this.context.createGain()
@@ -195,6 +203,10 @@ export class AudioSystem{
 
 
 	public static playRandomTone(x: number, volume: number, minFrequency: number = 0, maxFrequency: number = 10000, IIRFilter: AudioIIRFilter|null = null){
+		if (!AudioSystem.isEnabled){
+			return;
+		}
+		
 		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 		const context = AudioSystem.context;
 		const oscillator = context.createOscillator();
