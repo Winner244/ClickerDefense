@@ -28,6 +28,12 @@ import Sound8 from '../../assets/sounds/monsters/zombie/8.mp3';
 import Sound9 from '../../assets/sounds/monsters/zombie/9.mp3'; 
 import Sound10 from '../../assets/sounds/monsters/zombie/10.mp3'; 
 
+import SoundAttacked1 from '../../assets/sounds/monsters/zombie/attacked1.mp3'; 
+import SoundAttacked2 from '../../assets/sounds/monsters/zombie/attacked2.mp3'; 
+import SoundAttacked3 from '../../assets/sounds/monsters/zombie/attacked3.mp3'; 
+
+
+
 export class Zombie extends Monster{
 
 	static readonly images: HTMLImageElement[] = []; //разные окраски монстра
@@ -92,7 +98,15 @@ export class Zombie extends Monster{
 
 		if(this.timePlaySound + Zombie.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 99){
 			this.timePlaySound = Date.now();
-			AudioSystem.playRandom(this.centerX, [Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], [0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);
+			AudioSystem.playRandom(this.centerX, 
+				[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 
+				[0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);
 		}
+	}
+
+	onClicked(){
+		AudioSystem.playRandom(this.centerX, 
+			[SoundAttacked1, SoundAttacked2, SoundAttacked3], 
+			[0.04, 0.04, 0.07], false, 1, true);
 	}
 }
