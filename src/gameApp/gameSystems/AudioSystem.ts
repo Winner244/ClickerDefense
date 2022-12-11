@@ -59,6 +59,14 @@ export class AudioSystem{
 	}
 
 
+	public static playRandomV(x: number, arrayPathesToAudioFiles: string[], volume: number, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false): void {
+		if (!AudioSystem.isEnabled){
+			return;
+		}
+
+		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
+		AudioSystem.play(x, arrayPathesToAudioFiles[i], volume, isMusic, speed, isUseBiquadFilterRandom);
+	}
 	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false): void {
 		if (!AudioSystem.isEnabled){
 			return;

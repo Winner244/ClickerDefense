@@ -13,7 +13,6 @@ import Bat1Image from '../../assets/img/monsters/bat/bat.png';
 
 import Sound1 from '../../assets/sounds/monsters/bat/1.mp3'; 
 import Sound2 from '../../assets/sounds/monsters/bat/2.mp3'; 
-import Sound3 from '../../assets/sounds/monsters/bat/3.mp3'; 
 
 
 export class Bat extends Monster{
@@ -105,8 +104,8 @@ export class Bat extends Monster{
 		if(this.timePlaySound + Bat.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 99){
 			this.timePlaySound = Date.now();
 			AudioSystem.playRandom(this.centerX, 
-				[Sound1, Sound2, Sound3], 
-				[0.1, 0.1, 0.1], false, 1, true);
+				[Sound1, Sound2], 
+				[0.1, 0.1], false, 1, true);
 		}
 	}
 

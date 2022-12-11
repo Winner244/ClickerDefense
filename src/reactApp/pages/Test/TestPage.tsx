@@ -35,6 +35,9 @@ class TestPage extends React.Component {
         }
 
         let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
+        Tower.loadRepairResources();
+        Tower.loadResourcesAfterBuild();
+        Tower.loadUpgradeResources();
         switch(+variant){
             case 1: //разрушение башни
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -320,7 +323,6 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.isStarted = false;
                 Waves.all = [ //монстры на волнах
                 { 
                     [Bat.name]: new WaveData(30, 60, 2)
