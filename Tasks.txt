@@ -894,6 +894,7 @@ ok. проверить когда все ресурсы загружаются �
 			ok. Shop.select -> Game.init (loaded in Menu)
 			ok. Upgrade.select  -> Game.init (loaded in Menu)
 		ok. Upgrade.improve -> Game.loadResourcesAfterBuild
+		ok. Zombie.sounds -> AudioSystem.play 
 
 		Game.init запускается после открытия страницы с игрой, где меню с одной кнопкой отображается
 
