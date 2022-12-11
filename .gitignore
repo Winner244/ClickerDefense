@@ -25,3 +25,6 @@ yarn-error.log*
 .idea/*
 src/.idea/*
 .eslintcache
+
+src/assets/sounds/temp/*
+src/assets/img/temp/*
