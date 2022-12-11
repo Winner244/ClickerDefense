@@ -3,21 +3,30 @@ import {ImageHandler} from '../ImageHandler';
 import {Monster} from '../gameObjects/Monster';
 import {Building} from '../gameObjects/Building';
 
+import { AudioSystem } from '../gameSystems/AudioSystem';
+
 import {Helper} from '../helpers/Helper';
 
 import {Modifier} from '../../models/Modifier';
 
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
 
+import Sound1 from '../../assets/sounds/monsters/bat/1.mp3'; 
+import Sound2 from '../../assets/sounds/monsters/bat/2.mp3'; 
+import Sound3 from '../../assets/sounds/monsters/bat/3.mp3'; 
+
 
 export class Bat extends Monster{
 
 	static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	static readonly imageFrames = 6;
+	
+	static readonly minTimeSoundWait = 3000; //миллисекунды
 
 	private static readonly imageHandler: ImageHandler = new ImageHandler();
 	private static wasInit: boolean; //вызов функции init уже произошёл?
 
+	private timePlaySound: number;
 	private zigzagLength: number;
 	private isZigzagToTop: boolean;
 	private static readonly zigzagThreshold: number = 20;
@@ -48,6 +57,7 @@ export class Bat extends Monster{
 
 		this.zigzagLength = 0;
 		this.isZigzagToTop = !!Helper.getRandom(0, 1);
+		this.timePlaySound = Date.now() - Bat.minTimeSoundWait / 2;
 	}
 
 	static init(isLoadResources: boolean = true): void{
@@ -90,6 +100,13 @@ export class Bat extends Monster{
 					this.y--;
 				}
 			}
+		}
+
+		if(this.timePlaySound + Bat.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 99){
+			this.timePlaySound = Date.now();
+			AudioSystem.playRandom(this.centerX, 
+				[Sound1, Sound2, Sound3], 
+				[0.1, 0.1, 0.1], false, 1, true);
 		}
 	}
 

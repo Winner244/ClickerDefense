@@ -321,6 +321,10 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
+                Waves.all = [ //монстры на волнах
+                { 
+                    [Bat.name]: new WaveData(30, 60, 2)
+                }];
 
                 Buildings.all.push(new Barricade(600));
                 Buildings.all.push(new Tower(700));
