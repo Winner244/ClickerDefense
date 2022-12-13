@@ -261,7 +261,7 @@ export class Monster{
 
 			var size = this.width * this.height;
 			var sizeVolumeScale = size / 3000;
-			var volume = 0.1 * sizeVolumeScale;
+			var volume = 0.1 * Math.sqrt(sizeVolumeScale) * Math.sqrt(damage);
 			AudioSystem.playRandomV(this.centerX, [Hit1Sound, Hit2Sound, Hit3Sound, Hit4Sound, Hit5Sound, Hit6Sound, Hit7Sound, Hit8Sound, Hit9Sound, Hit10Sound, Hit11Sound], volume || 0.1, false, 1, true);
 
 			if(this.buildingGoal instanceof  Barricade){
