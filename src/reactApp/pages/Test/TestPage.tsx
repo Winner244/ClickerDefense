@@ -10,7 +10,6 @@ import {Waves} from '../../../gameApp/gameSystems/Waves';
 
 import {Helper} from '../../helpers/Helper';
 import {Draw} from '../../../gameApp/gameSystems/Draw';
-import {MovingObject} from '../../../models/MovingObject';
 import {Gamer} from "../../../gameApp/gameObjects/Gamer";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
 import {WaveData} from "../../../models/WaveData";
@@ -20,6 +19,8 @@ import {Builder} from "../../../gameApp/gameSystems/Builder";
 import {Menu} from '../../components/Menu/Menu';
 import {Barricade} from '../../../gameApp/buildings/Barricade';
 import {Bat} from '../../../gameApp/monsters/Bat';
+import {Monster} from '../../../gameApp/gameObjects/Monster';
+import {Building} from '../../../gameApp/gameObjects/Building';
 
 class TestPage extends React.Component {
     componentDidMount(){
@@ -35,16 +36,34 @@ class TestPage extends React.Component {
         }
 
         let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
+
+        //pre load sounds/images
+        Buildings.loadResources();
+        Building.loadRepairResources();
+        Building.loadUpgradeResources();
+        Monster.loadHitSounds();
         Tower.loadRepairResources();
         Tower.loadResourcesAfterBuild();
         Tower.loadUpgradeResources();
+        var tower1 = new Tower(200);
+        tower1.loadedResourcesAfterBuild();
+        var tower2 = new Tower(1200);
+        tower2.loadedResourcesAfterBuild();
+        var barricade1 = new Barricade(200);
+        tower1.loadedResourcesAfterBuild();
+        var barricade2 = new Barricade(1400);
+        tower2.loadedResourcesAfterBuild();
+
         switch(+variant){
-            case 1: //разрушение башни
+            case 1: //разрушение
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Buildings.all.push(new Tower(200));
-                setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 300);
+                Buildings.all.push(tower1);
+                barricade1.x = 500;
+                Buildings.all.push(barricade1);
+                setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 500);
+                setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 700);
             break;
 
             case 2: //пауза после волны с постройками (тест ремонта)
@@ -55,10 +74,11 @@ class TestPage extends React.Component {
                 Gamer.coins = 15;
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
-                Buildings.all.push(new Barricade(200));
-                Buildings.all.push(new Tower(500));
-                Buildings.all.push(new Barricade(1400));
-                Buildings.all.push(new Tower(1200));
+                Buildings.all.push(barricade1);
+                tower1.x = 500;
+                Buildings.all.push(tower1);
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
 
                 Buildings.all[Buildings.all.length - 1].health-=40;
                 Buildings.all[Buildings.all.length - 2].health-=100;
@@ -70,7 +90,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
-                Gamer.coins = 200;
+                Gamer.coins = 500;
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
                 break;
@@ -80,8 +100,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 setTimeout(() => {
-                    var tower = new Tower(0);
-                    Builder.addBuilding(tower, Draw.canvas.height - tower.height + Game.bottomShiftBorder);
+                    Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Game.bottomShiftBorder);
                     Builder.mouseLogic(200, 0, true, false)
                 }, 300);
                 break;
@@ -123,7 +142,8 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                Buildings.all.push(new Tower(700));
+                tower1.x = 700;
+                Buildings.all.push(tower1);
 
                 Boar.init();
                 waitLoadingImage(Boar.images[0], () => {
@@ -147,7 +167,8 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                Buildings.all.push(new Tower(1100));
+                tower1.x = 1100;
+                Buildings.all.push(tower1);
 
                 Boar.init();
                 waitLoadingImage(Boar.images[0], () => {
@@ -171,7 +192,8 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                Buildings.all.push(new Tower(700));
+                tower1.x = 700;
+                Buildings.all.push(tower1);
                 Buildings.all[Buildings.all.length - 1].impulse = 10;
                 //Buildings.all[Buildings.all.length - 1].impulse = 5;
                 //Buildings.all[Buildings.all.length - 1].impulse = 1.5;
@@ -238,24 +260,28 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.waveCurrent = 2;
-                Buildings.all.push(new Tower(700));
-                Buildings.all.push(new Tower(1200));
+                tower1.x = 700;
+                Buildings.all.push(tower1);
+                tower2.x = 1200;
+                Buildings.all.push(tower2);
                 break;
 
             case 13: //баррикада
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Buildings.all.push(new Barricade(200));
-                Buildings.all.push(new Tower(500));
+                Buildings.all.push(barricade1);
+                tower1.x = 500;
+                Buildings.all.push(tower1);
             break;
 
             case 14: //баррикады (с двух сторон) и проверка на кабанов
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Buildings.all.push(new Barricade(200));
-                Buildings.all.push(new Barricade(1600));
+                Buildings.all.push(barricade1);
+                barricade2.x = 1600;
+                Buildings.all.push(barricade2);
 
                 var boar = new Boar(50, 780, true, 1);
                 boar.isWillUseSpecialAbility = false;
@@ -272,8 +298,9 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Buildings.all.push(new Barricade(600));
-                Buildings.all.push(new Barricade(1200));
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                Buildings.all.push(barricade2);
 
                 var boar = new Boar(0, 780, true, 1);
                 boar.isWillUseSpecialAbility = true;
@@ -290,8 +317,9 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Buildings.all.push(new Barricade(600));
-                Buildings.all.push(new Tower(1200));
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                Buildings.all.push(tower2);
                 setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
 
                 var boar = new Boar(0, 780, true, 1);
@@ -312,11 +340,14 @@ class TestPage extends React.Component {
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.waveCurrent = 2;
 
-                Buildings.all.push(new Barricade(600));
-                Buildings.all.push(new Tower(700));
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
 
-                Buildings.all.push(new Barricade(1300));
-                Buildings.all.push(new Tower(1200));
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
                 break;
 
             case 18: //летучая мышка
@@ -328,11 +359,14 @@ class TestPage extends React.Component {
                     [Bat.name]: new WaveData(30, 60, 2)
                 }];
 
-                Buildings.all.push(new Barricade(600));
-                Buildings.all.push(new Tower(700));
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
 
-                Buildings.all.push(new Barricade(1300));
-                Buildings.all.push(new Tower(1200));
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
 
                 var bat = new Bat(0, 100, true, 0.5);
                 Monsters.all.push(bat);
@@ -349,12 +383,15 @@ class TestPage extends React.Component {
                         [Zombie.name]: new WaveData(1, 30, 0),
                     }];
 
-                Buildings.all.push(new Barricade(600));
-                Buildings.all.push(new Tower(700));
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
                 setTimeout(() => Buildings.all.forEach(x => x.health-= 10), 300);
 
-                Buildings.all.push(new Barricade(1300));
-                Buildings.all.push(new Tower(1200));
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
                 break;
 
             case 20: //ремонт и апгрейд
@@ -364,12 +401,15 @@ class TestPage extends React.Component {
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
 
-                Buildings.all.push(new Barricade(600));
-                Buildings.all.push(new Tower(700));
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
                 Buildings.all.forEach(x => x.health-= 40);
 
-                Buildings.all.push(new Barricade(1300));
-                Buildings.all.push(new Tower(1200));
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
                 break;
@@ -380,14 +420,16 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 2;
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
-                const tower1 = new Tower(500);
+                tower1.x = 500;
                 tower1.bowmans = 3;
-                Buildings.all.push(new Barricade(400));
+                barricade1.x = 400;
+                Buildings.all.push(barricade1);
                 Buildings.all.push(tower1);
 
-                const tower2 = new Tower(1500);
+                tower2.x = 1500;
                 tower2.bowmans = 2;
-                Buildings.all.push(new Barricade(1600));
+                barricade2.x = 1600;
+                Buildings.all.push(barricade2);
                 Buildings.all.push(tower2);
                 break;
 
@@ -397,15 +439,17 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 0;
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
-                const tower1_ = new Tower(500);
-                tower1_.arrowSpeed = 2000;
-                Buildings.all.push(new Barricade(400));
-                Buildings.all.push(tower1_);
+                tower1.x = 500;
+                tower1.arrowSpeed = 2000;
+                barricade1.x = 400;
+                Buildings.all.push(barricade1);
+                Buildings.all.push(tower1);
 
-                const tower2_ = new Tower(1500);
-                tower2_.arrowSpeed = 2000;
-                Buildings.all.push(tower2_);
-                Buildings.all.push(new Barricade(1500));
+                tower2.x = 1500;
+                tower2.arrowSpeed = 2000;
+                Buildings.all.push(tower2);
+                barricade2.x = 1500;
+                Buildings.all.push(barricade2);
                 break;
 
             case 23: //test sound of sword
@@ -418,8 +462,9 @@ class TestPage extends React.Component {
                 }]
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
-                Buildings.all.push(new Barricade(700));
-                Buildings.all.push(new Barricade(1200));
+                barricade1.x = 700;
+                Buildings.all.push(barricade1);
+                Buildings.all.push(barricade2);
                 Buildings.all.forEach(x => x.healthMax = x.health = 2000);
                 break;
 
