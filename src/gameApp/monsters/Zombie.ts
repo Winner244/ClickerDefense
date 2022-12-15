@@ -116,6 +116,6 @@ export class Zombie extends Monster{
 	onClicked(){
 		AudioSystem.playRandom(this.centerX, 
 			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10, SoundAttacked11, SoundAttacked12], 
-			[0.04, 0.04, 0.07, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], false, 1, true);
+			[0.04, 0.04, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07], false, 1, true);
 	}
 }

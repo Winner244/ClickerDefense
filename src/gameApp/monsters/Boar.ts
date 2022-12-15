@@ -9,6 +9,8 @@ import {Building} from "../gameObjects/Building";
 import {Draw} from "../gameSystems/Draw";
 import {Game} from '../gameSystems/Game';
 
+import {AudioSystem} from '../gameSystems/AudioSystem';
+
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
 
 import Boar1Image from '../../assets/img/monsters/boar/boar.png';
@@ -17,6 +19,28 @@ import BoarSpecial1Image from '../../assets/img/monsters/boar/boarSpecial.png';
 import BoarSpecialSmokeImage from '../../assets/img/monsters/boar/boarSpecial_Smoke.png';
 import BoarSpecialDamageParticlesImage from '../../assets/img/monsters/boar/boarSpecial_DamageParticles.png';
 
+import Sound1 from '../../assets/sounds/monsters/boar/1.mp3'; 
+import Sound2 from '../../assets/sounds/monsters/boar/2.mp3'; 
+import Sound3 from '../../assets/sounds/monsters/boar/3.mp3'; 
+import Sound4 from '../../assets/sounds/monsters/boar/4.mp3'; 
+import Sound5 from '../../assets/sounds/monsters/boar/5.mp3'; 
+import Sound6 from '../../assets/sounds/monsters/boar/6.mp3'; 
+import Sound7 from '../../assets/sounds/monsters/boar/7.mp3'; 
+import Sound8 from '../../assets/sounds/monsters/boar/8.mp3'; 
+import Sound9 from '../../assets/sounds/monsters/boar/9.mp3'; 
+import Sound10 from '../../assets/sounds/monsters/boar/10.mp3'; 
+import Sound11 from '../../assets/sounds/monsters/boar/11.mp3'; 
+
+import SoundAttacked1 from '../../assets/sounds/monsters/boar/attacked1.mp3'; 
+import SoundAttacked2 from '../../assets/sounds/monsters/boar/attacked2.mp3'; 
+import SoundAttacked3 from '../../assets/sounds/monsters/boar/attacked3.mp3'; 
+import SoundAttacked4 from '../../assets/sounds/monsters/boar/attacked4.mp3'; 
+import SoundAttacked5 from '../../assets/sounds/monsters/boar/attacked5.mp3'; 
+import SoundAttacked6 from '../../assets/sounds/monsters/boar/attacked6.mp3'; 
+import SoundAttacked7 from '../../assets/sounds/monsters/boar/attacked7.mp3'; 
+import SoundAttacked8 from '../../assets/sounds/monsters/boar/attacked8.mp3'; 
+import SoundAttacked9 from '../../assets/sounds/monsters/boar/attacked9.mp3'; 
+import SoundAttacked10 from '../../assets/sounds/monsters/boar/attacked10.mp3'; 
 
 
 
@@ -58,6 +82,9 @@ export class Boar extends Monster{
 
 	private static readonly imageHandler: ImageHandler = new ImageHandler();
 	private static wasInit: boolean; //вызов функции init уже произошёл?
+	
+	private static readonly minTimeSoundWait = 3000; //миллисекунды
+	private timePlaySound: number;
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -92,6 +119,7 @@ export class Boar extends Monster{
 		this.isActivatedSpecialDamage = false;
 		this.timeSpecialAbilityWasActivated = this.timeSpecialDamageWasActivated = 0;
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
+		this.timePlaySound = Date.now() - Boar.minTimeSoundWait / 2;
 	}
 
 	static init(isLoadResources: boolean = true): void {
@@ -143,10 +171,21 @@ export class Boar extends Monster{
 		}
 
 		super.logic(millisecondsDifferent, buildings, bottomBorder);
+
+		if(this.timePlaySound + Boar.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 99){
+			this.timePlaySound = Date.now();
+			AudioSystem.playRandom(this.centerX, 
+				[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10, Sound11], 
+				[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], false, 1, true);
+		}
 	}
 
 	onClicked(): void{
 		this.stopSpecialAbility();
+
+		AudioSystem.playRandomV(this.centerX, 
+			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10], 
+			0.1, false, 1, true);
 	}
 
 	stopSpecialAbility(): void{

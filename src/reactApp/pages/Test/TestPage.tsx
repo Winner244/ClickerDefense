@@ -238,6 +238,7 @@ class TestPage extends React.Component {
                 break;
 
             case 11: //атака кабана
+                Gamer.coins - 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -259,7 +260,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.waveCurrent = 2;
+                Waves.waveCurrent = 1;
                 tower1.x = 700;
                 Buildings.all.push(tower1);
                 tower2.x = 1200;
