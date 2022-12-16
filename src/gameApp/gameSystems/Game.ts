@@ -321,6 +321,7 @@ export class Game {
 		Game.isGameRun = false;
 		Menu.show();
 		Game.drawAll(0, true);
+		BuildingButtons.hide();
 	}
 
 	/** Продолжить игру */
