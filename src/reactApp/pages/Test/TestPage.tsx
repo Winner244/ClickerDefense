@@ -271,7 +271,8 @@ class TestPage extends React.Component {
                 Monsters.all.push(bat);
                 break;
 
-            case 12: //вторая волна
+            case 12: 
+                this.text = "Вторая волна";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -280,6 +281,10 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
                 tower2.x = 1200;
                 Buildings.all.push(tower2);
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
                 break;
 
             case 13: //баррикада

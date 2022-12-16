@@ -183,7 +183,7 @@ export class Boar extends Monster{
 
 		AudioSystem.playRandomV(this.centerX, 
 			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10], 
-			0.1, false, 1, true);
+			0.2, false, 1, true);
 	}
 
 	stopSpecialAbility(): void{
