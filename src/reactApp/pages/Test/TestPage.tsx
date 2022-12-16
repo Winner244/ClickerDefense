@@ -83,12 +83,13 @@ class TestPage extends React.Component {
                 break;
 
             case 3: 
-                this.text = "Ручной ремонт + disabled ремонт для второго строения";
+                this.text = "Ручной ремонт + disabled ремонт для второго строения + нет кнопок ремонта/апгрейда у земли и каната";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
                 Gamer.coins = 12;
+                Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
                 Buildings.all.push(barricade1);
@@ -108,7 +109,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
-                Gamer.coins = 500;
+                Gamer.coins = 1500;
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
                 break;
@@ -287,7 +288,8 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade2);
                 break;
 
-            case 13: //баррикада
+            case 13: 
+                this.text = "Баррикада - возврат урона - зомби";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -296,7 +298,8 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
             break;
 
-            case 14: //баррикады (с двух сторон) и проверка на кабанов
+            case 14: 
+                this.text = "Баррикада - возврат урона - кабаны";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -315,7 +318,8 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
             break;
 
-            case 15: //баррикады (с двух сторон) и проверка наспец способность кабанов
+            case 15:
+                this.text = "Баррикада - возврат урона - спец способность кабанов"; 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -334,7 +338,8 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
             break;
 
-            case 16: //Image Handler, loading images, waiting images
+            case 16: 
+                this.text = "Image Handler, loading images, waiting images"; 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -355,7 +360,8 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
             break;
 
-            case 17: //волна 3 с летучей мышкой 
+            case 17: 
+                this.text = "Волна 3"; 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -371,13 +377,14 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower2);
                 break;
 
-            case 18: //летучая мышка
+            case 18: 
+                this.text = "Полёт летучих мышей";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.all = [ //монстры на волнах
                 { 
-                    [Bat.name]: new WaveData(30, 60, 2)
+                    [Bat.name]: new WaveData(30, 60, 0)
                 }];
 
                 barricade1.x = 600;
@@ -388,12 +395,10 @@ class TestPage extends React.Component {
                 barricade2.x = 1300;
                 Buildings.all.push(barricade2);
                 Buildings.all.push(tower2);
-
-                var bat = new Bat(0, 100, true, 0.5);
-                Monsters.all.push(bat);
                 break;
 
-            case 19: //кнопки для управления зданиями
+            case 19: 
+                this.text = "Кнопки управления зданиями появляются только после окончания волны";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Gamer.coins = 500;
@@ -415,27 +420,8 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower2);
                 break;
 
-            case 20: //ремонт и апгрейд
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Gamer.coins = 1500;
-                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.isStarted = false;
-
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                tower1.x = 700;
-                Buildings.all.push(tower1);
-                Buildings.all.forEach(x => x.health-= 40);
-
-                barricade2.x = 1300;
-                Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                Menu.displayShopButton();
-				Menu.displayNewWaveButton();
-                break;
-
-            case 21: //Tower bowmans count
+            case 20: 
+                this.text = "Несколько лучников на башнях";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
@@ -454,14 +440,17 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower2);
                 break;
 
-            case 22: //Tower arrows speed sound
+            case 21: 
+                this.text = "Скоростные стрелы у башен";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.waveCurrent = 0;
+                Waves.waveCurrent = 2;
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
 
                 tower1.x = 500;
+                tower1.bowmans = 2;
                 tower1.arrowSpeed = 2000;
+                tower1.radiusAttack = 500;
                 barricade1.x = 400;
                 Buildings.all.push(barricade1);
                 Buildings.all.push(tower1);
@@ -473,7 +462,8 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade2);
                 break;
 
-            case 23: //test sound of sword
+            case 22: 
+                this.text = "test sound of sword";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                  Waves.waveCurrent = 0;
@@ -490,20 +480,8 @@ class TestPage extends React.Component {
                 break;
 
 
-            default: //кабаны
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Zombie.name]: new WaveData(33, 10, 0),
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
-                Monsters.all.push(new Boar(650, 780, true, 1));
+            default:
+                this.text = "Тест не выбран либо такого теста нету";
                 break;
 
         }
