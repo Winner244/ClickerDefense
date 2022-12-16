@@ -29,7 +29,6 @@ import Sound7 from '../../assets/sounds/monsters/boar/7.mp3';
 import Sound8 from '../../assets/sounds/monsters/boar/8.mp3'; 
 import Sound9 from '../../assets/sounds/monsters/boar/9.mp3'; 
 import Sound10 from '../../assets/sounds/monsters/boar/10.mp3'; 
-import Sound11 from '../../assets/sounds/monsters/boar/11.mp3'; 
 
 import SoundAttacked1 from '../../assets/sounds/monsters/boar/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/monsters/boar/attacked2.mp3'; 
@@ -174,9 +173,8 @@ export class Boar extends Monster{
 
 		if(this.timePlaySound + Boar.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 99){
 			this.timePlaySound = Date.now();
-			AudioSystem.playRandom(this.centerX, 
-				[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10, Sound11], 
-				[0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1, 0.1], false, 1, true);
+			AudioSystem.playRandomV(this.centerX, 
+				[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 0.1, false, 1, true);
 		}
 	}
 

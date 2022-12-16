@@ -22,7 +22,11 @@ import {Bat} from '../../../gameApp/monsters/Bat';
 import {Monster} from '../../../gameApp/gameObjects/Monster';
 import {Building} from '../../../gameApp/gameObjects/Building';
 
+import './TestPage.scss';
+
 class TestPage extends React.Component {
+    text: string = "";
+
     componentDidMount(){
         var waitLoadingImage = function(image: HTMLImageElement, callback: Function){
             setTimeout(() => {
@@ -50,12 +54,13 @@ class TestPage extends React.Component {
         var tower2 = new Tower(1200);
         tower2.loadedResourcesAfterBuild();
         var barricade1 = new Barricade(200);
-        tower1.loadedResourcesAfterBuild();
+        barricade1.loadedResourcesAfterBuild();
         var barricade2 = new Barricade(1400);
-        tower2.loadedResourcesAfterBuild();
+        barricade2.loadedResourcesAfterBuild();
 
         switch(+variant){
-            case 1: //разрушение
+            case 1: 
+                this.text = "Разрушение строений";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -66,12 +71,24 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 700);
             break;
 
-            case 2: //пауза после волны с постройками (тест ремонта)
+            case 2: 
+                this.text = "Авто строительство башни";
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                setTimeout(() => {
+                    Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Game.bottomShiftBorder);
+                    Builder.mouseLogic(200, 0, true, false)
+                }, 300);
+                break;
+
+            case 3: 
+                this.text = "Ручной ремонт + disabled ремонт для второго строения";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
                 Waves.isStarted = false;
-                Gamer.coins = 15;
+                Gamer.coins = 12;
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
                 Buildings.all.push(barricade1);
@@ -85,7 +102,8 @@ class TestPage extends React.Component {
 
                 break;
 
-            case 3: //магазин
+            case 4: 
+                this.text = "Магазин (постройка и улучшение)";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -95,17 +113,8 @@ class TestPage extends React.Component {
 				Menu.displayNewWaveButton();
                 break;
 
-            case 4: //строительство башни - автоматом
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                setTimeout(() => {
-                    Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Game.bottomShiftBorder);
-                    Builder.mouseLogic(200, 0, true, false)
-                }, 300);
-                break;
-
-            case 5: //спец способность кабана
+            case 5: 
+                this.text = "Спец способность кабана";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -129,7 +138,8 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar2);
                 break;
 
-            case 6: //передача импульса от спец способность кабана к башне (слева)
+            case 6: 
+                this.text = "Передача импульса от спец способность кабана к башне (слева)";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -154,7 +164,8 @@ class TestPage extends React.Component {
                 });
                 break;
 
-            case 7: //передача импульса от спец способность кабана к башне (справа)
+            case 7:
+                this.text = "Передача импульса от спец способность кабана к башне (справа)";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -179,27 +190,8 @@ class TestPage extends React.Component {
                 });
                 break;
 
-            case 8: // башня получила импульс
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
-
-                tower1.x = 700;
-                Buildings.all.push(tower1);
-                Buildings.all[Buildings.all.length - 1].impulse = 10;
-                //Buildings.all[Buildings.all.length - 1].impulse = 5;
-                //Buildings.all[Buildings.all.length - 1].impulse = 1.5;
-                break;
-
-            case 9: //спец способность кабана. тест на расстояние срабатывания
+            case 8: 
+                this.text = "Расстояние срабатывания Спец способность кабана";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -218,9 +210,12 @@ class TestPage extends React.Component {
                     boar.health--;
                     Monsters.all.push(boar);
                 }
+
+                Buildings.all.forEach(x => x.healthMax = x.health = 400);
                 break;
 
-            case 10: //атака зомби
+            case 9: 
+                this.text = "Атака зомби";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -237,8 +232,9 @@ class TestPage extends React.Component {
                 Monsters.all.push(zombie);
                 break;
 
-            case 11: //атака кабана
-                Gamer.coins - 200;
+            case 10: 
+                this.text = "Атака кабана";
+                Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -254,6 +250,25 @@ class TestPage extends React.Component {
                 var boar = new Boar(1000, 780, true, 1);
                 boar.isWillUseSpecialAbility = false;
                 Monsters.all.push(boar);
+                break;
+
+            case 11: 
+                this.text = "Атака летучей мыши";
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var bat = new Bat(700, 380, true, 1);
+                Monsters.all.push(bat);
                 break;
 
             case 12: //вторая волна
@@ -487,10 +502,14 @@ class TestPage extends React.Component {
                 break;
 
         }
+
+        this.forceUpdate();
     }
 
     public render() {
-        return <div></div>;
+        return <div className='test-page'>
+                <div className='test-page__label noselect'>{this.text}</div>
+            </div>;
     }
 }
 

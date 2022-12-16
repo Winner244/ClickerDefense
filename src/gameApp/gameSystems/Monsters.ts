@@ -51,7 +51,7 @@ export class Monsters{
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
-		for(let i = 0; i < Monsters.all.length; i++){
+		for(let i = Monsters.all.length - 1; i >= 0; i--){ //в обратном порядке, что бы кликался сперва тот - который виден первым 
 			let monster = Monsters.all[i];
 			if(mouseX > monster.x + monster.reduceHover && 
 				mouseX < monster.x + monster.width - monster.reduceHover &&

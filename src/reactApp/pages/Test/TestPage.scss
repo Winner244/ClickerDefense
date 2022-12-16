@@ -1,0 +1,13 @@
+.test-page{
+	position: absolute;
+    top: 0;
+    left: 0;
+	right: 0;
+
+	&__label{
+		text-align: center;
+		font-size: 16px;
+		font-family: Calibri;
+		color: #ff0404;
+	}
+}
