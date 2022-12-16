@@ -8,20 +8,9 @@ import AudioIIRFilter from "../../models/AudioIIRFilter";
 
 
 export class AudioSystem{
-	private static readonly delayBetweenBiquadFilters: number = 10; //milliseconds
-	private static readonly curves: Float32Array[] = [
-		AudioSystem._getDistortionCurve(2),
-		AudioSystem._getDistortionCurve(3),
-		AudioSystem._getDistortionCurve(4),
-		AudioSystem._getDistortionCurve(5),
-		AudioSystem._getDistortionCurve(6),
-		AudioSystem._getDistortionCurve(7),
-	];
-
 	static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
 	static musicVolume: number = 1; //общий уровень звука фоновой музыки (0 - is min value, 1 - is max value)
 	static isEnabled: boolean = true;
-	static lastUsedBiquadFilter: number = 0; //to protect from over перегруз
 
 	public static iirFilters = {
 		low: new AudioIIRFilter(
@@ -123,14 +112,6 @@ export class AudioSystem{
 			else if(isUseBiquadFilterRandom) {
 				const biquadFilter = this._getRandomBiquadFilter(context);
 				var chain = source.connect(biquadFilter);
-
-				if(false && Math.random() > 0.5){
-					var random = Helper.getRandom(2, 7);
-					const distortion = context.createWaveShaper();
-					distortion.curve = this.curves[random];
-					distortion.oversample = "4x";
-					chain = chain.connect(distortion);
-				}
 				chain = chain.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 			else{
@@ -218,7 +199,6 @@ export class AudioSystem{
 		biquadFilter.frequency.setValueAtTime(frequency, context.currentTime);
 		biquadFilter.gain.setValueAtTime(gain, context.currentTime);
 		biquadFilter.Q.setValueAtTime(q, context.currentTime);
-		AudioSystem.lastUsedBiquadFilter = Date.now();
 
 		return biquadFilter;
 	}
