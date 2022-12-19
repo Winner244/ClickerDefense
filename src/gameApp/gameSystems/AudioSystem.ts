@@ -23,39 +23,39 @@ export class AudioSystem{
 	private static waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
 	private static iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem.context.createIIRFilter(x.feedforward, x.feedback));
 
-	public static load(pathToAudioFile: string){
-		return this._load(pathToAudioFile, (buffer) => {});
+	public static load(pathToAudioFile: string): Promise<AudioBuffer> {
+		return this._load(pathToAudioFile);
 	}
 
-	private static _load(pathToAudioFile: string, callback: (buffer: AudioBuffer) => void){
-		var buffer = AudioSystem.Buffers[pathToAudioFile];
-		if(buffer){
-			if(callback){
-				callback(buffer);
+	private static _load(pathToAudioFile: string): Promise<AudioBuffer> {
+		return new Promise((done, fail) => {
+			var buffer = AudioSystem.Buffers[pathToAudioFile];
+			if(buffer){
+				done(buffer);
+				return;
 			}
-			return;
-		}
-	
-		//load audio file
-		var request = new XMLHttpRequest();
-		request.open('GET', pathToAudioFile, true); 
-		request.responseType = 'arraybuffer';
-		request.onload = function() {
-			AudioSystem.context.decodeAudioData(request.response, 
-				function(buffer) {
-					AudioSystem.Buffers[pathToAudioFile] = buffer;
-					if(callback){
-						callback(buffer);
-					}
-				}, 
-				function(err) { 
-					console.error('error of decoding audio file: ' + pathToAudioFile, err); 
-				});
-		};
-		request.onerror = function(err){
-			console.error('error of loading audio file: ' + pathToAudioFile, err); 
-		};
-		request.send();
+		
+			//load audio file
+			var request = new XMLHttpRequest();
+			request.open('GET', pathToAudioFile, true); 
+			request.responseType = 'arraybuffer';
+			request.onload = function() {
+				AudioSystem.context.decodeAudioData(request.response, 
+					function(buffer) {
+						AudioSystem.Buffers[pathToAudioFile] = buffer;
+						done(buffer);
+					}, 
+					function(err) { 
+						console.error('error of decoding audio file: ' + pathToAudioFile, err); 
+						fail(err);
+					});
+			};
+			request.onerror = function(err){
+				console.error('error of loading audio file: ' + pathToAudioFile, err); 
+				fail(err);
+			};
+			request.send();
+		});
 	}
 
 
@@ -76,9 +76,9 @@ export class AudioSystem{
 		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed, isUseBiquadFilterRandom);
 	}
 
-	public static play(x: number, pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): void{
+	public static play(x: number, pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): Promise<AudioBufferSourceNode|Tone.Player|null>{
 		if (!AudioSystem.isEnabled){
-			return;
+			return new Promise(done => done(null));
 		}
 
 		//volume
@@ -89,10 +89,11 @@ export class AudioSystem{
 		gainNode.gain.value = volume * volumeSettings;
 		gainNode.connect(this.context.destination)
 
-		this._load(pathToAudioFile, (buffer) => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter));
+		return this._load(pathToAudioFile)
+			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter));
 	}
 
-	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null){
+	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null) : AudioBufferSourceNode|Tone.Player{
 		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 
 		const pannerValue = x == -1 
@@ -119,6 +120,7 @@ export class AudioSystem{
 			}
 
 			source.start(0); 
+			return source;
 		}
 		else{
 			const sourceTone = new Tone.Player(buffer);
@@ -144,6 +146,7 @@ export class AudioSystem{
 			sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
 			sourceTone.toDestination();
 			sourceTone.start(); 
+			return sourceTone;
 		}
 	}
 
@@ -246,18 +249,5 @@ export class AudioSystem{
 		const index = Object.values(this.iirFilters).findIndex(x => x.id == IIRFilter.id);
 		const iirFilterBuilded = this.iirFiltersBuilded[index];
 		return iirFilterBuilded;
-	}
-
-
-	private static _getDistortionCurve(amount: number) : Float32Array {
-		const n_samples = 44100;
-		const curve = new Float32Array(n_samples);
-		const deg = Math.PI / 180;
-	  
-		for (let i = 0; i < n_samples; i++) {
-		  const x = (i * 2) / n_samples - 1;
-		  curve[i] = ((3 + amount) * x * 20 * deg) / (Math.PI + amount * Math.abs(x));
-		}
-		return curve;
 	}
 }

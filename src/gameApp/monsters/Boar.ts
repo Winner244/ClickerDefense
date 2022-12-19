@@ -1,3 +1,5 @@
+import * as Tone from 'tone';
+
 import {ImageHandler} from '../ImageHandler';
 
 import {Helper} from '../helpers/Helper';
@@ -87,6 +89,7 @@ export class Boar extends Monster{
 	
 	private static readonly minTimeSoundWait = 3000; //миллисекунды
 	private timePlaySound: number;
+	private runningSound: Tone.Player|null;
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -122,6 +125,7 @@ export class Boar extends Monster{
 		this.timeSpecialAbilityWasActivated = this.timeSpecialDamageWasActivated = 0;
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 		this.timePlaySound = Date.now() - Boar.minTimeSoundWait / 2;
+		this.runningSound = null;
 	}
 
 	static init(isLoadResources: boolean = true): void {
@@ -171,7 +175,14 @@ export class Boar extends Monster{
 				this.modifiers.push(new BoarSpecialAbility());
 
 				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true);
-				setTimeout(() => AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true), 1200);
+				setTimeout(() => {
+					AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true)
+						.then(sourse => {
+							if(sourse == null || sourse instanceof Tone.Player){
+								this.runningSound = sourse;
+							}
+						});
+				}, 1200);
 			}
 		}
 
@@ -197,8 +208,8 @@ export class Boar extends Monster{
 		this.isWillUseSpecialAbility = false;
 		this.isActivatedSpecialAbility = false;
 		this.timeSpecialAbilityWasActivated = 0;
-
-		//TODO: stop running audio
+		this.runningSound?.stop();
+		this.runningSound = null;
 	}
 
 	draw(isGameOver: boolean) {
