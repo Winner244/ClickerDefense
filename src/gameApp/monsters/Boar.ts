@@ -91,7 +91,6 @@ export class Boar extends Monster{
 	private timePlaySound: number;
 	private startSpecialSound: AudioBufferSourceNode|Tone.Player|null;
 	private runningSound: AudioBufferSourceNode|Tone.Player|null;
-	private runningSoundTimeout: NodeJS.Timeout|null;
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -129,7 +128,6 @@ export class Boar extends Monster{
 		this.timePlaySound = Date.now() - Boar.minTimeSoundWait / 2;
 		this.startSpecialSound = null;
 		this.runningSound = null;
-		this.runningSoundTimeout = null;
 	}
 
 	static init(isLoadResources: boolean = true): void {
@@ -179,11 +177,7 @@ export class Boar extends Monster{
 				this.modifiers.push(new BoarSpecialAbility());
 
 				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true).then(res => this.startSpecialSound = res);
-				this.runningSoundTimeout = setTimeout(() => {
-					if(this.health > 0){
-						AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true).then(sourse => this.runningSound = sourse);
-					}
-				}, 1200);
+				AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true, null, 1.2).then(sourse => this.runningSound = sourse);
 			}
 		}
 
@@ -213,17 +207,10 @@ export class Boar extends Monster{
 		this.runningSound = null;
 		this.startSpecialSound?.stop();
 		this.startSpecialSound = null;
-		if(this.runningSoundTimeout){
-			clearTimeout(this.runningSoundTimeout);
-		}
 	}
 
 	destroy(){
 		super.destroy();
-
-		if(this.runningSoundTimeout){
-			clearTimeout(this.runningSoundTimeout);
-		}
 		this.runningSound?.stop();
 		this.runningSound = null;
 		this.startSpecialSound?.stop();

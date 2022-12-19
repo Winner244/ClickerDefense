@@ -76,7 +76,15 @@ export class AudioSystem{
 		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed, isUseBiquadFilterRandom);
 	}
 
-	public static play(x: number, pathToAudioFile: string, volume: number = 1, isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null): Promise<AudioBufferSourceNode|Tone.Player|null>{
+	public static play(x: number, 
+		pathToAudioFile: string, 
+		volume: number = 1, 
+		isMusic: boolean = false,
+		speed: number = 1, 
+		isUseBiquadFilterRandom = false, 
+		IIRFilter: AudioIIRFilter|null = null, 
+		delayStarting: number = 0): Promise<AudioBufferSourceNode|Tone.Player|null>
+	{
 		if (!AudioSystem.isEnabled){
 			return new Promise(done => done(null));
 		}
@@ -90,10 +98,10 @@ export class AudioSystem{
 		gainNode.connect(this.context.destination)
 
 		return this._load(pathToAudioFile)
-			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter));
+			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStarting));
 	}
 
-	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null) : AudioBufferSourceNode|Tone.Player{
+	private static _play(x: number, context: AudioContext, buffer: AudioBuffer, gainNode: GainNode, speed: number, isUseBiquadFilterRandom = false, IIRFilter: AudioIIRFilter|null = null, delayStarting: number = 0) : AudioBufferSourceNode|Tone.Player{
 		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 
 		const pannerValue = x == -1 
@@ -119,7 +127,7 @@ export class AudioSystem{
 				source.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 
-			source.start(0); 
+			source.start(delayStarting); 
 			return source;
 		}
 		else{
@@ -145,7 +153,7 @@ export class AudioSystem{
 			sourceTone.playbackRate = speed;
 			sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
 			sourceTone.toDestination();
-			sourceTone.start(); 
+			sourceTone.start("+" + delayStarting); 
 			return sourceTone;
 		}
 	}
