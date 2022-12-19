@@ -274,6 +274,8 @@ export class Monster{
 
 	onClicked(): void{}
 
+	destroy(): void{}
+
 	draw(isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;

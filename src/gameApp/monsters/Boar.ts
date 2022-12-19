@@ -89,7 +89,9 @@ export class Boar extends Monster{
 	
 	private static readonly minTimeSoundWait = 3000; //миллисекунды
 	private timePlaySound: number;
-	private runningSound: Tone.Player|null;
+	private startSpecialSound: AudioBufferSourceNode|Tone.Player|null;
+	private runningSound: AudioBufferSourceNode|Tone.Player|null;
+	private runningSoundTimeout: NodeJS.Timeout|null;
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -125,7 +127,9 @@ export class Boar extends Monster{
 		this.timeSpecialAbilityWasActivated = this.timeSpecialDamageWasActivated = 0;
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 		this.timePlaySound = Date.now() - Boar.minTimeSoundWait / 2;
+		this.startSpecialSound = null;
 		this.runningSound = null;
+		this.runningSoundTimeout = null;
 	}
 
 	static init(isLoadResources: boolean = true): void {
@@ -174,14 +178,11 @@ export class Boar extends Monster{
 				this.timeSpecialAbilityWasActivated = Date.now();
 				this.modifiers.push(new BoarSpecialAbility());
 
-				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true);
-				setTimeout(() => {
-					AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true)
-						.then(sourse => {
-							if(sourse == null || sourse instanceof Tone.Player){
-								this.runningSound = sourse;
-							}
-						});
+				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true).then(res => this.startSpecialSound = res);
+				this.runningSoundTimeout = setTimeout(() => {
+					if(this.health > 0){
+						AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true).then(sourse => this.runningSound = sourse);
+					}
 				}, 1200);
 			}
 		}
@@ -210,6 +211,23 @@ export class Boar extends Monster{
 		this.timeSpecialAbilityWasActivated = 0;
 		this.runningSound?.stop();
 		this.runningSound = null;
+		this.startSpecialSound?.stop();
+		this.startSpecialSound = null;
+		if(this.runningSoundTimeout){
+			clearTimeout(this.runningSoundTimeout);
+		}
+	}
+
+	destroy(){
+		super.destroy();
+
+		if(this.runningSoundTimeout){
+			clearTimeout(this.runningSoundTimeout);
+		}
+		this.runningSound?.stop();
+		this.runningSound = null;
+		this.startSpecialSound?.stop();
+		this.startSpecialSound = null;
 	}
 
 	draw(isGameOver: boolean) {

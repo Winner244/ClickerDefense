@@ -82,6 +82,7 @@ export class Monsters{
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
 				if(monster.health <= 0){
+					monster.destroy();
 					Labels.createCoinLabel(monster.x, monster.y, '+1');
 					Monsters.all.splice(i, 1);
 					i--;

@@ -115,7 +115,7 @@ class TestPage extends React.Component {
                 break;
 
             case 5: 
-                this.text = "Спец способность кабана";
+                this.text = "Спец способность кабана + отмена при получении урона";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndTimeLeft = Waves.delayStartTimeLeft = 0;
@@ -136,7 +136,7 @@ class TestPage extends React.Component {
                 var boar2 = new Boar(1850, 780, false, 1);
                 boar2.isWillUseSpecialAbility = true;
                 boar2.health--;
-                Monsters.all.push(boar2);
+               // Monsters.all.push(boar2);
                 break;
 
             case 6: 
