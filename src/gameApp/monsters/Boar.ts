@@ -217,6 +217,16 @@ export class Boar extends Monster{
 		this.startSpecialSound = null;
 	}
 
+	
+	pauseSounds(){
+		//this.runningSound?.pause();
+		//this.startSpecialSound?.pause();
+	}
+
+	resumeSounds(){
+		
+	}
+
 	draw(isGameOver: boolean) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
