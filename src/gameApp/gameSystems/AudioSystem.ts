@@ -106,7 +106,7 @@ export class AudioSystem{
 
 		const pannerValue = x == -1 
 			? 0 
-			: x / Draw.canvas.width * 2 - 1;
+			: Math.min(1, Math.max(-1, x / Draw.canvas.width * 2 - 1));
 
 		if(speed == 1){
 			let source = context.createBufferSource();
