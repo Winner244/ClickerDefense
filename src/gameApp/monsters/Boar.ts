@@ -41,6 +41,9 @@ import SoundAttacked8 from '../../assets/sounds/monsters/boar/attacked8.mp3';
 import SoundAttacked9 from '../../assets/sounds/monsters/boar/attacked9.mp3'; 
 import SoundAttacked10 from '../../assets/sounds/monsters/boar/attacked10.mp3'; 
 
+import SoundStartSpecial from '../../assets/sounds/monsters/boar/special/start.mp3'; 
+import SoundRunning from '../../assets/sounds/monsters/boar/special/running.mp3'; 
+
 
 
 export class Boar extends Monster{
@@ -166,6 +169,9 @@ export class Boar extends Monster{
 				this.isActivatedSpecialAbility = true;
 				this.timeSpecialAbilityWasActivated = Date.now();
 				this.modifiers.push(new BoarSpecialAbility());
+
+				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true);
+				setTimeout(() => AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true), 1200);
 			}
 		}
 
@@ -191,6 +197,8 @@ export class Boar extends Monster{
 		this.isWillUseSpecialAbility = false;
 		this.isActivatedSpecialAbility = false;
 		this.timeSpecialAbilityWasActivated = 0;
+
+		//TODO: stop running audio
 	}
 
 	draw(isGameOver: boolean) {
