@@ -84,9 +84,10 @@ export class AudioSystem{
 		isMusic: boolean = false,
 		speed: number = 1, 
 		isUseBiquadFilterRandom = false, 
-		IIRFilter: AudioIIRFilter|null = null, 
-		delayStartingSeconds: number = 0,
-		isUseAutoPauseAndResume: boolean = false): Promise<AudioBufferSourceNode|Tone.Player|null>
+		IIRFilter: AudioIIRFilter|null = null,
+		isUseAutoPauseAndResume: boolean = false, 
+		delayStartingSeconds: number = 0, 
+		offsetStartingSeconds: number = 0): Promise<AudioBufferSourceNode|Tone.Player|null>
 	{
 		if (!AudioSystem.isEnabled){
 			return new Promise(done => done(null));
@@ -101,13 +102,14 @@ export class AudioSystem{
 		gainNode.connect(this.context.destination)
 
 		return this._load(pathToAudioFile)
-			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStartingSeconds))
+			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
 				if(isUseAutoPauseAndResume){
 					(<any>source).startedAt = this.context.currentTime + delayStartingSeconds * 1000;
 					if(source instanceof AudioBufferSourceNode){
 						this.soundsForPause.push(source);
 						source.onended = () => this.soundsForPause = this.soundsForPause.filter(x => x != source);
+						(<any>source).restart = (delay: number, offset: number) => AudioSystem.play(x, pathToAudioFile, volume, isMusic, speed, isUseBiquadFilterRandom, IIRFilter, true, delay, offset);
 					}
 					else if(source instanceof Tone.Player){
 						this.soundsToneForPause.push(source);
@@ -126,7 +128,8 @@ export class AudioSystem{
 		speed: number, 
 		isUseBiquadFilterRandom = false, 
 		IIRFilter: AudioIIRFilter|null = null, 
-		delayStartingSeconds: number = 0) : AudioBufferSourceNode|Tone.Player
+		delayStartingSeconds: number = 0, 
+		offsetSeconds: number = 0) : AudioBufferSourceNode|Tone.Player
 	{
 		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 
@@ -153,7 +156,8 @@ export class AudioSystem{
 				source.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 
-			source.start(delayStartingSeconds); 
+			console.log('source.start', delayStartingSeconds, offsetSeconds);
+			source.start(delayStartingSeconds, offsetSeconds); 
 			return source;
 		}
 		else{
@@ -179,7 +183,7 @@ export class AudioSystem{
 			sourceTone.playbackRate = speed;
 			sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
 			sourceTone.toDestination();
-			sourceTone.start("+" + delayStartingSeconds); 
+			sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 
 			return sourceTone;
 		}
 	}
@@ -308,9 +312,17 @@ export class AudioSystem{
 			var pausedAt = (<any>x).pausedAt || 0;
 			var startedAt = (<any>x).startedAt || 0;
 
-			var delayLeft = Math.max(0, startedAt - this.context.currentTime);
-			var offset = delayLeft > 0 ? 0 : pausedAt - startedAt;
-			(<AudioBufferSourceNode|Tone.Player>x).start(delayLeft / 1000, offset);
+			var delayLeftSec = Math.max(0, startedAt - this.context.currentTime) / 1000;
+			var offsetSec = delayLeftSec > 0 ? 0 : (pausedAt - startedAt) / 1000;
+			if(x instanceof AudioBufferSourceNode){
+				this.soundsForPause = this.soundsForPause.filter(y => y != x);
+				console.log('restart', delayLeftSec, offsetSec);
+				(<any>x).restart(delayLeftSec, offsetSec * 1000);
+			}
+			else if(x instanceof Tone.Player){
+				(<Tone.Player>x).start(delayLeftSec, offsetSec);
+				(<Tone.Player>x).onstop = () => this.soundsToneForPause = this.soundsToneForPause.filter(y => y != x);
+			}
 		});
 	}
 }
