@@ -276,10 +276,6 @@ export class Monster{
 
 	destroy(): void{}
 
-	pauseSounds(): void{}
-
-	resumeSounds(): void{}
-
 	draw(isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;

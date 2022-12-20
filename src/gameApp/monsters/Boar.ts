@@ -176,8 +176,8 @@ export class Boar extends Monster{
 				this.timeSpecialAbilityWasActivated = Date.now();
 				this.modifiers.push(new BoarSpecialAbility());
 
-				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true).then(res => this.startSpecialSound = res);
-				AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true, null, 1.2).then(sourse => this.runningSound = sourse);
+				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true, null, 0, true).then(res => this.startSpecialSound = res);
+				AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true, null, 1.2, true).then(sourse => this.runningSound = sourse);
 			}
 		}
 
@@ -215,16 +215,6 @@ export class Boar extends Monster{
 		this.runningSound = null;
 		this.startSpecialSound?.stop();
 		this.startSpecialSound = null;
-	}
-
-	
-	pauseSounds(){
-		//this.runningSound?.pause();
-		//this.startSpecialSound?.pause();
-	}
-
-	resumeSounds(){
-		
 	}
 
 	draw(isGameOver: boolean) {

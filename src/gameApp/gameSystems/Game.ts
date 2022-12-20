@@ -322,6 +322,7 @@ export class Game {
 		Menu.show();
 		Game.drawAll(0, true);
 		BuildingButtons.hide();
+		AudioSystem.pauseSounds();
 	}
 
 	/** Продолжить игру */
@@ -337,6 +338,7 @@ export class Game {
 		Mouse.isClick = false;
 		Game.isBlockMouseLogic = false;
 		BuildingButtons.hide();
+		AudioSystem.resumeSounds();
 	}
 
 	/** Начать новую волну */
