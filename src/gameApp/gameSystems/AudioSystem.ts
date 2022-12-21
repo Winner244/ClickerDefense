@@ -84,10 +84,10 @@ export class AudioSystem{
 		isMusic: boolean = false,
 		speed: number = 1, 
 		isUseBiquadFilterRandom = false, 
-		IIRFilter: AudioIIRFilter|null = null,
 		isUseAutoPauseAndResume: boolean = false, 
 		delayStartingSeconds: number = 0, 
-		offsetStartingSeconds: number = 0): Promise<AudioBufferSourceNode|Tone.Player|null>
+		offsetStartingSeconds: number = 0,
+		IIRFilter: AudioIIRFilter|null = null): Promise<AudioBufferSourceNode|Tone.Player|null>
 	{
 		if (!AudioSystem.isEnabled){
 			return new Promise(done => done(null));
@@ -105,11 +105,11 @@ export class AudioSystem{
 			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
 				if(isUseAutoPauseAndResume){
-					(<any>source).startedAt = this.context.currentTime + delayStartingSeconds * 1000;
+					(<any>source).startedAt = this.context.currentTime + delayStartingSeconds;
 					if(source instanceof AudioBufferSourceNode){
 						this.soundsForPause.push(source);
 						source.onended = () => this.soundsForPause = this.soundsForPause.filter(x => x != source);
-						(<any>source).restart = (delay: number, offset: number) => AudioSystem.play(x, pathToAudioFile, volume, isMusic, speed, isUseBiquadFilterRandom, IIRFilter, true, delay, offset);
+						(<any>source).restart = (delay: number, offset: number) => AudioSystem.play(x, pathToAudioFile, volume, isMusic, speed, isUseBiquadFilterRandom, true, delay, offset, IIRFilter);
 					}
 					else if(source instanceof Tone.Player){
 						this.soundsToneForPause.push(source);
@@ -156,7 +156,6 @@ export class AudioSystem{
 				source.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 
-			console.log('source.start', delayStartingSeconds, offsetSeconds);
 			source.start(delayStartingSeconds, offsetSeconds); 
 			return source;
 		}
@@ -292,11 +291,11 @@ export class AudioSystem{
 
 
 	public static pauseSounds(){
-		console.log('pauseSounds', this.soundsForPause, this.soundsToneForPause);
 		var allRecords: any[] = [];
 		allRecords = allRecords.concat(this.soundsForPause, this.soundsToneForPause);
 		allRecords.forEach(x => {
 			(<any>x).pausedAt = this.context.currentTime;
+			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this.context.currentTime);
 			(<AudioBufferSourceNode>x).onended = () => {};
 			(<Tone.Player>x).onstop = () => {};
 			(<AudioBufferSourceNode|Tone.Player>x).stop(0);
@@ -305,19 +304,17 @@ export class AudioSystem{
 
 	
 	public static resumeSounds(){
-		console.log('resumeSounds', this.soundsForPause, this.soundsToneForPause);
 		var allRecords: any[] = [];
 		allRecords = allRecords.concat(this.soundsForPause, this.soundsToneForPause);
 		allRecords.forEach(x => {
 			var pausedAt = (<any>x).pausedAt || 0;
 			var startedAt = (<any>x).startedAt || 0;
+			var delayLeftSec = (<any>x).delayLeftSec || 0;
 
-			var delayLeftSec = Math.max(0, startedAt - this.context.currentTime) / 1000;
-			var offsetSec = delayLeftSec > 0 ? 0 : (pausedAt - startedAt) / 1000;
+			var offsetSec = delayLeftSec > 0 ? 0 : (pausedAt - startedAt);
 			if(x instanceof AudioBufferSourceNode){
 				this.soundsForPause = this.soundsForPause.filter(y => y != x);
-				console.log('restart', delayLeftSec, offsetSec);
-				(<any>x).restart(delayLeftSec, offsetSec * 1000);
+				(<any>x).restart(delayLeftSec, offsetSec);
 			}
 			else if(x instanceof Tone.Player){
 				(<Tone.Player>x).start(delayLeftSec, offsetSec);

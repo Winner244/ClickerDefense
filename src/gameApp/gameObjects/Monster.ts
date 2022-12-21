@@ -49,8 +49,6 @@ export class Monster{
 	isLeftSide: boolean; // с левой стороны движется?
 	isLand: boolean; //наземный?
 
-	createdTime: number;
-
 	buildingGoal: Building|null; //цель-здание для атаки
 
 	modifiers: Modifier[]; //бафы/дебафы
@@ -110,7 +108,6 @@ export class Monster{
 		this.buildingGoal = null;
 		this.modifiers = [];
 		this.leftTimeToAttacked = 0;
-		this.createdTime = Date.now();
 	}
 
 	get height(): number {
