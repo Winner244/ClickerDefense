@@ -52,7 +52,7 @@ export class Bat extends Monster{
 			300,  //speed anumation attack
 			5,  //reduce hover
 			1,  //health
-			5,  //damage
+			0.1,  //damage
 			200, //time attack wait
 			200, //speed
 			Bat.imageHandler);

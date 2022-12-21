@@ -114,7 +114,7 @@ export class Boar extends Monster{
 			500,
 			5,
 			4,  //health
-			180, //damage
+			3, //damage
 			500,  //time attack wait
 			150,  //speed
 			Boar.imageHandler);
@@ -162,7 +162,7 @@ export class Boar extends Monster{
 				this.timeSpecialDamageWasActivated = Date.now();
 			}
 			else {
-				this.lastAttackedTime = Date.now(); //что бы не сработала первая обычная атака в базовом методе
+				this.leftTimeToAttacked = this.attackTimeWaiting; //что бы не сработала первая обычная атака в базовом методе
 			}
 		}
 		else if(this.isWillUseSpecialAbility) {

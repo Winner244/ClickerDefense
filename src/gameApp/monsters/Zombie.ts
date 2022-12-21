@@ -75,7 +75,7 @@ export class Zombie extends Monster{
 			1000,
 			5,
 			3,  //health
-			100,   //damage
+			1.4,   //damage
 			990, //time attack wait
 			50,  //speed
 			Zombie.imageHandler); 

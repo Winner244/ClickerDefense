@@ -55,8 +55,8 @@ export class Monster{
 
 	modifiers: Modifier[]; //бафы/дебафы
 
-	lastAttackedTime: number; //последнее время атаки (unixtime)
-	attackTimeWaiting: number; //частота атаки (выражается вовремени ожидания после атаки)
+	leftTimeToAttacked: number; //оставшееся время до следующей атаки (миллисекунды)
+	readonly attackTimeWaiting: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
 
 	imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 
@@ -99,7 +99,7 @@ export class Monster{
 		this.healthMax = healthMax * scaleSize; //максимум хп
 		this.health = healthMax * scaleSize;
 
-		this.damage = damage * scaleSize; //урон (в секунду)
+		this.damage = damage * scaleSize; //урон за 1 раз
 		this.attackTimeWaiting = attackTimeWaiting;
 		this.speed = speed; //скорость (пикселей в секунду)
 
@@ -109,7 +109,7 @@ export class Monster{
 		this.isAttack = false; //атакует?
 		this.buildingGoal = null;
 		this.modifiers = [];
-		this.lastAttackedTime = 0;
+		this.leftTimeToAttacked = 0;
 		this.createdTime = Date.now();
 	}
 
@@ -220,13 +220,15 @@ export class Monster{
 		}
 
 		//логика атаки
+		if(this.leftTimeToAttacked > 0)
+			this.leftTimeToAttacked -= millisecondsDifferent;
+
 		if(this.isAttack) //если атакует
 		{
 			//атака
-			if(this.lastAttackedTime + this.attackTimeWaiting < Date.now()){
+			if(this.leftTimeToAttacked <= 0){
 				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
-				let damage = this.damage * (millisecondsDifferent / 1000);
-				damage += damage * damageMultiplier;
+				let damage = this.damage + this.damage * damageMultiplier;
 				this.attack(damage);
 			}
 
@@ -256,7 +258,7 @@ export class Monster{
 	attack(damage: number): void{
 		if(damage > 0 && this.buildingGoal != null){
 			const realDamage = this.buildingGoal.applyDamage(damage); //монстр наносит урон
-			this.lastAttackedTime = Date.now();
+			this.leftTimeToAttacked = this.attackTimeWaiting;
 			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
 
 			var size = this.width * this.height;

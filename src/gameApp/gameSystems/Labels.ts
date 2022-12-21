@@ -27,8 +27,9 @@ export class Labels{
 	static logic(millisecondsDifferent: number): void{
 		//контроль за временем жизни
 		for(let i = 0; i < Labels.labels.length; i++){
-			let leftTime = Date.now() - (Labels.labels[i].timeCreated + Labels.labels[i].lifeTimeMilliseconds);
-			if(leftTime > 0){
+			Labels.labels[i].logic(millisecondsDifferent);
+
+			if(Labels.labels[i].leftTimeMilliseconds <= 0){
 				Labels.labels.splice(i, 1);
 				i--;
 				continue;
