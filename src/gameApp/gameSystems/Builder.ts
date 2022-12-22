@@ -54,7 +54,7 @@ export class Builder {
 				
 				Buildings.all.push(this.selectedBuildingForBuild);
 				this.isDrawSmoke = true;
-				this.smokeAnimation.timeCreated = Date.now();
+				this.smokeAnimation.restart();
 				AudioSystem.play(mouseX, BuildSoundUrl, 0.15);
 				Game.loadResourcesAfterBuild(this.selectedBuildingForBuild);
 				return;
@@ -68,28 +68,28 @@ export class Builder {
 
 	static logic(){
 		if(this.selectedBuildingForBuild && this.isDrawSmoke){
-			if(this.smokeAnimation.timeCreated + this.smokeAnimation.duration < Date.now()){
+			if(this.smokeAnimation.leftTimeMs <= 0){
 				this.selectedBuildingForBuild = null;
 				this.isDrawSmoke = false;
 			}
 		}
 	}
 
-	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
+	static draw(millisecondsDifferent: number, isGameOver: boolean): void{
 		if(this.selectedBuildingForBuild){
 			if(this.isDrawSmoke){
 				let smokeWidth = this.selectedBuildingForBuild.width * 2;
 				let newHeight = this.smokeAnimation.image.height * (smokeWidth / (this.smokeAnimation.image.width / this.smokeAnimation.frames));
 				const x = this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2;
 				const y = this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight;
-				this.smokeAnimation.draw(isGameOver, x, y, smokeWidth, newHeight);
+				this.smokeAnimation.draw(millisecondsDifferent, isGameOver, x, y, smokeWidth, newHeight);
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{
 				if(this.isAnotherBuilding){
 					Draw.ctx.filter="grayscale(1) ";
 				}
-				this.selectedBuildingForBuild.draw(millisecondsFromStart, isGameOver, true);
+				this.selectedBuildingForBuild.draw(millisecondsDifferent, isGameOver, true);
 				Draw.ctx.filter="none";
 			}
 		}

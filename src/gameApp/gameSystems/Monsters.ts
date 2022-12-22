@@ -97,8 +97,8 @@ export class Monsters{
 		//логика исчезновение погибших монстров
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
-				this.explosions[i].lifeTime -= millisecondsDifferent;
-				if(this.explosions[i].lifeTime <= 0){
+				this.explosions[i].leftTimeMs -= millisecondsDifferent;
+				if(this.explosions[i].leftTimeMs <= 0){
 					this.explosions.splice(i, 1);
 					i--;
 				}
@@ -124,14 +124,15 @@ export class Monsters{
 		}
 	}
 
-	static draw(isGameOver: boolean): void{
+	static draw(millisecondsDifferent: number, isGameOver: boolean): void{
 		//исчезновение погибших монстров
 		this.explosions.forEach(x => {
 			let newWidth = (this.explosionAnimation.image.width / this.explosionAnimation.frames) * (x.size.height / (this.explosionAnimation.image.height));
-			this.explosionAnimation.draw(false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height, x.lifeTime);
+			this.explosionAnimation.leftTimeMs = x.leftTimeMs;
+			this.explosionAnimation.draw(millisecondsDifferent, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height);
 		});
 
-		Monsters.all.forEach(monster => monster.draw(isGameOver));
+		Monsters.all.forEach(monster => monster.draw(millisecondsDifferent, isGameOver));
 	}
 
 	static create(name: string, isLeftSide: boolean, scaleSize: number): Monster{

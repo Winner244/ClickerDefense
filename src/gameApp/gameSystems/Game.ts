@@ -164,7 +164,6 @@ export class Game {
 		else{
 			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
-				Game.gameOverTime = Date.now();
 			}
 
 			Builder.logic();
@@ -184,7 +183,7 @@ export class Game {
 
 		FPS.counting();
 
-		Game.drawAll(millisecondsFromStart);
+		Game.drawAll(millisecondsFromStart, millisecondsDifferent);
 
 		if(!Game.isEndAfterGameOver){
 			window.requestAnimationFrame(Game.go);
@@ -250,19 +249,19 @@ export class Game {
 		Keypad.isEnter = false;
 	}
 
-	private static drawAll(millisecondsFromStart: number, isPausedMode: boolean = false) : void{
+	private static drawAll(millisecondsFromStart: number, millisecondsDifferent: number, isPausedMode: boolean = false) : void{
 		Draw.clear(); //очищаем холст
 		Draw.drawBlackout(); //затемняем фон
 	
-		Buildings.draw(millisecondsFromStart, Game.isGameOver);
+		Buildings.draw(millisecondsDifferent, Game.isGameOver);
 		Buildings.drawHealth();
 		Buildings.drawRepairingAnumation();
 
-		Builder.draw(millisecondsFromStart, Game.isGameOver);
+		Builder.draw(millisecondsDifferent, Game.isGameOver);
 	
 		Coins.draw();
 	
-		Monsters.draw(Game.isGameOver);
+		Monsters.draw(millisecondsDifferent, Game.isGameOver);
 	
 		Draw.drawGrass(Game.grassImage); 
 	
@@ -320,7 +319,7 @@ export class Game {
 		Game.animationId = 0;
 		Game.isGameRun = false;
 		Menu.show();
-		Game.drawAll(0, true);
+		Game.drawAll(0, 0, true);
 		BuildingButtons.hide();
 		AudioSystem.pauseSounds();
 	}

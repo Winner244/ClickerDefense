@@ -3,7 +3,6 @@ import {ImageHandler} from '../ImageHandler';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import {Monster} from '../gameObjects/Monster';
-import {Building} from '../gameObjects/Building';
 
 import {Helper} from '../helpers/Helper';
 
@@ -44,18 +43,12 @@ import SoundAttacked12 from '../../assets/sounds/monsters/zombie/attacked12.mp3'
 
 
 export class Zombie extends Monster{
+	public static readonly imageHandler: ImageHandler = new ImageHandler();
+	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
+	private static readonly imageFrames = 12;
 
-	static readonly images: HTMLImageElement[] = []; //разные окраски монстра
-	static readonly imageFrames = 12;
-
-	static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
-	static readonly attackImageFrames = 4;
-
-	static readonly minTimeSoundWait = 3000; //миллисекунды
-
-	private static readonly imageHandler: ImageHandler = new ImageHandler();
-	private static wasInit: boolean; //вызов функции init уже произошёл?
-	private timePlaySound: number;
+	private static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
+	private static readonly attackImageFrames = 4;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
@@ -65,30 +58,27 @@ export class Zombie extends Monster{
 		super(x, y,
 			scaleSize,
 			isLeftSide,
-			true, //isLand
+			true,  //isLand
 			Zombie.name,
 			selectedImage,
 			Zombie.imageFrames,
-			900,
+			900,   //speed animation
 			selectedAttackImage,
 			Zombie.attackImageFrames,
-			1000,
-			5,
-			3,  //health
+			1000,  //speed animation attack
+			5,     //reduce hover
+			3,     //health
 			1.4,   //damage
-			990, //time attack wait
-			50,  //speed
-			Zombie.imageHandler); 
+			990,   //time attack wait
+			50,    //speed
+			Zombie.imageHandler,
+			3000); //avrTimeSoundWaitMs
 
 			Zombie.init(true); //reserve init
-
-			this.timePlaySound = Date.now() - Zombie.minTimeSoundWait / 2;
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources && !Zombie.wasInit){
-			Zombie.wasInit = true;
-
+		if(isLoadResources && !Zombie.images.length){
 			Zombie.imageHandler.add(Zombie.images).src = Zombie1Image;
 			Zombie.imageHandler.add(Zombie.images).src = Zombie2Image;
 			Zombie.imageHandler.add(Zombie.images).src = Zombie3Image;
@@ -101,19 +91,13 @@ export class Zombie extends Monster{
 		}
 	}
 
-	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
-		super.logic(millisecondsDifferent, buildings, bottomBorder);
-
-
-		if(this.timePlaySound + Zombie.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 99){
-			this.timePlaySound = Date.now();
-			AudioSystem.playRandom(this.centerX, 
-				[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 
-				[0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);
-		}
+	playSound(): void {
+		AudioSystem.playRandom(this.centerX, 
+			[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 
+			[0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);
 	}
 
-	onClicked(){
+	onClicked(): void {
 		AudioSystem.playRandom(this.centerX, 
 			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10, SoundAttacked11, SoundAttacked12], 
 			[0.04, 0.04, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07, 0.07], false, 1, true);

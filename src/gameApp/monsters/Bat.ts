@@ -3,7 +3,7 @@ import {ImageHandler} from '../ImageHandler';
 import {Monster} from '../gameObjects/Monster';
 import {Building} from '../gameObjects/Building';
 
-import { AudioSystem } from '../gameSystems/AudioSystem';
+import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import {Helper} from '../helpers/Helper';
 
@@ -19,16 +19,10 @@ import Sound5 from '../../assets/sounds/monsters/bat/5.mp3';
 
 
 export class Bat extends Monster{
+	public static readonly imageHandler: ImageHandler = new ImageHandler();
+	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
+	private static readonly imageFrames = 6; 
 
-	static readonly images: HTMLImageElement[] = []; //разные окраски монстра
-	static readonly imageFrames = 6;
-	
-	static readonly minTimeSoundWait = 3000; //миллисекунды
-
-	private static readonly imageHandler: ImageHandler = new ImageHandler();
-	private static wasInit: boolean; //вызов функции init уже произошёл?
-
-	private timePlaySound: number;
 	private zigzagLength: number;
 	private isZigzagToTop: boolean;
 	private static readonly zigzagThreshold: number = 20;
@@ -42,30 +36,29 @@ export class Bat extends Monster{
 		super(x, y,
 			scaleSize,
 			isLeftSide,
-			false, //isLand
+			false,  //isLand
 			Bat.name,
 			selectedImage,
 			Bat.imageFrames,
 			300,  //speed animation
 			selectedImage,
 			Bat.imageFrames,
-			300,  //speed anumation attack
-			5,  //reduce hover
-			1,  //health
+			300,  //speed animation attack
+			5,    //reduce hover
+			1,    //health
 			0.1,  //damage
-			200, //time attack wait
-			200, //speed
-			Bat.imageHandler);
+			200,  //time attack wait
+			200,  //speed
+			Bat.imageHandler,
+			3000); //avrTimeSoundWaitMs
 
 		this.zigzagLength = 0;
 		this.isZigzagToTop = !!Helper.getRandom(0, 1);
-		this.timePlaySound = Date.now() - Bat.minTimeSoundWait / 2;
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources && !Bat.wasInit){
-			Bat.wasInit = true;
-			Bat.images.push(new Image()); Bat.images[0].src = Bat1Image;
+		if(isLoadResources && !Bat.images.length){
+			Bat.imageHandler.add(Bat.images).src = Bat1Image;
 		}
 	}
 
@@ -103,13 +96,10 @@ export class Bat extends Monster{
 				}
 			}
 		}
+	}
 
-		if(this.timePlaySound + Bat.minTimeSoundWait < Date.now() && Helper.getRandom(0, 100) > 95){
-			this.timePlaySound = Date.now();
-			AudioSystem.playRandom(this.centerX, 
-				[Sound1, Sound2, Sound3, Sound4, Sound5], 
-				[0.1, 0.1, 0.02, 0.02, 0.02], false, 1, true);
-		}
+	playSound(): void{
+		AudioSystem.playRandom(this.centerX, [Sound1, Sound2, Sound3, Sound4, Sound5], [0.1, 0.1, 0.02, 0.02, 0.02], false, 1, true);
 	}
 
 }

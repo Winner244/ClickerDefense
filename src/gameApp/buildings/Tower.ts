@@ -167,7 +167,7 @@ export class Tower extends Building{
 		{
 			let arrow = this._arrows[i];
 			let endMoving = true;
-			arrow.lifeTime -= millisecondsDifferent;
+			arrow.leftTimeMs -= millisecondsDifferent;
 
 			//moving
 			if(arrow.location.y + arrow.size.height < Draw.canvas.height - bottomShiftBorder - 10){
@@ -179,7 +179,7 @@ export class Tower extends Building{
 			//delete
 			if(arrow.location.x + arrow.size.width < 0 || arrow.location.x > Draw.canvas.width || 
 				arrow.location.y + arrow.size.height < 0 || arrow.location.y > Draw.canvas.height ||
-				arrow.lifeTime < 0)
+				arrow.leftTimeMs < 0)
 			{
 				this._arrows.splice(i, 1);
 				i--;
@@ -199,7 +199,7 @@ export class Tower extends Building{
 		}
 	}
 
-	draw(millisecondsFromStart: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+	draw(millisecondsDifferent: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		//стрелы
 		for(let i = 0; i < this._arrows.length; i++)
 		{
@@ -223,6 +223,6 @@ export class Tower extends Building{
 			Draw.ctx.stroke();
 		}
 
-		super.draw(millisecondsFromStart, isGameOver, isBuildingMode);
+		super.draw(millisecondsDifferent, isGameOver, isBuildingMode);
 	}
 }

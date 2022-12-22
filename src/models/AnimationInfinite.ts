@@ -1,28 +1,26 @@
 import {Draw} from "../gameApp/gameSystems/Draw";
 
-export default class Animation{
+export default class AnimationInfinite{
 	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
 	readonly frames: number; //количество кадров на изображении
 	readonly duration: number; //время полной анимации в миллисекундах
-	leftTimeMs: number; //оставшееся время анимации (миллисекунды)
+	timeCreated: number;
 
 	constructor(frames: number, duration: number, image: HTMLImageElement|null = null)
 	{
 		this.image = image || new Image();
 		this.frames = frames;
 		this.duration = duration;
-		this.leftTimeMs = duration;
+		this.timeCreated = Date.now();
 	}
 
 	restart(){
-		this.leftTimeMs = this.duration;
+		this.timeCreated = Date.now();
 	}
 
-	draw(millisecondsDifferent: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
-		if(!isGameOver)
-			this.leftTimeMs -= millisecondsDifferent;
-
-		let frame = isGameOver ? 0 : Math.floor(this.leftTimeMs % this.duration / (this.duration / this.frames));
+	draw(isGameOver: boolean, x: number, y: number, width: number, height: number){
+		let lifeTimeAnimation = Date.now() - this.timeCreated;
+		let frame = isGameOver ? 0 : Math.floor(lifeTimeAnimation % this.duration / (this.duration / this.frames));
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y

@@ -84,8 +84,8 @@ export class Buildings{
 		//логика анимации разрушения здания
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
-				this.explosions[i].lifeTime -= millisecondsDifferent;
-				if(this.explosions[i].lifeTime <= 0){
+				this.explosions[i].leftTimeMs -= millisecondsDifferent;
+				if(this.explosions[i].leftTimeMs <= 0){
 					this.explosions.splice(i, 1);
 					i--;
 				}
@@ -109,16 +109,17 @@ export class Buildings{
 		}
 	}
 
-	static draw(millisecondsFromStart: number, isGameOver: boolean): void{
+	static draw(millisecondsDifferent: number, isGameOver: boolean): void{
 		//разрушения зданий
 		this.explosions.forEach(explosion => {
 			let newHeight = this.explosionAnimation.image.height * (explosion.size.width / (this.explosionAnimation.image.width / this.explosionAnimation.frames));
-			this.explosionAnimation.draw(false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight, explosion.lifeTime);
+			this.explosionAnimation.leftTimeMs = explosion.leftTimeMs;
+			this.explosionAnimation.draw(millisecondsDifferent, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
 			Draw.ctx.globalAlpha = 1;
 
 		});
 
-		Buildings.all.forEach(building => building.draw(millisecondsFromStart, isGameOver));
+		Buildings.all.forEach(building => building.draw(millisecondsDifferent, isGameOver));
 	}
 
 	static drawHealth(): void{

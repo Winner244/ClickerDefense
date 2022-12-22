@@ -23,18 +23,19 @@ import {Monster} from '../../../gameApp/gameObjects/Monster';
 import {Building} from '../../../gameApp/gameObjects/Building';
 
 import './TestPage.scss';
+import { ImageHandler } from '../../../gameApp/ImageHandler';
 
 class TestPage extends React.Component {
     text: string = "";
 
     componentDidMount(){
-        var waitLoadingImage = function(image: HTMLImageElement, callback: Function){
+        var waitLoadingImage = function(imageHandler: ImageHandler, callback: Function){
             setTimeout(() => {
-                if(image.complete){
+                if(imageHandler.isImagesCompleted){
                     callback();
                 }
                 else{
-                    waitLoadingImage(image, callback);
+                    waitLoadingImage(imageHandler, callback);
                 }
             }, 100);
         }
@@ -57,6 +58,9 @@ class TestPage extends React.Component {
         barricade1.loadedResourcesAfterBuild();
         var barricade2 = new Barricade(1400);
         barricade2.loadedResourcesAfterBuild();
+        Boar.init(true);
+        Zombie.init(true);
+        Bat.init(true);
 
         switch(+variant){
             case 1: 
@@ -156,8 +160,7 @@ class TestPage extends React.Component {
                 tower1.x = 700;
                 Buildings.all.push(tower1);
 
-                Boar.init();
-                waitLoadingImage(Boar.images[0], () => {
+                waitLoadingImage(Boar.imageHandler, () => {
                     var boar = new Boar(50, 780, true, 1);
                     boar.isWillUseSpecialAbility = true;
                     boar.health--;
@@ -182,8 +185,7 @@ class TestPage extends React.Component {
                 tower1.x = 1100;
                 Buildings.all.push(tower1);
 
-                Boar.init();
-                waitLoadingImage(Boar.images[0], () => {
+                waitLoadingImage(Boar.imageHandler, () => {
                     var boar2 = new Boar(1850, 780, false, 1);
                     boar2.isWillUseSpecialAbility = true;
                     boar2.health--;

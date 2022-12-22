@@ -8,6 +8,7 @@ import {Labels} from '../gameSystems/Labels';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 import {Modifier} from "../../models/Modifier";
 
 import {Helper} from "../helpers/Helper";
@@ -30,8 +31,8 @@ export class Monster{
 	id: string;
 	name: string;
 
-	animation: Animation; //содержит несколько изображений для анимации
-	attackAnimation: Animation;  //содержит несколько изображений для анимации
+	animation: AnimationInfinite; //содержит несколько изображений для анимации
+	attackAnimation: AnimationInfinite;  //содержит несколько изображений для анимации
 
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
 
@@ -58,6 +59,9 @@ export class Monster{
 
 	imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 
+	protected leftTimeToPlaySoundMs: number; //оставшееся время до проигрывания звука монстра
+	readonly avrTimeSoundWaitMs: number; //среднее время ожидания следующего звука
+
 	constructor(
 		x: number, 
 		y: number, 
@@ -79,7 +83,8 @@ export class Monster{
 		damage: number, 
 		attackTimeWaiting: number,
 		speed: number,
-		imageHandler: ImageHandler)
+		imageHandler: ImageHandler,
+		avrTimeSoundWaitMs: number)
 	{
 		this.id = Helper.generateUid();
 		this.x = x;
@@ -89,8 +94,8 @@ export class Monster{
 		this.scaleSize = scaleSize;
 		this.name = name;
 
-		this.animation = new Animation(frames, animationDuration, image); //анимация бега
-		this.attackAnimation = new Animation(attackFrames, attackAnimationDuration, attackImage);  //анимация атаки
+		this.animation = new AnimationInfinite(frames, animationDuration, image); //анимация бега
+		this.attackAnimation = new AnimationInfinite(attackFrames, attackAnimationDuration, attackImage);  //анимация атаки
 
 		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
 
@@ -108,6 +113,8 @@ export class Monster{
 		this.buildingGoal = null;
 		this.modifiers = [];
 		this.leftTimeToAttacked = 0;
+		this.leftTimeToPlaySoundMs = avrTimeSoundWaitMs / 2;
+		this.avrTimeSoundWaitMs = avrTimeSoundWaitMs;
 	}
 
 	get height(): number {
@@ -185,7 +192,7 @@ export class Monster{
 					this.x = this.buildingGoal.x - this.width + this.width / 5;
 				}
 				if(!this.isAttack){
-					this.attackAnimation.timeCreated = Date.now();
+					this.attackAnimation.restart();
 				}
 				this.isAttack = true; //атакует
 			}
@@ -210,7 +217,7 @@ export class Monster{
 					this.x = this.buildingGoal.x + this.buildingGoal.width - this.width / 5;
 				}
 				if(!this.isAttack){
-					this.attackAnimation.timeCreated = Date.now();
+					this.attackAnimation.restart();
 				}
 				this.isAttack = true; //атакует
 			}
@@ -250,6 +257,12 @@ export class Monster{
 				}
 			}
 		}
+
+		this.leftTimeToPlaySoundMs -= millisecondsDifferent;
+		if(this.leftTimeToPlaySoundMs <= 0){
+			this.leftTimeToPlaySoundMs = this.avrTimeSoundWaitMs + Helper.getRandom(-this.avrTimeSoundWaitMs / 2, this.avrTimeSoundWaitMs / 2);
+			this.playSound();
+		}
 	}
 
 	attack(damage: number): void{
@@ -275,7 +288,9 @@ export class Monster{
 
 	destroy(): void{}
 
-	draw(isGameOver: boolean): void{
+	playSound(): void{}
+
+	draw(millisecondsDifferent: number, isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}

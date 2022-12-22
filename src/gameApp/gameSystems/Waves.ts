@@ -37,7 +37,7 @@ export class Waves{
 	static all: { [id: string] : WaveData; }[] = [];
 
 	static get waveCountKilledMonsters(): number{
-		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.wasCreated)) - Monsters.all.length;
+		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.wasCreatedCount)) - Monsters.all.length;
 	};
 	static get waveCountMonsters(): number {
 		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.count))
@@ -123,8 +123,8 @@ export class Waves{
 				continue;
 			}
 
-			let periodTime = 1000 * 60 / waveData.frequencyCreating;
-			if(waveData.count > waveData.wasCreated && Date.now() > waveData.wasCreatedLastTime + periodTime + Helper.getRandom(-periodTime / 2, periodTime / 2))
+			waveData.timeFromLastCreated += millisecondsDifferent;
+			if(waveData.count > waveData.wasCreatedCount && waveData.timeFromLastCreated - waveData.timeWaitingNewMonster < 0)
 			{
 				let isLeftSide = Math.random() < 0.5;
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
@@ -138,8 +138,10 @@ export class Waves{
 
 				Monsters.add(monster);
 
-				waveData.wasCreated++;
-				waveData.wasCreatedLastTime = Date.now();
+				let periodTimeMs = 1000 * 60 / waveData.frequencyCreating;
+				waveData.timeWaitingNewMonster = periodTimeMs + Helper.getRandom(-periodTimeMs / 2, periodTimeMs / 2)
+				waveData.timeFromLastCreated = 0;
+				waveData.wasCreatedCount++;
 			}
 		}
 	}
