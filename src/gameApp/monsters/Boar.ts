@@ -251,7 +251,6 @@ export class Boar extends Monster{
 					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeAnimationDisplayWidth - this.width);
 				const y = this.y + (1 - smokeScaleSize) * this.height;
 				const width = smokeScaleSize * scale * Boar.specialAbilitySmokeAnimationDisplayWidth;
-				console.log('drow smoke', this.specialAbilitySmokeAnimation.image);
 				this.specialAbilitySmokeAnimation.draw(isGameOver, x, y, width, smokeScaleSize * this.height);
 
 				if(isInvert){
