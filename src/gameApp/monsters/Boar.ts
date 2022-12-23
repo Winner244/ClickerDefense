@@ -5,12 +5,14 @@ import {ImageHandler} from '../ImageHandler';
 import {Helper} from '../helpers/Helper';
 
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 
-import {Monster} from '../gameObjects/Monster';
-import {Building} from "../gameObjects/Building";
+import {Monster} from './Monster';
+
 import {Draw} from "../gameSystems/Draw";
-
 import {AudioSystem} from '../gameSystems/AudioSystem';
+
+import {Building} from "../buildings/Building";
 
 import {BoarSpecialAbility} from "../modifiers/BoarSpecialAbility";
 
@@ -59,13 +61,13 @@ export class Boar extends Monster{
 	private readonly specialAbilityAnimation: Animation; //анимация спец способности
 	private static readonly specialAbilityImages: HTMLImageElement[] = [];  //разные окраски монстра
 
-	private readonly specialAbilitySmokeAnimation: Animation;
-	private static readonly specialAbilitySmokeAnimationImage: HTMLImageElement;
+	private readonly specialAbilitySmokeAnimation: AnimationInfinite;
+	private static readonly specialAbilitySmokeAnimationImage: HTMLImageElement = new Image();
 	private static readonly specialAbilitySmokeAnimationDisplayWidth = 180;
 	private static readonly specialAbilitySmokeTimeGrowing = 600; //(milliseconds) время роста анимации пыли у способности
 
 	private readonly specialAbilityDamageParticlesAnimation: Animation;
-	private static readonly specialAbilityDamageParticlesAnimationImage: HTMLImageElement;
+	private static readonly specialAbilityDamageParticlesAnimationImage: HTMLImageElement = new Image();
 	private static readonly specialAbilityDamageParticlesImageDisplayedWidth = 100;
 	private static readonly specialAbilityDamageParticlesImageDisplayedHeight = 100;
 
@@ -117,7 +119,7 @@ export class Boar extends Monster{
 
 		this.isWillUseSpecialAbility = Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
 		this.specialAbilityAnimation = new Animation(12, 1000, selectedSpecialImage);
-		this.specialAbilitySmokeAnimation = new Animation(16, 1000, Boar.specialAbilitySmokeAnimationImage);
+		this.specialAbilitySmokeAnimation = new AnimationInfinite(16, 1000, Boar.specialAbilitySmokeAnimationImage);
 		this.specialAbilityDamageParticlesAnimation = new Animation(7, 200, Boar.specialAbilityDamageParticlesAnimationImage);
 		this.isActivatedSpecialAbility = false;
 		this.isActivatedSpecialDamage = false;
@@ -249,7 +251,8 @@ export class Boar extends Monster{
 					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeAnimationDisplayWidth - this.width);
 				const y = this.y + (1 - smokeScaleSize) * this.height;
 				const width = smokeScaleSize * scale * Boar.specialAbilitySmokeAnimationDisplayWidth;
-				this.specialAbilitySmokeAnimation.draw(millisecondsDifferent, isGameOver, x, y, width, smokeScaleSize * this.height);
+				console.log('drow smoke', this.specialAbilitySmokeAnimation.image);
+				this.specialAbilitySmokeAnimation.draw(isGameOver, x, y, width, smokeScaleSize * this.height);
 
 				if(isInvert){
 					Draw.ctx.restore();

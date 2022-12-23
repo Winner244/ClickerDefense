@@ -1,5 +1,6 @@
-import { Reducer } from 'redux';
-import { Label } from '../../../models/Label';
+import {Reducer} from 'redux';
+
+import {Label} from '../../../gameApp/labels/Label';
 
 // STATE
 export interface CoinLabelsState {

@@ -22,7 +22,12 @@ export default class Animation{
 		if(!isGameOver)
 			this.leftTimeMs -= millisecondsDifferent;
 
-		let frame = isGameOver ? 0 : Math.floor(this.leftTimeMs % this.duration / (this.duration / this.frames));
+		let frame = this.leftTimeMs <= 0 
+			? this.frames - 1
+			: isGameOver 
+				? 0 
+				: Math.floor((this.duration - this.leftTimeMs) / (this.duration / this.frames));
+
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y

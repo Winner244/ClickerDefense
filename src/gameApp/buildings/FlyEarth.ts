@@ -1,8 +1,12 @@
-import {Cursor} from '../Cursor';
 
-import {Building} from '../gameObjects/Building';
-import {Coins} from '../gameSystems/Coins';
+
+import {Building} from './Building';
+
+import {Coins} from '../coins/Coins';
+
 import {AudioSystem} from '../gameSystems/AudioSystem';
+
+import {Cursor} from '../gamer/Cursor';
 
 import {Helper} from '../helpers/Helper';
 

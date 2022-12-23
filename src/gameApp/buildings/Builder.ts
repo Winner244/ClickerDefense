@@ -1,11 +1,13 @@
-import {Draw} from './Draw';
-import {Game} from './Game';
-import {Labels} from './Labels';
-import {Buildings} from './Buildings';
-import {AudioSystem} from './AudioSystem';
+import {Draw} from '../gameSystems/Draw';
+import {Game} from '../gameSystems/Game';
+import {AudioSystem} from '../gameSystems/AudioSystem';
 
-import {Gamer} from '../gameObjects/Gamer';
-import {Building} from '../gameObjects/Building';
+import {Labels} from '../labels/Labels';
+
+import {Building} from './Building';
+import {Buildings} from './Buildings';
+
+import {Gamer} from '../gamer/Gamer';
 
 import Animation from '../../models/Animation';
 

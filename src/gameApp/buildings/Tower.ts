@@ -1,9 +1,11 @@
 import sortBy from 'lodash/sortBy';
 
 import {Draw} from '../gameSystems/Draw';
-import {Monster} from '../gameObjects/Monster';
-import {Building} from '../gameObjects/Building';
-import { AudioSystem } from '../gameSystems/AudioSystem';
+import {AudioSystem} from '../gameSystems/AudioSystem';
+
+import {Building} from './Building';
+
+import {Monster} from '../monsters/Monster';
 
 import InfoItem from '../../models/InfoItem';
 import Improvement from '../../models/Improvement';

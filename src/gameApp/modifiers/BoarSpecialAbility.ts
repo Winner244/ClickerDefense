@@ -1,4 +1,4 @@
-import {Modifier} from "../../models/Modifier";
+import {Modifier} from "./Modifier";
 
 /* Используется монстром Boar 
  * даёт x2 скорость

@@ -1,17 +1,17 @@
 import sum from 'lodash/sum';
 
-import {Draw} from './Draw';
-import {Game} from './Game';
-import {Monsters} from './Monsters';
+import {Draw} from '../gameSystems/Draw';
+import {Game} from '../gameSystems/Game';
 
 import {Size} from '../../models/Size';
-import {WaveData} from '../../models/WaveData';
+import {WaveData} from './WaveData';
 
 import {Helper} from '../helpers/Helper';
 
 import {Bat} from '../monsters/Bat';
 import {Boar} from '../monsters/Boar';
 import {Zombie} from '../monsters/Zombie';
+import {Monsters} from '../monsters/Monsters';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 

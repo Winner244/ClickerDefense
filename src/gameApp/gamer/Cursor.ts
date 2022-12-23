@@ -1,10 +1,10 @@
 
-import StandartImage from '../assets/cursors/Standart.png';
-import PickImage from '../assets/cursors/Pick.png';
-import PickYellowImage from '../assets/cursors/PickYellow.png';
-import HandImage from '../assets/cursors/Hand.png';
-import SwordImage from '../assets/cursors/Sword.png';  
-import SwordRedImage from '../assets/cursors/SwordRed.png';  
+import StandartImage from '../../assets/cursors/Standart.png';
+import PickImage from '../../assets/cursors/Pick.png';
+import PickYellowImage from '../../assets/cursors/PickYellow.png';
+import HandImage from '../../assets/cursors/Hand.png';
+import SwordImage from '../../assets/cursors/Sword.png';  
+import SwordRedImage from '../../assets/cursors/SwordRed.png';  
 
 export class Cursor{
 	static readonly default: string = StandartImage;

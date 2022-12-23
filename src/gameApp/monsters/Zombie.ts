@@ -2,7 +2,7 @@ import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
-import {Monster} from '../gameObjects/Monster';
+import {Monster} from './Monster';
 
 import {Helper} from '../helpers/Helper';
 

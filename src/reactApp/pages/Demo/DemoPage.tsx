@@ -4,13 +4,12 @@ import { App } from '../../App';
 import * as MenuStore from '../../components/Menu/MenuStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import { Waves } from '../../../gameApp/gameSystems/Waves';
-
+import {Waves} from '../../../gameApp/waves/Waves';
+import {WaveData} from "../../../gameApp/waves/WaveData";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
-import {WaveData} from "../../../models/WaveData";
 import {Boar} from "../../../gameApp/monsters/Boar";
 import {Bat} from "../../../gameApp/monsters/Bat";
-import {Gamer} from "../../../gameApp/gameObjects/Gamer";
+import {Gamer} from "../../../gameApp/gamer/Gamer";
 
 class DemoPage extends React.Component {
     componentDidMount(){

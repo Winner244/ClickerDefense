@@ -1,26 +1,30 @@
 import {Draw} from './Draw';
-import {Coins} from './Coins';
-import {Waves} from './Waves';
-import {Labels} from './Labels';
-import {Builder} from './Builder';
-import {Monsters} from './Monsters';
-import {Buildings} from './Buildings';
 import {AudioSystem} from './AudioSystem';
 
+import {Waves} from '../waves/Waves';
+
+import {Labels} from '../labels/Labels';
+
 import {FPS} from '../FPS';
-import {Mouse} from '../Mouse';
-import {Keypad} from '../Keypad';
-import {Cursor} from '../Cursor';
 
-import {Coin} from '../gameObjects/Coin';
-import {Gamer} from '../gameObjects/Gamer';
-import {Monster} from '../gameObjects/Monster';
-import {Building} from '../gameObjects/Building';
+import {Mouse} from '../gamer/Mouse';
+import {Keypad} from '../gamer/Keypad';
+import {Cursor} from '../gamer/Cursor';
+import {Gamer} from '../gamer/Gamer';
 
-import {Tower} from '../buildings/Tower';
+import {Coin} from '../coins/Coin';
+import {Coins} from '../coins/Coins';
+
+import {Monster} from '../monsters/Monster';
+import {Monsters} from '../monsters/Monsters';
+
+import {Builder} from '../buildings/Builder';
+import {Building} from '../buildings/Building';
+import {Buildings} from '../buildings/Buildings';
 import {FlyEarth} from '../buildings/FlyEarth';
-import {Barricade} from '../buildings/Barricade';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
+import {Tower} from '../buildings/Tower';
+import {Barricade} from '../buildings/Barricade';
 
 import {Helper} from '../helpers/Helper';
 

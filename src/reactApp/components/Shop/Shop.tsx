@@ -9,9 +9,8 @@ import { App } from '../../App';
 
 import './Shop.scss';
 
-import {Mouse} from '../../../gameApp/Mouse';
-
-import {Gamer} from '../../../gameApp/gameObjects/Gamer';
+import {Mouse} from '../../../gameApp/gamer/Mouse';
+import {Gamer} from '../../../gameApp/gamer/Gamer';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';

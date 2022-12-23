@@ -1,9 +1,11 @@
-import {Cursor} from '../Cursor';
-import {Labels} from './Labels';
-import {AudioSystem} from './AudioSystem';
+import {AudioSystem} from '../gameSystems/AudioSystem';
 
-import {Coin} from '../gameObjects/Coin';
-import {Gamer} from '../gameObjects/Gamer';
+import {Labels} from '../labels/Labels';
+
+import {Coin} from './Coin';
+
+import {Gamer} from '../gamer/Gamer';
+import {Cursor} from '../gamer/Cursor';
 
 import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
 

@@ -1,4 +1,4 @@
-import {Gamer} from "../gameApp/gameObjects/Gamer";
+import {Gamer} from "../gameApp/gamer/Gamer";
 
 import {Helper} from "../gameApp/helpers/Helper";
 

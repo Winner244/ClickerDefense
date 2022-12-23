@@ -1,16 +1,15 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { ApplicationState } from '../../store';
+import {ApplicationState} from '../../store';
 import * as CoinLabelsStore from './CoinLabelsStore';
 
-import { App } from '../../App';
+import {App} from '../../App';
 
 import './CoinLabels.scss';
 
-import { Label } from '../../../models/Label';
-
-import { Labels } from '../../../gameApp/gameSystems/Labels';
+import {Label} from '../../../gameApp/labels/Label';
+import {Labels} from '../../../gameApp/labels/Labels';
 
 interface Prop {
 }

@@ -10,14 +10,15 @@ import './Upgrade.scss';
 
 import {CoinLabels} from '../CoinLabels/CoinLabels';
 
-import {Mouse} from '../../../gameApp/Mouse';
 
 import InfoItem from '../../../models/InfoItem';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
-import {Gamer} from '../../../gameApp/gameObjects/Gamer';
-import {Building} from '../../../gameApp/gameObjects/Building';
+import {Gamer} from '../../../gameApp/gamer/Gamer';
+import {Mouse} from '../../../gameApp/gamer/Mouse';
+
+import {Building} from '../../../gameApp/buildings/Building';
 
 import CoinImage from '../../../assets/img/coin.png';
 

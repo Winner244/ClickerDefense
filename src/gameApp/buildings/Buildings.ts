@@ -1,14 +1,14 @@
-import {Draw} from './Draw';
-import {AudioSystem} from './AudioSystem';
+import {Draw} from '../gameSystems/Draw';
+import {AudioSystem} from '../gameSystems/AudioSystem';
 
-import {FlyEarth} from '../buildings/FlyEarth';
-import {FlyEarthRope} from '../buildings/FlyEarthRope';
+import {Building} from './Building';
+import {FlyEarth} from './FlyEarth';
+import {FlyEarthRope} from './FlyEarthRope';
 
 import {SimpleObject} from '../../models/SimpleObject';
 import Animation from '../../models/Animation';
 
-import {Building} from '../gameObjects/Building';
-import {Monster} from '../gameObjects/Monster';
+import {Monster} from '../monsters/Monster';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 

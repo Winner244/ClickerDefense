@@ -9,9 +9,9 @@ import { App } from '../../App';
 
 import './BuildingButtons.scss';
 
-import { Mouse } from '../../../gameApp/Mouse';
+import { Mouse } from '../../../gameApp/gamer/Mouse';
 
-import { Building } from '../../../gameApp/gameObjects/Building';
+import { Building } from '../../../gameApp/buildings/Building';
 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 

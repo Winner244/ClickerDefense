@@ -1,21 +1,23 @@
 import {SimpleObject} from '../../models/SimpleObject';
 import Animation from '../../models/Animation';
 
+import {Building} from '../buildings/Building';
 import {FlyEarth} from '../buildings/FlyEarth';
 
-import {Zombie} from '../monsters/Zombie';
-import {Bat} from '../monsters/Bat';
-import {Boar} from '../monsters/Boar';
+import {Monster} from './Monster';
+import {Zombie} from './Zombie';
+import {Bat} from './Bat';
+import {Boar} from './Boar';
 
-import {Building} from '../gameObjects/Building';
-import {Monster} from '../gameObjects/Monster';
-import {Gamer} from '../gameObjects/Gamer';
-import {Coin} from '../gameObjects/Coin';
+import {Gamer} from '../gamer/Gamer';
+import {Cursor} from '../gamer/Cursor';
 
-import {AudioSystem} from './AudioSystem';
-import {Cursor} from '../Cursor';
-import {Labels} from './Labels';
-import {Coins} from './Coins';
+import {Coin} from '../coins/Coin';
+import {Coins} from '../coins/Coins';
+
+import {AudioSystem} from '../gameSystems/AudioSystem';
+
+import {Labels} from '../labels/Labels';
 
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 

@@ -1,5 +1,6 @@
-import {Gamer} from './Gamer';
-import {Monster} from './Monster';
+import {Gamer} from '../gamer/Gamer';
+
+import {Monster} from '../monsters/Monster';
 
 import ShopItem from '../../models/ShopItem';
 import InfoItem from '../../models/InfoItem';
@@ -7,8 +8,9 @@ import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import Improvement from '../../models/Improvement';
 
+import {Labels} from '../labels/Labels';
+
 import {Draw} from '../gameSystems/Draw';
-import {Labels} from '../gameSystems/Labels';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';

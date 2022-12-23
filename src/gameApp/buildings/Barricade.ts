@@ -1,4 +1,4 @@
-import {Building} from '../gameObjects/Building';
+import {Building} from './Building';
 import {Draw} from '../gameSystems/Draw';
 
 import barricadeImage from '../../assets/img/buildings/barricade/barricade.png';  

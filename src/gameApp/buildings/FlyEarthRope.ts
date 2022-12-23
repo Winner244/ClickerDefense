@@ -1,4 +1,4 @@
-import {Building} from '../gameObjects/Building';
+import {Building} from './Building';
 import {Draw} from '../gameSystems/Draw';
 
 import FlyEarthRopeImage from '../../assets/img/buildings/flyEarthRope.png';  

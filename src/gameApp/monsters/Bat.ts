@@ -1,13 +1,14 @@
 import {ImageHandler} from '../ImageHandler';
 
-import {Monster} from '../gameObjects/Monster';
-import {Building} from '../gameObjects/Building';
+import {Monster} from './Monster';
+
+import {Building} from '../buildings/Building';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import {Helper} from '../helpers/Helper';
 
-import {Modifier} from '../../models/Modifier';
+import {Modifier} from '../modifiers/Modifier';
 
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
 

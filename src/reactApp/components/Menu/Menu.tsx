@@ -8,11 +8,11 @@ import { App } from '../../App';
 import { Shop } from '../Shop/Shop';
 import { Upgrade } from '../Upgrade/Upgrade';
 
-import {Mouse} from '../../../gameApp/Mouse';
-import {Keypad} from '../../../gameApp/Keypad';
+import {Mouse} from '../../../gameApp/gamer/Mouse';
+import {Keypad} from '../../../gameApp/gamer/Keypad';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {Waves} from '../../../gameApp/gameSystems/Waves';
+import {Waves} from '../../../gameApp/waves/Waves';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import './Menu.scss';

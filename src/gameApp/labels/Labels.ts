@@ -1,4 +1,4 @@
-import {Label} from '../../models/Label';
+import {Label} from './Label';
 
 export class Labels{
 	static readonly labelLifetime: number = 1000; //время жизни сообщения (в миллисекундах)

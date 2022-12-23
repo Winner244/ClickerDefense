@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { Building } from '../../../gameApp/gameObjects/Building';
+import { Building } from '../../../gameApp/buildings/Building';
 
 // STATE
 export interface UpgradeState {
