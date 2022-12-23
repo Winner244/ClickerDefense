@@ -124,7 +124,7 @@ export class Waves{
 			}
 
 			waveData.timeFromLastCreated += millisecondsDifferent;
-			if(waveData.count > waveData.wasCreatedCount && waveData.timeFromLastCreated - waveData.timeWaitingNewMonster < 0)
+			if(waveData.count > waveData.wasCreatedCount && waveData.timeFromLastCreated > waveData.timeWaitingNewMonster)
 			{
 				let isLeftSide = Math.random() < 0.5;
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
