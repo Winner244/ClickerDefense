@@ -3,24 +3,24 @@ import {Draw} from "../gameApp/gameSystems/Draw";
 export default class AnimationInfinite{
 	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
 	readonly frames: number; //количество кадров на изображении
-	readonly duration: number; //время полной анимации в миллисекундах
-	displayedTime: number; //сколько по времени уже отображается
+	readonly durationMs: number; //время полной анимации в миллисекундах
+	displayedTimeMs: number; //сколько по времени уже отображается (миллисекунды)
 
-	constructor(frames: number, duration: number, image: HTMLImageElement|null = null)
+	constructor(frames: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
 		this.image = image || new Image();
 		this.frames = frames;
-		this.duration = duration;
-		this.displayedTime = 0;
+		this.durationMs = durationMs;
+		this.displayedTimeMs = 0;
 	}
 
 	restart(){
-		this.displayedTime = 0;
+		this.displayedTimeMs = 0;
 	}
 
-	draw(millisecondsDifferent: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
-		this.displayedTime += millisecondsDifferent;
-		let frame = isGameOver ? 0 : Math.floor(this.displayedTime % this.duration / (this.duration / this.frames));
+	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
+		this.displayedTimeMs += drawsDiffMs;
+		let frame = isGameOver ? 0 : Math.floor(this.displayedTimeMs % this.durationMs / (this.durationMs / this.frames));
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y

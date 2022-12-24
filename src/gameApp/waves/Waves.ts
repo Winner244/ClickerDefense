@@ -25,13 +25,13 @@ export class Waves{
 
 	static isStarted: boolean = false; //Волна запущена?
 
-	static delayStartTimeLeft: number = 0; //сколько ещё осталось задержки
-	static delayStartTime: number = 3000; //задержка перед началом волны (в миллисекундах) - что бы показать надпись "Волна N"
+	static delayStartLeftTimeMs: number = 0; //сколько ещё осталось задержки (миллисекунды)
+	static delayStartTimeMs: number = 3000; //задержка перед началом волны (миллисекунды) - что бы показать надпись "Волна N"
 
-	static delayEndTimeLeft: number = 0; //сколько ещё осталось задержки 
-	static delayEndTime: number = 3000; //задержка после окончании волны (в миллисекундах) - что бы показать надпись "Волна пройдена"
+	static delayEndLeftTimeMs: number = 0; //сколько ещё осталось задержки 
+	static delayEndTimeMs: number = 3000; //задержка после окончании волны (миллисекунды) - что бы показать надпись "Волна пройдена"
 
-	static waveTimeMs: number = 0; //(в миллисекундах) сколько по времени волна уже идёт
+	static waveTimeMs: number = 0; //(миллисекунды) сколько по времени волна уже идёт
 
 	static waveCurrent: number = 0; //текущая волна нападения 
 	static all: { [id: string] : WaveData; }[] = [];
@@ -70,10 +70,10 @@ export class Waves{
 
 	static startNewWave(){
 		this.waveCurrent++;
-		this.delayStartTimeLeft = this.delayStartTime;
+		this.delayStartLeftTimeMs = this.delayStartTimeMs;
 		this.isStarted = true;
 		this.waveTimeMs = 0;
-		this.delayEndTimeLeft = 0;
+		this.delayEndLeftTimeMs = 0;
 
 		//call "init" in are used classes in new wave to preload lazy images
 		let currentWave = Waves.all[Waves.waveCurrent];
@@ -83,9 +83,9 @@ export class Waves{
 		Game.loadResourcesAfterStartOfWave(this.waveCurrent);
 	}
 
-	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
-		if(this.delayEndTimeLeft > 0){
-			this.delayEndTimeLeft -= millisecondsDifferent;
+	static logic(drawsDiffMs: number, bottomShiftBorder: number): void{
+		if(this.delayEndLeftTimeMs > 0){
+			this.delayEndLeftTimeMs -= drawsDiffMs;
 			return;
 		}
 
@@ -93,18 +93,18 @@ export class Waves{
 			return;
 		}
 
-		if(this.delayStartTimeLeft > 0){
-			this.delayStartTimeLeft -= millisecondsDifferent;
+		if(this.delayStartLeftTimeMs > 0){
+			this.delayStartLeftTimeMs -= drawsDiffMs;
 			return;
 		}
 
-		this.waveTimeMs += millisecondsDifferent;
+		this.waveTimeMs += drawsDiffMs;
 
 		//end of wave
 		if(this.waveCountKilledMonsters == this.waveCountMonsters){
 			Menu.displayShopButton();
 			this.isStarted = false;
-			this.delayEndTimeLeft = this.delayEndTime;
+			this.delayEndLeftTimeMs = this.delayEndTimeMs;
 			if(Waves.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
 			}
@@ -119,12 +119,12 @@ export class Waves{
 			let key = wavesData[i];
 			let waveData = currentWave[key];
 
-			if(this.waveTimeMs < waveData.startDelaySec * 1000){
+			if(this.waveTimeMs < waveData.startDelayMs){
 				continue;
 			}
 
-			waveData.timeFromLastCreated += millisecondsDifferent;
-			if(waveData.count > waveData.wasCreatedCount && waveData.timeFromLastCreated > waveData.timeWaitingNewMonster)
+			waveData.timeFromLastCreatedMs += drawsDiffMs;
+			if(waveData.count > waveData.wasCreatedCount && waveData.timeFromLastCreatedMs > waveData.timeWaitingNewMonsterMs)
 			{
 				let isLeftSide = Math.random() < 0.5;
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
@@ -139,19 +139,19 @@ export class Waves{
 				Monsters.add(monster);
 
 				let periodTimeMs = 1000 * 60 / waveData.frequencyCreating;
-				waveData.timeWaitingNewMonster = periodTimeMs + Helper.getRandom(-periodTimeMs / 2, periodTimeMs / 2)
-				waveData.timeFromLastCreated = 0;
+				waveData.timeWaitingNewMonsterMs = periodTimeMs + Helper.getRandom(-periodTimeMs / 2, periodTimeMs / 2)
+				waveData.timeFromLastCreatedMs = 0;
 				waveData.wasCreatedCount++;
 			}
 		}
 	}
 
 	static draw(): void{
-		if(Waves.isStarted && Waves.delayStartTimeLeft > 0){
-			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartTimeLeft, Waves.delayStartTime);
+		if(Waves.isStarted && Waves.delayStartLeftTimeMs > 0){
+			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartLeftTimeMs, Waves.delayStartTimeMs);
 		}
-		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters && Waves.delayEndTimeLeft > 0){
-			Draw.drawEndNewWave(Waves.delayEndTimeLeft, Waves.delayEndTime);
+		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters && Waves.delayEndLeftTimeMs > 0){
+			Draw.drawEndNewWave(Waves.delayEndLeftTimeMs, Waves.delayEndTimeMs);
 		}
 
 		if(Waves.isStarted){

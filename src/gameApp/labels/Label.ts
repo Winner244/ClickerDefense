@@ -20,14 +20,14 @@ export class Label{
 	backgroundGreen: number;
 	backgroundBlue: number;
 
-	leftTimeMilliseconds: number;
-	readonly lifeTimeMilliseconds: number;
+	leftTimeMs: number;
+	readonly lifeTimeMs: number;
 
 	constructor(
 		x: number, y: number, 
 		text: string, 
 		red: number, green: number, blue: number, 
-		lifeTimeMilliseconds: number,
+		lifeTimeMs: number,
 		isDecreaseOpacity: boolean = true,
 		isDisplayBackground: boolean = false,
 		backgroundRed: number = 0, backgroundGreen: number = 0, backgroundBlue: number = 0)
@@ -48,17 +48,17 @@ export class Label{
 		this.backgroundGreen = backgroundGreen;
 		this.backgroundBlue = backgroundBlue;
 
-		this.leftTimeMilliseconds = lifeTimeMilliseconds;
-		this.lifeTimeMilliseconds = lifeTimeMilliseconds;
+		this.leftTimeMs = lifeTimeMs;
+		this.lifeTimeMs = lifeTimeMs;
 	}
 
-	logic(millisecondsDifferent: number){
-		this.leftTimeMilliseconds -= millisecondsDifferent;
+	logic(drawsDiffMs: number){
+		this.leftTimeMs -= drawsDiffMs;
 	}
 
 	draw(){
-		let opacity = this.isDecreaseOpacity && this.leftTimeMilliseconds < this.lifeTimeMilliseconds / 2
-			? Math.abs(this.leftTimeMilliseconds / (this.lifeTimeMilliseconds / 2))
+		let opacity = this.isDecreaseOpacity && this.leftTimeMs < this.lifeTimeMs / 2
+			? Math.abs(this.leftTimeMs / (this.lifeTimeMs / 2))
 			: 1;
 
 		if(this.isDisplayBackground){

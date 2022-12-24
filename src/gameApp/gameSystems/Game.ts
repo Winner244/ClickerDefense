@@ -35,7 +35,7 @@ import {BuildingButtons} from '../../reactApp/components/BuildingButtons/Buildin
 
 import ShopItem from '../../models/ShopItem';
 
-import { ShopCategoryEnum } from '../../enum/ShopCategoryEnum';
+import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import GrassImage from '../../assets/img/grass1.png'; 
 
@@ -58,7 +58,7 @@ export class Game {
 	static isWasInit: boolean = false; //инициализация уже была?
 
 	static gameOverTime: number = 0; //время окончания игры
-	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита millisecondsDifferent)
+	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита drawsDiffMs)
 
 	static isBlockMouseLogic: boolean = false; //if user's mouse enter to interface buttons (menu/shop/nextWave)
 
@@ -152,14 +152,14 @@ export class Game {
 			Game.lastDrawTime = millisecondsFromStart - 100;
 		}
 
-		let millisecondsDifferent = millisecondsFromStart - Game.lastDrawTime; //сколько времени прошло с прошлой прорисовки
-		if(millisecondsDifferent > 100) { //защита от долгого отсутствия
-			millisecondsDifferent = 100;
+		let drawsDiffMs = millisecondsFromStart - Game.lastDrawTime; //сколько времени прошло с прошлой прорисовки
+		if(drawsDiffMs > 100) { //защита от долгого отсутствия
+			drawsDiffMs = 100;
 		}
 
 		///** logics **//
 		if(Game.isGameOver){
-			Game.gameOverLogic(millisecondsDifferent);
+			Game.gameOverLogic(drawsDiffMs);
 
 			if(Buildings.flyEarth.y <= -FlyEarth.height){
 				Game.isEndAfterGameOver = true;
@@ -172,29 +172,29 @@ export class Game {
 
 			Builder.logic();
 			
-			Game.mouseLogic(millisecondsDifferent); //логика обработки мыши
+			Game.mouseLogic(drawsDiffMs); //логика обработки мыши
 
-			Waves.logic(millisecondsDifferent, Game.bottomShiftBorder);
+			Waves.logic(drawsDiffMs, Game.bottomShiftBorder);
 		}
 
-		Buildings.logic(millisecondsDifferent, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
+		Buildings.logic(drawsDiffMs, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
 		
-		Monsters.logic(millisecondsDifferent, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder);
+		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder);
 		
-		Coins.logic(millisecondsDifferent, Game.bottomShiftBorder);
+		Coins.logic(drawsDiffMs, Game.bottomShiftBorder);
 		
-		Labels.logic(millisecondsDifferent);
+		Labels.logic(drawsDiffMs);
 
 		FPS.counting();
 
-		Game.drawAll(millisecondsFromStart, millisecondsDifferent);
+		Game.drawAll(millisecondsFromStart, drawsDiffMs);
 
 		if(!Game.isEndAfterGameOver){
 			window.requestAnimationFrame(Game.go);
 		}
 	}
 
-	private static mouseLogic(millisecondsDifferent: number) : void {
+	private static mouseLogic(drawsDiffMs: number) : void {
 		if(Game.isBlockMouseLogic){
 			return;
 		}
@@ -202,8 +202,8 @@ export class Game {
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
-		let isWaveStarted = Waves.isStarted && Waves.delayStartTimeLeft <= 0;
-		let isWaveEnded = !Waves.isStarted && Waves.delayEndTimeLeft <= 0;
+		let isWaveStarted = Waves.isStarted && Waves.delayStartLeftTimeMs <= 0;
+		let isWaveEnded = !Waves.isStarted && Waves.delayEndLeftTimeMs <= 0;
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
 
@@ -220,8 +220,8 @@ export class Game {
 			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isWaveStarted, isWaveEnded);
 		}
 
-		if(Cursor.cursorWait > 0){
-			Cursor.cursorWait -= millisecondsDifferent;
+		if(Cursor.cursorWaitMs > 0){
+			Cursor.cursorWaitMs -= drawsDiffMs;
 		}
 
 		if(!isSetCursor){
@@ -253,19 +253,19 @@ export class Game {
 		Keypad.isEnter = false;
 	}
 
-	private static drawAll(millisecondsFromStart: number, millisecondsDifferent: number, isPausedMode: boolean = false) : void{
+	private static drawAll(millisecondsFromStart: number, drawsDiffMs: number, isPausedMode: boolean = false) : void{
 		Draw.clear(); //очищаем холст
 		Draw.drawBlackout(); //затемняем фон
 	
-		Buildings.draw(millisecondsDifferent, Game.isGameOver);
+		Buildings.draw(drawsDiffMs, Game.isGameOver);
 		Buildings.drawHealth();
 		Buildings.drawRepairingAnumation();
 
-		Builder.draw(millisecondsDifferent, Game.isGameOver);
+		Builder.draw(drawsDiffMs, Game.isGameOver);
 	
 		Coins.draw();
 	
-		Monsters.draw(millisecondsDifferent, Game.isGameOver);
+		Monsters.draw(drawsDiffMs, Game.isGameOver);
 	
 		Draw.drawGrass(Game.grassImage); 
 	
@@ -287,15 +287,15 @@ export class Game {
 		Game.lastDrawTime = millisecondsFromStart;
 	}
 		
-	private static gameOverLogic(millisecondsDifferent: number) : void{
+	private static gameOverLogic(drawsDiffMs: number) : void{
 		Cursor.setCursor(Cursor.default);
 
 		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
-			Buildings.flyEarthRope.y += 100 * millisecondsDifferent / 1000;
+			Buildings.flyEarthRope.y += 100 * drawsDiffMs / 1000;
 		}
 
 		if(Buildings.flyEarth.y > -FlyEarth.height){
-			Buildings.flyEarth.y -= 100 * millisecondsDifferent / 1000;
+			Buildings.flyEarth.y -= 100 * drawsDiffMs / 1000;
 		}
 	}
 

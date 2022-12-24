@@ -80,11 +80,11 @@ export class Buildings{
 		return isProcessed;
 	}
 
-	static logic(millisecondsDifferent: number, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){
+	static logic(drawsDiffMs: number, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){
 		//логика анимации разрушения здания
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
-				this.explosions[i].leftTimeMs -= millisecondsDifferent;
+				this.explosions[i].leftTimeMs -= drawsDiffMs;
 				if(this.explosions[i].leftTimeMs <= 0){
 					this.explosions.splice(i, 1);
 					i--;
@@ -97,29 +97,29 @@ export class Buildings{
 			{
 				let building = this.all[i];
 				if(this.all[i].health <= 0){ //проверка здоровья
-					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.duration));
+					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.durationMs));
 					this.all.splice(i, 1);
 					i--;
 					AudioSystem.play(building.centerX, ExplosionSound, 0.1, false, 2, false, true);
 				}
 				else{
-					building.logic(millisecondsDifferent, monsters, bottomShiftBorder)
+					building.logic(drawsDiffMs, monsters, bottomShiftBorder)
 				}
 			}
 		}
 	}
 
-	static draw(millisecondsDifferent: number, isGameOver: boolean): void{
+	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		//разрушения зданий
 		this.explosions.forEach(explosion => {
 			let newHeight = this.explosionAnimation.image.height * (explosion.size.width / (this.explosionAnimation.image.width / this.explosionAnimation.frames));
 			this.explosionAnimation.leftTimeMs = explosion.leftTimeMs;
-			this.explosionAnimation.draw(millisecondsDifferent, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
+			this.explosionAnimation.draw(drawsDiffMs, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
 			Draw.ctx.globalAlpha = 1;
 
 		});
 
-		Buildings.all.forEach(building => building.draw(millisecondsDifferent, isGameOver));
+		Buildings.all.forEach(building => building.draw(drawsDiffMs, isGameOver));
 	}
 
 	static drawHealth(): void{

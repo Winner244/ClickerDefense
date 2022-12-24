@@ -77,21 +77,21 @@ export class Builder {
 		}
 	}
 
-	static draw(millisecondsDifferent: number, isGameOver: boolean): void{
+	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		if(this.selectedBuildingForBuild){
 			if(this.isDrawSmoke){
 				let smokeWidth = this.selectedBuildingForBuild.width * 2;
 				let newHeight = this.smokeAnimation.image.height * (smokeWidth / (this.smokeAnimation.image.width / this.smokeAnimation.frames));
 				const x = this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2;
 				const y = this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height - newHeight;
-				this.smokeAnimation.draw(millisecondsDifferent, isGameOver, x, y, smokeWidth, newHeight);
+				this.smokeAnimation.draw(drawsDiffMs, isGameOver, x, y, smokeWidth, newHeight);
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{
 				if(this.isAnotherBuilding){
 					Draw.ctx.filter="grayscale(1) ";
 				}
-				this.selectedBuildingForBuild.draw(millisecondsDifferent, isGameOver, true);
+				this.selectedBuildingForBuild.draw(drawsDiffMs, isGameOver, true);
 				Draw.ctx.filter="none";
 			}
 		}

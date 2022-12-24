@@ -150,7 +150,7 @@ export class Menu extends React.Component<Props, IState> {
 
   onClickShopOpen(){
     Game.pause();
-    Waves.delayEndTimeLeft = 0;
+    Waves.delayEndLeftTimeMs = 0;
     this.props.close();
     Shop.show();
   }

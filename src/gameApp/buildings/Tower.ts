@@ -42,12 +42,12 @@ export class Tower extends Building{
 	damage: number = 1; //урон от одной атаки
 	arrowSpeed: number = Tower.initArrowSpeed; //скорость полёта стрелы (в пикселях за секунду)
 	radiusAttack: number = 400; //радиус атаки
-	rechargeTime: number = 1000; //время перезарядки (в миллисекундах)
+	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
 
-	private _rechargeLeft: number = 0; //сколько осталось времени перезарядки
+	private _rechargeLeftTimeMs: number = 0; //сколько осталось времени перезарядки (миллисекунды)
 	private _arrows: MovingObject[] = [];
 	private _bowmansWaiting: number = 0; //сколько стрелков ещё не отстрелялось?
-	private _bowmansDelayLeft: number = 0; //сколько осталось времени до стрельбы следующего лучника
+	private _bowmansDelayLeftTimeMs: number = 0; //сколько осталось времени до стрельбы следующего лучника (миллисекунды)
 	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 
 	constructor(x: number) {
@@ -91,7 +91,7 @@ export class Tower extends Building{
 
 		this.infoItems.splice(1, 0, new InfoItem('Урон', () => this.damage, swordIcon, 40, () => this.damage += 1));
 		this.infoItems.splice(2, 0, new InfoItem('Лучников', () => this.bowmans, bowmanIcon, 40 * 2, () => this.bowmans += 1));
-		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTime / 1000).toFixed(2) + ' сек', rechargeIcon, 40, () => this.rechargeTime *= 0.9));
+		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTimeMs / 1000).toFixed(2) + ' сек', rechargeIcon, 40, () => this.rechargeTimeMs *= 0.9));
 		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 40, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 10, () => this.arrowSpeed += 150));
 	}
@@ -108,19 +108,19 @@ export class Tower extends Building{
 		this._isDisplayRadius = false;
 	}
 
-	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number)
+	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number)
 	{
-		super.logic(millisecondsDifferent, monsters, bottomShiftBorder);
+		super.logic(drawsDiffMs, monsters, bottomShiftBorder);
 
-		if(this._rechargeLeft > 0){ //перезарядка
-			this._rechargeLeft -= millisecondsDifferent;
-			this._bowmansDelayLeft -= millisecondsDifferent;
+		if(this._rechargeLeftTimeMs > 0){ //перезарядка
+			this._rechargeLeftTimeMs -= drawsDiffMs;
+			this._bowmansDelayLeftTimeMs -= drawsDiffMs;
 		}
 		else{
 			this._bowmansWaiting = this.bowmans;
 		}
 
-		if(this._bowmansDelayLeft <= 0 && this._bowmansWaiting > 0) {
+		if(this._bowmansDelayLeftTimeMs <= 0 && this._bowmansWaiting > 0) {
 			if(monsters.length){
 				let monstersInRadius = monsters.filter(monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY) < this.radiusAttack);
 				if (monstersInRadius.length){
@@ -155,10 +155,10 @@ export class Tower extends Building{
 						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
 						AudioSystem.play(this.centerX, arrowStrikeSound, 1, false, this.arrowSpeed / Tower.initArrowSpeed, true);
 
-						if(this._rechargeLeft <= 0){
-							this._rechargeLeft = this.rechargeTime;
+						if(this._rechargeLeftTimeMs <= 0){
+							this._rechargeLeftTimeMs = this.rechargeTimeMs;
 						}
-						this._bowmansDelayLeft = this.rechargeTime / 10 / this.bowmans;
+						this._bowmansDelayLeftTimeMs = this.rechargeTimeMs / 10 / this.bowmans;
 						this._bowmansWaiting--;
 					}
 				}
@@ -169,12 +169,12 @@ export class Tower extends Building{
 		{
 			let arrow = this._arrows[i];
 			let endMoving = true;
-			arrow.leftTimeMs -= millisecondsDifferent;
+			arrow.leftTimeMs -= drawsDiffMs;
 
 			//moving
 			if(arrow.location.y + arrow.size.height < Draw.canvas.height - bottomShiftBorder - 10){
-				arrow.location.x -= arrow.dx * (millisecondsDifferent / 1000);
-				arrow.location.y -= arrow.dy * (millisecondsDifferent / 1000);
+				arrow.location.x -= arrow.dx * (drawsDiffMs / 1000);
+				arrow.location.y -= arrow.dy * (drawsDiffMs / 1000);
 				endMoving = false;
 			}
 
@@ -201,7 +201,7 @@ export class Tower extends Building{
 		}
 	}
 
-	draw(millisecondsDifferent: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		//стрелы
 		for(let i = 0; i < this._arrows.length; i++)
 		{
@@ -225,6 +225,6 @@ export class Tower extends Building{
 			Draw.ctx.stroke();
 		}
 
-		super.draw(millisecondsDifferent, isGameOver, isBuildingMode);
+		super.draw(drawsDiffMs, isGameOver, isBuildingMode);
 	}
 }

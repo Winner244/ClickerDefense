@@ -73,19 +73,19 @@ export class Draw{
 	}
 
 	/** Надпись о начале новой волны */
-	static drawStartNewWave(waveNumber: number, delayStartTimeLeft: number, delayStartTime: number){
+	static drawStartNewWave(waveNumber: number, delayStartLeftTimeMs: number, delayStartTimeMs: number){
 		Draw.drawBlackout();
 
 		let text = `Волна ${waveNumber}`;
 		Draw.ctx.font = "72px Calibri";
 
-		let diff = delayStartTime - delayStartTimeLeft;
+		let diff = delayStartTimeMs - delayStartLeftTimeMs;
 		let timeFirst = 1500;
 		let timeSecond = 2000;
 		let alpha = diff < timeFirst 
 			? diff / timeFirst //плавное появление надписи
 			: (diff > timeSecond
-				? 1 - (diff - timeSecond) / (delayStartTime - timeSecond) //плавное затухание надписи
+				? 1 - (diff - timeSecond) / (delayStartTimeMs - timeSecond) //плавное затухание надписи
 				: 255);
 		Draw.ctx.fillStyle = `rgba(255,165,0,${alpha})`; //orange
 		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 120, 200);
@@ -95,19 +95,19 @@ export class Draw{
 	}
 
 	/** Надпись об окончании волны */
-	static drawEndNewWave(delayEndTimeLeft: number, delayEndTime: number){
+	static drawEndNewWave(delayEndLeftTimeMs: number, delayEndTimeMs: number){
 		Draw.drawBlackout();
 
 		let text = `Волна пройдена`;
 		Draw.ctx.font = "72px Calibri";
 
-		let diff = delayEndTime - delayEndTimeLeft;
+		let diff = delayEndTimeMs - delayEndLeftTimeMs;
 		let timeFirst = 1500;
 		let timeSecond = 2000;
 		let alpha = diff < timeFirst 
 			? diff / timeFirst //плавное появление надписи
 			: (diff > timeSecond
-				? 1 - (diff - timeSecond) / (delayEndTime - timeSecond) //плавное затухание надписи
+				? 1 - (diff - timeSecond) / (delayEndTimeMs - timeSecond) //плавное затухание надписи
 				: 255);
 		Draw.ctx.fillStyle = `rgba(255,165,0,${alpha})`; //orange
 		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 240, 200);

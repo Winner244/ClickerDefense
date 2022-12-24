@@ -5,13 +5,13 @@ import {Helper} from '../helpers/Helper';
 import CoinImage from '../../assets/img/coin.png'; 
 
 export class Coin {
-	static readonly lifetime: number = 5; //время жизни монетки (в секундах)
+	static readonly lifeTimeMs: number = 5000; //время жизни монетки (миллисекунды)
 	static readonly image: HTMLImageElement = new Image();  
 
 	x: number;
 	y: number;
 	impulseY: number;
-	lifeTimeLeft: number; //осталось времени жизни
+	lifeTimeLeftMs: number; //осталось времени жизни (миллисекунды)
 
 	static init(isLoadResources: boolean = true){
 		if(isLoadResources){
@@ -23,10 +23,10 @@ export class Coin {
 		this.x = x; 
 		this.y = y;
 		this.impulseY = 0;
-		this.lifeTimeLeft = Coin.lifetime * 1000;
+		this.lifeTimeLeftMs = Coin.lifeTimeMs * 1000;
 	}
 
-	logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
+	logic(drawsDiffMs: number, bottomShiftBorder: number): void{
 		
 		//ускорение свободного падения
 		if(this.y + Coin.image.height < Draw.canvas.height - bottomShiftBorder){ 
@@ -37,7 +37,7 @@ export class Coin {
 		}
 
 		//перемещение
-		this.y += millisecondsDifferent * this.impulseY;
+		this.y += drawsDiffMs * this.impulseY;
 
 		//отскок от земли
 		if(this.y + Coin.image.height > Draw.canvas.height - bottomShiftBorder){

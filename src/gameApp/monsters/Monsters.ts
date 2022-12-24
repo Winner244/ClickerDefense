@@ -78,7 +78,7 @@ export class Monsters{
 		return false;
 	}
 
-	static logic(millisecondsDifferent: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number): void{
+	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number): void{
 		//уничтожение монстров
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
@@ -89,7 +89,7 @@ export class Monsters{
 					Monsters.all.splice(i, 1);
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
-					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.duration));
+					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.animation.image.height, this.explosionAnimation.durationMs));
 					AudioSystem.play(monster.centerX, ExplosionSound, 0.1, false, 1, true);
 					AudioSystem.playRandomTone(monster.centerX, 0.001, 0, 200, AudioSystem.iirFilters.low);
 				}
@@ -99,7 +99,7 @@ export class Monsters{
 		//логика исчезновение погибших монстров
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
-				this.explosions[i].leftTimeMs -= millisecondsDifferent;
+				this.explosions[i].leftTimeMs -= drawsDiffMs;
 				if(this.explosions[i].leftTimeMs <= 0){
 					this.explosions.splice(i, 1);
 					i--;
@@ -109,7 +109,7 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.map(monster => monster.logic(millisecondsDifferent, buildings, bottomBorder));
+			Monsters.all.map(monster => monster.logic(drawsDiffMs, buildings, bottomBorder));
 		
 			//логика взаимодействия с монетками
 			if(Coins.all.length){
@@ -126,15 +126,15 @@ export class Monsters{
 		}
 	}
 
-	static draw(millisecondsDifferent: number, isGameOver: boolean): void{
+	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		//исчезновение погибших монстров
 		this.explosions.forEach(x => {
 			let newWidth = (this.explosionAnimation.image.width / this.explosionAnimation.frames) * (x.size.height / (this.explosionAnimation.image.height));
 			this.explosionAnimation.leftTimeMs = x.leftTimeMs;
-			this.explosionAnimation.draw(millisecondsDifferent, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height);
+			this.explosionAnimation.draw(drawsDiffMs, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height);
 		});
 
-		Monsters.all.forEach(monster => monster.draw(millisecondsDifferent, isGameOver));
+		Monsters.all.forEach(monster => monster.draw(drawsDiffMs, isGameOver));
 	}
 
 	static create(name: string, isLeftSide: boolean, scaleSize: number): Monster{

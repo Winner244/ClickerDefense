@@ -9,14 +9,14 @@ export class Modifier{
 	readonly damageMultiplier: number; //кратное увеличение урона
 	readonly speedMultiplier: number; //кратное увеличение скорости передвижения
 
-	readonly lifeTime: number|null; //время существования (если временное)
+	readonly lifeTimeMs: number|null; //время существования (если временное)
 
 	constructor(
 		name: string,
 		healthMultiplier: number,
 		damageMultiplier: number,
 		speedMultiplier: number,
-		lifeTime: number|null)
+		lifeTimeMs: number|null)
 	{
 		this.name = name;
 
@@ -24,6 +24,6 @@ export class Modifier{
 		this.damageMultiplier = damageMultiplier;
 		this.speedMultiplier = speedMultiplier;
 
-		this.lifeTime = lifeTime;
+		this.lifeTimeMs = lifeTimeMs;
 	}
 }

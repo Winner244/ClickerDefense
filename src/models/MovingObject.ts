@@ -6,8 +6,8 @@ export class MovingObject extends SimpleObject{
 	public dy: number;
 	public rotate: number;
 
-	constructor(x: number, y: number, width: number, height: number, lifeTime: number, dx: number, dy: number, rotate: number){
-		super(x, y, width, height, lifeTime);
+	constructor(x: number, y: number, width: number, height: number, lifeTimeMs: number, dx: number, dy: number, rotate: number){
+		super(x, y, width, height, lifeTimeMs);
 		this.dx = dx;
 		this.dy = dy;
 		this.rotate = rotate;

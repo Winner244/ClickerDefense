@@ -63,23 +63,23 @@ export class Bat extends Monster{
 		}
 	}
 
-	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
+	logic(drawsDiffMs: number, buildings: Building[], bottomBorder: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(millisecondsDifferent, buildings, bottomBorder);
+		super.logic(drawsDiffMs, buildings, bottomBorder);
 
 		if(this.buildingGoal){
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-			let speed = this.speed * (millisecondsDifferent / 1000);
+			let speed = this.speed * (drawsDiffMs / 1000);
 			speed += speed * speedMultiplier;
 
 			if(!this.isAttack){
 				this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
 	
 				//Зигзагообразное перемещение
-				var changes = millisecondsDifferent / 10 * (this.isZigzagToTop ? 1 : -1);
+				var changes = drawsDiffMs / 10 * (this.isZigzagToTop ? 1 : -1);
 				this.y += changes;
 				this.zigzagLength += changes;
 				if(Math.abs(this.zigzagLength) > Bat.zigzagThreshold){

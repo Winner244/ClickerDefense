@@ -14,13 +14,13 @@ export class Cursor{
 	static readonly sword: string = SwordImage;
 	static readonly swordRed: string = SwordRedImage;
 
-	static cursorWait: number = 0; 
+	static cursorWaitMs: number = 0; // (миллисекунды)
 
 	static setCursor(cursor: string){
 		if(cursor == Cursor.swordRed || cursor == Cursor.pickYellow){
-			Cursor.cursorWait = 100; //замораживаем текущий курсор на 100 миллисекунд (работает нестабильно)
+			Cursor.cursorWaitMs = 100; //замораживаем текущий курсор на 100 миллисекунд (работает нестабильно)
 		}
-		else if(Cursor.cursorWait > 0){
+		else if(Cursor.cursorWaitMs > 0){
 			return;
 		}
 

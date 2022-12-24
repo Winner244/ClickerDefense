@@ -51,18 +51,18 @@ export class Coins{
 		return false;
 	}
 
-	static logic(millisecondsDifferent: number, bottomShiftBorder: number): void{
+	static logic(drawsDiffMs: number, bottomShiftBorder: number): void{
 		for(let i = 0; i < Coins.all.length; i++){
 			let coin = Coins.all[i];
-			coin.lifeTimeLeft -= millisecondsDifferent;
+			coin.lifeTimeLeftMs -= drawsDiffMs;
 		
-			if(coin.lifeTimeLeft <= 0){
+			if(coin.lifeTimeLeftMs <= 0){
 				Coins.all.splice(i, 1);
 				i--;
 				continue;
 			}
 			
-			coin.logic(millisecondsDifferent, bottomShiftBorder);
+			coin.logic(drawsDiffMs, bottomShiftBorder);
 		}
 	}
 

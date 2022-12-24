@@ -84,7 +84,7 @@ export class Boar extends Monster{
 	isActivatedSpecialAbility: boolean;
 	isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
 	
-	specialAbilityActivationLeftTime: number; //оставшееся время активации спец способности
+	specialAbilityActivationLeftTimeMs: number; //оставшееся время активации спец способности (миллисекунды)
 
 	private startSpecialSound: AudioBufferSourceNode|Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
 	private runningSound: AudioBufferSourceNode|Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
@@ -123,7 +123,7 @@ export class Boar extends Monster{
 		this.specialAbilityDamageParticlesAnimation = new Animation(7, 200, Boar.specialAbilityDamageParticlesAnimationImage);
 		this.isActivatedSpecialAbility = false;
 		this.isActivatedSpecialDamage = false;
-		this.specialAbilityActivationLeftTime = 0;
+		this.specialAbilityActivationLeftTimeMs = 0;
 		this.specialAbilityDamage = Boar.specialAbilityDamage * scaleSize;
 		this.startSpecialSound = null;
 		this.runningSound = null;
@@ -142,14 +142,14 @@ export class Boar extends Monster{
 		}
 	}
 
-	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number) {
+	logic(drawsDiffMs: number, buildings: Building[], bottomBorder: number) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
 		if(this.isActivatedSpecialAbility) {
-			if(this.specialAbilityActivationLeftTime > 0) {
-				this.specialAbilityActivationLeftTime -= millisecondsDifferent;
+			if(this.specialAbilityActivationLeftTimeMs > 0) {
+				this.specialAbilityActivationLeftTimeMs -= drawsDiffMs;
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this.isAttack && this.buildingGoal) {
@@ -160,7 +160,7 @@ export class Boar extends Monster{
 				this.specialAbilityDamageParticlesAnimation.restart();
 			}
 			else {
-				this.leftTimeToAttacked = this.attackTimeWaiting; //что бы не сработала первая обычная атака в базовом методе
+				this.attackLeftTimeMs = this.attackTimeWaitingMs; //что бы не сработала первая обычная атака в базовом методе
 			}
 		}
 		else if(this.isWillUseSpecialAbility) {
@@ -168,10 +168,10 @@ export class Boar extends Monster{
 			if(this.buildingGoal != null &&
 				Math.abs(this.buildingGoal.x - this.x) <= Boar.maxDistanceActivateSpecialAbility &&
 				Math.abs(this.buildingGoal.x - this.x) > Boar.minDistanceActivateSpecialAbility && 
-				Math.random() < 0.1 * millisecondsDifferent / 100)
+				Math.random() < 0.1 * drawsDiffMs / 100)
 			{
 				this.isActivatedSpecialAbility = true;
-				this.specialAbilityActivationLeftTime = this.specialAbilityAnimation.duration;
+				this.specialAbilityActivationLeftTimeMs = this.specialAbilityAnimation.durationMs;
 				this.specialAbilitySmokeAnimation.restart();
 				this.modifiers.push(new BoarSpecialAbility());
 
@@ -180,7 +180,7 @@ export class Boar extends Monster{
 			}
 		}
 
-		super.logic(millisecondsDifferent, buildings, bottomBorder);
+		super.logic(drawsDiffMs, buildings, bottomBorder);
 	}
 
 	playSound(): void {
@@ -200,7 +200,7 @@ export class Boar extends Monster{
 		this.modifiers = this.modifiers.filter(x => x.name != BoarSpecialAbility.name);
 		this.isWillUseSpecialAbility = false;
 		this.isActivatedSpecialAbility = false;
-		this.specialAbilityActivationLeftTime = 0;
+		this.specialAbilityActivationLeftTimeMs = 0;
 		this.runningSound?.stop();
 		this.runningSound = null;
 		this.startSpecialSound?.stop();
@@ -215,7 +215,7 @@ export class Boar extends Monster{
 		this.startSpecialSound = null;
 	}
 
-	draw(millisecondsDifferent: number, isGameOver: boolean) {
+	draw(drawsDiffMs: number, isGameOver: boolean) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -224,13 +224,13 @@ export class Boar extends Monster{
 		let scale = isInvert ? -1 : 1;
 
 		//анимация начала спец способности - когда кабан стоит на месте и ногами как бык взбивает пыль
-		if(this.isActivatedSpecialAbility && this.specialAbilityActivationLeftTime > 0){
+		if(this.isActivatedSpecialAbility && this.specialAbilityActivationLeftTimeMs > 0){
 			if(isInvert){
 				Draw.ctx.save();
 				Draw.ctx.scale(-1, 1);
 			}
 
-			this.specialAbilityAnimation.draw(millisecondsDifferent, isGameOver, scale * this.x, this.y, scale * this.width, this.height);
+			this.specialAbilityAnimation.draw(drawsDiffMs, isGameOver, scale * this.x, this.y, scale * this.width, this.height);
 
 			if(isInvert){
 				Draw.ctx.restore();
@@ -246,13 +246,13 @@ export class Boar extends Monster{
 					Draw.ctx.scale(-1, 1);
 				}
 
-				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + this.specialAbilitySmokeAnimation.displayedTime - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
+				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + this.specialAbilitySmokeAnimation.displayedTimeMs - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
 				const x = scale > 0 
 					? this.x + this.width / 3
 					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeAnimationDisplayWidth - this.width);
 				const y = this.y + (1 - smokeScaleSize) * this.height;
 				const width = smokeScaleSize * scale * Boar.specialAbilitySmokeAnimationDisplayWidth;
-				this.specialAbilitySmokeAnimation.draw(millisecondsDifferent, isGameOver, x, y, width, smokeScaleSize * this.height);
+				this.specialAbilitySmokeAnimation.draw(drawsDiffMs, isGameOver, x, y, width, smokeScaleSize * this.height);
 
 				if(isInvert){
 					Draw.ctx.restore();
@@ -260,7 +260,7 @@ export class Boar extends Monster{
 			}
 			
 			//сама модель быка
-			super.draw(millisecondsDifferent, isGameOver);
+			super.draw(drawsDiffMs, isGameOver);
 
 			//обломки от спец атаки
 			if(this.isActivatedSpecialDamage && this.specialAbilityDamageParticlesAnimation.leftTimeMs > 0){
@@ -274,7 +274,7 @@ export class Boar extends Monster{
 				const y = this.y + this.height / 2 - Boar.specialAbilityDamageParticlesImageDisplayedHeight / 2;
 				const width = scale * Boar.specialAbilityDamageParticlesImageDisplayedWidth;
 				const height = Boar.specialAbilityDamageParticlesImageDisplayedHeight;
-				this.specialAbilityDamageParticlesAnimation.draw(millisecondsDifferent, isGameOver, x, y, width, height);
+				this.specialAbilityDamageParticlesAnimation.draw(drawsDiffMs, isGameOver, x, y, width, height);
 
 				if(!isInvert){
 					Draw.ctx.restore();

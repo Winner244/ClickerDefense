@@ -59,7 +59,7 @@ export class Building extends ShopItem{
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
 	
 	protected _isDisplayRepairAnimation: boolean; //отображается ли сейчас анимация починки?
-	protected _repairAnimationLeftTime: number; //оставшееся время отображения анимации починки
+	protected _repairAnimationLeftTimeMs: number; //оставшееся время отображения анимации починки (миллисекунды)
 	protected _repairAnimationAngle: number; //угол поворота картинки в анимации
 	protected _repairAnimationSign: boolean; //ударяет ли молоток? иначе возвращается обратно
 	protected _isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного здания? если да, то нужно подсвечивать данное здание
@@ -67,7 +67,7 @@ export class Building extends ShopItem{
 	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
 	static readonly upgradeAnimation: Animation = new Animation(90, 3000); //анимация апгрейда
 
-	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки в миллисекундах
+	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки (миллисекунды)
 	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
 
 	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
@@ -80,7 +80,7 @@ export class Building extends ShopItem{
 		name: string, 
 		image: HTMLImageElement, 
 		frames: number, 
-		animationDuration: number,
+		animationDurationMs: number,
 		width: number, 
 		height: number, 
 		reduceHover: number, 
@@ -92,7 +92,7 @@ export class Building extends ShopItem{
 	{
 		super(name, image, price, description, ShopCategoryEnum.BUILDINGS);
 
-		this.animation = new AnimationInfinite(frames, animationDuration, image);
+		this.animation = new AnimationInfinite(frames, animationDurationMs, image);
 		this.image = image;
 		this.name = name;
 		this.width = width;
@@ -119,7 +119,7 @@ export class Building extends ShopItem{
 		this._impulsePharosForceDecreasing = 5;
 
 		this._isDisplayRepairAnimation = this._repairAnimationSign = false;
-		this._repairAnimationLeftTime = this._repairAnimationAngle = 0;
+		this._repairAnimationLeftTimeMs = this._repairAnimationAngle = 0;
 
 		this._isDisplayedUpgradeWindow = false;
 
@@ -237,19 +237,19 @@ export class Building extends ShopItem{
 			AudioSystem.play(this.centerX, RepairHammerSoundUrl, 0.2, false, 1, false, true);
 			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
 			this._isDisplayRepairAnimation = true;
-			this._repairAnimationLeftTime = Building.repairAnimationDurationMs;
+			this._repairAnimationLeftTimeMs = Building.repairAnimationDurationMs;
 			return true;
 		}
 
 		return false;
 	}
 
-	draw(millisecondsDifferent: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
 		let x = this.x;
 		let y = this.y;
 
 		if(this.isDisplayedUpgradeWindow){
-			Building.upgradeAnimation.draw(millisecondsDifferent, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
+			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
 			Draw.ctx.filter = 'brightness(1.7)';
 		}
 
@@ -261,7 +261,7 @@ export class Building extends ShopItem{
 		}
 
 		if(this.animation.frames > 1){
-			this.animation.draw(millisecondsDifferent, isGameOver, x, y, this.width, this.height);
+			this.animation.draw(drawsDiffMs, isGameOver, x, y, this.width, this.height);
 		}
 		else{
 			if(this.width > 0 && this.height > 0){
@@ -299,10 +299,10 @@ export class Building extends ShopItem{
 		}
 	}
 
-	logic(millisecondsDifferent: number, monsters: Monster[], bottomShiftBorder: number){
+	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number){
 		if(this._impulse > 1){
-			this._impulse -= millisecondsDifferent / 1000 * (this._impulse * this.impulseForceDecreasing);
-			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * millisecondsDifferent / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
+			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
+			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
 
 			if(this._impulsePharos < -this._impulse){
 				this._impulsePharosSign = !this._impulsePharosSign;
@@ -316,8 +316,8 @@ export class Building extends ShopItem{
 		}
 
 		if(this._isDisplayRepairAnimation){
-			this._repairAnimationLeftTime -= millisecondsDifferent;
-			if(this._repairAnimationLeftTime <= 0){
+			this._repairAnimationLeftTimeMs -= drawsDiffMs;
+			if(this._repairAnimationLeftTimeMs <= 0){
 				this._isDisplayRepairAnimation = this._repairAnimationSign = false;
 				this._repairAnimationAngle = 0;
 			}

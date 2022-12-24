@@ -55,8 +55,8 @@ export class Monster{
 
 	modifiers: Modifier[]; //бафы/дебафы
 
-	leftTimeToAttacked: number; //оставшееся время до следующей атаки (миллисекунды)
-	readonly attackTimeWaiting: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
+	attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
+	readonly attackTimeWaitingMs: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
 
 	imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 
@@ -73,16 +73,16 @@ export class Monster{
 
 		image: HTMLImageElement, 
 		frames: number, 
-		animationDuration: number,
+		animationDurationMs: number,
 
 		attackImage: HTMLImageElement, 
 		attackFrames: number, 
-		attackAnimationDuration: number,
+		attackAnimationDurationMs: number,
 
 		reduceHover: number, 
 		healthMax: number, 
 		damage: number, 
-		attackTimeWaiting: number,
+		attackTimeWaitingMs: number,
 		speed: number,
 		imageHandler: ImageHandler,
 		avrTimeSoundWaitMs: number)
@@ -95,8 +95,8 @@ export class Monster{
 		this.scaleSize = scaleSize;
 		this.name = name;
 
-		this.animation = new AnimationInfinite(frames, animationDuration, image); //анимация бега
-		this.attackAnimation = new AnimationInfinite(attackFrames, attackAnimationDuration, attackImage);  //анимация атаки
+		this.animation = new AnimationInfinite(frames, animationDurationMs, image); //анимация бега
+		this.attackAnimation = new AnimationInfinite(attackFrames, attackAnimationDurationMs, attackImage);  //анимация атаки
 
 		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
 
@@ -104,7 +104,7 @@ export class Monster{
 		this.health = healthMax * scaleSize;
 
 		this.damage = damage * scaleSize; //урон за 1 раз
-		this.attackTimeWaiting = attackTimeWaiting;
+		this.attackTimeWaitingMs = attackTimeWaitingMs;
 		this.speed = speed; //скорость (пикселей в секунду)
 
 		this.imageHandler = imageHandler;
@@ -113,7 +113,7 @@ export class Monster{
 		this.isAttack = false; //атакует?
 		this.buildingGoal = null;
 		this.modifiers = [];
-		this.leftTimeToAttacked = 0;
+		this.attackLeftTimeMs = 0;
 		this.leftTimeToPlaySoundMs = avrTimeSoundWaitMs / 2;
 		this.avrTimeSoundWaitMs = avrTimeSoundWaitMs;
 	}
@@ -153,7 +153,7 @@ export class Monster{
 		AudioSystem.load(Hit11Sound);
 	}
 
-	logic(millisecondsDifferent: number, buildings: Building[], bottomBorder: number): void{
+	logic(drawsDiffMs: number, buildings: Building[], bottomBorder: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -170,7 +170,7 @@ export class Monster{
 		}
 
 		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-		let speed = this.speed * (millisecondsDifferent / 1000);
+		let speed = this.speed * (drawsDiffMs / 1000);
 		speed += speed * speedMultiplier;
 
 		if(this.isLeftSide) //если монстр идёт с левой стороны
@@ -225,13 +225,13 @@ export class Monster{
 		}
 
 		//логика атаки
-		if(this.leftTimeToAttacked > 0)
-			this.leftTimeToAttacked -= millisecondsDifferent;
+		if(this.attackLeftTimeMs > 0)
+			this.attackLeftTimeMs -= drawsDiffMs;
 
 		if(this.isAttack) //если атакует
 		{
 			//атака
-			if(this.leftTimeToAttacked <= 0){
+			if(this.attackLeftTimeMs <= 0){
 				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attack(damage);
@@ -259,7 +259,7 @@ export class Monster{
 			}
 		}
 
-		this.leftTimeToPlaySoundMs -= millisecondsDifferent;
+		this.leftTimeToPlaySoundMs -= drawsDiffMs;
 		if(this.leftTimeToPlaySoundMs <= 0){
 			this.leftTimeToPlaySoundMs = this.avrTimeSoundWaitMs + Helper.getRandom(-this.avrTimeSoundWaitMs / 2, this.avrTimeSoundWaitMs / 2);
 			this.playSound();
@@ -269,7 +269,7 @@ export class Monster{
 	attack(damage: number): void{
 		if(damage > 0 && this.buildingGoal != null){
 			const realDamage = this.buildingGoal.applyDamage(damage); //монстр наносит урон
-			this.leftTimeToAttacked = this.attackTimeWaiting;
+			this.attackLeftTimeMs = this.attackTimeWaitingMs;
 			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
 
 			var size = this.width * this.height;
@@ -291,7 +291,7 @@ export class Monster{
 
 	playSound(): void{}
 
-	draw(millisecondsDifferent: number, isGameOver: boolean): void{
+	draw(drawsDiffMs: number, isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -306,11 +306,11 @@ export class Monster{
 
 		if(this.isAttack){
 			//атака
-			this.attackAnimation.draw(millisecondsDifferent, isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
+			this.attackAnimation.draw(drawsDiffMs, isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
 		}
 		else{
 			//передвижение
-			this.animation.draw(millisecondsDifferent, isGameOver, scale * this.x, this.y, scale * this.width, this.height);
+			this.animation.draw(drawsDiffMs, isGameOver, scale * this.x, this.y, scale * this.width, this.height);
 		}
 
 		if(isInvert){

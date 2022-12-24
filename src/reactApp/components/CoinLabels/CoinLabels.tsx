@@ -21,21 +21,21 @@ CoinLabelsStore.CoinLabelsState
 
 export class CoinLabels extends React.Component<Props, {}> {
 
-  static add(x: number, y: number, number: number, lifeTimeMilliseconds: number): void{
+  static add(x: number, y: number, number: number, lifeTimeMs: number): void{
     y -= 10;
     x += 10;
-    const item = new Label(x, y, '-' + number, 255, 255, 0, lifeTimeMilliseconds);
+    const item = new Label(x, y, '-' + number, 255, 255, 0, lifeTimeMs);
     App.Store.dispatch(CoinLabelsStore.actionCreators.add(item));
 
     
-    let timeUpdate = Date.now();
+    let updatedTime = Date.now();
     const interval = setInterval(() => {
-      if(lifeTimeMilliseconds > 0){
-        const difTime = Date.now() - timeUpdate;
-        timeUpdate = Date.now();
-        lifeTimeMilliseconds -= difTime;
+      if(lifeTimeMs > 0){
+        const difTimeMs = Date.now() - updatedTime;
+        updatedTime = Date.now();
+        lifeTimeMs -= difTimeMs;
 
-        item.y -= difTime * Labels.speedOfUppingToTop / 1000; 
+        item.y -= difTimeMs * Labels.speedOfUppingToTop / 1000; 
         App.Store.dispatch(CoinLabelsStore.actionCreators.update(item.id, item.x, item.y));
       }
       else{
