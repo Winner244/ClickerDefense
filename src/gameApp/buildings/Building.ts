@@ -261,7 +261,7 @@ export class Building extends ShopItem{
 		}
 
 		if(this.animation.frames > 1){
-			this.animation.draw(isGameOver, x, y, this.width, this.height);
+			this.animation.draw(millisecondsDifferent, isGameOver, x, y, this.width, this.height);
 		}
 		else{
 			if(this.width > 0 && this.height > 0){

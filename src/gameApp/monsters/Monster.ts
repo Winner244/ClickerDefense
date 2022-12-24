@@ -306,11 +306,11 @@ export class Monster{
 
 		if(this.isAttack){
 			//атака
-			this.attackAnimation.draw(isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
+			this.attackAnimation.draw(millisecondsDifferent, isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
 		}
 		else{
 			//передвижение
-			this.animation.draw(isGameOver, scale * this.x, this.y, scale * this.width, this.height);
+			this.animation.draw(millisecondsDifferent, isGameOver, scale * this.x, this.y, scale * this.width, this.height);
 		}
 
 		if(isInvert){

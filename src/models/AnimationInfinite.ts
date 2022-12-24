@@ -4,23 +4,23 @@ export default class AnimationInfinite{
 	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
 	readonly frames: number; //количество кадров на изображении
 	readonly duration: number; //время полной анимации в миллисекундах
-	timeCreated: number;
+	displayedTime: number; //сколько по времени уже отображается
 
 	constructor(frames: number, duration: number, image: HTMLImageElement|null = null)
 	{
 		this.image = image || new Image();
 		this.frames = frames;
 		this.duration = duration;
-		this.timeCreated = Date.now();
+		this.displayedTime = 0;
 	}
 
 	restart(){
-		this.timeCreated = Date.now();
+		this.displayedTime = 0;
 	}
 
-	draw(isGameOver: boolean, x: number, y: number, width: number, height: number){
-		let lifeTimeAnimation = Date.now() - this.timeCreated;
-		let frame = isGameOver ? 0 : Math.floor(lifeTimeAnimation % this.duration / (this.duration / this.frames));
+	draw(millisecondsDifferent: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
+		this.displayedTime += millisecondsDifferent;
+		let frame = isGameOver ? 0 : Math.floor(this.displayedTime % this.duration / (this.duration / this.frames));
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y

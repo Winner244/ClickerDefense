@@ -246,13 +246,13 @@ export class Boar extends Monster{
 					Draw.ctx.scale(-1, 1);
 				}
 
-				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + Date.now() - this.specialAbilitySmokeAnimation.timeCreated - this.specialAbilityAnimation.duration - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
+				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + this.specialAbilitySmokeAnimation.displayedTime - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
 				const x = scale > 0 
 					? this.x + this.width / 3
 					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeAnimationDisplayWidth - this.width);
 				const y = this.y + (1 - smokeScaleSize) * this.height;
 				const width = smokeScaleSize * scale * Boar.specialAbilitySmokeAnimationDisplayWidth;
-				this.specialAbilitySmokeAnimation.draw(isGameOver, x, y, width, smokeScaleSize * this.height);
+				this.specialAbilitySmokeAnimation.draw(millisecondsDifferent, isGameOver, x, y, width, smokeScaleSize * this.height);
 
 				if(isInvert){
 					Draw.ctx.restore();
