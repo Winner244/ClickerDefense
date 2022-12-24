@@ -246,7 +246,7 @@ export class Boar extends Monster{
 					Draw.ctx.scale(-1, 1);
 				}
 
-				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + this.specialAbilityAnimation.leftTimeMs - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
+				const smokeScaleSize = Math.min((Boar.specialAbilitySmokeTimeGrowing + Date.now() - this.specialAbilitySmokeAnimation.timeCreated - this.specialAbilityAnimation.duration - Boar.specialAbilitySmokeTimeGrowing) / Boar.specialAbilitySmokeTimeGrowing, 1);
 				const x = scale > 0 
 					? this.x + this.width / 3
 					: scale * this.x + this.width / 3 + (smokeScaleSize * Boar.specialAbilitySmokeAnimationDisplayWidth - this.width);
