@@ -3,6 +3,7 @@ import {Draw} from '../gameSystems/Draw';
 
 import FlyEarthRopeImage from '../../assets/img/buildings/flyEarthRope.png';  
 
+/** Канат держащий землю - главное здание в еденичном экземпляре */
 export class FlyEarthRope extends Building{
 	static readonly image: HTMLImageElement = new Image();
 

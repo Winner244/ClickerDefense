@@ -3,6 +3,7 @@ import {Draw} from '../gameSystems/Draw';
 
 import barricadeImage from '../../assets/img/buildings/barricade/barricade.png';  
 
+/** Баррикада - тип здания */
 export class Barricade extends Building{
 	static readonly image: HTMLImageElement = new Image();
 	static readonly width: number = 226 * 0.7;

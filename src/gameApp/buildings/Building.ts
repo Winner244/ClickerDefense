@@ -25,7 +25,18 @@ import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 import HealthIcon from '../../assets/img/icons/health.png';
 import ShieldIcon from '../../assets/img/icons/shield.png';
 
+/** Базовый класс для всех зданий */
 export class Building extends ShopItem{
+	
+	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
+	static readonly upgradeAnimation: Animation = new Animation(90, 3000); //анимация апгрейда
+
+	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки (миллисекунды)
+	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
+
+	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
+
+	//поля свойства экземпляра
 	animation: AnimationInfinite;
 	width: number;  //ширина image
 	height: number; //высота image
@@ -53,6 +64,8 @@ export class Building extends ShopItem{
 	maxImpulse: number; //максимальное значение импульса для здания
 	impulseForceDecreasing: number; //сила уменьшения импульса
 
+
+	//технические поля экземпляра
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
@@ -63,14 +76,6 @@ export class Building extends ShopItem{
 	protected _repairAnimationAngle: number; //угол поворота картинки в анимации
 	protected _repairAnimationSign: boolean; //ударяет ли молоток? иначе возвращается обратно
 	protected _isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного здания? если да, то нужно подсвечивать данное здание
-	
-	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
-	static readonly upgradeAnimation: Animation = new Animation(90, 3000); //анимация апгрейда
-
-	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки (миллисекунды)
-	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
-
-	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
 
 	constructor(
 		x: number, 

@@ -17,6 +17,7 @@ import PickSoundUrl2 from '../../assets/sounds/buildings/flyEarth/pick2.mp3';
 import PickSoundUrl3 from '../../assets/sounds/buildings/flyEarth/pick3.mp3'; 
 import PickSoundUrl4 from '../../assets/sounds/buildings/flyEarth/pick4.mp3'; 
 
+/** Летающая земля - главное здание в еденичном экземпляре */
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();
 	static readonly width: number = 375;

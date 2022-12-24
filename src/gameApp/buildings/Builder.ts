@@ -15,13 +15,15 @@ import SmokeImage from '../../assets/img/smoke.png';
 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
 
-/** Режим строительства */
+/** Режим строительства - еденичный статичный класс */
 export class Builder {
 
-	private static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
-	private static smokeAnimation: Animation = new Animation(10, 1000);  
-	private static isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
-	private static isAnotherBuilding: boolean = false; //курсор наведён на другое здание?
+	static readonly smokeAnimation: Animation = new Animation(10, 1000);  
+	
+	static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
+
+	private static _isDrawSmoke: boolean = false; //пора отрисовывать дым при постройке?
+	private static _isAnotherBuilding: boolean = false; //курсор наведён на другое здание?
 
 	static init(isLoadResources: boolean = true){
 		if(isLoadResources){
@@ -35,7 +37,7 @@ export class Builder {
 		this.init(true);
 		this.selectedBuildingForBuild = building;
 		this.selectedBuildingForBuild.y = y;
-		this.isDrawSmoke = false;
+		this._isDrawSmoke = false;
 	}
 
 	static finish(){
@@ -43,10 +45,10 @@ export class Builder {
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean){
-		if(this.selectedBuildingForBuild && !this.isDrawSmoke){
+		if(this.selectedBuildingForBuild && !this._isDrawSmoke){
 			this.selectedBuildingForBuild.x = mouseX - this.selectedBuildingForBuild.width / 2;
-			this.isAnotherBuilding = Buildings.all.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
-			if(isClick && !this.isAnotherBuilding){
+			this._isAnotherBuilding = Buildings.all.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
+			if(isClick && !this._isAnotherBuilding){
 				Gamer.coins -= this.selectedBuildingForBuild.price;
 				Labels.createCoinLabel(
 					this.selectedBuildingForBuild.x + this.selectedBuildingForBuild.width, 
@@ -55,7 +57,7 @@ export class Builder {
 					2000);
 				
 				Buildings.all.push(this.selectedBuildingForBuild);
-				this.isDrawSmoke = true;
+				this._isDrawSmoke = true;
 				this.smokeAnimation.restart();
 				AudioSystem.play(mouseX, BuildSoundUrl, 0.15);
 				Game.loadResourcesAfterBuild(this.selectedBuildingForBuild);
@@ -69,17 +71,17 @@ export class Builder {
 	}
 
 	static logic(){
-		if(this.selectedBuildingForBuild && this.isDrawSmoke){
+		if(this.selectedBuildingForBuild && this._isDrawSmoke){
 			if(this.smokeAnimation.leftTimeMs <= 0){
 				this.selectedBuildingForBuild = null;
-				this.isDrawSmoke = false;
+				this._isDrawSmoke = false;
 			}
 		}
 	}
 
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		if(this.selectedBuildingForBuild){
-			if(this.isDrawSmoke){
+			if(this._isDrawSmoke){
 				let smokeWidth = this.selectedBuildingForBuild.width * 2;
 				let newHeight = this.smokeAnimation.image.height * (smokeWidth / (this.smokeAnimation.image.width / this.smokeAnimation.frames));
 				const x = this.selectedBuildingForBuild.x - this.selectedBuildingForBuild.width / 2;
@@ -88,7 +90,7 @@ export class Builder {
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{
-				if(this.isAnotherBuilding){
+				if(this._isAnotherBuilding){
 					Draw.ctx.filter="grayscale(1) ";
 				}
 				this.selectedBuildingForBuild.draw(drawsDiffMs, isGameOver, true);

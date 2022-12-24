@@ -16,10 +16,11 @@ import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3
 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
 
+/** Система управления всеми зданиями - еденичный статичный класс */
 export class Buildings{
+	static readonly explosionAnimation: Animation = new Animation(10, 1000); //анимация после разрушения здания
+
 	static all: Building[] = []; //все строения
-	
-	static explosionAnimation: Animation = new Animation(10, 1000); //анимация после разрушения здания
 	static explosions: SimpleObject[] = []; //анимации разрушения 
 
 	static flyEarth: Building; //ключевое воздушное здание

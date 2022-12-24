@@ -25,12 +25,11 @@ import radiusIcon from '../../assets/img/icons/radius.png';
 
 import arrowStrikeSound from '../../assets/sounds/buildings/tower/arrow_strike.mp3';   
 
-
+/** Башня - тип здания - стреляет стрелами по монстрам */
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
 	static readonly width: number = 200 * 0.7;
 	static readonly height: number = 425 * 0.7;
-
 
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly price: number = 50; //цена здания
@@ -38,12 +37,14 @@ export class Tower extends Building{
 
 	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
 
+	//поля свойства экземпляра
 	bowmans: number = 1; //кол-во лучников
 	damage: number = 1; //урон от одной атаки
 	arrowSpeed: number = Tower.initArrowSpeed; //скорость полёта стрелы (в пикселях за секунду)
 	radiusAttack: number = 400; //радиус атаки
 	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
 
+	//технические поля экземпляра
 	private _rechargeLeftTimeMs: number = 0; //сколько осталось времени перезарядки (миллисекунды)
 	private _arrows: MovingObject[] = [];
 	private _bowmansWaiting: number = 0; //сколько стрелков ещё не отстрелялось?
