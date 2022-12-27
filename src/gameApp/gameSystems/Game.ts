@@ -98,7 +98,7 @@ export class Game {
 		document.addEventListener('keydown', Game.onKey);
 
 		if(this._animationId == 0 && this._primaryImages.length){
-			this._animationId = window.requestAnimationFrame(Game.go);
+			this._animationId = window.requestAnimationFrame(Game.go.bind(this));
 		}
 	}
 
@@ -144,7 +144,7 @@ export class Game {
 
 		//проверка что все изображения загружены - иначе будет краш хрома
 		if(this._primaryImages.some(x => !x.complete)){
-			this._animationId = window.requestAnimationFrame(Game.go);
+			this._animationId = window.requestAnimationFrame(Game.go.bind(this));
 			return;
 		}
 
@@ -190,7 +190,7 @@ export class Game {
 		Game.drawAll(millisecondsFromStart, drawsDiffMs);
 
 		if(!Game.isEndAfterGameOver){
-			window.requestAnimationFrame(Game.go);
+			window.requestAnimationFrame(Game.go.bind(this));
 		}
 	}
 
@@ -337,7 +337,7 @@ export class Game {
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
 		if(!this._animationId)
-		this._animationId = window.requestAnimationFrame(Game.go);
+		this._animationId = window.requestAnimationFrame(Game.go.bind(this));
 		Mouse.isClick = false;
 		Game.isBlockMouseLogic = false;
 		BuildingButtons.hide();

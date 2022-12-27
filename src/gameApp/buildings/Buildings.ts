@@ -34,7 +34,7 @@ export class Buildings{
 			Draw.canvas.height / 2 - FlyEarth.height / 2);
 
 		
-		this.flyEarthRope = new FlyEarthRope(0, 0);
+		this.flyEarthRope = new FlyEarthRope(Draw.canvas.width / 2, 0);
 		let flyEarthRopeImageOnLoad = () => {
 			this.flyEarthRope.x = this.flyEarth.x + FlyEarth.width / 2 - FlyEarthRope.image.width / 2;
 			this.flyEarthRope.y = this.flyEarth.y + FlyEarth.height - 8;
