@@ -4,10 +4,12 @@ import {Helper} from '../helpers/Helper';
 
 import CoinImage from '../../assets/img/coin.png'; 
 
+/** Монетка */
 export class Coin {
 	static readonly lifeTimeMs: number = 5000; //время жизни монетки (миллисекунды)
 	static readonly image: HTMLImageElement = new Image();  
 
+	//поля свойства экземпляра
 	x: number;
 	y: number;
 	impulseY: number;

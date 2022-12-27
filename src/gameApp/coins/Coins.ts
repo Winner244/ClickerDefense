@@ -9,6 +9,7 @@ import {Cursor} from '../gamer/Cursor';
 
 import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
 
+/** Система управления всеми монетками - единичный статичный класс */
 export class Coins{
 	static all: Coin[] = [];
 

@@ -1,7 +1,7 @@
 import {Draw} from './Draw';
 import {AudioSystem} from './AudioSystem';
 
-import {Waves} from '../waves/Waves';
+import {Waves} from './Waves';
 
 import {Labels} from '../labels/Labels';
 
@@ -43,14 +43,11 @@ import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3';
 
 
 
-
+/** Система управления игрой - единичный статичный экземпляр */
 export class Game {
-	private static primaryImages: HTMLImageElement[] = [];  // изображения (кроме курсоров) загрузку которых нужно дождаться перед началом игры
-	private static grassImage: HTMLImageElement = new Image(); //трава
-	private static animationId: number = 0; //техническая переменная для браузера
-
-
 	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
+
+	private static readonly grassImage: HTMLImageElement = new Image(); //трава
 
 	static isGameRun: boolean = false; //если false - значит на паузе 
 	static isGameOver: boolean = false; //игра заканчивается
@@ -61,6 +58,9 @@ export class Game {
 	static lastDrawTime: number = 0; //время последней отрисовки (нужно для высчита drawsDiffMs)
 
 	static isBlockMouseLogic: boolean = false; //if user's mouse enter to interface buttons (menu/shop/nextWave)
+
+	private static _primaryImages: HTMLImageElement[] = [];  // изображения (кроме курсоров) загрузку которых нужно дождаться перед началом игры
+	private static _animationId: number = 0; //техническая переменная для браузера
 
 	/** Инициализация игры */
 	static init(canvas: HTMLCanvasElement, isLoadResources: boolean = true): void{
@@ -87,18 +87,18 @@ export class Game {
 			
 			Game.grassImage.src = GrassImage;
 
-			Game.primaryImages = [];
-			Game.primaryImages.push(Game.grassImage);
-			Game.primaryImages.push(FlyEarth.image);
-			Game.primaryImages.push(FlyEarthRope.image);
-			Game.primaryImages.push(Coin.image);
+			this._primaryImages = [];
+			this._primaryImages.push(Game.grassImage);
+			this._primaryImages.push(FlyEarth.image);
+			this._primaryImages.push(FlyEarthRope.image);
+			this._primaryImages.push(Coin.image);
 		}
 
 		document.removeEventListener('keydown', Game.onKey);
 		document.addEventListener('keydown', Game.onKey);
 
-		if(Game.animationId == 0 && Game.primaryImages.length){
-			Game.animationId = window.requestAnimationFrame(Game.go);
+		if(this._animationId == 0 && this._primaryImages.length){
+			this._animationId = window.requestAnimationFrame(Game.go);
 		}
 	}
 
@@ -138,13 +138,13 @@ export class Game {
 	/** основной цикл игры */
 	private static go(millisecondsFromStart: number) : void{
 		if(!Game.isGameRun){
-			Game.animationId = 0;
+			this._animationId = 0;
 			return;
 		}
 
 		//проверка что все изображения загружены - иначе будет краш хрома
-		if(Game.primaryImages.some(x => !x.complete)){
-			Game.animationId = window.requestAnimationFrame(Game.go);
+		if(this._primaryImages.some(x => !x.complete)){
+			this._animationId = window.requestAnimationFrame(Game.go);
 			return;
 		}
 
@@ -220,8 +220,8 @@ export class Game {
 			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isWaveStarted, isWaveEnded);
 		}
 
-		if(Cursor.cursorWaitMs > 0){
-			Cursor.cursorWaitMs -= drawsDiffMs;
+		if(Cursor.cursorWaitLeftTimeMs > 0){
+			Cursor.cursorWaitLeftTimeMs -= drawsDiffMs;
 		}
 
 		if(!isSetCursor){
@@ -319,8 +319,8 @@ export class Game {
 
 		Cursor.setCursor(Cursor.default);
 		Game.isBlockMouseLogic = true;
-		cancelAnimationFrame(Game.animationId);
-		Game.animationId = 0;
+		cancelAnimationFrame(this._animationId);
+		this._animationId = 0;
 		Game.isGameRun = false;
 		Menu.show();
 		Game.drawAll(0, 0, true);
@@ -336,8 +336,8 @@ export class Game {
 
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
-		if(!Game.animationId)
-			Game.animationId = window.requestAnimationFrame(Game.go);
+		if(!this._animationId)
+		this._animationId = window.requestAnimationFrame(Game.go);
 		Mouse.isClick = false;
 		Game.isBlockMouseLogic = false;
 		BuildingButtons.hide();

@@ -41,9 +41,10 @@ import SoundAttacked11 from '../../assets/sounds/monsters/zombie/attacked11.mp3'
 import SoundAttacked12 from '../../assets/sounds/monsters/zombie/attacked12.mp3'; 
 
 
-
+/** Зомби - тип монстров */
 export class Zombie extends Monster{
-	public static readonly imageHandler: ImageHandler = new ImageHandler();
+	static readonly imageHandler: ImageHandler = new ImageHandler();
+	
 	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	private static readonly imageFrames = 12;
 

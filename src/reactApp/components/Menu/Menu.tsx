@@ -12,7 +12,7 @@ import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {Keypad} from '../../../gameApp/gamer/Keypad';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {Waves} from '../../../gameApp/waves/Waves';
+import {Waves} from '../../../gameApp/gameSystems/Waves';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import './Menu.scss';

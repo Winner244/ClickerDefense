@@ -15,7 +15,7 @@ import SmokeImage from '../../assets/img/smoke.png';
 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
 
-/** Режим строительства - еденичный статичный класс */
+/** Режим строительства - единичный статичный класс */
 export class Builder {
 
 	static readonly smokeAnimation: Animation = new Animation(10, 1000);  

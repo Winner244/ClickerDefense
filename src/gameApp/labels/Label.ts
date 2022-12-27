@@ -3,8 +3,12 @@ import {Draw} from "../gameSystems/Draw";
 import {Helper} from "../helpers/Helper";
 
 
+/** Поднимающийся текст - мини надписи, типо "+1" при сборе монеток */
 export class Label{
-	id: string;
+	readonly id: string;
+	readonly lifeTimeMs: number;
+
+	//поля свойства экземпляра
 	x: number;
 	y: number;
 	text: string;
@@ -21,7 +25,6 @@ export class Label{
 	backgroundBlue: number;
 
 	leftTimeMs: number;
-	readonly lifeTimeMs: number;
 
 	constructor(
 		x: number, y: number, 

@@ -26,10 +26,11 @@ import SwordAttackSound from '../../assets/sounds/gamer/sword_attack.mp3';
 
 
 
+/** Система управления всеми монстрами - единичный статичный класс */
 export class Monsters{
+	static readonly explosionAnimation: Animation = new Animation(27, 700); //анимация после гибели монстра
+
 	static all: Monster[] = []; //все созданные и пока ещё живые монстры
-	
-	static explosionAnimation: Animation = new Animation(27, 700); //анимация после гибели монстра
 	static explosions: SimpleObject[] = []; //анимации гибели монстра 
 
 	static init(isLoadResources: boolean = true){

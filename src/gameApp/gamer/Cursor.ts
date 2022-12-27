@@ -6,6 +6,7 @@ import HandImage from '../../assets/cursors/Hand.png';
 import SwordImage from '../../assets/cursors/Sword.png';  
 import SwordRedImage from '../../assets/cursors/SwordRed.png';  
 
+/** Отображение курсора мыши - единичный статичный класс */
 export class Cursor{
 	static readonly default: string = StandartImage;
 	static readonly pick: string = PickImage;
@@ -14,13 +15,14 @@ export class Cursor{
 	static readonly sword: string = SwordImage;
 	static readonly swordRed: string = SwordRedImage;
 
-	static cursorWaitMs: number = 0; // (миллисекунды)
+	static readonly cursorWaitAfterChangeMs: number = 100; //время на которое замораживается курсор после изменения, что бы небыло морганий (миллисекунды)
+	static cursorWaitLeftTimeMs: number = 0; //сколько времени заморозки осталось (миллисекунды)
 
 	static setCursor(cursor: string){
 		if(cursor == Cursor.swordRed || cursor == Cursor.pickYellow){
-			Cursor.cursorWaitMs = 100; //замораживаем текущий курсор на 100 миллисекунд (работает нестабильно)
+			Cursor.cursorWaitLeftTimeMs = Cursor.cursorWaitAfterChangeMs; //замораживаем текущий курсор (работает нестабильно)
 		}
-		else if(Cursor.cursorWaitMs > 0){
+		else if(Cursor.cursorWaitLeftTimeMs > 0){
 			return;
 		}
 

@@ -1,3 +1,4 @@
+/** Система рисования на холсте - единичный статичный экземпляр */
 export class Draw{
 	static canvas: HTMLCanvasElement;
 	static ctx: CanvasRenderingContext2D;

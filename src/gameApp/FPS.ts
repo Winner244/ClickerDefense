@@ -1,18 +1,21 @@
+/** Мониторинг ФПС - единичный статичный класс */
 export class FPS{
 	static fps: number = 0; //все ФПС насчитанные за предыдущую секунду
-	static countNewFPS: number = 0; //техническая переменная (считает текущие fps за секунду)
-	static oldFPStime: string = ''; //предыдущая метка времени подсчёта FPS
+
+	//технические переменные
+	private static countNewFPS: number = 0; //считает текущие fps за секунду
+	private static oldFPStime: string = ''; //предыдущая метка времени подсчёта фпс
 
 	static counting() : void {
 		let newDate = new Date();
 		let newKey = newDate.getMinutes() + '_' + newDate.getSeconds();
-		if(FPS.oldFPStime != newKey){
-			FPS.fps = FPS.countNewFPS;
-			console.log('fps: ' + FPS.fps); //все насчитанные FPS за предыдущую секунду
-			FPS.countNewFPS = 0;
-			FPS.oldFPStime = newKey;
+		if(this.oldFPStime != newKey){
+			this.fps = this.countNewFPS;
+			console.log('fps: ' + this.fps); //все насчитанные фпс за предыдущую секунду
+			this.countNewFPS = 0;
+			this.oldFPStime = newKey;
 		}
 
-		FPS.countNewFPS++;
+		this.countNewFPS++;
 	}
 }

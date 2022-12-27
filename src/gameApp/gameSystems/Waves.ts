@@ -1,10 +1,10 @@
 import sum from 'lodash/sum';
 
-import {Draw} from '../gameSystems/Draw';
-import {Game} from '../gameSystems/Game';
+import {Draw} from './Draw';
+import {Game} from './Game';
 
 import {Size} from '../../models/Size';
-import {WaveData} from './WaveData';
+import {WaveData} from '../../models/WaveData';
 
 import {Helper} from '../helpers/Helper';
 
@@ -18,7 +18,7 @@ import {Menu} from '../../reactApp/components/Menu/Menu';
 import MonsterImage from '../../assets/img/monster.png'; 
 
 
-
+/** Система управления волнами монстров - единичный статичный экземпляр */
 export class Waves{
 	static readonly iconCountKilledMonsters = new Image(); //иконка для интерфейса
 	static readonly monsterSizeDifferentScalePercentage = 20; //(в процентах) разница в размерах создаваемых монстров одного типа.
@@ -26,10 +26,10 @@ export class Waves{
 	static isStarted: boolean = false; //Волна запущена?
 
 	static delayStartLeftTimeMs: number = 0; //сколько ещё осталось задержки (миллисекунды)
-	static delayStartTimeMs: number = 3000; //задержка перед началом волны (миллисекунды) - что бы показать надпись "Волна N"
+	static readonly delayStartTimeMs: number = 3000; //задержка перед началом волны (миллисекунды) - что бы показать надпись "Волна N"
 
 	static delayEndLeftTimeMs: number = 0; //сколько ещё осталось задержки 
-	static delayEndTimeMs: number = 3000; //задержка после окончании волны (миллисекунды) - что бы показать надпись "Волна пройдена"
+	static readonly delayEndTimeMs: number = 3000; //задержка после окончании волны (миллисекунды) - что бы показать надпись "Волна пройдена"
 
 	static waveTimeMs: number = 0; //(миллисекунды) сколько по времени волна уже идёт
 

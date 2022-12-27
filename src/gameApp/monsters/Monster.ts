@@ -28,12 +28,16 @@ import Hit9Sound from '../../assets/sounds/monsters/hit9.mp3';
 import Hit10Sound from '../../assets/sounds/monsters/hit10.mp3'; 
 import Hit11Sound from '../../assets/sounds/monsters/hit11.mp3'; 
 
-export class Monster{
-	id: string;
-	name: string;
 
-	animation: AnimationInfinite; //содержит несколько изображений для анимации
-	attackAnimation: AnimationInfinite;  //содержит несколько изображений для анимации
+/** Базовый класс для всех монстров */
+export class Monster{
+	readonly imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
+	readonly animation: AnimationInfinite; //анимация движения монстра
+	readonly attackAnimation: AnimationInfinite;  //анимация атаки монстра
+
+	//поля свойства экземпляра
+	readonly id: string;
+	name: string;
 
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
 
@@ -46,23 +50,25 @@ export class Monster{
 	y: number;
 	scaleSize: number; //1 - размер монстра по размеру картинки, 0.5 - монстр в 2 раза меньше картинки по высоте и ширине, 1.5 - монстр в 2 раза больше.
 
-	isAttack: boolean; //атакует?
-
 	isLeftSide: boolean; // с левой стороны движется?
 	isLand: boolean; //наземный?
 
-	buildingGoal: Building|null; //цель-здание для атаки
-
 	modifiers: Modifier[]; //бафы/дебафы
 
-	attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
-	readonly attackTimeWaitingMs: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
 
-	imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 
-	protected leftTimeToPlaySoundMs: number; //оставшееся время до проигрывания звука монстра
-	readonly avrTimeSoundWaitMs: number; //среднее время ожидания следующего звука
+	//технические поля экземпляра
+	protected _buildingGoal: Building|null; //цель-здание для атаки
 
+	protected readonly attackTimeWaitingMs: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
+	_attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
+
+	protected readonly avrTimeSoundWaitMs: number; //среднее время ожидания следующего звука
+	protected _leftTimeToPlaySoundMs: number; //оставшееся время до проигрывания звука монстра
+
+	protected _isAttack: boolean; //атакует?
+
+	
 	constructor(
 		x: number, 
 		y: number, 
@@ -110,11 +116,11 @@ export class Monster{
 		this.imageHandler = imageHandler;
 
 
-		this.isAttack = false; //атакует?
-		this.buildingGoal = null;
+		this._isAttack = false; //атакует?
+		this._buildingGoal = null;
 		this.modifiers = [];
-		this.attackLeftTimeMs = 0;
-		this.leftTimeToPlaySoundMs = avrTimeSoundWaitMs / 2;
+		this._attackLeftTimeMs = 0;
+		this._leftTimeToPlaySoundMs = avrTimeSoundWaitMs / 2;
 		this.avrTimeSoundWaitMs = avrTimeSoundWaitMs;
 	}
 
@@ -159,12 +165,12 @@ export class Monster{
 		}
 
 		//логика передвижения
-		if(this.buildingGoal == null || this.buildingGoal.health <= 0){
+		if(this._buildingGoal == null || this._buildingGoal.health <= 0){
 			let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
 			buildingsGoal = sortBy(buildingsGoal, [building => this.isLeftSide ? building.x : building.x + building.width]);
-			this.buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
+			this._buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
 
-			if(this.buildingGoal == null){
+			if(this._buildingGoal == null){
 				return;
 			}
 		}
@@ -176,62 +182,62 @@ export class Monster{
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
 			let condition = this.isLand 
-				? this.x + this.width < this.buildingGoal.x + this.width / 5
-				: this.buildingGoal.width / 2 - this.buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY);
+				? this.x + this.width < this._buildingGoal.x + this.width / 5
+				: this._buildingGoal.width / 2 - this._buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY);
 
 			if (condition) { //ещё не дошёл
 				this.x += speed;
 
 				if(!this.isLand){
-					//this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
+					//this.y += (this._buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY) * speed;
 				}
-				this.isAttack = false;
+				this._isAttack = false;
 			}
 			else //дошёл
 			{
 				if(this.isLand){
-					this.x = this.buildingGoal.x - this.width + this.width / 5;
+					this.x = this._buildingGoal.x - this.width + this.width / 5;
 				}
-				if(!this.isAttack){
+				if(!this._isAttack){
 					this.attackAnimation.restart();
 				}
-				this.isAttack = true; //атакует
+				this._isAttack = true; //атакует
 			}
 		}
 		else 
 		{
 			let condition = this.isLand 
-				? this.x > this.buildingGoal.x + this.buildingGoal.width - this.width / 5
-				: this.buildingGoal.width / 2 - this.buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY);
+				? this.x > this._buildingGoal.x + this._buildingGoal.width - this.width / 5
+				: this._buildingGoal.width / 2 - this._buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY);
 
 			if (condition) { //ещё не дошёл
 				this.x -= speed;
 
 				if(!this.isLand){
-					//this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
+					//this.y += (this._buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY) * speed;
 				}
-				this.isAttack = false;
+				this._isAttack = false;
 			}
 			else //дошёл
 			{
 				if(this.isLand){
-					this.x = this.buildingGoal.x + this.buildingGoal.width - this.width / 5;
+					this.x = this._buildingGoal.x + this._buildingGoal.width - this.width / 5;
 				}
-				if(!this.isAttack){
+				if(!this._isAttack){
 					this.attackAnimation.restart();
 				}
-				this.isAttack = true; //атакует
+				this._isAttack = true; //атакует
 			}
 		}
 
 		//логика атаки
-		if(this.attackLeftTimeMs > 0)
-			this.attackLeftTimeMs -= drawsDiffMs;
+		if(this._attackLeftTimeMs > 0)
+			this._attackLeftTimeMs -= drawsDiffMs;
 
-		if(this.isAttack) //если атакует
+		if(this._isAttack) //если атакует
 		{
 			//атака
-			if(this.attackLeftTimeMs <= 0){
+			if(this._attackLeftTimeMs <= 0){
 				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attack(damage);
@@ -259,17 +265,17 @@ export class Monster{
 			}
 		}
 
-		this.leftTimeToPlaySoundMs -= drawsDiffMs;
-		if(this.leftTimeToPlaySoundMs <= 0){
-			this.leftTimeToPlaySoundMs = this.avrTimeSoundWaitMs + Helper.getRandom(-this.avrTimeSoundWaitMs / 2, this.avrTimeSoundWaitMs / 2);
+		this._leftTimeToPlaySoundMs -= drawsDiffMs;
+		if(this._leftTimeToPlaySoundMs <= 0){
+			this._leftTimeToPlaySoundMs = this.avrTimeSoundWaitMs + Helper.getRandom(-this.avrTimeSoundWaitMs / 2, this.avrTimeSoundWaitMs / 2);
 			this.playSound();
 		}
 	}
 
 	attack(damage: number): void{
-		if(damage > 0 && this.buildingGoal != null){
-			const realDamage = this.buildingGoal.applyDamage(damage); //монстр наносит урон
-			this.attackLeftTimeMs = this.attackTimeWaitingMs;
+		if(damage > 0 && this._buildingGoal != null){
+			const realDamage = this._buildingGoal.applyDamage(damage); //монстр наносит урон
+			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
 
 			var size = this.width * this.height;
@@ -277,7 +283,7 @@ export class Monster{
 			var volume = 0.1 * Math.sqrt(sizeVolumeScale) * Math.sqrt(damage);
 			AudioSystem.playRandomV(this.centerX, [Hit1Sound, Hit2Sound, Hit3Sound, Hit4Sound, Hit5Sound, Hit6Sound, Hit7Sound, Hit8Sound, Hit9Sound, Hit10Sound, Hit11Sound], volume || 0.1, false, 1, true);
 
-			if(this.buildingGoal instanceof  Barricade){
+			if(this._buildingGoal instanceof  Barricade){
 				var mirrorDamage = damage / 100 * Barricade.damageMirrorPercentage;
 				this.health -= mirrorDamage;
 				Labels.createMonsterDamageLabel(this.x + this.width / 2 + (this.isLeftSide ? 0: -17), this.y + this.height / 2, '-' + mirrorDamage.toFixed(1), 3000);
@@ -304,7 +310,7 @@ export class Monster{
 			Draw.ctx.scale(-1, 1);
 		}
 
-		if(this.isAttack){
+		if(this._isAttack){
 			//атака
 			this.attackAnimation.draw(drawsDiffMs, isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
 		}

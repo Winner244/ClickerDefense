@@ -1,3 +1,4 @@
+/** Данные по вводу клавиш через мышку - единичный статичный класс */
 export class Mouse{
 	static x: number;
 	static y: number;

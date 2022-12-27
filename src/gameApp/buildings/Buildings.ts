@@ -16,7 +16,7 @@ import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3
 
 import ExplosionImage from '../../assets/img/buildings/explosion.png'; 
 
-/** Система управления всеми зданиями - еденичный статичный класс */
+/** Система управления всеми зданиями - единичный статичный класс */
 export class Buildings{
 	static readonly explosionAnimation: Animation = new Animation(10, 1000); //анимация после разрушения здания
 

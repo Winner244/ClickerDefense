@@ -6,11 +6,11 @@ import {Helper} from "../helpers/Helper";
 
 import AudioIIRFilter from "../../models/AudioIIRFilter";
 
-
+/** Система управления звуком - единичный статичный класс */
 export class AudioSystem{
 	public static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
 	public static musicVolume: number = 1; //общий уровень звука фоновой музыки (0 - is min value, 1 - is max value)
-	public static isEnabled: boolean = true;
+	public static isEnabled: boolean = true; //включена/отключена система?
 
 	public static iirFilters = {
 		low: new AudioIIRFilter(
@@ -18,12 +18,13 @@ export class AudioSystem{
 			[1.0317185917, -1.9999273033, 0.9682814083])
 	}
 
-	private static context = new AudioContext();
-	private static Buffers: any = {};
-	private static waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
-	private static iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem.context.createIIRFilter(x.feedforward, x.feedback));
-	private static soundsForPause: AudioBufferSourceNode[] = [];
-	private static soundsToneForPause: Tone.Player[] = [];
+	private static readonly _context = new AudioContext();
+	private static readonly _buffers: any = {};
+	private static readonly _waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
+	private static readonly _iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem._context.createIIRFilter(x.feedforward, x.feedback));
+
+	private static _soundsForPause: AudioBufferSourceNode[] = [];
+	private static _soundsToneForPause: Tone.Player[] = [];
 
 	public static load(pathToAudioFile: string): Promise<AudioBuffer> {
 		return this._load(pathToAudioFile);
@@ -31,7 +32,7 @@ export class AudioSystem{
 
 	private static _load(pathToAudioFile: string): Promise<AudioBuffer> {
 		return new Promise((done, fail) => {
-			var buffer = AudioSystem.Buffers[pathToAudioFile];
+			var buffer = AudioSystem._buffers[pathToAudioFile];
 			if(buffer){
 				done(buffer);
 				return;
@@ -42,9 +43,9 @@ export class AudioSystem{
 			request.open('GET', pathToAudioFile, true); 
 			request.responseType = 'arraybuffer';
 			request.onload = function() {
-				AudioSystem.context.decodeAudioData(request.response, 
+				AudioSystem._context.decodeAudioData(request.response, 
 					function(buffer) {
-						AudioSystem.Buffers[pathToAudioFile] = buffer;
+						AudioSystem._buffers[pathToAudioFile] = buffer;
 						done(buffer);
 					}, 
 					function(err) { 
@@ -94,26 +95,26 @@ export class AudioSystem{
 		}
 
 		//volume
-		var gainNode = this.context.createGain()
+		var gainNode = this._context.createGain()
 		var volumeSettings = isMusic 
 			? AudioSystem.musicVolume 
 			: AudioSystem.soundVolume;
 		gainNode.gain.value = volume * volumeSettings;
-		gainNode.connect(this.context.destination)
+		gainNode.connect(this._context.destination)
 
 		return this._load(pathToAudioFile)
-			.then(buffer => AudioSystem._play(x, AudioSystem.context, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStartingSeconds, offsetStartingSeconds))
+			.then(buffer => AudioSystem._play(x, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
 				if(isUseAutoPauseAndResume){
-					(<any>source).startedAt = this.context.currentTime + delayStartingSeconds;
+					(<any>source).startedAt = this._context.currentTime + delayStartingSeconds;
 					if(source instanceof AudioBufferSourceNode){
-						this.soundsForPause.push(source);
-						source.onended = () => this.soundsForPause = this.soundsForPause.filter(x => x != source);
+						this._soundsForPause.push(source);
+						source.onended = () => this._soundsForPause = this._soundsForPause.filter(x => x != source);
 						(<any>source).restart = (delay: number, offset: number) => AudioSystem.play(x, pathToAudioFile, volume, isMusic, speed, isUseBiquadFilterRandom, true, delay, offset, IIRFilter);
 					}
 					else if(source instanceof Tone.Player){
-						this.soundsToneForPause.push(source);
-						source.onstop = () => this.soundsToneForPause = this.soundsToneForPause.filter(x => x != source);
+						this._soundsToneForPause.push(source);
+						source.onstop = () => this._soundsToneForPause = this._soundsToneForPause.filter(x => x != source);
 					}
 				}
 				return source;
@@ -122,7 +123,6 @@ export class AudioSystem{
 
 	private static _play(
 		x: number, 
-		context: AudioContext, 
 		buffer: AudioBuffer, 
 		gainNode: GainNode, 
 		speed: number, 
@@ -131,6 +131,7 @@ export class AudioSystem{
 		delayStartingSeconds: number = 0, 
 		offsetSeconds: number = 0) : AudioBufferSourceNode|Tone.Player
 	{
+		const context = this._context;
 		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 
 		const pannerValue = x == -1 
@@ -251,7 +252,7 @@ export class AudioSystem{
 		}
 		
 		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
-		const context = AudioSystem.context;
+		const context = this._context;
 		const oscillator = context.createOscillator();
 
 		const gainNode = context.createGain();
@@ -264,13 +265,13 @@ export class AudioSystem{
 			: x / Draw.canvas.width * 2 - 1;
 
 		if(iirFilterBuilded){
-			oscillator.connect(gainNode).connect(pannerNode).connect(iirFilterBuilded).connect(AudioSystem.context.destination);
+			oscillator.connect(gainNode).connect(pannerNode).connect(iirFilterBuilded).connect(context.destination);
 		}
 		else{
 			oscillator.connect(gainNode).connect(pannerNode).connect(context.destination);
 		}
 		
-		oscillator.type = AudioSystem.waveForms[Helper.getRandom(0, AudioSystem.waveForms.length - 1)];   
+		oscillator.type = this._waveForms[Helper.getRandom(0, this._waveForms.length - 1)];   
 		oscillator.frequency.value = minFrequency + Math.random() * maxFrequency;
 		oscillator.start(0); 
 		if(iirFilterBuilded){
@@ -284,7 +285,7 @@ export class AudioSystem{
 		}
 
 		const index = Object.values(this.iirFilters).findIndex(x => x.id == IIRFilter.id);
-		const iirFilterBuilded = this.iirFiltersBuilded[index];
+		const iirFilterBuilded = this._iirFiltersBuilded[index];
 		return iirFilterBuilded;
 	}
 
@@ -292,10 +293,10 @@ export class AudioSystem{
 
 	public static pauseSounds(){
 		var allRecords: any[] = [];
-		allRecords = allRecords.concat(this.soundsForPause, this.soundsToneForPause);
+		allRecords = allRecords.concat(this._soundsForPause, this._soundsToneForPause);
 		allRecords.forEach(x => {
-			(<any>x).pausedAt = this.context.currentTime;
-			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this.context.currentTime);
+			(<any>x).pausedAt = this._context.currentTime;
+			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this._context.currentTime);
 			(<AudioBufferSourceNode>x).onended = () => {};
 			(<Tone.Player>x).onstop = () => {};
 			(<AudioBufferSourceNode|Tone.Player>x).stop(0);
@@ -305,7 +306,7 @@ export class AudioSystem{
 	
 	public static resumeSounds(){
 		var allRecords: any[] = [];
-		allRecords = allRecords.concat(this.soundsForPause, this.soundsToneForPause);
+		allRecords = allRecords.concat(this._soundsForPause, this._soundsToneForPause);
 		allRecords.forEach(x => {
 			var pausedAt = (<any>x).pausedAt || 0;
 			var startedAt = (<any>x).startedAt || 0;
@@ -313,12 +314,12 @@ export class AudioSystem{
 
 			var offsetSec = delayLeftSec > 0 ? 0 : (pausedAt - startedAt);
 			if(x instanceof AudioBufferSourceNode){
-				this.soundsForPause = this.soundsForPause.filter(y => y != x);
+				this._soundsForPause = this._soundsForPause.filter(y => y != x);
 				(<any>x).restart(delayLeftSec, offsetSec);
 			}
 			else if(x instanceof Tone.Player){
 				(<Tone.Player>x).start(delayLeftSec, offsetSec);
-				(<Tone.Player>x).onstop = () => this.soundsToneForPause = this.soundsToneForPause.filter(y => y != x);
+				(<Tone.Player>x).onstop = () => this._soundsToneForPause = this._soundsToneForPause.filter(y => y != x);
 			}
 		});
 	}

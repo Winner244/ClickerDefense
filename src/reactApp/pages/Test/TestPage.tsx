@@ -6,8 +6,8 @@ import * as MenuStore from '../../components/Menu/MenuStore';
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Buildings} from '../../../gameApp/buildings/Buildings';
 import {Tower} from '../../../gameApp/buildings/Tower';
-import {Waves} from '../../../gameApp/waves/Waves';
-import {WaveData} from "../../../gameApp/waves/WaveData";
+import {Waves} from '../../../gameApp/gameSystems/Waves';
+import {WaveData} from "../../../models/WaveData";
 import {Helper} from '../../helpers/Helper';
 import {Draw} from '../../../gameApp/gameSystems/Draw';
 import {Gamer} from "../../../gameApp/gamer/Gamer";
@@ -131,13 +131,11 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                var boar = new Boar(50, 780, true, 1);
-                boar.isWillUseSpecialAbility = true;
+                var boar = new Boar(50, 780, true, 1, true);
                 boar.health--;
                 Monsters.all.push(boar);
 
-                var boar2 = new Boar(1850, 780, false, 1);
-                boar2.isWillUseSpecialAbility = true;
+                var boar2 = new Boar(1850, 780, false, 1, true);
                 boar2.health--;
                // Monsters.all.push(boar2);
                 break;
@@ -160,8 +158,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
 
                 waitLoadingImage(Boar.imageHandler, () => {
-                    var boar = new Boar(50, 780, true, 1);
-                    boar.isWillUseSpecialAbility = true;
+                    var boar = new Boar(50, 780, true, 1, true);
                     boar.health--;
                     Monsters.all.push(boar);
                 });
@@ -185,8 +182,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
 
                 waitLoadingImage(Boar.imageHandler, () => {
-                    var boar2 = new Boar(1850, 780, false, 1);
-                    boar2.isWillUseSpecialAbility = true;
+                    var boar2 = new Boar(1850, 780, false, 1, true);
                     boar2.health--;
                     Monsters.all.push(boar2);
                 });
@@ -207,8 +203,7 @@ class TestPage extends React.Component {
                     }];
 
                 for(var i = 0; i < 10; i++){
-                    var boar = new Boar(0, 780, true, 1);
-                    boar.isWillUseSpecialAbility = true;
+                    var boar = new Boar(0, 780, true, 1, true);
                     boar.health--;
                     Monsters.all.push(boar);
                 }
@@ -249,8 +244,7 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                var boar = new Boar(1000, 780, true, 1);
-                boar.isWillUseSpecialAbility = false;
+                var boar = new Boar(1000, 780, true, 1, true);
                 Monsters.all.push(boar);
                 break;
 
@@ -308,12 +302,10 @@ class TestPage extends React.Component {
                 barricade2.x = 1600;
                 Buildings.all.push(barricade2);
 
-                var boar = new Boar(50, 780, true, 1);
-                boar.isWillUseSpecialAbility = false;
+                var boar = new Boar(50, 780, true, 1, true);
                 Monsters.all.push(boar);
 
-                var boar = new Boar(1800, 780, false, 1);
-                boar.isWillUseSpecialAbility = false;
+                var boar = new Boar(1800, 780, false, 1, true);
                 Monsters.all.push(boar);
 
                 Waves.isStarted = false;
@@ -328,12 +320,10 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade1);
                 Buildings.all.push(barricade2);
 
-                var boar = new Boar(0, 780, true, 1);
-                boar.isWillUseSpecialAbility = true;
+                var boar = new Boar(0, 780, true, 1, true);
                 Monsters.all.push(boar);
 
-                var boar = new Boar(1900, 780, false, 1);
-                boar.isWillUseSpecialAbility = true;
+                var boar = new Boar(1900, 780, false, 1, true);
                 Monsters.all.push(boar);
 
                 Waves.isStarted = false;
@@ -349,8 +339,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower2);
                 setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
 
-                var boar = new Boar(0, 780, true, 1);
-                boar.isWillUseSpecialAbility = true;
+                var boar = new Boar(0, 780, true, 1, true);
                 boar.name = 'boar1';
                 Monsters.all.push(boar);
 

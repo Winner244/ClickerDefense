@@ -19,13 +19,16 @@ import Sound4 from '../../assets/sounds/monsters/bat/4.mp3';
 import Sound5 from '../../assets/sounds/monsters/bat/5.mp3'; 
 
 
+/** Летучая  мышь - тип монстров */
 export class Bat extends Monster{
-	public static readonly imageHandler: ImageHandler = new ImageHandler();
+	static readonly imageHandler: ImageHandler = new ImageHandler();
+
 	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	private static readonly imageFrames = 6; 
 
-	private zigzagLength: number;
-	private isZigzagToTop: boolean;
+	//технические поля экземпляра
+	private _zigzagLength: number;
+	private _isZigzagToTop: boolean;
 	private static readonly zigzagThreshold: number = 20;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -53,8 +56,8 @@ export class Bat extends Monster{
 			Bat.imageHandler,
 			3000); //avrTimeSoundWaitMs
 
-		this.zigzagLength = 0;
-		this.isZigzagToTop = !!Helper.getRandom(0, 1);
+		this._zigzagLength = 0;
+		this._isZigzagToTop = !!Helper.getRandom(0, 1);
 	}
 
 	static init(isLoadResources: boolean = true): void{
@@ -70,29 +73,29 @@ export class Bat extends Monster{
 
 		super.logic(drawsDiffMs, buildings, bottomBorder);
 
-		if(this.buildingGoal){
+		if(this._buildingGoal){
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 			let speed = this.speed * (drawsDiffMs / 1000);
 			speed += speed * speedMultiplier;
 
-			if(!this.isAttack){
-				this.y += (this.buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this.buildingGoal.centerX, this.buildingGoal.centerY) * speed;
+			if(!this._isAttack){
+				this.y += (this._buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY) * speed;
 	
 				//Зигзагообразное перемещение
-				var changes = drawsDiffMs / 10 * (this.isZigzagToTop ? 1 : -1);
+				var changes = drawsDiffMs / 10 * (this._isZigzagToTop ? 1 : -1);
 				this.y += changes;
-				this.zigzagLength += changes;
-				if(Math.abs(this.zigzagLength) > Bat.zigzagThreshold){
-					this.zigzagLength = 0;
-					this.isZigzagToTop = !this.isZigzagToTop;
+				this._zigzagLength += changes;
+				if(Math.abs(this._zigzagLength) > Bat.zigzagThreshold){
+					this._zigzagLength = 0;
+					this._isZigzagToTop = !this._isZigzagToTop;
 				}
 				
 			}
 			else{
-				if(this.y < this.buildingGoal.y + this.buildingGoal.reduceHover){
+				if(this.y < this._buildingGoal.y + this._buildingGoal.reduceHover){
 					this.y++;
 				}
-				else if(this.y > this.buildingGoal.y + this.buildingGoal.height - this.buildingGoal.reduceHover){
+				else if(this.y > this._buildingGoal.y + this._buildingGoal.height - this._buildingGoal.reduceHover){
 					this.y--;
 				}
 			}

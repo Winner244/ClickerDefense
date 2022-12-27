@@ -1,5 +1,6 @@
 import {Label} from './Label';
 
+/** Система управления всеми Label экземплярами - единичный статичный класс */
 export class Labels{
 	static readonly labelLifetimeMs: number = 1000; //время жизни сообщения (миллисекунды)
 	static readonly speedOfUppingToTop: number = 20; //скорость всплывания (пикселей в секунду)

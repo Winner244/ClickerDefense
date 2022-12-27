@@ -5,9 +5,9 @@ import {Shop} from '../../components/Shop/Shop';
 import {Menu} from '../../components/Menu/Menu';
 import * as MenuStore from '../../components/Menu/MenuStore';
 
+import {Waves} from '../../../gameApp/gameSystems/Waves';
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Gamer} from '../../../gameApp/gamer/Gamer';
-import {Waves} from '../../../gameApp/waves/Waves';
 
 class TestShopPage extends React.Component {
     componentDidMount(){
