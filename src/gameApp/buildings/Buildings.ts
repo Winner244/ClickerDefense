@@ -116,8 +116,6 @@ export class Buildings{
 			let newHeight = this.explosionAnimation.image.height * (explosion.size.width / (this.explosionAnimation.image.width / this.explosionAnimation.frames));
 			this.explosionAnimation.leftTimeMs = explosion.leftTimeMs;
 			this.explosionAnimation.draw(drawsDiffMs, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
-			Draw.ctx.globalAlpha = 1;
-
 		});
 
 		Buildings.all.forEach(building => building.draw(drawsDiffMs, isGameOver));

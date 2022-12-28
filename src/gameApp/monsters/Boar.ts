@@ -82,9 +82,10 @@ export class Boar extends Monster{
 
 	//технические поля экземпляра
 	private _isWillUseSpecialAbility: boolean; //будет ли использована спец способность у данного экземпляра
-	private _isActivatedSpecialAbility: boolean;
-	private _isActivatedSpecialDamage: boolean;  //урон от спец способности был нанесён
+	private _isActivatedSpecialAbility: boolean;  //была ли активирована спец способность ?
+	private _isActivatedSpecialDamage: boolean;  //был ли нанесён урон от спец способности ?
 	private _specialAbilityActivationLeftTimeMs: number; //оставшееся время активации спец способности (миллисекунды)
+	private _specialAbilityXStart: number; //координата x на которой будетактивирована спец способность кабана
 
 	private _startSpecialSound: AudioBufferSourceNode|Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
 	private _runningSound: AudioBufferSourceNode|Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
@@ -118,6 +119,7 @@ export class Boar extends Monster{
 			3000); //avrTimeSoundWait
 
 		this._isWillUseSpecialAbility = isWillUseSpecialAbility ?? Helper.getRandom(0, 100) <= Boar.probabilitySpecialAbilityPercentage;
+		this._specialAbilityXStart = 0;
 		this.specialAbilityAnimation = new Animation(12, 1000, selectedSpecialImage);
 		this.specialAbilitySmokeAnimation = new AnimationInfinite(16, 1000, Boar.specialAbilitySmokeAnimationImage);
 		this.specialAbilityDamageParticlesAnimation = new Animation(7, 200, Boar.specialAbilityDamageParticlesAnimationImage);
@@ -163,14 +165,13 @@ export class Boar extends Monster{
 				this._attackLeftTimeMs = this.attackTimeWaitingMs; //что бы не сработала первая обычная атака в базовом методе
 			}
 		}
-		else if(this._isWillUseSpecialAbility) {
+		else if(this._isWillUseSpecialAbility && this._specialAbilityXStart > 0 && this._buildingGoal) {
 			//активация спец способности
-			if(this._buildingGoal != null &&
-				Math.abs(this._buildingGoal.x - this.x) <= Boar.maxDistanceActivateSpecialAbility &&
-				Math.abs(this._buildingGoal.x - this.x) > Boar.minDistanceActivateSpecialAbility && 
-				Math.random() < 0.1 * drawsDiffMs / 100)
+			if ( this.isLeftSide && this.centerX >= this._specialAbilityXStart || 
+				!this.isLeftSide && this.centerX <= this._specialAbilityXStart)
 			{
 				this._isActivatedSpecialAbility = true;
+				this._specialAbilityXStart = 0;
 				this._specialAbilityActivationLeftTimeMs = this.specialAbilityAnimation.durationMs;
 				this.specialAbilitySmokeAnimation.restart();
 				this.modifiers.push(new BoarSpecialAbility());
@@ -180,7 +181,13 @@ export class Boar extends Monster{
 			}
 		}
 
+		var oldBuildingGoalX = this._buildingGoal?.centerX;
 		super.logic(drawsDiffMs, buildings, bottomBorder);
+		var newBuildingGoalX = this._buildingGoal?.centerX;
+
+		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility){
+			this._specialAbilityXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Boar.minDistanceActivateSpecialAbility, Boar.maxDistanceActivateSpecialAbility) 
+		}
 	}
 
 	playSound(): void {

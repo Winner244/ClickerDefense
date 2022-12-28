@@ -46,8 +46,7 @@ export class FlyEarth extends Building{
 			PickSoundUrl3,
 			PickSoundUrl4
 		];
-		var audioUrl = listOfSounds[Helper.getRandom(0, listOfSounds.length - 1)];
-		AudioSystem.play(x, audioUrl, 0.05);
+		AudioSystem.playRandomV(x, listOfSounds, 0.05);
 		AudioSystem.playRandomTone(x, 0.01, 5000, 10000);
 	}
 
