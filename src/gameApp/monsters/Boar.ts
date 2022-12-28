@@ -185,7 +185,7 @@ export class Boar extends Monster{
 		super.logic(drawsDiffMs, buildings, bottomBorder);
 		var newBuildingGoalX = this._buildingGoal?.centerX;
 
-		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility){
+		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility && Math.abs(newBuildingGoalX - this.centerX) > Boar.minDistanceActivateSpecialAbility){
 			this._specialAbilityXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Boar.minDistanceActivateSpecialAbility, Boar.maxDistanceActivateSpecialAbility) 
 		}
 	}

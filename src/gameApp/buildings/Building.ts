@@ -4,7 +4,6 @@ import {Monster} from '../monsters/Monster';
 
 import ShopItem from '../../models/ShopItem';
 import InfoItem from '../../models/InfoItem';
-import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import Improvement from '../../models/Improvement';
 
@@ -29,7 +28,7 @@ import ShieldIcon from '../../assets/img/icons/shield.png';
 export class Building extends ShopItem{
 	
 	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
-	static readonly upgradeAnimation: Animation = new Animation(90, 3000); //анимация апгрейда
+	static readonly upgradeAnimation: AnimationInfinite = new AnimationInfinite(90, 3000); //анимация апгрейда
 
 	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки (миллисекунды)
 	static readonly repairDiscount: number = 2; //во сколько раз будет дешевле восстановление здания по отношению к его стоимости
