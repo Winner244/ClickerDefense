@@ -14,9 +14,11 @@ import Bat1Image from '../../assets/img/monsters/bat/bat.png';
 
 import Sound1 from '../../assets/sounds/monsters/bat/1.mp3'; 
 import Sound2 from '../../assets/sounds/monsters/bat/2.mp3'; 
-import Sound3 from '../../assets/sounds/monsters/bat/3.mp3'; 
-import Sound4 from '../../assets/sounds/monsters/bat/4.mp3'; 
-import Sound5 from '../../assets/sounds/monsters/bat/5.mp3'; 
+
+import SoundMany1 from '../../assets/sounds/monsters/bat/many1.mp3'; 
+import SoundMany2 from '../../assets/sounds/monsters/bat/many2.mp3'; 
+import SoundMany3 from '../../assets/sounds/monsters/bat/many3.mp3'; 
+import { Monsters } from './Monsters';
 
 
 /** Летучая  мышь - тип монстров */
@@ -103,7 +105,12 @@ export class Bat extends Monster{
 	}
 
 	playSound(): void{
-		AudioSystem.playRandom(this.centerX, [Sound1, Sound2, Sound3, Sound4, Sound5], [0.1, 0.1, 0.02, 0.02, 0.02], false, 1, true);
+		if(Monsters.all.filter(x => x instanceof Bat).length > 4){
+			AudioSystem.playRandom(this.centerX, [SoundMany1, SoundMany2, SoundMany3], [0.02, 0.02, 0.02], false, 1, true);
+		}
+		else{
+			AudioSystem.playRandom(this.centerX, [Sound1, Sound2], [0.06, 0.06], false, 1, true);
+		}
 	}
 
 }
