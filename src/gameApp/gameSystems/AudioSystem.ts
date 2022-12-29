@@ -313,6 +313,11 @@ export class AudioSystem{
 			var delayLeftSec = (<any>x).delayLeftSec || 0;
 
 			var offsetSec = delayLeftSec > 0 ? 0 : (pausedAt - startedAt);
+			if(offsetSec < 0){ //develop hot reload code
+				console.error('AudioSystem.resumeSounds: offsetSec < 0', pausedAt, startedAt);
+				return;
+			}
+
 			if(x instanceof AudioBufferSourceNode){
 				this._soundsForPause = this._soundsForPause.filter(y => y != x);
 				(<any>x).restart(delayLeftSec, offsetSec);
