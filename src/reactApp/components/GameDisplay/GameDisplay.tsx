@@ -4,6 +4,7 @@ import {Menu} from '../Menu/Menu';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
+import {Waves} from '../../../gameApp/gameSystems/Waves';
 
 import './GameDisplay.scss';
 
@@ -28,7 +29,9 @@ class GameDisplay extends React.Component {
     document.addEventListener('visibilitychange', () => {
       if(document.hidden){
         AudioSystem.isEnabled = false;
-        Game.pause();
+        if(Waves.isStarted){
+          Game.pause();
+        }
       }
       else{
         AudioSystem.isEnabled = true;

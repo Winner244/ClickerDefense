@@ -160,11 +160,14 @@
 		}
 
 		&-buttons-box{
+			height: 100%;
 			position: absolute;
 			right: 0;
 
-			&-group{
-				display: inline-block;
+			&-group{    
+				display: flex;
+				align-items: center;
+				height: 100%;
 
 				&:hover > span {
 					display: inline;
