@@ -113,4 +113,9 @@ export class Bat extends Monster{
 		}
 	}
 
+	onClicked(): void {
+		//TODO: нужны звуки писка мышей короткие
+		//AudioSystem.playRandomV(this.centerX, [Sound1, Sound2], 0.5, false, 1.2, false);
+	}
+
 }
