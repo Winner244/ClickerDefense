@@ -12,6 +12,9 @@ import PeaceTime4Music from '../../assets/music/peacetime/Vista-Sounds---Lassi.m
 import PeaceTime5Music from '../../assets/music/peacetime/204334_Sunscape.mp3'; 
 import PeaceTime6Music from '../../assets/music/peacetime/De4dl0ck Resistan.mp3'; 
 import PeaceTime7Music from '../../assets/music/peacetime/Song Of Storms Dubs2.mp3'; 
+import PeaceTime8Music from '../../assets/music/peacetime/Electroscape.mp3'; 
+import PeaceTime9Music from '../../assets/music/peacetime/SxV Jolly Roger-J.mp3'; 
+import PeaceTime10Music from '../../assets/music/peacetime/Vomitoxin.mp3'; 
 
 
 
@@ -27,7 +30,10 @@ export class MusicSystem {
 		PeaceTime4Music,
 		PeaceTime5Music,
 		PeaceTime6Music,
-		PeaceTime7Music
+		PeaceTime7Music,
+		PeaceTime8Music,
+		PeaceTime9Music,
+		PeaceTime10Music
 	]); 
 
 	/** Воспроизвести музыку между волн */
