@@ -1,6 +1,7 @@
 import {ImageHandler} from '../ImageHandler';
 
 import {Monster} from './Monster';
+import {Monsters} from './Monsters';
 
 import {Building} from '../buildings/Building';
 
@@ -18,7 +19,12 @@ import Sound2 from '../../assets/sounds/monsters/bat/2.mp3';
 import SoundMany1 from '../../assets/sounds/monsters/bat/many1.mp3'; 
 import SoundMany2 from '../../assets/sounds/monsters/bat/many2.mp3'; 
 import SoundMany3 from '../../assets/sounds/monsters/bat/many3.mp3'; 
-import { Monsters } from './Monsters';
+
+import SoundAttacked1 from '../../assets/sounds/monsters/bat/attacked1.mp3'; 
+import SoundAttacked2 from '../../assets/sounds/monsters/bat/attacked2.mp3'; 
+import SoundAttacked3 from '../../assets/sounds/monsters/bat/attacked3.mp3'; 
+import SoundAttacked4 from '../../assets/sounds/monsters/bat/attacked4.mp3'; 
+
 
 
 /** Летучая  мышь - тип монстров */
@@ -114,8 +120,7 @@ export class Bat extends Monster{
 	}
 
 	onClicked(): void {
-		//TODO: нужны звуки писка мышей короткие
-		//AudioSystem.playRandomV(this.centerX, [Sound1, Sound2], 0.5, false, 1.2, false);
+		AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [0.09, 0.4, 0.3, 0.3], false, 1, true);
 	}
 
 }

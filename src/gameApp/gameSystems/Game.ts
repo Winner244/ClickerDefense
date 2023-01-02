@@ -168,6 +168,7 @@ export class Game {
 		else{
 			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
+				AudioSystem.pauseSounds();
 			}
 
 			Builder.logic();
