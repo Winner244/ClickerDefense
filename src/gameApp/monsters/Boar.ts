@@ -87,8 +87,8 @@ export class Boar extends Monster{
 	private _specialAbilityActivationLeftTimeMs: number; //оставшееся время активации спец способности (миллисекунды)
 	private _specialAbilityXStart: number; //координата x на которой будетактивирована спец способность кабана
 
-	private _startSpecialSound: AudioBufferSourceNode|Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
-	private _runningSound: AudioBufferSourceNode|Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
+	private _startSpecialSound: Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
+	private _runningSound: Tone.Player|null; //нужно для отмены звука при гибели монстра или при отмене спец способности
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number, isWillUseSpecialAbility: boolean|null = null) {
@@ -176,8 +176,8 @@ export class Boar extends Monster{
 				this.specialAbilitySmokeAnimation.restart();
 				this.modifiers.push(new BoarSpecialAbility());
 
-				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, false, 1, true, true).then(res => this._startSpecialSound = res);
-				AudioSystem.play(this.centerX, SoundRunning, 0.5, false, 2, true, true, 1.2).then(sourse => this._runningSound = sourse);
+				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, 1, true, true).then(res => this._startSpecialSound = res);
+				AudioSystem.play(this.centerX, SoundRunning, 0.5, 2, true, true, 1.2).then(sourse => this._runningSound = sourse);
 			}
 		}
 

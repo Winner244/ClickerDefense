@@ -23,8 +23,7 @@ export class AudioSystem{
 	private static readonly _waveForms: OscillatorType[] = ['sine', 'square', 'sawtooth', 'triangle'];
 	private static readonly _iirFiltersBuilded = Object.values(AudioSystem.iirFilters).map(x => AudioSystem._context.createIIRFilter(x.feedforward, x.feedback));
 
-	private static _soundsForPause: AudioBufferSourceNode[] = [];
-	private static _soundsToneForPause: Tone.Player[] = [];
+	private static _soundsForPause: Tone.Player[] = [];
 
 	public static load(pathToAudioFile: string): Promise<AudioBuffer> {
 		return this._load(pathToAudioFile);
@@ -68,7 +67,7 @@ export class AudioSystem{
 		}
 
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
-		AudioSystem.play(x, arrayPathesToAudioFiles[i], volume, isMusic, speed, isUseBiquadFilterRandom);
+		AudioSystem.play(x, arrayPathesToAudioFiles[i], volume, speed, isUseBiquadFilterRandom, isMusic ? true : false, 0, 0, isMusic);
 	}
 	public static playRandom(x: number, arrayPathesToAudioFiles: string[], volumes: number[], isMusic: boolean = false, speed: number = 1, isUseBiquadFilterRandom = false): void {
 		if (!AudioSystem.isEnabled){
@@ -76,19 +75,27 @@ export class AudioSystem{
 		}
 
 		const i = Helper.getRandom(0, arrayPathesToAudioFiles.length - 1);
-		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], isMusic, speed, isUseBiquadFilterRandom);
+		AudioSystem.play(x, arrayPathesToAudioFiles[i], volumes[i], speed, isUseBiquadFilterRandom, isMusic ? true : false, 0, 0, isMusic);
 	}
 
-	public static play(x: number, 
-		pathToAudioFile: string, 
+	public static playMusic(
+		pathToAudioFile: string,
 		volume: number = 1, 
-		isMusic: boolean = false,
+		delayStartingSeconds: number = 0): Promise<AudioBufferSourceNode|Tone.Player|null>
+	{
+		return this.play(-1, pathToAudioFile, volume, 1, false, true, delayStartingSeconds, 0, true);
+	}
+
+	public static play(
+		x: number, 
+		pathToAudioFile: string, 
+		volume: number = 1,
 		speed: number = 1, 
 		isUseBiquadFilterRandom = false, 
 		isUseAutoPauseAndResume: boolean = false, 
 		delayStartingSeconds: number = 0, 
 		offsetStartingSeconds: number = 0,
-		IIRFilter: AudioIIRFilter|null = null): Promise<AudioBufferSourceNode|Tone.Player|null>
+		isMusic: boolean = false): Promise<Tone.Player|null>
 	{
 		if (!AudioSystem.isEnabled){
 			return new Promise(done => done(null));
@@ -103,20 +110,13 @@ export class AudioSystem{
 		gainNode.connect(this._context.destination)
 
 		return this._load(pathToAudioFile)
-			.then(buffer => AudioSystem._play(x, buffer, gainNode, speed, isUseBiquadFilterRandom, IIRFilter, delayStartingSeconds, offsetStartingSeconds))
+			.then(buffer => AudioSystem._play(x, buffer, gainNode, speed, isUseBiquadFilterRandom, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
-				if(isUseAutoPauseAndResume){
+				if(isUseAutoPauseAndResume && source){
 					(<any>source).startedAt = this._context.currentTime + delayStartingSeconds;
-					if(source instanceof AudioBufferSourceNode){
-						this._soundsForPause.push(source);
-						source.onended = () => this._soundsForPause = this._soundsForPause.filter(x => x != source);
-						(<any>source).restart = (delay: number, offset: number) => AudioSystem.play(x, pathToAudioFile, volume, isMusic, speed, isUseBiquadFilterRandom, true, delay, offset, IIRFilter);
-					}
-					else if(source instanceof Tone.Player){
-						this._soundsToneForPause.push(source);
-						source.onstop = () => this._soundsToneForPause = this._soundsToneForPause.filter(x => x != source);
-					}
-				}
+					this._soundsForPause.push(source);
+					source.onstop = () => this._soundsForPause = this._soundsForPause.filter(x => x != source);
+			}
 				return source;
 			});
 	}
@@ -127,65 +127,40 @@ export class AudioSystem{
 		gainNode: GainNode, 
 		speed: number, 
 		isUseBiquadFilterRandom = false, 
-		IIRFilter: AudioIIRFilter|null = null, 
 		delayStartingSeconds: number = 0, 
-		offsetSeconds: number = 0) : AudioBufferSourceNode|Tone.Player
+		offsetSeconds: number = 0) : Tone.Player
 	{
 		const context = this._context;
-		const iirFilterBuilded = this._getBuildedIIRFilter(IIRFilter);
 
 		const pannerValue = x == -1 
 			? 0 
 			: Math.min(1, Math.max(-1, x / Draw.canvas.width * 2 - 1));
 
-		if(speed == 1){
-			let source = context.createBufferSource();
-			source.buffer = buffer;
-
-			const pannerNode = context.createStereoPanner();
-			pannerNode.pan.value = pannerValue;
-
-			if(iirFilterBuilded){
-				source.connect(gainNode).connect(pannerNode).connect(iirFilterBuilded).connect(context.destination);
-			}
-			else if(isUseBiquadFilterRandom) {
-				const biquadFilter = this._getRandomBiquadFilter(context);
-				var chain = source.connect(biquadFilter);
-				chain = chain.connect(gainNode).connect(pannerNode).connect(context.destination);
-			}
-			else{
-				source.connect(gainNode).connect(pannerNode).connect(context.destination);
-			}
-
-			source.start(this._context.currentTime +  delayStartingSeconds, offsetSeconds); 
-			return source;
+		
+		const sourceTone = new Tone.Player(buffer);
+		const panner = new Tone.Panner(pannerValue);
+		
+		if(isUseBiquadFilterRandom) {
+			const biquadFilter = this._getRandomBiquadFilter(context);
+			const option = {
+				frequency: biquadFilter.frequency.value,
+				Q: biquadFilter.Q.value,
+				type:  biquadFilter.type,
+				gain: biquadFilter.gain.value,
+			};
+			//const distortion = new Tone.Distortion(0.5);
+			//sourceTone.chain(new Tone.BiquadFilter(option), distortion, Tone.Destination);
+			sourceTone.chain(new Tone.BiquadFilter(option), panner, Tone.Destination);
 		}
 		else{
-			const sourceTone = new Tone.Player(buffer);
-			const panner = new Tone.Panner(pannerValue);
-			
-			if(isUseBiquadFilterRandom) {
-				const biquadFilter = this._getRandomBiquadFilter(context);
-				const option = {
-					frequency: biquadFilter.frequency.value,
-					Q: biquadFilter.Q.value,
-					type:  biquadFilter.type,
-					gain: biquadFilter.gain.value,
-				};
-				//const distortion = new Tone.Distortion(0.5);
-				//sourceTone.chain(new Tone.BiquadFilter(option), distortion, Tone.Destination);
-				sourceTone.chain(new Tone.BiquadFilter(option), panner, Tone.Destination);
-			}
-			else{
-				sourceTone.chain(panner, Tone.Destination);
-			}
-
-			sourceTone.playbackRate = speed;
-			sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
-			sourceTone.toDestination();
-			sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 
-			return sourceTone;
+			sourceTone.chain(panner, Tone.Destination);
 		}
+
+		sourceTone.playbackRate = speed;
+		sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
+		sourceTone.toDestination();
+		sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 
+		return sourceTone;
 	}
 
 	private static _getRandomBiquadFilter(context: AudioContext){
@@ -292,22 +267,17 @@ export class AudioSystem{
 
 
 	public static pauseSounds(){
-		var allRecords: any[] = [];
-		allRecords = allRecords.concat(this._soundsForPause, this._soundsToneForPause);
-		allRecords.forEach(x => {
+		this._soundsForPause.forEach(x => {
 			(<any>x).pausedAt = this._context.currentTime;
 			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this._context.currentTime);
-			(<AudioBufferSourceNode>x).onended = () => {};
 			(<Tone.Player>x).onstop = () => {};
-			(<AudioBufferSourceNode|Tone.Player>x).stop(0);
+			(<Tone.Player>x).stop(0);
 		});
 	}
 
 	
 	public static resumeSounds(){
-		var allRecords: any[] = [];
-		allRecords = allRecords.concat(this._soundsForPause, this._soundsToneForPause);
-		allRecords.forEach(x => {
+		this._soundsForPause.forEach(x => {
 			var pausedAt = (<any>x).pausedAt || 0;
 			var startedAt = (<any>x).startedAt || 0;
 			var delayLeftSec = (<any>x).delayLeftSec || 0;
@@ -318,14 +288,8 @@ export class AudioSystem{
 				return;
 			}
 
-			if(x instanceof AudioBufferSourceNode){
-				this._soundsForPause = this._soundsForPause.filter(y => y != x);
-				(<any>x).restart(delayLeftSec, offsetSec);
-			}
-			else if(x instanceof Tone.Player){
-				(<Tone.Player>x).start(delayLeftSec, offsetSec);
-				(<Tone.Player>x).onstop = () => this._soundsToneForPause = this._soundsToneForPause.filter(y => y != x);
-			}
+			(<Tone.Player>x).start(delayLeftSec, offsetSec);
+			(<Tone.Player>x).onstop = () => this._soundsForPause = this._soundsForPause.filter(y => y != x);
 		});
 	}
 }

@@ -397,10 +397,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 500;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        [Zombie.name]: new WaveData(1, 30, 0),
-                    }];
+                Waves.all[0][Zombie.name] = new WaveData(1, 30, 0);
 
                 barricade1.x = 600;
                 Buildings.all.push(barricade1);

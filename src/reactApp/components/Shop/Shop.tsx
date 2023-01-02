@@ -49,6 +49,10 @@ export class Shop extends React.Component<Props, {}> {
     App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
   }
 
+  static isOpened(): boolean{
+    return App.Store.getState().shop?.isOpen || false;
+  }
+
   private static playSoundSelect(){
 		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
   }

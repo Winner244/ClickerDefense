@@ -101,7 +101,7 @@ export class Buildings{
 					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.durationMs));
 					this.all.splice(i, 1);
 					i--;
-					AudioSystem.play(building.centerX, ExplosionSound, 0.1, false, 2, false, true);
+					AudioSystem.play(building.centerX, ExplosionSound, 0.1, 2, false, true);
 				}
 				else{
 					building.logic(drawsDiffMs, monsters, bottomShiftBorder)

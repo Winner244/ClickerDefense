@@ -170,7 +170,7 @@ export class Game {
 			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
 				AudioSystem.pauseSounds();
-				AudioSystem.play(-1, GameOverSound, 0.5, false);
+				AudioSystem.play(-1, GameOverSound, 0.5);
 			}
 
 			Builder.logic();
@@ -232,7 +232,7 @@ export class Game {
 		}
 
 		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
-			AudioSystem.play(x, SwordEmptySound, 0.5, false, 1, true);
+			AudioSystem.play(x, SwordEmptySound, 0.5, 1, true);
 		}
 
 		Mouse.isClick = false;
@@ -242,7 +242,7 @@ export class Game {
 		Keypad.isEnter = true;
 		switch(event.key){
 			case 'Escape':
-				if(Game.isGameRun && !Upgrade.isOpened()){
+				if(Game.isGameRun && !Upgrade.isOpened() && !Shop.isOpened()){
 					Game.pause();
 				}
 				else{
@@ -284,7 +284,6 @@ export class Game {
 
 		if(isPausedMode){
 			Draw.drawBlackout(); //затемняем фон
-			Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 		}
 	
 		Game.lastDrawTime = millisecondsFromStart;
@@ -337,6 +336,10 @@ export class Game {
 			return;
 		}
 
+		if(!Game.isGameRun){
+			AudioSystem.resumeSounds();
+		}
+
 		Game.isGameRun = true;
 		Game.lastDrawTime = 0;
 		if(!this._animationId)
@@ -344,7 +347,6 @@ export class Game {
 		Mouse.isClick = false;
 		Game.isBlockMouseLogic = false;
 		BuildingButtons.hide();
-		AudioSystem.resumeSounds();
 	}
 
 	/** Начать новую волну */

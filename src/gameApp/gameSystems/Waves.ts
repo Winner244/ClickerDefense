@@ -20,6 +20,7 @@ import StartNewWaveSound from '../../assets/sounds/startWave.mp3';
 import StartNewWave2Sound from '../../assets/sounds/startWave2.mp3'; 
 
 import MonsterImage from '../../assets/img/monster.png'; 
+import { MusicSystem } from './MusicSystem';
 
 
 /** Система управления волнами монстров - единичный статичный экземпляр */
@@ -86,9 +87,11 @@ export class Waves{
 
 		Game.loadResourcesAfterStartOfWave(this.waveCurrent);
 
+		MusicSystem.stop();
+
 		if(this.waveCurrent > 0){
-			AudioSystem.play(-1, StartNewWaveSound, 0.2, false);
-			AudioSystem.play(-1, StartNewWave2Sound, 0.2, false, 1, false, false, 1.5);
+			AudioSystem.play(-1, StartNewWaveSound, 0.2);
+			AudioSystem.play(-1, StartNewWave2Sound, 0.2, 1, false, false, 1.5);
 		}
 	}
 
@@ -118,6 +121,7 @@ export class Waves{
 				Menu.displayNewWaveButton();
 			}
 			Game.loadResourcesAfterEndOfWave(Waves.waveCurrent);
+			MusicSystem.playPeaceTime(this.delayEndTimeMs / 1000);
 			return;
 		}
 
