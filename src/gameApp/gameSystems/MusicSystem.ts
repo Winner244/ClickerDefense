@@ -42,7 +42,9 @@ export class MusicSystem {
 						}
 
 						this._startedMusic = null;
-						this.playPeaceTime();
+						if(!this._isStopperd){
+							this.playPeaceTime();
+						}
 					}
 				}
 				else{
