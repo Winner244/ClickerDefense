@@ -17,7 +17,11 @@ import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import './Menu.scss';
 
+import offSoundsImage from '../../../assets/img/off-sounds.png'; 
+import onSoundsImage from '../../../assets/img/on-sounds.png'; 
+
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import SoundTurnOnSoundUrl from '../../../assets/sounds/menu/soundTurnOn.mp3'; 
 
 interface IState {
   hoverItem: number;
@@ -171,6 +175,15 @@ export class Menu extends React.Component<Props, IState> {
     this.setState({ hoverItem: -1 });
   }
 
+  onClickSound(){
+    AudioSystem.isEnabled = !AudioSystem.isEnabled;
+    this.forceUpdate();
+
+    if(AudioSystem.isEnabled){
+      AudioSystem.play(-1, SoundTurnOnSoundUrl, 0.2);
+    }
+  }
+
   getItemsMenu(){
     let i = 0;
     const itemsMenu = [
@@ -278,6 +291,17 @@ export class Menu extends React.Component<Props, IState> {
                   {this.getItemsMenu()}
               </div>
             </div>
+          : null
+        }
+
+        {this.props.isOpen
+          ? <button className={"menu__button-sound-off noselect " + (AudioSystem.isEnabled ? '' : 'menu__button-sound-off--off')} onClick={() => this.onClickSound()}>
+            {AudioSystem.isEnabled 
+              ? <img className='nodrag' src={onSoundsImage} />
+              : <img className='nodrag' src={offSoundsImage} />
+            }
+              
+            </button>
           : null
         }
       </div>);

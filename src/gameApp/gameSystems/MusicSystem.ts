@@ -7,7 +7,11 @@ import {AudioSystem} from './AudioSystem';
 
 import PeaceTime1Music from '../../assets/music/peacetime/67700_newgrounds_therit.mp3'; 
 import PeaceTime2Music from '../../assets/music/peacetime/306540_gluttony.mp3'; 
-
+import PeaceTime3Music from '../../assets/music/peacetime/351970_reyholliday_rh-getrightwestcoastloopstartbpm89.mp3'; 
+import PeaceTime4Music from '../../assets/music/peacetime/Vista-Sounds---Lassi.mp3'; 
+import PeaceTime5Music from '../../assets/music/peacetime/204334_Sunscape.mp3'; 
+import PeaceTime6Music from '../../assets/music/peacetime/De4dl0ck Resistan.mp3'; 
+import PeaceTime7Music from '../../assets/music/peacetime/Song Of Storms Dubs2.mp3'; 
 
 
 
@@ -18,7 +22,12 @@ export class MusicSystem {
 
 	private static peaceTimeList: string[] = shuffle([
 		PeaceTime1Music,
-		PeaceTime2Music
+		PeaceTime2Music,
+		PeaceTime3Music,
+		PeaceTime4Music,
+		PeaceTime5Music,
+		PeaceTime6Music,
+		PeaceTime7Music
 	]); 
 
 	/** Воспроизвести музыку между волн */

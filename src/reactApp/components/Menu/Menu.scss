@@ -103,6 +103,41 @@
 		}
 	}
 
+	&__button-sound-off{
+		position: absolute;
+		bottom: 20px;
+		right: 20px;
+		width: 35px;
+		height: 35px;
+		padding: 3px;
+		cursor: pointer;
+
+		background-color: #d4b71e;
+		border: 1px solid #540000;
+		box-shadow: inset 0 0 10px #d30000;
+		border-radius: 5px;
+
+		& > img{
+			background-position: center;
+			background-size: contain;
+			background-repeat: no-repeat;
+			width: 100%;
+			height: 100%;
+		}
+
+		&:hover{
+			background-color: #f4cd0c;
+		}
+
+		&:active{
+			background-color: #6c5c0e;
+		}
+
+		&--off{
+			background-color: #6c5c0e;
+		}
+	}
+
 	&__close{
 		position: absolute;
 		top: -10px;
