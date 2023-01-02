@@ -40,6 +40,7 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 import GrassImage from '../../assets/img/grass1.png'; 
 
 import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
+import GameOverSound from '../../assets/sounds/gameOver.mp3'; 
 
 
 
@@ -169,6 +170,7 @@ export class Game {
 			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
 				AudioSystem.pauseSounds();
+				AudioSystem.play(-1, GameOverSound, 0.5, false);
 			}
 
 			Builder.logic();
@@ -292,11 +294,11 @@ export class Game {
 		Cursor.setCursor(Cursor.default);
 
 		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
-			Buildings.flyEarthRope.y += 100 * drawsDiffMs / 1000;
+			Buildings.flyEarthRope.y += 150 * drawsDiffMs / 1000;
 		}
 
 		if(Buildings.flyEarth.y > -FlyEarth.height){
-			Buildings.flyEarth.y -= 100 * drawsDiffMs / 1000;
+			Buildings.flyEarth.y -= 150 * drawsDiffMs / 1000;
 		}
 	}
 
