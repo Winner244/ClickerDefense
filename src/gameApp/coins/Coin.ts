@@ -25,7 +25,7 @@ export class Coin {
 		this.x = x; 
 		this.y = y;
 		this.impulseY = 0;
-		this.lifeTimeLeftMs = Coin.lifeTimeMs * 1000;
+		this.lifeTimeLeftMs = Coin.lifeTimeMs;
 	}
 
 	logic(drawsDiffMs: number, bottomShiftBorder: number): void{

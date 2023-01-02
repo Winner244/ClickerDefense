@@ -17,6 +17,7 @@ import {Monsters} from '../monsters/Monsters';
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
 import StartNewWaveSound from '../../assets/sounds/startWave.mp3'; 
+import StartNewWave2Sound from '../../assets/sounds/startWave2.mp3'; 
 
 import MonsterImage from '../../assets/img/monster.png'; 
 
@@ -56,13 +57,13 @@ export class Waves{
 				[Zombie.name]: new WaveData(15, 30, 0),
 			},
 			{ //2-я волна
-				[Zombie.name]: new WaveData(15, 80, 0),
-				[Boar.name]: new WaveData(15, 30, 5)
+				[Zombie.name]: new WaveData(22, 80, 0),
+				[Boar.name]: new WaveData(13, 30, 5)
 			},
 			{ //3-я волна
 				[Zombie.name]: new WaveData(30, 70, 0),
-				[Boar.name]: new WaveData(28, 25, 1),
-				[Bat.name]: new WaveData(30, 60, 2)
+				[Boar.name]: new WaveData(18, 25, 1),
+				[Bat.name]: new WaveData(35, 60, 2)
 			}];
 	}
 
@@ -84,7 +85,11 @@ export class Waves{
 		monstersName.forEach(monsterName => Monsters.initMonster(monsterName));
 
 		Game.loadResourcesAfterStartOfWave(this.waveCurrent);
-		AudioSystem.play(-1, StartNewWaveSound, 0.2, false);
+
+		if(this.waveCurrent > 0){
+			AudioSystem.play(-1, StartNewWaveSound, 0.2, false);
+			AudioSystem.play(-1, StartNewWave2Sound, 0.2, false, 1, false, false, 1.5);
+		}
 	}
 
 	static logic(drawsDiffMs: number, bottomShiftBorder: number): void{

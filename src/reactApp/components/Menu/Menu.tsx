@@ -149,9 +149,9 @@ export class Menu extends React.Component<Props, IState> {
   }
 
   onClickShopOpen(){
-    Game.pause();
     Waves.delayEndLeftTimeMs = 0;
     this.props.close();
+    Menu.playSoundSelect();
     Shop.show();
   }
 

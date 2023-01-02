@@ -157,7 +157,7 @@ export class AudioSystem{
 				source.connect(gainNode).connect(pannerNode).connect(context.destination);
 			}
 
-			source.start(delayStartingSeconds, offsetSeconds); 
+			source.start(this._context.currentTime +  delayStartingSeconds, offsetSeconds); 
 			return source;
 		}
 		else{

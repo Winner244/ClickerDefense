@@ -46,9 +46,7 @@ export class Shop extends React.Component<Props, {}> {
   static hide(): void{
     Game.isBlockMouseLogic = false;
     App.Store.dispatch(ShopStore.actionCreators.close());
-    if(!Game.isGameRun){
-      App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
-    }
+    App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
   }
 
   private static playSoundSelect(){
