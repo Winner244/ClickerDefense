@@ -453,23 +453,6 @@ class TestPage extends React.Component {
                 break;
 
             case 22: 
-                this.text = "test sound of sword";
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                 Waves.waveCurrent = 0;
-                 Waves.all =[{ 
-                    [Zombie.name]: new WaveData(301, 70, 0),
-                    [Boar.name]: new WaveData(351, 25, 1)
-                }]
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-
-                barricade1.x = 700;
-                Buildings.all.push(barricade1);
-                Buildings.all.push(barricade2);
-                Buildings.all.forEach(x => x.healthMax = x.health = 2000);
-                break;
-
-            case 23: 
                 this.text = "Game Over - bottom";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -490,8 +473,8 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.flyEarthRope.health-=100, 1800);
                 break;
 
-            case 24: 
-                this.text = "Game Over - to";
+            case 23: 
+                this.text = "Game Over - top";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                     Waves.waveCurrent = 0;

@@ -50,6 +50,10 @@ export class BuildingButtons extends React.Component<Props, IState> {
       this.setState({ isDisplayRepairButton: nextProps.isDisplayRepairButton });
     }
   }
+
+  static hideRepairButton(){
+    App.Store.dispatch(BuildingButtonsStore.actionCreators.hideRepairButton());
+  }
   
 
   static show(x: number, y: number, 

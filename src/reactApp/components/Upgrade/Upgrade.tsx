@@ -22,6 +22,8 @@ import {Building} from '../../../gameApp/buildings/Building';
 
 import CoinImage from '../../../assets/img/coin.png';
 
+import {BuildingButtons} from '../BuildingButtons/BuildingButtons';
+
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import ImproveSoundUrl from '../../../assets/sounds/buildings/placing.mp3'; 
 
@@ -155,6 +157,7 @@ export class Upgrade extends React.Component<Props, {}> {
         this.setGreenTransition(infoItem.id);
       }
       this.forceUpdate();
+      BuildingButtons.hideRepairButton();
     }
   }
 
