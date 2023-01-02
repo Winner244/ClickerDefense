@@ -44,9 +44,11 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   static hide(): void{
-    Game.isBlockMouseLogic = false;
-    App.Store.dispatch(ShopStore.actionCreators.close());
-    App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
+    if(Shop.isOpened()){
+      Game.isBlockMouseLogic = false;
+      App.Store.dispatch(ShopStore.actionCreators.close());
+      App.Store.dispatch(MenuStore.actionCreators.displayOutsideButtons());
+    }
   }
 
   static isOpened(): boolean{

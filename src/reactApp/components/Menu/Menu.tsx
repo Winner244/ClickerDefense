@@ -50,7 +50,7 @@ export class Menu extends React.Component<Props, IState> {
     AudioSystem.load(SelectingSoundUrl);
   }
 
-  static displayNewWaveButton():void{
+  static displayNewWaveButton(): void{
     App.Store.dispatch(MenuStore.actionCreators.displayNewWaveButton());
   }
 
