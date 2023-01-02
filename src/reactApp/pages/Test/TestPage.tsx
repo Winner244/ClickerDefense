@@ -108,6 +108,26 @@ class TestPage extends React.Component {
                 break;
 
             case 4: 
+                this.text = "Кнопки управления зданиями появляются только после окончания волны";
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Gamer.coins = 500;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = true;
+                Waves.all[0][Zombie.name] = new WaveData(1, 30, 0);
+
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
+                setTimeout(() => Buildings.all.forEach(x => x.health-= 10), 300);
+
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
+                break;
+
+            case 5: 
                 this.text = "Магазин (постройка и улучшение)";
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -120,7 +140,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = true;
                 break;
 
-            case 5: 
+            case 6: 
                 this.text = "Спец способность кабана + отмена при получении урона";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -143,7 +163,7 @@ class TestPage extends React.Component {
                // Monsters.all.push(boar2);
                 break;
 
-            case 6: 
+            case 7: 
                 this.text = "Передача импульса от спец способность кабана к башне (слева)";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -167,7 +187,7 @@ class TestPage extends React.Component {
                 });
                 break;
 
-            case 7:
+            case 8:
                 this.text = "Передача импульса от спец способность кабана к башне (справа)";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -191,7 +211,7 @@ class TestPage extends React.Component {
                 });
                 break;
 
-            case 8: 
+            case 9: 
                 this.text = "Расстояние срабатывания Спец способность кабана";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -214,79 +234,7 @@ class TestPage extends React.Component {
                 Buildings.all.forEach(x => x.healthMax = x.health = 400);
                 break;
 
-            case 9: 
-                this.text = "Атака зомби";
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
-
-                var zombie = new Zombie(800, 780, true, 1);
-                Monsters.all.push(zombie);
-                break;
-
             case 10: 
-                this.text = "Атака кабана";
-                Gamer.coins = 200;
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
-
-                var boar = new Boar(1000, 780, true, 1, true);
-                Monsters.all.push(boar);
-                break;
-
-            case 11: 
-                this.text = "Атака летучей мыши";
-                Gamer.coins = 200;
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
-
-                var bat = new Bat(700, 380, true, 1);
-                Monsters.all.push(bat);
-                break;
-
-            case 12: 
-                this.text = "Вторая волна";
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.waveCurrent = 1;
-                tower1.x = 700;
-                Buildings.all.push(tower1);
-                tower2.x = 1200;
-                Buildings.all.push(tower2);
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                barricade2.x = 1300;
-                Buildings.all.push(barricade2);
-                break;
-
-            case 13: 
                 this.text = "Баррикада - возврат урона - зомби";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -296,7 +244,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
             break;
 
-            case 14: 
+            case 11: 
                 this.text = "Баррикада - возврат урона - кабаны";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -314,7 +262,7 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
             break;
 
-            case 15:
+            case 12:
                 this.text = "Баррикада - возврат урона - спец способность кабанов"; 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -332,85 +280,7 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
             break;
 
-            case 16: 
-                this.text = "Image Handler, loading images, waiting images"; 
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                Buildings.all.push(tower2);
-                setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
-
-                var boar = new Boar(0, 780, true, 1, true);
-                boar.name = 'boar1';
-                Monsters.all.push(boar);
-
-                var z = new Zombie(1780, 780, false, 1);
-                Monsters.all.push(z);
-                setTimeout(() => Monsters.all.forEach(x => x.health--), 300);
-
-                Waves.isStarted = false;
-            break;
-
-            case 17: 
-                this.text = "Волна 3"; 
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.waveCurrent = 2;
-
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                tower1.x = 700;
-                Buildings.all.push(tower1);
-
-                barricade2.x = 1300;
-                Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
-
-            case 18: 
-                this.text = "Полёт летучих мышей";
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                { 
-                    [Bat.name]: new WaveData(30, 60, 0)
-                }];
-
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                tower1.x = 700;
-                Buildings.all.push(tower1);
-
-                barricade2.x = 1300;
-                Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
-
-            case 19: 
-                this.text = "Кнопки управления зданиями появляются только после окончания волны";
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Gamer.coins = 500;
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.isStarted = true;
-                Waves.all[0][Zombie.name] = new WaveData(1, 30, 0);
-
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                tower1.x = 700;
-                Buildings.all.push(tower1);
-                setTimeout(() => Buildings.all.forEach(x => x.health-= 10), 300);
-
-                barricade2.x = 1300;
-                Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
-
-            case 20: 
+            case 13: 
                 this.text = "Несколько лучников на башнях";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -430,7 +300,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower2);
                 break;
 
-            case 21: 
+            case 14: 
                 this.text = "Скоростные стрелы у башен";
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -451,6 +321,136 @@ class TestPage extends React.Component {
                 barricade2.x = 1500;
                 Buildings.all.push(barricade2);
                 break;
+
+            case 15: 
+                this.text = "Атака зомби";
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var zombie = new Zombie(800, 780, true, 1);
+                Monsters.all.push(zombie);
+                break;
+
+            case 16: 
+                this.text = "Атака кабана";
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var boar = new Boar(1000, 780, true, 1, true);
+                Monsters.all.push(boar);
+                break;
+
+            case 17: 
+                this.text = "Атака летучей мыши";
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var bat = new Bat(700, 380, true, 1);
+                Monsters.all.push(bat);
+                break;
+
+            case 18: 
+                this.text = "Вторая волна";
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.waveCurrent = 1;
+                tower1.x = 700;
+                Buildings.all.push(tower1);
+                tower2.x = 1200;
+                Buildings.all.push(tower2);
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                break;
+
+            case 19: 
+                this.text = "Волна 3"; 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.waveCurrent = 2;
+
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
+
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
+                break;
+
+            case 20: 
+                this.text = "Полёт летучих мышей";
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                { 
+                    [Bat.name]: new WaveData(30, 60, 0)
+                }];
+
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                tower1.x = 700;
+                Buildings.all.push(tower1);
+
+                barricade2.x = 1300;
+                Buildings.all.push(barricade2);
+                Buildings.all.push(tower2);
+                break;
+
+            case 21: 
+                this.text = "Image Handler, loading images, waiting images"; 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                barricade1.x = 600;
+                Buildings.all.push(barricade1);
+                Buildings.all.push(tower2);
+                setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
+
+                var boar = new Boar(0, 780, true, 1, true);
+                boar.name = 'boar1';
+                Monsters.all.push(boar);
+
+                var z = new Zombie(1780, 780, false, 1);
+                Monsters.all.push(z);
+                setTimeout(() => Monsters.all.forEach(x => x.health--), 300);
+
+                Waves.isStarted = false;
+            break;
 
             case 22: 
                 this.text = "Game Over - bottom";
@@ -505,8 +505,11 @@ class TestPage extends React.Component {
     }
 
     public render() {
+        let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
+
         return <div className='test-page'>
                 <div className='test-page__label noselect'>{this.text}</div>
+                <a className='test-page__button-next' href={'/test?v=' + (+variant + 1)}>Next test</a>
             </div>;
     }
 }
