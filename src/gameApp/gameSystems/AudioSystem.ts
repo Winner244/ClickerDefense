@@ -81,7 +81,7 @@ export class AudioSystem{
 	public static playMusic(
 		pathToAudioFile: string,
 		volume: number = 1, 
-		delayStartingSeconds: number = 0): Promise<AudioBufferSourceNode|Tone.Player|null>
+		delayStartingSeconds: number = 0): Promise<Tone.Player|null>
 	{
 		return this.play(-1, pathToAudioFile, volume, 1, false, true, delayStartingSeconds, 0, true);
 	}
@@ -115,7 +115,9 @@ export class AudioSystem{
 				if(isUseAutoPauseAndResume && source){
 					(<any>source).startedAt = this._context.currentTime + delayStartingSeconds;
 					this._soundsForPause.push(source);
-					source.onstop = () => this._soundsForPause = this._soundsForPause.filter(x => x != source);
+					source.onstop = () => {
+						this._soundsForPause = this._soundsForPause.filter(x => x != source);
+					};
 			}
 				return source;
 			});
