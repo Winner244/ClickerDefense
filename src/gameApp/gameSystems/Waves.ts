@@ -2,6 +2,7 @@ import sum from 'lodash/sum';
 
 import {Draw} from './Draw';
 import {Game} from './Game';
+import {AudioSystem} from './AudioSystem';
 
 import {Size} from '../../models/Size';
 import {WaveData} from '../../models/WaveData';
@@ -14,6 +15,8 @@ import {Zombie} from '../monsters/Zombie';
 import {Monsters} from '../monsters/Monsters';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
+
+import StartNewWaveSound from '../../assets/sounds/startWave.mp3'; 
 
 import MonsterImage from '../../assets/img/monster.png'; 
 
@@ -81,6 +84,7 @@ export class Waves{
 		monstersName.forEach(monsterName => Monsters.initMonster(monsterName));
 
 		Game.loadResourcesAfterStartOfWave(this.waveCurrent);
+		AudioSystem.play(-1, StartNewWaveSound, 0.2, false);
 	}
 
 	static logic(drawsDiffMs: number, bottomShiftBorder: number): void{

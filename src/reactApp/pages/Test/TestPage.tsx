@@ -23,6 +23,7 @@ import {Building} from '../../../gameApp/buildings/Building';
 
 import './TestPage.scss';
 import { ImageHandler } from '../../../gameApp/ImageHandler';
+import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -108,6 +109,7 @@ class TestPage extends React.Component {
 
             case 4: 
                 this.text = "Магазин (постройка и улучшение)";
+                AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -115,6 +117,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
 				Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
                 break;
 
             case 5: 
