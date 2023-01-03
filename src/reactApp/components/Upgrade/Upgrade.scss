@@ -213,6 +213,11 @@
 		justify-content: space-between;
 		background-color: #640000;
 		border: 3px double rgba(0, 0, 0, 0.5);
+		transition: background-color 0.5s linear;
+
+		&:hover{
+			background-color: #390101;
+		}
 
 		&-body{
 			display: flex;
