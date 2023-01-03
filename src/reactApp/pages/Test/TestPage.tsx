@@ -49,6 +49,7 @@ class TestPage extends React.Component {
         Monster.loadHitSounds();
         Tower.loadRepairResources();
         Tower.loadResourcesAfterBuild();
+        Barricade.loadResourcesAfterBuild();
         Tower.loadUpgradeResources();
         var tower1 = new Tower(200);
         tower1.loadedResourcesAfterBuild();

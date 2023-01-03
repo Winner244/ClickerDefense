@@ -196,4 +196,23 @@
 		background-color: saddlebrown;
     	border: 1px solid #702900;
 	}
+
+	&__upgrade-item{
+		height: 75px;
+		margin-bottom: 2px;
+		display: flex;
+
+		&-description{
+			display: none;
+		}
+
+		&-info-item-image{
+			width: 15px;
+		}
+
+		&-button-buy-image{
+			width: 15px;
+			margin: 0 5px;
+		}
+	}
 }

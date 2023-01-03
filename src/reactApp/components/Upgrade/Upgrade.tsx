@@ -239,7 +239,27 @@ export class Upgrade extends React.Component<Props, {}> {
 
                   </ul>
                 </div>
-                <div className="upgrade__upgrade-items" ></div>
+                <div className="upgrade__upgrade-items">
+                  {this.props.selectedBuilding?.improvements.map((improvement, i) => {
+                    return (<div className='upgrade__upgrade-item' key={i}>
+                      <img className='upgrade__upgrade-item-image' src={improvement.image.src} />
+                      <div className='upgrade__upgrade-item-body'>
+                        <div className='upgrade__upgrade-item-description'>{improvement.description}</div>
+                        <div className='upgrade__upgrade-item-label'>{improvement.label}</div>
+                        <div className='upgrade__upgrade-item-info-items'>{improvement.infoItems.map((infoItem, i) => {
+                          return (<span className='upgrade__upgrade-item-info-item'>
+                            {infoItem.value}
+                            <img className='upgrade__upgrade-item-info-item-image' src={infoItem.icon?.src}/>
+                          </span>);
+                        })}</div>
+                      </div>
+                      <div className='upgrade__upgrade-item-button-buy'>
+                        <div>{improvement.price}<img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/></div>
+                        <div>Купить</div>
+                      </div>
+                    </div>);
+                  })}
+                </div>
               </div>
               <div className="upgrade__upgraded-box"></div>
             </div>

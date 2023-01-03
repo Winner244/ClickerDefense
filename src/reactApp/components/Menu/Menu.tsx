@@ -156,6 +156,7 @@ export class Menu extends React.Component<Props, IState> {
     Waves.delayEndLeftTimeMs = 0;
     this.props.close();
     Menu.playSoundSelect();
+    Upgrade.hide();
     Shop.show();
   }
 

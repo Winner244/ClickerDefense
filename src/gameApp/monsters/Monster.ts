@@ -274,7 +274,7 @@ export class Monster{
 
 	attack(damage: number): void{
 		if(damage > 0 && this._buildingGoal != null){
-			const realDamage = this._buildingGoal.applyDamage(damage); //монстр наносит урон
+			const realDamage = this._buildingGoal.applyDamage(damage, this); //монстр наносит урон
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
 
@@ -282,12 +282,6 @@ export class Monster{
 			var sizeVolumeScale = size / 3000;
 			var volume = 0.1 * Math.sqrt(sizeVolumeScale) * Math.sqrt(damage);
 			AudioSystem.playRandomV(this.centerX, [Hit1Sound, Hit2Sound, Hit3Sound, Hit4Sound, Hit5Sound, Hit6Sound, Hit7Sound, Hit8Sound, Hit9Sound, Hit10Sound, Hit11Sound], volume || 0.1, false, 1, true);
-
-			if(this._buildingGoal instanceof  Barricade){
-				var mirrorDamage = damage / 100 * Barricade.damageMirrorPercentage;
-				this.health -= mirrorDamage;
-				Labels.createMonsterDamageLabel(this.x + this.width / 2 + (this.isLeftSide ? 0: -17), this.y + this.height / 2, '-' + mirrorDamage.toFixed(1), 3000);
-			}
 		}
 	}
 

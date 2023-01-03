@@ -129,7 +129,9 @@ export class Game {
 		if (building  instanceof  Tower){ 
 			Tower.loadResourcesAfterBuild();
 		}
-		//Barricade doesn't have this method
+		else if(building  instanceof  Barricade){ 
+			Barricade.loadResourcesAfterBuild();
+		}
 
 		Buildings.loadResources();
 		Building.loadUpgradeResources();

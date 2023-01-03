@@ -187,7 +187,7 @@ export class Building extends ShopItem{
 		return this._isDisplayedUpgradeWindow;
 	}
 
-	applyDamage(damage: number): number{
+	applyDamage(damage: number, monster: Monster): number{
 		const realDamage = Math.max(0, Math.abs(damage) - this.defense);
 		this.health -= realDamage;
 		return realDamage;

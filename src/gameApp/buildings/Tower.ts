@@ -35,7 +35,7 @@ export class Tower extends Building{
 	static readonly price: number = 50; //цена здания
 	static readonly initArrowSpeed: number = 500; 
 
-	static readonly improvementFireArrows = new Improvement('Огненные стрелы');
+	static readonly improvementFireArrows = new Improvement('Огненные стрелы', 100, 'Поджигает монстров.');
 
 	//поля свойства экземпляра
 	bowmans: number = 1; //кол-во лучников
@@ -67,6 +67,9 @@ export class Tower extends Building{
 		this.impulseForceDecreasing = 5;
 
 		this.improvements.push(Tower.improvementFireArrows);
+		this.improvements.push(new Improvement('Эмс', 20, 'эээ')); //TODO: delete after testing
+		this.improvements.push(new Improvement('something', 50, 'эээ')); //TODO: delete after testing
+		this.improvements.push(new Improvement('T', 20, 'эээ')); //TODO: delete after testing
 
 		Tower.init(true); //reserve
 	}
@@ -79,12 +82,13 @@ export class Tower extends Building{
 	
 	static loadResourcesAfterBuild() {
 		this.imageArrow.src = arrowImage; 
-		this.improvementFireArrows.image.src = fireArrowImage;
-		AudioSystem.load(arrowStrikeSound);
 
+		this.improvementFireArrows.image.src = fireArrowImage;
 		this.improvementFireArrows.infoItems = [
 			new ImprovementInfoItem('+', fireIcon)
 		];
+
+		AudioSystem.load(arrowStrikeSound);
 	}
 
 	loadedResourcesAfterBuild(){
