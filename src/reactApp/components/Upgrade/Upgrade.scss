@@ -195,24 +195,65 @@
 	&__upgrade-items{
 		background-color: saddlebrown;
     	border: 1px solid #702900;
+		box-shadow: inset 0 0 50px 0px black;
 	}
 
 	&__upgrade-item{
-		height: 75px;
-		margin-bottom: 2px;
+		height: 50px;
+		margin: 3px;
 		display: flex;
+		justify-content: space-between;
+		background-color: #640000;
+		border: 3px double rgba(0, 0, 0, 0.5);
+
+		&-body{
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		&-label{
+			color: #ff0000;
+			text-shadow: 1px 1px #540000;
+		}
 
 		&-description{
 			display: none;
 		}
 
-		&-info-item-image{
-			width: 15px;
+		&-info-item{
+			color: orange;
+			margin-right: 7px;
+
+			&-image{
+				width: 15px;
+				margin-left: 2px;
+			}
 		}
 
-		&-button-buy-image{
-			width: 15px;
-			margin: 0 5px;
+		&-button-buy{
+			display: inline-block;
+			cursor: pointer;
+			font-family: 'AnotherCastle3';
+			color: #ffc541;
+			align-self: center;
+
+			&-image{
+				width: 12px;
+				margin-left: 5px;
+			}
+
+			&-text{
+				font-size: 14px;
+			}
+
+			&-price{
+				text-align: right;
+			}
+
+			&:hover > &-text{
+				color: #f01313;
+			}
 		}
 	}
 }

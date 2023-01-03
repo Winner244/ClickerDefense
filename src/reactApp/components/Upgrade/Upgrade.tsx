@@ -254,8 +254,11 @@ export class Upgrade extends React.Component<Props, {}> {
                         })}</div>
                       </div>
                       <div className='upgrade__upgrade-item-button-buy'>
-                        <div>{improvement.price}<img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/></div>
-                        <div>Купить</div>
+                        <div className='upgrade__upgrade-item-button-buy-price'>
+                          {improvement.price}
+                          <img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/>
+                        </div>
+                        <div className='upgrade__upgrade-item-button-buy-text'>Купить</div>
                       </div>
                     </div>);
                   })}

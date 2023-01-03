@@ -27,7 +27,7 @@ export class Barricade extends Building{
 
 	static readonly improvementIronShield: number = 1; //кол-во добавляемой брони для железной версии
 
-	static readonly improvementIron = new Improvement('Железо', 100, 'Прочнее и возвращает больше урона.');
+	static readonly improvementIron = new Improvement('Железные шипы', 100, 'Прочнее и возвращает больше урона.');
 
 	constructor(x: number) {
 		super(x, 

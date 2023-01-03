@@ -4,9 +4,10 @@ import { connect } from 'react-redux';
 import { ApplicationState } from '../../store';
 import * as MenuStore from './MenuStore';
 
-import { App } from '../../App';
-import { Shop } from '../Shop/Shop';
-import { Upgrade } from '../Upgrade/Upgrade';
+import {App} from '../../App';
+import {Shop} from '../Shop/Shop';
+import {Upgrade} from '../Upgrade/Upgrade';
+import {BuildingButtons} from '../BuildingButtons/BuildingButtons';
 
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {Keypad} from '../../../gameApp/gamer/Keypad';
@@ -157,6 +158,7 @@ export class Menu extends React.Component<Props, IState> {
     this.props.close();
     Menu.playSoundSelect();
     Upgrade.hide();
+    BuildingButtons.hide();
     Shop.show();
   }
 
