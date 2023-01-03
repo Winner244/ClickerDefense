@@ -111,10 +111,10 @@
 		height: 35px;
 		padding: 3px;
 		cursor: pointer;
+		outline: none;
 
 		background-color: #d4b71e;
 		border: 1px solid #540000;
-		box-shadow: inset 0 0 10px #d30000;
 		border-radius: 5px;
 
 		& > img{
@@ -125,16 +125,24 @@
 			height: 100%;
 		}
 
-		&:hover{
-			background-color: #f4cd0c;
-		}
-
 		&:active{
 			background-color: #6c5c0e;
 		}
 
 		&--off{
 			background-color: #6c5c0e;
+
+			&:hover{
+				background-color: #806b07;
+			}
+		}
+
+		&--on{
+			box-shadow: inset 0 0 10px #d30000;
+
+			&:hover{
+				background-color: #f4cd0c;
+			}
 		}
 	}
 

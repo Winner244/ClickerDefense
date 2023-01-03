@@ -295,7 +295,7 @@ export class Menu extends React.Component<Props, IState> {
         }
 
         {this.props.isOpen
-          ? <button className={"menu__button-sound-off noselect " + (AudioSystem.isEnabled ? '' : 'menu__button-sound-off--off')} onClick={() => this.onClickSound()}>
+          ? <button className={"menu__button-sound-off noselect " + (AudioSystem.isEnabled ? 'menu__button-sound-off--on' : 'menu__button-sound-off--off')} onClick={() => this.onClickSound()}>
             {AudioSystem.isEnabled 
               ? <img className='nodrag' src={onSoundsImage} />
               : <img className='nodrag' src={offSoundsImage} />
