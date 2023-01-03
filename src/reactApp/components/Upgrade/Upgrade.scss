@@ -70,6 +70,11 @@
 		position: relative;
 		display: flex;
 		flex-direction: row;
+		transition: background-color 0.5s linear;
+
+		&--hover-active:hover{
+			background-color: rgba(0,0,0,0.3) !important;
+		}
 
 		&-name, &-value-box{
 			width: 50%;
@@ -180,6 +185,9 @@
 		}
 		&--transition{
 			transition: background-color 1s linear;
+		}
+		&--no-transition{
+			transition: background-color 0s linear !important;
 		}
 	}
 

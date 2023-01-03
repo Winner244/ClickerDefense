@@ -41,6 +41,7 @@ export class Building extends ShopItem{
 	height: number; //высота image
 	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
 	
+	initialHealthMax: number; //изначальный максимум хп
 	healthMax: number; //максимум хп
 	health: number;
 
@@ -103,7 +104,7 @@ export class Building extends ShopItem{
 		this.height = height;
 		this.reduceHover = reduceHover; 
 
-		this.healthMax = healthMax; 
+		this.healthMax = this.initialHealthMax = healthMax; 
 		this.health = healthMax;
 
 		this.x = x;
@@ -146,7 +147,7 @@ export class Building extends ShopItem{
 
 	loadedResourcesAfterBuild(){
 		this.infoItems = [
-			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.healthMax)),
+			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
 			new InfoItem('Защита', () => this.defense, ShieldIcon)
 		];

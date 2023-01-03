@@ -44,6 +44,7 @@ export class Upgrade extends React.Component<Props, {}> {
   static mouseDownOffsetY : number = 0;
   static offsetX : number = 0;
   static offsetY : number = 0;
+  private _timeoutTransition : NodeJS.Timeout|null = null;
 
   coinLabel: React.RefObject<HTMLDivElement> = React.createRef();
   popup: React.RefObject<HTMLDivElement> = React.createRef();
@@ -165,11 +166,22 @@ export class Upgrade extends React.Component<Props, {}> {
     const elements = document.getElementsByClassName('upgrade__parameter--' + id);
     if(elements && elements.length){
       const element: HTMLElement = elements[0] as HTMLElement;
-      element.className = element.className .replace('upgrade__parameter--transition', '');
+      element.className = element.className.replace('upgrade__parameter--transition', '');
+      element.className = element.className.replace('upgrade__parameter--hover-active', '');
+      element.className += ' upgrade__parameter--no-transition';
       element.className += ' upgrade__parameter--green';
       setTimeout(() => {
+        element.className = element.className.replace('upgrade__parameter--no-transition', '');
         element.className += ' upgrade__parameter--transition';
-        element.className = element.className .replace('upgrade__parameter--green', '');
+        element.className = element.className.replace('upgrade__parameter--green', '');
+        
+        if(this._timeoutTransition)
+          clearTimeout(this._timeoutTransition);
+          
+        this._timeoutTransition = setTimeout(() => {
+          element.className = element.className.replace('upgrade__parameter--transition', '');
+          element.className += ' upgrade__parameter--hover-active';
+        }, 1000);
       }, 100);
     }
   }
@@ -194,7 +206,7 @@ export class Upgrade extends React.Component<Props, {}> {
                     {this.props.selectedBuilding.infoItems.map((infoItem, i) => {
                       let isDisplayRepairButton = infoItem.label == Building.improveHealthLabel && this.props.selectedBuilding?.health != this.props.selectedBuilding?.healthMax;
 
-                      return (<li className={"upgrade__parameter upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
+                      return (<li className={"upgrade__parameter upgrade__parameter--hover-active upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
                         <div className="upgrade__parameter-name">
                           {infoItem.icon 
                             ? <img className="upgrade__parameter-icon" src={infoItem.icon.src}/> 
