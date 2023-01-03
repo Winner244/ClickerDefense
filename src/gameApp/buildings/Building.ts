@@ -253,7 +253,8 @@ export class Building extends ShopItem{
 		let y = this.y;
 
 		if(this.isDisplayedUpgradeWindow){
-			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
+			//Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
+			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - this.height / 10, this.width * 2, this.height + this.height / 10)
 			Draw.ctx.filter = 'brightness(1.7)';
 		}
 
