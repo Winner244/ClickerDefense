@@ -20,6 +20,7 @@ import {Gamer} from '../../../gameApp/gamer/Gamer';
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 
 import {Building} from '../../../gameApp/buildings/Building';
+import {Builder} from '../../../gameApp/buildings/Builder';
 
 import CoinImage from '../../../assets/img/coin.png';
 
@@ -156,6 +157,9 @@ export class Upgrade extends React.Component<Props, {}> {
       this.forceUpdate();
       CoinLabels.add(e.clientX, e.clientY, improvement.priceToImprove || 0, 2000);
       AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
+      if(this.props.selectedBuilding){
+        //Builder.upgradeBuilding(this.props.selectedBuilding);
+      }
       //this.setImprovementGreenTransition(infoItem.id);
     }
   }
@@ -264,7 +268,7 @@ export class Upgrade extends React.Component<Props, {}> {
                 </div>
                 <div className="upgrade__upgrade-items">
                   {this.props.selectedBuilding?.improvements.map((improvement, i) => {
-                    return (<div className='upgrade__upgrade-item' key={i}>
+                    return (<div className={'upgrade__upgrade-item ' + (improvement.isImproved ? 'upgrade__upgrade-item--improved' : '')} key={i}>
                       {improvement.image?.src 
                         ? <img className='upgrade__upgrade-item-image' src={improvement.image.src} /> 
                         : null}
@@ -278,13 +282,23 @@ export class Upgrade extends React.Component<Props, {}> {
                           </span>);
                         })}</div>
                       </div>
-                      <button className='upgrade__upgrade-item-button-buy'  disabled={improvement.priceToImprove > Gamer.coins} onClick={(e) => this.improve(improvement, e)}>
-                        <div className='upgrade__upgrade-item-button-buy-price'>
-                          {improvement.priceToImprove}
-                          <img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/>
-                        </div>
-                        <div className='upgrade__upgrade-item-button-buy-text'>Купить</div>
-                      </button>
+
+                      {improvement.isImproved 
+                        ? <div className='upgrade__upgrade-item-bought-text' >Куплено</div>
+                        : <button className='upgrade__upgrade-item-button-buy'  disabled={improvement.priceToImprove > Gamer.coins} onClick={(e) => this.improve(improvement, e)}>
+                            <div className='upgrade__upgrade-item-button-buy-price'>
+                              {improvement.priceToImprove}
+                              <img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/>
+                            </div>
+                            <div className='upgrade__upgrade-item-button-buy-text'>Купить</div>
+                          </button>
+                      }
+                      
+
+                      {improvement.isImproved 
+                        ? <div className='upgrade__upgrade-item-curtain'></div>
+                        : null
+                      }
                     </div>);
                   })}
                 </div>

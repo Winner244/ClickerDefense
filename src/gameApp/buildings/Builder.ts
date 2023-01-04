@@ -40,6 +40,11 @@ export class Builder {
 		this._isDrawSmoke = false;
 	}
 
+	static upgradeBuilding(building: Building){
+		this.selectedBuildingForBuild = building;
+		this._isDrawSmoke = true;
+	}
+
 	static finish(){
 		this.selectedBuildingForBuild = null;
 	}

@@ -4,9 +4,9 @@ import {Helper} from "../gameApp/helpers/Helper";
 
 
 export default class InfoItem{
-	id: string; //guid
-	label: string; //название характеристики
-	icon: HTMLImageElement|null; //иконка характеристики 
+	readonly id: string; //guid
+	readonly label: string; //название характеристики
+	readonly icon: HTMLImageElement|null; //иконка характеристики 
 	getValue: () => string|number; //функция получения значения
 
 	mouseIn: () => void; //наведении мышкой на параметр в UI

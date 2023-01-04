@@ -3,12 +3,14 @@ import ImprovementInfoItem from "./ImprovementInfoItem";
 
 // Улучшение для зданий/юнитов
 export default class Improvement{
-	label: string; //название улучшения/апгрейда
+	readonly label: string; //название улучшения/апгрейда
+	readonly image: HTMLImageElement|null; //картинка 
+	readonly infoItems: ImprovementInfoItem[]; //отображает улучшаемые характеристики и значение улучшения (+50%, +1, ...)
+
 	priceToImprove: number; //цена
-	image: HTMLImageElement|null; //картинка 
-	infoItems: ImprovementInfoItem[]; //отображает улучшаемые характеристики и значение улучшения (+50%, +1, ...)
 
 	private _improve: () => void; //функция улучшения
+	isImproved: boolean; //улучшение сделано?
 
 	constructor(
 		label: string, 
@@ -30,14 +32,16 @@ export default class Improvement{
 
 		this.infoItems = infoItems;
 		this._improve = improve;
+		this.isImproved = false;
 
 	}
 
 	improve(): boolean {
-		if(this.priceToImprove){
+		if(this.priceToImprove && !this.isImproved){
 			if(Gamer.coins >= this.priceToImprove){
 				Gamer.coins -= this.priceToImprove
 				this._improve();
+				this.isImproved = true;
 				return true;
 			}
 

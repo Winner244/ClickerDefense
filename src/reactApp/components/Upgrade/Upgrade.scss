@@ -207,6 +207,7 @@
 	}
 
 	&__upgrade-item{
+		position: relative;
 		height: 50px;
 		margin: 3px;
 		display: flex;
@@ -214,6 +215,26 @@
 		background-color: #640000;
 		border: 3px double rgba(0, 0, 0, 0.5);
 		transition: background-color 0.5s linear;
+
+		&--improved{
+			background-color: #163000 !important;
+		}
+
+		&-bought-text{
+			font-family: 'AnotherCastle3';
+			font-size: 14px;
+			align-self: center;
+			color: #00c500;
+		}
+
+		&-curtain{
+			background-color: rgba(0, 0, 0, 0.5);
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
 
 		&:hover{
 			background-color: #390101;
