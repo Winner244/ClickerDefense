@@ -12,6 +12,7 @@ import {CoinLabels} from '../CoinLabels/CoinLabels';
 
 
 import InfoItem from '../../../models/InfoItem';
+import Improvement from '../../../models/Improvement';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
@@ -139,13 +140,23 @@ export class Upgrade extends React.Component<Props, {}> {
     document.removeEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
-  improve(infoItem : InfoItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
+  improveParameter(infoItem : InfoItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
     const result = infoItem.improve();
     if(result){
       this.forceUpdate();
       CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove || 0, 2000);
       AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
-      this.setGreenTransition(infoItem.id);
+      this.setParameterGreenTransition(infoItem.id);
+    }
+  }
+
+  improve(improvement : Improvement, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
+    const result = improvement.improve();
+    if(result){
+      this.forceUpdate();
+      CoinLabels.add(e.clientX, e.clientY, improvement.priceToImprove || 0, 2000);
+      AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
+      //this.setImprovementGreenTransition(infoItem.id);
     }
   }
 
@@ -155,14 +166,14 @@ export class Upgrade extends React.Component<Props, {}> {
       const result = this.props.selectedBuilding.repair();
       if(result){
         CoinLabels.add(e.clientX, e.clientY, repairPrice || 0, 2000);
-        this.setGreenTransition(infoItem.id);
+        this.setParameterGreenTransition(infoItem.id);
       }
       this.forceUpdate();
       BuildingButtons.hideRepairButton();
     }
   }
 
-  setGreenTransition(id: string){
+  setParameterGreenTransition(id: string){
     const elements = document.getElementsByClassName('upgrade__parameter--' + id);
     if(elements && elements.length){
       const element: HTMLElement = elements[0] as HTMLElement;
@@ -240,7 +251,7 @@ export class Upgrade extends React.Component<Props, {}> {
                                       <img className='nodrag upgrade__parameter-price-image' src={CoinImage}/>
                                     </span>
 
-                                    <button className='upgrade__parameter-button' disabled={infoItem.priceToImprove > Gamer.coins} onClick={(e) => this.improve(infoItem, e)}>+</button>
+                                    <button className='upgrade__parameter-button' disabled={infoItem.priceToImprove > Gamer.coins} onClick={(e) => this.improveParameter(infoItem, e)}>+</button>
                                   </div>
                                 : null}
                             
@@ -254,24 +265,26 @@ export class Upgrade extends React.Component<Props, {}> {
                 <div className="upgrade__upgrade-items">
                   {this.props.selectedBuilding?.improvements.map((improvement, i) => {
                     return (<div className='upgrade__upgrade-item' key={i}>
-                      <img className='upgrade__upgrade-item-image' src={improvement.image.src} />
+                      {improvement.image?.src 
+                        ? <img className='upgrade__upgrade-item-image' src={improvement.image.src} /> 
+                        : null}
+                      
                       <div className='upgrade__upgrade-item-body'>
-                        <div className='upgrade__upgrade-item-description'>{improvement.description}</div>
                         <div className='upgrade__upgrade-item-label'>{improvement.label}</div>
                         <div className='upgrade__upgrade-item-info-items'>{improvement.infoItems.map((infoItem, i) => {
-                          return (<span className='upgrade__upgrade-item-info-item'>
+                          return (<span className='upgrade__upgrade-item-info-item' key={i}>
                             {infoItem.value}
                             <img className='upgrade__upgrade-item-info-item-image' src={infoItem.icon?.src}/>
                           </span>);
                         })}</div>
                       </div>
-                      <div className='upgrade__upgrade-item-button-buy'>
+                      <button className='upgrade__upgrade-item-button-buy'  disabled={improvement.priceToImprove > Gamer.coins} onClick={(e) => this.improve(improvement, e)}>
                         <div className='upgrade__upgrade-item-button-buy-price'>
-                          {improvement.price}
+                          {improvement.priceToImprove}
                           <img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/>
                         </div>
                         <div className='upgrade__upgrade-item-button-buy-text'>Купить</div>
-                      </div>
+                      </button>
                     </div>);
                   })}
                 </div>

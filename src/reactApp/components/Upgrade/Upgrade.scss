@@ -245,11 +245,13 @@
 		}
 
 		&-button-buy{
-			display: inline-block;
 			cursor: pointer;
 			font-family: 'AnotherCastle3';
 			color: #ffc541;
 			align-self: center;
+			background-color: transparent;
+			border: 0;
+			outline: none;
 
 			&-image{
 				width: 12px;
@@ -266,6 +268,19 @@
 
 			&:hover > &-text{
 				color: #f01313;
+			}
+
+			&:disabled{
+				cursor: not-allowed;
+				color: #7e7e7e !important;
+			}
+
+			&:disabled > &-text{
+				color: #7e7e7e !important;
+			}
+
+			&:disabled:hover{
+				color: #f01313 !important;
 			}
 		}
 	}

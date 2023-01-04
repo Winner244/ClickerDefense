@@ -23,11 +23,9 @@ export class Barricade extends Building{
 
 	static readonly damageMirrorPercentage: number = 10; //количество возвращаемого монстрам урона (%)
 	static readonly damageIronMirrorPercentage: number = 20; //количество возвращаемого монстрам урона от железной версии (%)
-	readonly damageMirrorPercentage: number = 10; //количество возвращаемого монстрам урона (%) - у экземпляра
+	damageMirrorPercentage: number = 10; //количество возвращаемого монстрам урона (%) - у экземпляра
 
 	static readonly improvementIronShield: number = 1; //кол-во добавляемой брони для железной версии
-
-	static readonly improvementIron = new Improvement('Железные шипы', 100, 'Прочнее и возвращает больше урона.');
 
 	constructor(x: number) {
 		super(x, 
@@ -43,7 +41,6 @@ export class Barricade extends Building{
 			
 		this.maxImpulse = 2;
 		this.impulseForceDecreasing = 5;
-		this.improvements.push(Barricade.improvementIron);
 
 		Barricade.init(true); //reserve
 	}
@@ -54,12 +51,21 @@ export class Barricade extends Building{
 		}
 	}
 	
-	static loadResourcesAfterBuild() {
-		this.improvementIron.image.src = BarricadeIronImage;
-		this.improvementIron.infoItems = [
+	static loadResourcesAfterBuild() {}
+
+	loadedResourcesAfterBuild(){
+		super.loadedResourcesAfterBuild();
+
+		this.improvements.push(new Improvement('Железные шипы', 100, BarricadeIronImage, () => this.impoveToIron(), [
 			new ImprovementInfoItem(`+${(Barricade.damageIronMirrorPercentage - Barricade.damageMirrorPercentage)}%`, SwordIcon),
 			new ImprovementInfoItem(`+${Barricade.improvementIronShield}`, ShieldIcon)
-		];
+		]));
+	}
+
+	impoveToIron(){
+		this.defense += Barricade.improvementIronShield;
+		this.damageMirrorPercentage = Barricade.damageIronMirrorPercentage;
+		this.image.src = BarricadeIronImage;
 	}
 
 	get centerY(){

@@ -35,14 +35,13 @@ export class Tower extends Building{
 	static readonly price: number = 50; //цена здания
 	static readonly initArrowSpeed: number = 500; 
 
-	static readonly improvementFireArrows = new Improvement('Огненные стрелы', 100, 'Поджигает монстров.');
-
 	//поля свойства экземпляра
 	bowmans: number = 1; //кол-во лучников
 	damage: number = 1; //урон от одной атаки
 	arrowSpeed: number = Tower.initArrowSpeed; //скорость полёта стрелы (в пикселях за секунду)
 	radiusAttack: number = 400; //радиус атаки
 	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
+	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
 
 	//технические поля экземпляра
 	private _rechargeLeftTimeMs: number = 0; //сколько осталось времени перезарядки (миллисекунды)
@@ -66,11 +65,6 @@ export class Tower extends Building{
 		this.maxImpulse = 5;
 		this.impulseForceDecreasing = 5;
 
-		this.improvements.push(Tower.improvementFireArrows);
-		this.improvements.push(new Improvement('Эмс', 20, 'эээ')); //TODO: delete after testing
-		this.improvements.push(new Improvement('something', 50, 'эээ')); //TODO: delete after testing
-		this.improvements.push(new Improvement('T', 20, 'эээ')); //TODO: delete after testing
-
 		Tower.init(true); //reserve
 	}
 
@@ -83,11 +77,6 @@ export class Tower extends Building{
 	static loadResourcesAfterBuild() {
 		this.imageArrow.src = arrowImage; 
 
-		this.improvementFireArrows.image.src = fireArrowImage;
-		this.improvementFireArrows.infoItems = [
-			new ImprovementInfoItem('+', fireIcon)
-		];
-
 		AudioSystem.load(arrowStrikeSound);
 	}
 
@@ -99,6 +88,14 @@ export class Tower extends Building{
 		this.infoItems.splice(3, 0, new InfoItem('Перезарядка', () => (this.rechargeTimeMs / 1000).toFixed(2) + ' сек', rechargeIcon, 40, () => this.rechargeTimeMs *= 0.9));
 		this.infoItems.splice(4, 0, new InfoItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 40, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new InfoItem('Скорость стрел', () => this.arrowSpeed, '', 10, () => this.arrowSpeed += 150));
+
+		this.improvements.push( new Improvement('Огненные стрелы', 100, fireArrowImage, () => this.improveToFireArrows(), [
+			new ImprovementInfoItem('+', fireIcon)
+		]));
+	}
+
+	improveToFireArrows(){
+		this.isHasFireArrows = true;
 	}
 
 	get centerY(){
