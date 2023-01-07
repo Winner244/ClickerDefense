@@ -11,7 +11,7 @@ import './Upgrade.scss';
 import {CoinLabels} from '../CoinLabels/CoinLabels';
 
 
-import InfoItem from '../../../models/InfoItem';
+import ParameterItem from '../../../models/ParameterItem';
 import Improvement from '../../../models/Improvement';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
@@ -141,7 +141,7 @@ export class Upgrade extends React.Component<Props, {}> {
     document.removeEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
-  improveParameter(infoItem : InfoItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
+  improveParameter(infoItem : ParameterItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
     const result = infoItem.improve();
     if(result){
       this.forceUpdate();
@@ -160,11 +160,11 @@ export class Upgrade extends React.Component<Props, {}> {
       if(this.props.selectedBuilding){
         //Builder.upgradeBuilding(this.props.selectedBuilding);
       }
-      //this.setImprovementGreenTransition(infoItem.id);
+      this.setImprovementGreenTransition(improvement.id);
     }
   }
 
-  repair(infoItem : InfoItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
+  repair(infoItem : ParameterItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
     if(this.props.selectedBuilding) {
       const repairPrice = this.props.selectedBuilding.getRepairPrice();
       const result = this.props.selectedBuilding.repair();
@@ -175,6 +175,10 @@ export class Upgrade extends React.Component<Props, {}> {
       this.forceUpdate();
       BuildingButtons.hideRepairButton();
     }
+  }
+
+  setImprovementGreenTransition(id: string){
+
   }
 
   setParameterGreenTransition(id: string){
@@ -266,44 +270,44 @@ export class Upgrade extends React.Component<Props, {}> {
 
                   </ul>
                 </div>
-                <div className="upgrade__upgrade-items">
+                <div className="upgrade__improvement-items">
                   {this.props.selectedBuilding?.improvements.map((improvement, i) => {
-                    return (<div className={'upgrade__upgrade-item ' + (improvement.isImproved ? 'upgrade__upgrade-item--improved' : '')} key={i}>
+                    return (<div className={'upgrade__improvement-item ' + ('upgrade__improvement--' + improvement.id) + (improvement.isImproved ? ' upgrade__improvement-item--improved' : '')} key={i}>
                       {improvement.image?.src 
-                        ? <img className='upgrade__upgrade-item-image' src={improvement.image.src} /> 
+                        ? <img className='upgrade__improvement-item-image' src={improvement.image.src} /> 
                         : null}
                       
-                      <div className='upgrade__upgrade-item-body'>
-                        <div className='upgrade__upgrade-item-label'>{improvement.label}</div>
-                        <div className='upgrade__upgrade-item-info-items'>{improvement.infoItems.map((infoItem, i) => {
-                          return (<span className='upgrade__upgrade-item-info-item' key={i}>
+                      <div className='upgrade__improvement-item-body'>
+                        <div className='upgrade__improvement-item-label'>{improvement.label}</div>
+                        <div className='upgrade__improvement-item-info-items'>{improvement.infoItems.map((infoItem, i) => {
+                          return (<span className='upgrade__improvement-item-info-item' key={i}>
                             {infoItem.value}
-                            <img className='upgrade__upgrade-item-info-item-image' src={infoItem.icon?.src}/>
+                            <img className='upgrade__improvement-item-info-item-image' src={infoItem.icon?.src}/>
                           </span>);
                         })}</div>
                       </div>
 
                       {improvement.isImproved 
-                        ? <div className='upgrade__upgrade-item-bought-text' >Куплено</div>
-                        : <button className='upgrade__upgrade-item-button-buy'  disabled={improvement.priceToImprove > Gamer.coins} onClick={(e) => this.improve(improvement, e)}>
-                            <div className='upgrade__upgrade-item-button-buy-price'>
+                        ? <div className='upgrade__improvement-item-bought-text' >Куплено</div>
+                        : <button className='upgrade__improvement-item-button-buy'  disabled={improvement.priceToImprove > Gamer.coins} onClick={(e) => this.improve(improvement, e)}>
+                            <div className='upgrade__improvement-item-button-buy-price'>
                               {improvement.priceToImprove}
-                              <img className='upgrade__upgrade-item-button-buy-image nodrag' src={CoinImage}/>
+                              <img className='upgrade__improvement-item-button-buy-image nodrag' src={CoinImage}/>
                             </div>
-                            <div className='upgrade__upgrade-item-button-buy-text'>Купить</div>
+                            <div className='upgrade__improvement-item-button-buy-text'>Купить</div>
                           </button>
                       }
                       
 
                       {improvement.isImproved 
-                        ? <div className='upgrade__upgrade-item-curtain'></div>
+                        ? <div className='upgrade__improvement-item-curtain'></div>
                         : null
                       }
                     </div>);
                   })}
                 </div>
               </div>
-              <div className="upgrade__upgraded-box"></div>
+              <div className="upgrade__improvementd-box"></div>
             </div>
         </div>
     </div>

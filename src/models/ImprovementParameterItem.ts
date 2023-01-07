@@ -1,4 +1,5 @@
-export default class ImprovementInfoItem{
+/** Улучшаяемый параметр/характеристика предмета */
+export default class ImprovementParameterItem{
 	value: string; //значение улучшения
 	icon: HTMLImageElement|null; //иконка улучшаемой характеристики 
 

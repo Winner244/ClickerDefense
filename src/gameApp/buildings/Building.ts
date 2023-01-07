@@ -3,7 +3,7 @@ import {Gamer} from '../gamer/Gamer';
 import {Monster} from '../monsters/Monster';
 
 import ShopItem from '../../models/ShopItem';
-import InfoItem from '../../models/InfoItem';
+import ParameterItem from '../../models/ParameterItem';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import Improvement from '../../models/Improvement';
 
@@ -54,7 +54,7 @@ export class Building extends ShopItem{
 	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
 	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
 
-	infoItems: InfoItem[];  //информация отображаемая в окне строения
+	infoItems: ParameterItem[];  //информация отображаемая в окне строения
 	improvements: Improvement[]; //улучшения здания
 
 	repairPricePerHealth: number; //сколько стоит 1 хп починить
@@ -147,9 +147,9 @@ export class Building extends ShopItem{
 
 	loadedResourcesAfterBuild(){
 		this.infoItems = [
-			new InfoItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
+			new ParameterItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
-			new InfoItem('Защита', () => this.defense, ShieldIcon)
+			new ParameterItem('Защита', () => this.defense, ShieldIcon)
 		];
 	}
 

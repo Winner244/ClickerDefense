@@ -3,7 +3,8 @@ import {Gamer} from "../gameApp/gamer/Gamer";
 import {Helper} from "../gameApp/helpers/Helper";
 
 
-export default class InfoItem{
+/** Параметр/Характеристика предмета (сила, броня, скорость, ...) */
+export default class ParameterItem{
 	readonly id: string; //guid
 	readonly label: string; //название характеристики
 	readonly icon: HTMLImageElement|null; //иконка характеристики 

@@ -315,6 +315,30 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Баррикада - Железная версия",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var zombie1 = new Zombie(650, 780, true, 1);
+                Monsters.all.push(zombie1);
+
+                var barricade1 = new Barricade(700);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+
+                var zombie2 = new Zombie(1200, 780, false, 1);
+                Monsters.all.push(zombie2);
+
+                var barricade2 = new Barricade(1100);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
             key: "Башня - несколько лучников",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

@@ -7,7 +7,7 @@ import {Labels} from '../labels/Labels';
 import {Monster} from '../monsters/Monster';
 
 import Improvement from '../../models/Improvement';
-import ImprovementInfoItem from '../../models/ImprovementInfoItem';
+import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
 import BarricadeImage from '../../assets/img/buildings/barricade/barricade.png';  
 import BarricadeIronImage from '../../assets/img/buildings/barricade/barricadeIron.png';  
@@ -57,8 +57,8 @@ export class Barricade extends Building{
 		super.loadedResourcesAfterBuild();
 
 		this.improvements.push(new Improvement('Железные шипы', 100, BarricadeIronImage, () => this.impoveToIron(), [
-			new ImprovementInfoItem(`+${(Barricade.damageIronMirrorPercentage - Barricade.damageMirrorPercentage)}%`, SwordIcon),
-			new ImprovementInfoItem(`+${Barricade.improvementIronShield}`, ShieldIcon)
+			new ImprovementParameterItem(`+${(Barricade.damageIronMirrorPercentage - Barricade.damageMirrorPercentage)}%`, SwordIcon),
+			new ImprovementParameterItem(`+${Barricade.improvementIronShield}`, ShieldIcon)
 		]));
 	}
 

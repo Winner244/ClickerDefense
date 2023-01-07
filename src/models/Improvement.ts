@@ -1,11 +1,16 @@
-import { Gamer } from "../gameApp/gamer/Gamer";
-import ImprovementInfoItem from "./ImprovementInfoItem";
+import {Gamer} from "../gameApp/gamer/Gamer";
+
+import {Helper} from "../gameApp/helpers/Helper";
+
+import ImprovementParameterItem from "./ImprovementParameterItem";
+
 
 // Улучшение для зданий/юнитов
 export default class Improvement{
+	readonly id: string; //guid
 	readonly label: string; //название улучшения/апгрейда
 	readonly image: HTMLImageElement|null; //картинка 
-	readonly infoItems: ImprovementInfoItem[]; //отображает улучшаемые характеристики и значение улучшения (+50%, +1, ...)
+	readonly infoItems: ImprovementParameterItem[]; //отображает улучшаемые характеристики и значение улучшения (+50%, +1, ...)
 
 	priceToImprove: number; //цена
 
@@ -17,8 +22,9 @@ export default class Improvement{
 		priceToImprove: number, 
 		imageSrc: string = '', 
 		improve: () => void = () => {},
-		infoItems: ImprovementInfoItem[] = [])
+		infoItems: ImprovementParameterItem[] = [])
 	{
+		this.id = Helper.generateUid();
 		this.label = label;
 		this.priceToImprove = priceToImprove;
 
