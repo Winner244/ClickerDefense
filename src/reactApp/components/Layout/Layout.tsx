@@ -15,12 +15,12 @@ export default class Layout extends React.Component<Props, {}> {
     public render() {
         return <div>
             <GameDisplay />
+            {this.props.children}
             <Menu />
             <Shop />
             <BuildingButtons />
             <Upgrade />
             <CoinLabels />
-            {this.props.children}
         </div>;
     }
 }
