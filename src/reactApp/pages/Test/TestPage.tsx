@@ -28,67 +28,45 @@ import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 class TestPage extends React.Component {
     text: string = "";
 
-    componentDidMount(){
-        var waitLoadingImage = function(imageHandler: ImageHandler, callback: Function){
-            setTimeout(() => {
-                if(imageHandler.isImagesCompleted){
-                    callback();
-                }
-                else{
-                    waitLoadingImage(imageHandler, callback);
-                }
-            }, 100);
-        }
-
-        let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
-
-        //pre load sounds/images
-        Buildings.loadResources();
-        Building.loadRepairResources();
-        Building.loadUpgradeResources();
-        Monster.loadHitSounds();
-        Tower.loadRepairResources();
-        Tower.loadResourcesAfterBuild();
-        Barricade.loadResourcesAfterBuild();
-        Tower.loadUpgradeResources();
-        var tower1 = new Tower(200);
-        tower1.loadedResourcesAfterBuild();
-        var tower2 = new Tower(1200);
-        tower2.loadedResourcesAfterBuild();
-        var barricade1 = new Barricade(200);
-        barricade1.loadedResourcesAfterBuild();
-        var barricade2 = new Barricade(1400);
-        barricade2.loadedResourcesAfterBuild();
-        Boar.init(true);
-        Zombie.init(true);
-        Bat.init(true);
-
-        switch(+variant){
-            case 1: 
-                this.text = "Разрушение строений";
+    listOfTests = [
+        {
+            key: "Разрушение строений", 
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                
+                var tower1 = new Tower(200);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
-                barricade1.x = 500;
+
+                var barricade1 = new Barricade(500);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
+
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 500);
                 setTimeout(() => Buildings.all[Buildings.all.length - 1].health = 0, 700);
-            break;
+            }
+        },
 
-            case 2: 
-                this.text = "Авто строительство башни";
+        {
+            key: "Авто строительство башни",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 setTimeout(() => {
+                    var tower1 = new Tower(200);
+                    tower1.loadedResourcesAfterBuild();
                     Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Game.bottomShiftBorder);
                     Builder.mouseLogic(200, 0, true, false)
                 }, 300);
-                break;
+            }
+        },
 
-            case 3: 
-                this.text = "Ручной ремонт + disabled ремонт для второго строения + нет кнопок ремонта/апгрейда у земли и каната";
+        {
+            key: "Ручной ремонт + disabled ремонт для второго строения + нет кнопок ремонта/апгрейда у земли и каната",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -96,20 +74,33 @@ class TestPage extends React.Component {
                 Gamer.coins = 12;
                 Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
-				Menu.displayNewWaveButton();
+                Menu.displayNewWaveButton();
+
+                var barricade1 = new Barricade(200);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
-                tower1.x = 500;
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
+
+                var barricade2 = new Barricade(1400);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
+
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
                 Buildings.all.push(tower2);
 
                 Buildings.all[Buildings.all.length - 1].health-=40;
                 Buildings.all[Buildings.all.length - 2].health-=100;
 
-                break;
+            }
+        },
 
-            case 4: 
-                this.text = "Кнопки управления зданиями появляются только после окончания волны";
+        {
+            key: "Кнопки управления зданиями появляются только после окончания волны",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Gamer.coins = 500;
@@ -117,19 +108,29 @@ class TestPage extends React.Component {
                 Waves.isStarted = true;
                 Waves.all[0][Zombie.name] = new WaveData(1, 30, 0);
 
-                barricade1.x = 600;
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
-                tower1.x = 700;
+                
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
+
                 setTimeout(() => Buildings.all.forEach(x => x.health-= 10), 300);
 
-                barricade2.x = 1300;
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
 
-            case 5: 
-                this.text = "Магазин (постройка и улучшение)";
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+            }
+        },
+
+        {
+            key: "Магазин (постройка и улучшение)",
+            code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -137,12 +138,14 @@ class TestPage extends React.Component {
                 Waves.isStarted = false;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
-				Menu.displayNewWaveButton();
+                Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
-                break;
+            }
+        },
 
-            case 6: 
-                this.text = "Спец способность кабана + отмена при получении урона";
+        {
+            key: "Кабан - Спец способность + отмена при получении урона",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -161,11 +164,13 @@ class TestPage extends React.Component {
 
                 var boar2 = new Boar(1850, 780, false, 1, true);
                 boar2.health--;
-               // Monsters.all.push(boar2);
-                break;
+            // Monsters.all.push(boar2);
+        }
+    },
 
-            case 7: 
-                this.text = "Передача импульса от спец способность кабана к башне (слева)";
+    {
+        key: "Кабан - передача импульса от спец способности кабана к башне (слева)",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -178,18 +183,21 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                tower1.x = 700;
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
 
-                waitLoadingImage(Boar.imageHandler, () => {
+                this.waitLoadingImage(Boar.imageHandler, () => {
                     var boar = new Boar(50, 780, true, 1, true);
                     boar.health--;
                     Monsters.all.push(boar);
                 });
-                break;
+            }
+        },
 
-            case 8:
-                this.text = "Передача импульса от спец способность кабана к башне (справа)";
+        {
+            key: "Кабан - передача импульса от спец способности кабана к башне (справа)",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -202,18 +210,21 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                tower1.x = 1100;
+                var tower1 = new Tower(1100);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
 
-                waitLoadingImage(Boar.imageHandler, () => {
+                this.waitLoadingImage(Boar.imageHandler, () => {
                     var boar2 = new Boar(1850, 780, false, 1, true);
                     boar2.health--;
                     Monsters.all.push(boar2);
                 });
-                break;
+            }
+        },
 
-            case 9: 
-                this.text = "Расстояние срабатывания Спец способность кабана";
+        {
+            key: "Кабан - расстояние срабатывания Спец способности",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -233,25 +244,39 @@ class TestPage extends React.Component {
                 }
 
                 Buildings.all.forEach(x => x.healthMax = x.health = 400);
-                break;
+            }
+        },
 
-            case 10: 
-                this.text = "Баррикада - возврат урона - зомби";
+        {
+            key: "Баррикада - возврат урона - зомби",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var barricade1 = new Barricade(200);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
-                tower1.x = 500;
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
-            break;
+            }
+        },
 
-            case 11: 
-                this.text = "Баррикада - возврат урона - кабаны";
+        {
+            key: "Баррикада - возврат урона - кабаны",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var barricade1 = new Barricade(200);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
-                barricade2.x = 1600;
+
+                var barricade2 = new Barricade(1600);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
 
                 var boar = new Boar(50, 780, true, 1, true);
@@ -261,15 +286,22 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar);
 
                 Waves.isStarted = false;
-            break;
+            }
+        },
 
-            case 12:
-                this.text = "Баррикада - возврат урона - спец способность кабанов"; 
+        {
+            key: "Баррикада - возврат урона - спец способность кабанов",
+            code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                barricade1.x = 600;
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
+
+                var barricade2 = new Barricade(1400);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
 
                 var boar = new Boar(0, 780, true, 1, true);
@@ -279,52 +311,72 @@ class TestPage extends React.Component {
                 Monsters.all.push(boar);
 
                 Waves.isStarted = false;
-            break;
+            }
+        },
 
-            case 13: 
-                this.text = "Несколько лучников на башнях";
+        {
+            key: "Башня - несколько лучников",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
 
-                tower1.x = 500;
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
                 tower1.bowmans = 3;
-                barricade1.x = 400;
-                Buildings.all.push(barricade1);
                 Buildings.all.push(tower1);
 
-                tower2.x = 1500;
-                tower2.bowmans = 2;
-                barricade2.x = 1600;
-                Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
+                var barricade1 = new Barricade(400);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+                
 
-            case 14: 
-                this.text = "Скоростные стрелы у башен";
+                var tower2 = new Tower(1500);
+                tower2.loadedResourcesAfterBuild();
+                tower2.bowmans = 2;
+                Buildings.all.push(tower2);
+
+
+                var barricade2 = new Barricade(1600);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "Башня - скоростные стрелы",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
 
-                tower1.x = 500;
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
                 tower1.bowmans = 2;
                 tower1.arrowSpeed = 2000;
                 tower1.radiusAttack = 500;
-                barricade1.x = 400;
-                Buildings.all.push(barricade1);
                 Buildings.all.push(tower1);
 
-                tower2.x = 1500;
+                var barricade1 = new Barricade(400);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1500);
+                tower2.loadedResourcesAfterBuild();
                 tower2.arrowSpeed = 2000;
                 Buildings.all.push(tower2);
-                barricade2.x = 1500;
+                
+                var barricade2 = new Barricade(1500);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
-                break;
+            }
+        },
 
-            case 15: 
-                this.text = "Атака зомби";
+        {
+            key: "Атака зомби",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -339,10 +391,12 @@ class TestPage extends React.Component {
 
                 var zombie = new Zombie(800, 780, true, 1);
                 Monsters.all.push(zombie);
-                break;
+            }
+        },
 
-            case 16: 
-                this.text = "Атака кабана";
+        {
+            key: "Атака кабана",
+            code: () => {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -358,10 +412,12 @@ class TestPage extends React.Component {
 
                 var boar = new Boar(1000, 780, true, 1, true);
                 Monsters.all.push(boar);
-                break;
+            }
+        },
 
-            case 17: 
-                this.text = "Атака летучей мыши";
+        {
+            key: "Атака летучей мыши",
+            code: () => {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -377,43 +433,64 @@ class TestPage extends React.Component {
 
                 var bat = new Bat(700, 380, true, 1);
                 Monsters.all.push(bat);
-                break;
+            }
+        },
 
-            case 18: 
-                this.text = "Вторая волна";
+        {
+            key: "Волна 2",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 1;
-                tower1.x = 700;
+                
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
-                tower2.x = 1200;
-                Buildings.all.push(tower2);
-                barricade1.x = 600;
-                Buildings.all.push(barricade1);
-                barricade2.x = 1300;
-                Buildings.all.push(barricade2);
-                break;
 
-            case 19: 
-                this.text = "Волна 3"; 
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "Волна 3",
+            code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 2;
 
-                barricade1.x = 600;
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
-                tower1.x = 700;
+                
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
 
-                barricade2.x = 1300;
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
 
-            case 20: 
-                this.text = "Полёт летучих мышей";
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+            }
+        },
+
+        {
+            key: "Полёт летучих мышей",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
@@ -422,23 +499,37 @@ class TestPage extends React.Component {
                     [Bat.name]: new WaveData(30, 60, 0)
                 }];
 
-                barricade1.x = 600;
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
-                tower1.x = 700;
+
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
 
-                barricade2.x = 1300;
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
-                Buildings.all.push(tower2);
-                break;
 
-            case 21: 
-                this.text = "Image Handler, loading images, waiting images"; 
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+            }
+        },
+
+        {
+            key: "Image Handler, loading images, waiting images",
+            code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                barricade1.x = 600;
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
                 Buildings.all.push(tower2);
                 setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
 
@@ -451,10 +542,12 @@ class TestPage extends React.Component {
                 setTimeout(() => Monsters.all.forEach(x => x.health--), 300);
 
                 Waves.isStarted = false;
-            break;
+            }
+        },
 
-            case 22: 
-                this.text = "Game Over - bottom";
+        {
+            key: "Game Over - bottom",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                     Waves.waveCurrent = 0;
@@ -472,10 +565,12 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.flyEarthRope.health-=10, 1400);
                 setTimeout(() => Buildings.flyEarthRope.health-=10, 1500);
                 setTimeout(() => Buildings.flyEarthRope.health-=100, 1800);
-                break;
+            }
+        },
 
-            case 23: 
-                this.text = "Game Over - top";
+        {
+            key: "Game Over - top",
+            code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                     Waves.waveCurrent = 0;
@@ -493,25 +588,75 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.flyEarth.health-=10, 1400);
                 setTimeout(() => Buildings.flyEarth.health-=10, 1500);
                 setTimeout(() => Buildings.flyEarth.health-=100, 1800);
-                break;
+            }
+        },
+    ];
 
+    waitLoadingImage(imageHandler: ImageHandler, callback: Function){
+        setTimeout(() => {
+            if(imageHandler.isImagesCompleted){
+                callback();
+            }
+            else{
+                this.waitLoadingImage(imageHandler, callback);
+            }
+        }, 100);
+    }
 
-            default:
-                this.text = "Тест не выбран либо такого теста нету";
-                break;
+    getSelectedTestNumber(): number {
+        return +(Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v']);
+    }
 
+    componentDidMount(){
+        //pre load sounds/images
+        Buildings.loadResources();
+        Building.loadRepairResources();
+        Building.loadUpgradeResources();
+        Monster.loadHitSounds();
+        Tower.loadRepairResources();
+        Tower.loadResourcesAfterBuild();
+        Barricade.loadResourcesAfterBuild();
+        Tower.loadUpgradeResources();
+        Boar.init(true);
+        Zombie.init(true);
+        Bat.init(true);
+
+        const variant = this.getSelectedTestNumber();
+        if(variant > 0){
+            var test = this.listOfTests[variant - 1];
+            if(test){
+                this.text = test.key;
+                test.code();
+            }
+        }
+
+        if(!this.text){
+            App.Store.dispatch(MenuStore.actionCreators.close());
+            App.Store.dispatch(MenuStore.actionCreators.hideOutsideButtons());
         }
 
         this.forceUpdate();
     }
 
     public render() {
-        let variant: any = Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v'];
+        const variant = this.getSelectedTestNumber();
+
+        if(this.text){
+            return <div className='test-page'>
+                <div className='test-page__name-test noselect'>{this.text}</div>
+                <a className='test-page__button-all' href={'/test'}>all</a>
+                <a className='test-page__button-next' href={'/test?v=' + (variant + 1)}>Next test</a>
+            </div>;
+        }
 
         return <div className='test-page'>
-                <div className='test-page__label noselect'>{this.text}</div>
-                <a className='test-page__button-next' href={'/test?v=' + (+variant + 1)}>Next test</a>
-            </div>;
+            <div className='test-page__list'>
+                <div className='test-page__header-list-tests'>Список тестов:</div>
+                {this.listOfTests.map((test, i) => {
+                    return <div key={i}><a className='test-page__link-test' href={'/test?v=' + (i + 1)}>{test.key}</a></div>
+                })}
+            </div>
+        </div>;
     }
 }
 
