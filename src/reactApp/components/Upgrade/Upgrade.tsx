@@ -160,7 +160,7 @@ export class Upgrade extends React.Component<Props, {}> {
       CoinLabels.add(e.clientX, e.clientY, improvement.priceToImprove || 0, 2000);
       AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
       if(this.props.selectedBuilding){
-        //Builder.upgradeBuilding(this.props.selectedBuilding);
+        Builder.upgradeBuilding(this.props.selectedBuilding);
       }
     }
   }

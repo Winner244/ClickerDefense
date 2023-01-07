@@ -210,7 +210,7 @@ export class Game {
 		let isWaveStarted = Waves.isStarted && Waves.delayStartLeftTimeMs <= 0;
 		let isWaveEnded = !Waves.isStarted && Waves.delayEndLeftTimeMs <= 0;
 
-		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick);
+		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick, Buildings.all, this.loadResourcesAfterBuild.bind(this));
 
 		let isSetCursor = false;
 		if(!isSetCursor){

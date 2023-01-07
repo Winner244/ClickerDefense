@@ -1,11 +1,9 @@
 import {Draw} from '../gameSystems/Draw';
-import {Game} from '../gameSystems/Game';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import {Labels} from '../labels/Labels';
 
 import {Building} from './Building';
-import {Buildings} from './Buildings';
 
 import {Gamer} from '../gamer/Gamer';
 
@@ -50,10 +48,10 @@ export class Builder {
 		this.selectedBuildingForBuild = null;
 	}
 
-	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean){
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean, buildingsAll: Building[], loadResourcesAfterBuild: (building: Building) => void){
 		if(this.selectedBuildingForBuild && !this._isDrawSmoke){
 			this.selectedBuildingForBuild.x = mouseX - this.selectedBuildingForBuild.width / 2;
-			this._isAnotherBuilding = Buildings.all.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
+			this._isAnotherBuilding = buildingsAll.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
 			if(isClick && !this._isAnotherBuilding){
 				Gamer.coins -= this.selectedBuildingForBuild.price;
 				Labels.createCoinLabel(
@@ -62,11 +60,11 @@ export class Builder {
 					'-' + this.selectedBuildingForBuild.price,
 					2000);
 				
-				Buildings.all.push(this.selectedBuildingForBuild);
+				buildingsAll.push(this.selectedBuildingForBuild);
 				this._isDrawSmoke = true;
 				this.smokeAnimation.restart();
 				AudioSystem.play(mouseX, BuildSoundUrl, 0.15);
-				Game.loadResourcesAfterBuild(this.selectedBuildingForBuild);
+				loadResourcesAfterBuild(this.selectedBuildingForBuild);
 				return;
 			}
 			else if(isRightClick){

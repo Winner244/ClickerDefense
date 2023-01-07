@@ -59,7 +59,7 @@ class TestPage extends React.Component {
                     var tower1 = new Tower(200);
                     tower1.loadedResourcesAfterBuild();
                     Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Game.bottomShiftBorder);
-                    Builder.mouseLogic(200, 0, true, false)
+                    Builder.mouseLogic(200, 0, true, false, Buildings.all, Game.loadResourcesAfterBuild.bind(Game));
                 }, 300);
             }
         },
@@ -72,6 +72,7 @@ class TestPage extends React.Component {
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = false;
                 Gamer.coins = 12;
+                //Gamer.coins = 112;
                 Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -644,6 +645,7 @@ class TestPage extends React.Component {
         Boar.init(true);
         Zombie.init(true);
         Bat.init(true);
+        Builder.init(true);
 
         const variant = this.getSelectedTestNumber();
         if(variant > 0){
