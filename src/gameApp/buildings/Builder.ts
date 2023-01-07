@@ -43,6 +43,7 @@ export class Builder {
 	static upgradeBuilding(building: Building){
 		this.selectedBuildingForBuild = building;
 		this._isDrawSmoke = true;
+		this.smokeAnimation.restart();
 	}
 
 	static finish(){

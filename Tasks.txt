@@ -68,10 +68,24 @@
 			> анимация улучшения 
 				Builder можно подключить с анимацией 
 					есть проблмеа в циклических зависимостях 
-					при добавлении Builder в Upgrade (если убрать Game и Buildings из Builder то работает)
-						Upgrade юзается только в Game 
+					при добавлении Builder в Upgrade - возникает ошибка 
+						Upgrade юзается в Game, BuildingButtons, Menu
+							если убрать Upgrade из BuildingButtons то всё ок, но тогда и окно апгрейда не появляется 
+							если убрать только из Game и Menu то ошибка остаётся
+							а зачем оно нужно в Game и в Menu ?
 							если убрать все зависимости из Upgrade то ошибка остаётся 
-						Builder юзается в Game и в TestPage (если там убрать то ничего не меняется)
+						Builder юзается в Game и в TestPage (если в обоих убрать то ошибка остаётся)
+							если убрать из него Game и Buildings то всё ок
+						BuildingButtons
+							он юзается в Game, Building, Buildings, Menu, Upgrade
+								Building есть в Upgrade и в Builder 
+									Buildings есть только в Builder 
+									Menu Нигде нету 
+									Game есть только в Builder (если убрать - ничего не меняется)
+							если убрать Building из BuildingButtons то ошибка остаётся
+
+						Game так же нельзя заюзать из Upgrade - ошибка та же
+
 			ok. проверка на стоимость и баланс 
 				ok. disable кнопку если нехватает монеток
 			ok. отображать некий предмет после улучшения на строении (по координатам) означающий что улучшение проведено 
