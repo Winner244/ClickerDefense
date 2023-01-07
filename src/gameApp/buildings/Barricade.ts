@@ -65,6 +65,7 @@ export class Barricade extends Building{
 	impoveToIron(){
 		this.defense += Barricade.improvementIronShield;
 		this.damageMirrorPercentage = Barricade.damageIronMirrorPercentage;
+		this.image = new Image();
 		this.image.src = BarricadeIronImage;
 	}
 

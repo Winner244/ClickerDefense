@@ -218,6 +218,19 @@
 
 		&--improved{
 			background-color: #163000 !important;
+			transition: background-color 0s linear;
+		}
+
+		&--flash{
+			background-color: #73ff00 !important;
+		}
+		
+		&--transition{
+			transition: background-color 0.5s linear !important;
+		}
+		
+		&--no-transition{
+			transition: background-color 0s linear !important;
 		}
 
 		&-bought-text{
@@ -228,6 +241,7 @@
 		}
 
 		&-curtain{
+			transition: background-color 0.5s linear;
 			background-color: rgba(0, 0, 0, 0.5);
 			position: absolute;
 			top: 0;
