@@ -219,6 +219,9 @@
 		&--improved{
 			background-color: #163000 !important;
 			transition: background-color 0s linear;
+			justify-content: start;
+
+
 		}
 
 		&--flash{
@@ -234,6 +237,8 @@
 		}
 
 		&-bought-text{
+			position: absolute;
+			right: 0;
 			font-family: 'AnotherCastle3';
 			font-size: 14px;
 			align-self: center;
