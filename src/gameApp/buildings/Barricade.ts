@@ -56,7 +56,7 @@ export class Barricade extends Building{
 	loadedResourcesAfterBuild(){
 		super.loadedResourcesAfterBuild();
 
-		this.improvements.push(new Improvement('Железные шипы', 100, BarricadeIronImage, () => this.impoveToIron(), [
+		this.improvements.push(new Improvement('Железные шипы', 200, BarricadeIronImage, () => this.impoveToIron(), [
 			new ImprovementParameterItem(`+${(Barricade.damageIronMirrorPercentage - Barricade.damageMirrorPercentage)}%`, SwordIcon),
 			new ImprovementParameterItem(`+${Barricade.improvementIronShield}`, ShieldIcon)
 		]));

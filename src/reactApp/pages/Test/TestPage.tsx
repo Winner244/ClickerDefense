@@ -72,7 +72,7 @@ class TestPage extends React.Component {
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = false;
                 Gamer.coins = 12;
-                //Gamer.coins = 112;
+                //Gamer.coins = 212;
                 Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -335,6 +335,7 @@ class TestPage extends React.Component {
 
                 var barricade2 = new Barricade(1100);
                 barricade2.loadedResourcesAfterBuild();
+                barricade2.impoveToIron();
                 Buildings.all.push(barricade2);
             }
         },
