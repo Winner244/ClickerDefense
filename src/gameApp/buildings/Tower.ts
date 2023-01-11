@@ -16,12 +16,14 @@ import { Helper } from '../helpers/Helper';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
-import fireArrowImage from '../../assets/img/buildings/tower/fireArrow.png';  
+import fireArrowImproveImage from '../../assets/img/buildings/tower/fireArrowImprove.png';  
+import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamitArrowImprove.png';  
 import fireIcon from '../../assets/img/icons/fire.png';  
 import swordIcon from '../../assets/img/icons/sword.png';  
 import bowmanIcon from '../../assets/img/icons/bow.png';  
 import rechargeIcon from '../../assets/img/icons/recharge.png';  
 import radiusIcon from '../../assets/img/icons/radius.png';  
+import boomIcon from '../../assets/img/icons/boom.png';  
 
 import arrowStrikeSound from '../../assets/sounds/buildings/tower/arrow_strike.mp3';   
 
@@ -42,6 +44,7 @@ export class Tower extends Building{
 	radiusAttack: number = 400; //радиус атаки
 	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
+	isHasDynamitArrows: boolean = false; //имеет ли взрывающиеся стрелы с динамитом?
 
 	//технические поля экземпляра
 	private _rechargeLeftTimeMs: number = 0; //сколько осталось времени перезарядки (миллисекунды)
@@ -89,13 +92,20 @@ export class Tower extends Building{
 		this.infoItems.splice(4, 0, new ParameterItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 40, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new ParameterItem('Скорость стрел', () => this.arrowSpeed, '', 10, () => this.arrowSpeed += 150));
 
-		this.improvements.push( new Improvement('Огненные стрелы', 100, fireArrowImage, () => this.improveToFireArrows(), [
+		this.improvements.push( new Improvement('Огненные стрелы', 100, fireArrowImproveImage, () => this.improveToFireArrows(), [
 			new ImprovementParameterItem('+', fireIcon)
+		]));
+		this.improvements.push( new Improvement('Взрывные стрелы', 100, dynamitArrowImproveImage, () => this.improveToDynamitArrows(), [
+			new ImprovementParameterItem('+', boomIcon)
 		]));
 	}
 
 	improveToFireArrows(){
 		this.isHasFireArrows = true;
+	}
+
+	improveToDynamitArrows(){
+		this.isHasDynamitArrows = true;
 	}
 
 	get centerY(){

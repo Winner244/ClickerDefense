@@ -17,7 +17,6 @@ import {Monsters} from '../monsters/Monsters';
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
 import StartNewWaveSound from '../../assets/sounds/startWave.mp3'; 
-import StartNewWave2Sound from '../../assets/sounds/startWave2.mp3'; 
 
 import MonsterImage from '../../assets/img/monster.png'; 
 import { MusicSystem } from './MusicSystem';
@@ -91,7 +90,6 @@ export class Waves{
 
 		if(this.waveCurrent > 0){
 			AudioSystem.play(-1, StartNewWaveSound, 0.2);
-			AudioSystem.play(-1, StartNewWave2Sound, 0.2, 1, false, false, 1.5);
 		}
 	}
 

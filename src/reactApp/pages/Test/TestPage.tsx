@@ -72,7 +72,6 @@ class TestPage extends React.Component {
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = false;
                 Gamer.coins = 12;
-                //Gamer.coins = 212;
                 Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -392,6 +391,35 @@ class TestPage extends React.Component {
                 var tower2 = new Tower(1500);
                 tower2.loadedResourcesAfterBuild();
                 tower2.arrowSpeed = 2000;
+                Buildings.all.push(tower2);
+                
+                var barricade2 = new Barricade(1500);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "Башня - огненные стрелы",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                tower1.bowmans = 1;
+                tower1.radiusAttack = 500;
+                tower1.improveToFireArrows();
+                Buildings.all.push(tower1);
+
+                var barricade1 = new Barricade(400);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1500);
+                tower2.loadedResourcesAfterBuild();
                 Buildings.all.push(tower2);
                 
                 var barricade2 = new Barricade(1500);

@@ -14,6 +14,7 @@ import BarricadeIronImage from '../../assets/img/buildings/barricade/barricadeIr
 
 import SwordIcon from '../../assets/img/icons/sword.png';  
 import ShieldIcon from '../../assets/img/icons/shield.png';
+import ParameterItem from '../../models/ParameterItem';
 
 /** Баррикада - тип здания */
 export class Barricade extends Building{
@@ -55,6 +56,8 @@ export class Barricade extends Building{
 
 	loadedResourcesAfterBuild(){
 		super.loadedResourcesAfterBuild();
+
+		this.infoItems.splice(1, 0, new ParameterItem('Возврат урона', () => this.damageMirrorPercentage + '%', SwordIcon));
 
 		this.improvements.push(new Improvement('Железные шипы', 200, BarricadeIronImage, () => this.impoveToIron(), [
 			new ImprovementParameterItem(`+${(Barricade.damageIronMirrorPercentage - Barricade.damageMirrorPercentage)}%`, SwordIcon),

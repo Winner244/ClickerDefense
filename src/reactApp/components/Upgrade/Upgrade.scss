@@ -76,8 +76,12 @@
 			background-color: rgba(0,0,0,0.3) !important;
 		}
 
-		&-name, &-value-box{
-			width: 50%;
+		&-name{
+			width: 55%;
+		}
+
+		&-value-box{
+			width: 45%;
 		}
 
 		&-name{
