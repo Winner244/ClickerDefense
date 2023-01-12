@@ -429,6 +429,65 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Башня - взрывные стрелы",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                tower1.bowmans = 1;
+                tower1.radiusAttack = 500;
+                tower1.improveToDynamitArrows();
+                Buildings.all.push(tower1);
+
+                var barricade1 = new Barricade(400);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1500);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+                
+                var barricade2 = new Barricade(1500);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "Башня - огненные + взрывные стрелы",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                tower1.bowmans = 1;
+                tower1.radiusAttack = 500;
+                tower1.improveToFireArrows();
+                tower1.improveToDynamitArrows();
+                Buildings.all.push(tower1);
+
+                var barricade1 = new Barricade(400);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1500);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+                
+                var barricade2 = new Barricade(1500);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
             key: "Атака зомби",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

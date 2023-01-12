@@ -17,7 +17,9 @@ import { Helper } from '../helpers/Helper';
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
 import fireArrowImproveImage from '../../assets/img/buildings/tower/fireArrowImprove.png';  
-import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamitArrowImprove.png';  
+import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamitArrowImprove.png'; 
+import dynamitPackImage from '../../assets/img/buildings/tower/dynamitPack.png'; 
+import brazierImage from '../../assets/img/buildings/tower/brazier.png'; 
 import fireIcon from '../../assets/img/icons/fire.png';  
 import swordIcon from '../../assets/img/icons/sword.png';  
 import bowmanIcon from '../../assets/img/icons/bow.png';  
@@ -52,6 +54,8 @@ export class Tower extends Building{
 	private _bowmansWaiting: number = 0; //сколько стрелков ещё не отстрелялось?
 	private _bowmansDelayLeftTimeMs: number = 0; //сколько осталось времени до стрельбы следующего лучника (миллисекунды)
 	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
+	private _dyamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
+	private _brazierImage: HTMLImageElement = new Image(); //Отображается на башне после улучшения до огненных стрел
 
 	constructor(x: number) {
 		super(x, 
@@ -102,10 +106,12 @@ export class Tower extends Building{
 
 	improveToFireArrows(){
 		this.isHasFireArrows = true;
+		this._brazierImage.src = brazierImage;
 	}
 
 	improveToDynamitArrows(){
 		this.isHasDynamitArrows = true;
+		this._dyamitPackImage.src = dynamitPackImage;
 	}
 
 	get centerY(){
@@ -238,5 +244,13 @@ export class Tower extends Building{
 		}
 
 		super.draw(drawsDiffMs, isGameOver, isBuildingMode);
+
+		if(this.isHasDynamitArrows && this._dyamitPackImage.complete){
+			Draw.ctx.drawImage(this._dyamitPackImage, this.x + 35, this.y + 115, this._dyamitPackImage.width, this._dyamitPackImage.height);
+		}
+
+		if(this.isHasFireArrows && this._brazierImage.complete){
+			Draw.ctx.drawImage(this._brazierImage, this.x + 80, this.y + 110, this._brazierImage.width, this._brazierImage.height);
+		}
 	}
 }
