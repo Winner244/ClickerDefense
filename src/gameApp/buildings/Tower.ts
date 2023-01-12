@@ -20,6 +20,7 @@ import arrowImage from '../../assets/img/buildings/tower/arrow.png';
 
 import fireArrowImproveImage from '../../assets/img/buildings/tower/fire/fireArrowImprove.png';  
 import brazierImage from '../../assets/img/buildings/tower/fire/brazier.png'; 
+import fireImage from '../../assets/img/buildings/tower/fire/fire.png'; 
 
 import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamit/dynamitArrowImprove.png'; 
 import dynamitPackImage from '../../assets/img/buildings/tower/dynamit/dynamitPack.png'; 
@@ -52,7 +53,8 @@ export class Tower extends Building{
 	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
 
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
-	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //Отображается на башне после улучшения до огненных стрел
+	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //отображается на башне после улучшения до огненных стрел
+	private _fireAnimation: AnimationInfinite = new AnimationInfinite(35, 1000); //отображается на стреле после улучшения до огненных стрел
 
 	isHasDynamitArrows: boolean = false; //имеет ли взрывающиеся стрелы с динамитом?
 	private _dyamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
@@ -115,6 +117,7 @@ export class Tower extends Building{
 	improveToFireArrows(){
 		this.isHasFireArrows = true;
 		this._brazierAnimation.image.src = brazierImage;
+		this._fireAnimation.image.src = fireImage;
 	}
 
 	improveToDynamitArrows(){
@@ -237,11 +240,12 @@ export class Tower extends Building{
 			Draw.ctx.setTransform(1, 0, 0, 1, arrow.location.x + arrow.size.width / 2, arrow.location.y + arrow.size.height / 2); 
 			Draw.ctx.rotate(arrow.rotate * Math.PI / 180);
 			Draw.ctx.drawImage(Tower.imageArrow, -arrow.size.width / 2, -arrow.size.height / 2, arrow.size.width, arrow.size.height);
-			if(arrow.isDynamit){
+			if(arrow.isDynamit && this._dyamitImage.complete){
 				Draw.ctx.drawImage(this._dyamitImage, -this._dyamitImage.width / 2, -this._dyamitImage.height / 2, this._dyamitImage.width, this._dyamitImage.height);
 			}
-			if(arrow.isFire){
-				
+			if(arrow.isFire && this._fireAnimation.image.complete){ 
+				Draw.ctx.rotate(-90 * Math.PI / 180);
+				this._fireAnimation.draw(drawsDiffMs, isGameOver, -arrow.size.height * 1.5, -arrow.size.width, arrow.size.height * 3, arrow.size.width * 2);
 			}
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
