@@ -11,6 +11,7 @@ import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
 import {MovingObject} from '../../models/MovingObject';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
+import AnimationInfinite from '../../models/AnimationInfinite';
 
 import { Helper } from '../helpers/Helper';
 
@@ -55,7 +56,7 @@ export class Tower extends Building{
 	private _bowmansDelayLeftTimeMs: number = 0; //сколько осталось времени до стрельбы следующего лучника (миллисекунды)
 	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 	private _dyamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
-	private _brazierImage: HTMLImageElement = new Image(); //Отображается на башне после улучшения до огненных стрел
+	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(4, 700); //Отображается на башне после улучшения до огненных стрел
 
 	constructor(x: number) {
 		super(x, 
@@ -106,7 +107,7 @@ export class Tower extends Building{
 
 	improveToFireArrows(){
 		this.isHasFireArrows = true;
-		this._brazierImage.src = brazierImage;
+		this._brazierAnimation.image.src = brazierImage;
 	}
 
 	improveToDynamitArrows(){
@@ -249,8 +250,8 @@ export class Tower extends Building{
 			Draw.ctx.drawImage(this._dyamitPackImage, this.x + 35, this.y + 115, this._dyamitPackImage.width, this._dyamitPackImage.height);
 		}
 
-		if(this.isHasFireArrows && this._brazierImage.complete){
-			Draw.ctx.drawImage(this._brazierImage, this.x + 80, this.y + 110, this._brazierImage.width, this._brazierImage.height);
+		if(this.isHasFireArrows && this._brazierAnimation.image.complete){
+			this._brazierAnimation.draw(drawsDiffMs, isGameOver, this.x + 80, this.y + 110)
 		}
 	}
 }

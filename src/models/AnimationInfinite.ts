@@ -18,7 +18,7 @@ export default class AnimationInfinite{
 		this.displayedTimeMs = 0;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
+	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null){
 		this.displayedTimeMs += drawsDiffMs;
 		let frame = isGameOver ? 0 : Math.floor(this.displayedTimeMs % this.durationMs / (this.durationMs / this.frames));
 		Draw.ctx.drawImage(this.image, 
@@ -28,7 +28,7 @@ export default class AnimationInfinite{
 			this.image.height,    //crop by height
 			x, //x
 			y,  //y
-			width, //displayed width 
-			height); //displayed height 
+			width || this.image.width / this.frames, //displayed width 
+			height || this.image.height); //displayed height 
 	}
 }
