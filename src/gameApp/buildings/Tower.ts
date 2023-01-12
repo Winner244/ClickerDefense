@@ -9,7 +9,7 @@ import {Monster} from '../monsters/Monster';
 
 import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
-import {MovingObject} from '../../models/MovingObject';
+import {Arrow} from '../../models/Arrow';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 import AnimationInfinite from '../../models/AnimationInfinite';
 
@@ -17,10 +17,14 @@ import { Helper } from '../helpers/Helper';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
-import fireArrowImproveImage from '../../assets/img/buildings/tower/fireArrowImprove.png';  
-import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamitArrowImprove.png'; 
-import dynamitPackImage from '../../assets/img/buildings/tower/dynamitPack.png'; 
-import brazierImage from '../../assets/img/buildings/tower/brazier.png'; 
+
+import fireArrowImproveImage from '../../assets/img/buildings/tower/fire/fireArrowImprove.png';  
+import brazierImage from '../../assets/img/buildings/tower/fire/brazier.png'; 
+
+import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamit/dynamitArrowImprove.png'; 
+import dynamitPackImage from '../../assets/img/buildings/tower/dynamit/dynamitPack.png'; 
+import dynamitImage from '../../assets/img/buildings/tower/dynamit/dynamit.png'; 
+
 import fireIcon from '../../assets/img/icons/fire.png';  
 import swordIcon from '../../assets/img/icons/sword.png';  
 import bowmanIcon from '../../assets/img/icons/bow.png';  
@@ -46,17 +50,20 @@ export class Tower extends Building{
 	arrowSpeed: number = Tower.initArrowSpeed; //скорость полёта стрелы (в пикселях за секунду)
 	radiusAttack: number = 400; //радиус атаки
 	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
+
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
+	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //Отображается на башне после улучшения до огненных стрел
+
 	isHasDynamitArrows: boolean = false; //имеет ли взрывающиеся стрелы с динамитом?
+	private _dyamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
+	private _dyamitImage: HTMLImageElement = new Image(); //отображается на стреле после улучшения до взрывных стрел
 
 	//технические поля экземпляра
 	private _rechargeLeftTimeMs: number = 0; //сколько осталось времени перезарядки (миллисекунды)
-	private _arrows: MovingObject[] = [];
+	private _arrows: Arrow[] = [];
 	private _bowmansWaiting: number = 0; //сколько стрелков ещё не отстрелялось?
 	private _bowmansDelayLeftTimeMs: number = 0; //сколько осталось времени до стрельбы следующего лучника (миллисекунды)
 	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
-	private _dyamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
-	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //Отображается на башне после улучшения до огненных стрел
 
 	constructor(x: number) {
 		super(x, 
@@ -113,6 +120,7 @@ export class Tower extends Building{
 	improveToDynamitArrows(){
 		this.isHasDynamitArrows = true;
 		this._dyamitPackImage.src = dynamitPackImage;
+		this._dyamitImage.src = dynamitImage;
 	}
 
 	get centerY(){
@@ -171,7 +179,7 @@ export class Tower extends Building{
 						let dx = (x1 - x2) / (distance / this.arrowSpeed);
 						let dy = (y1 - y2) / (distance / this.arrowSpeed);
 	
-						this._arrows.push(new MovingObject(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate));
+						this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, this.isHasFireArrows, this.isHasDynamitArrows));
 						AudioSystem.play(this.centerX, arrowStrikeSound, 1, this.arrowSpeed / Tower.initArrowSpeed, true);
 
 						if(this._rechargeLeftTimeMs <= 0){
@@ -229,6 +237,12 @@ export class Tower extends Building{
 			Draw.ctx.setTransform(1, 0, 0, 1, arrow.location.x + arrow.size.width / 2, arrow.location.y + arrow.size.height / 2); 
 			Draw.ctx.rotate(arrow.rotate * Math.PI / 180);
 			Draw.ctx.drawImage(Tower.imageArrow, -arrow.size.width / 2, -arrow.size.height / 2, arrow.size.width, arrow.size.height);
+			if(arrow.isDynamit){
+				Draw.ctx.drawImage(this._dyamitImage, -this._dyamitImage.width / 2, -this._dyamitImage.height / 2, this._dyamitImage.width, this._dyamitImage.height);
+			}
+			if(arrow.isFire){
+				
+			}
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
 		}
