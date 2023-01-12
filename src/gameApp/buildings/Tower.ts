@@ -56,7 +56,7 @@ export class Tower extends Building{
 	private _bowmansDelayLeftTimeMs: number = 0; //сколько осталось времени до стрельбы следующего лучника (миллисекунды)
 	private _isDisplayRadius: boolean = false; //рисовать радиус атаки? 
 	private _dyamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
-	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(4, 700); //Отображается на башне после улучшения до огненных стрел
+	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //Отображается на башне после улучшения до огненных стрел
 
 	constructor(x: number) {
 		super(x, 
