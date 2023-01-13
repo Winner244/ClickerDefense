@@ -33,7 +33,10 @@ import rechargeIcon from '../../assets/img/icons/recharge.png';
 import radiusIcon from '../../assets/img/icons/radius.png';  
 import boomIcon from '../../assets/img/icons/boom.png';  
 
-import arrowStrikeSound from '../../assets/sounds/buildings/tower/arrow_strike.mp3';   
+import arrowStrikeSound from '../../assets/sounds/buildings/tower/arrow_strike.mp3'; 
+import arrowFireStrikeSound from '../../assets/sounds/buildings/tower/fire_arrow_strike.mp3'; 
+import arrowDynamitStrikeSound from '../../assets/sounds/buildings/tower/dynamit_arrow_strike.mp3'; 
+
 
 /** Башня - тип здания - стреляет стрелами по монстрам */
 export class Tower extends Building{
@@ -118,12 +121,14 @@ export class Tower extends Building{
 		this.isHasFireArrows = true;
 		this._brazierAnimation.image.src = brazierImage;
 		this._fireAnimation.image.src = fireImage;
+		AudioSystem.load(arrowFireStrikeSound);
 	}
 
 	improveToDynamitArrows(){
 		this.isHasDynamitArrows = true;
 		this._dyamitPackImage.src = dynamitPackImage;
 		this._dyamitImage.src = dynamitImage;
+		AudioSystem.load(arrowDynamitStrikeSound);
 	}
 
 	get centerY(){
@@ -230,8 +235,16 @@ export class Tower extends Building{
 		let dx = (x1 - x2) / (distance / this.arrowSpeed);
 		let dy = (y1 - y2) / (distance / this.arrowSpeed);
 
-		this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, this.isHasFireArrows, this.isHasDynamitArrows));
+		const isFireArrow = this.isHasFireArrows;
+		const isDynamitArrow = this.isHasDynamitArrows;
+		this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, isFireArrow, isDynamitArrow));
+		if(isDynamitArrow){
+			AudioSystem.play(this.centerX, arrowDynamitStrikeSound, 0.1, this.arrowSpeed / Tower.initArrowSpeed, true);
+		}
 		AudioSystem.play(this.centerX, arrowStrikeSound, 1, this.arrowSpeed / Tower.initArrowSpeed, true);
+		if(isFireArrow){
+			AudioSystem.play(this.centerX, arrowFireStrikeSound, 0.1, this.arrowSpeed / Tower.initArrowSpeed, true);
+		}
 
 		if(this._rechargeLeftTimeMs <= 0){
 			this._rechargeLeftTimeMs = this.rechargeTimeMs;
