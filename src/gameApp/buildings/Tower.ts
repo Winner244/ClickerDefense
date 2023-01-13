@@ -170,26 +170,8 @@ export class Tower extends Building{
 					}
 					
 					const monsterGoal = sortedMonstersByDistance[skipCount];
-
 					if(monsterGoal){ //в радиусе атаки
-						let x1 = this.centerX - Tower.imageArrow.width / 2;
-						let y1 = this.centerY - Tower.imageArrow.height / 2;
-						let x2 = monsterGoal.centerX - Tower.imageArrow.width / 2;
-						let y2 = monsterGoal.centerY - Tower.imageArrow.height / 2;
-	
-						let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
-						let distance = Helper.getDistance(x1, y1, x2, y2);
-						let dx = (x1 - x2) / (distance / this.arrowSpeed);
-						let dy = (y1 - y2) / (distance / this.arrowSpeed);
-	
-						this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, this.isHasFireArrows, this.isHasDynamitArrows));
-						AudioSystem.play(this.centerX, arrowStrikeSound, 1, this.arrowSpeed / Tower.initArrowSpeed, true);
-
-						if(this._rechargeLeftTimeMs <= 0){
-							this._rechargeLeftTimeMs = this.rechargeTimeMs;
-						}
-						this._bowmansDelayLeftTimeMs = this.rechargeTimeMs / 10 / this.bowmans;
-						this._bowmansWaiting--;
+						this.attack(monsterGoal.centerX, monsterGoal.centerY);
 					}
 				}
 			}
@@ -228,7 +210,34 @@ export class Tower extends Building{
 					i--;
 				}
 			}
+			else if(endMoving){
+				arrow.isFire = false;
+				if(this.isHasDynamitArrows){
+					//TOOD: boom
+				}
+			}
 		}
+	}
+
+	attack(monsterGoalCenterX: number, monsterGoalCenterY: number): void {
+		let x1 = this.centerX - Tower.imageArrow.width / 2;
+		let y1 = this.centerY - Tower.imageArrow.height / 2;
+		let x2 = monsterGoalCenterX - Tower.imageArrow.width / 2;
+		let y2 = monsterGoalCenterY - Tower.imageArrow.height / 2;
+
+		let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
+		let distance = Helper.getDistance(x1, y1, x2, y2);
+		let dx = (x1 - x2) / (distance / this.arrowSpeed);
+		let dy = (y1 - y2) / (distance / this.arrowSpeed);
+
+		this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, this.isHasFireArrows, this.isHasDynamitArrows));
+		AudioSystem.play(this.centerX, arrowStrikeSound, 1, this.arrowSpeed / Tower.initArrowSpeed, true);
+
+		if(this._rechargeLeftTimeMs <= 0){
+			this._rechargeLeftTimeMs = this.rechargeTimeMs;
+		}
+		this._bowmansDelayLeftTimeMs = this.rechargeTimeMs / 10 / this.bowmans;
+		this._bowmansWaiting--;
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{

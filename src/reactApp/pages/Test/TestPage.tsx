@@ -488,6 +488,40 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Башня - огненные + взрывные стрелы в землю",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                //Waves.isStarted = false;
+
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                tower1.bowmans = 1;
+                tower1.radiusAttack = 500;
+                tower1.improveToFireArrows();
+                Buildings.all.push(tower1);
+                tower1.attack(500 - 400, Draw.canvas.height + 100);
+
+                var barricade1 = new Barricade(400);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1500);
+                tower2.loadedResourcesAfterBuild();
+                tower2.improveToDynamitArrows();
+                Buildings.all.push(tower2);
+                tower2.attack(1500 + 400, Draw.canvas.height + 100);
+                
+                var barricade2 = new Barricade(1500);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
             key: "Атака зомби",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

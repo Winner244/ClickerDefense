@@ -149,7 +149,7 @@ export class Building extends ShopItem{
 		this.infoItems = [
 			new ParameterItem(Building.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
-			new ParameterItem('Защита', () => this.defense, ShieldIcon)
+			new ParameterItem('Защита', () => this.defense.toFixed(1), ShieldIcon, this.price * 2, () => this.defense += 0.1)
 		];
 	}
 
