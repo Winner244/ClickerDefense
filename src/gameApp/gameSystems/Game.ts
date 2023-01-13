@@ -1,5 +1,6 @@
 import {Draw} from './Draw';
 import {AudioSystem} from './AudioSystem';
+import {AnimationsSystem} from './AnimationsSystem';
 
 import {Waves} from './Waves';
 
@@ -190,6 +191,8 @@ export class Game {
 		
 		Labels.logic(drawsDiffMs);
 
+		AnimationsSystem.logic();
+
 		FPS.counting();
 
 		Game.drawAll(millisecondsFromStart, drawsDiffMs);
@@ -279,6 +282,8 @@ export class Game {
 		Draw.drawCoinsInterface(Coin.image, Gamer.coins);
 
 		Waves.draw();
+
+		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
 	
 		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.health <= 0)){
 			Draw.drawGameOver();

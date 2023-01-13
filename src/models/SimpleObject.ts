@@ -12,4 +12,11 @@ export class SimpleObject{
 		this.size = new Size(width, height);
 		this.leftTimeMs = lifeTimeMs;
 	}
+
+	get centerX(){
+		return this.location.x + this.size.width / 2;
+	}
+	get centerY(){
+		return this.location.y + this.size.height / 2;
+	}
 }

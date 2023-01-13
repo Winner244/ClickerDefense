@@ -59,7 +59,7 @@ export class Builder {
 					this.selectedBuildingForBuild.y + this.selectedBuildingForBuild.height / 3, 
 					'-' + this.selectedBuildingForBuild.price,
 					2000);
-				
+				this.selectedBuildingForBuild.isLeftSide = this.selectedBuildingForBuild.x < Draw.canvas.width / 2;
 				buildingsAll.push(this.selectedBuildingForBuild);
 				this._isDrawSmoke = true;
 				this.smokeAnimation.restart();
