@@ -19,6 +19,11 @@ export default class AnimationInfinite{
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null){
+		if(!this.image.complete){
+			console.warn(`image src=${this.image.src} is not loaded yet!`);
+			return;
+		}
+
 		this.displayedTimeMs += drawsDiffMs;
 		let frame = isGameOver ? 0 : Math.floor(this.displayedTimeMs % this.durationMs / (this.durationMs / this.frames));
 		Draw.ctx.drawImage(this.image, 

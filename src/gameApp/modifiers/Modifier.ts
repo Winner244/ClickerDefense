@@ -1,3 +1,5 @@
+import { Monster } from "../monsters/Monster";
+
 /* Баф/дебаф - повышение/понижение характеристик юнитов/монстров/строений */
 export class Modifier{
 	readonly name: string;
@@ -9,7 +11,7 @@ export class Modifier{
 	readonly damageMultiplier: number; //кратное увеличение урона
 	readonly speedMultiplier: number; //кратное увеличение скорости передвижения
 
-	readonly lifeTimeMs: number|null; //время существования (если временное)
+	lifeTimeMs: number|null; //время существования (если временное)
 
 	constructor(
 		name: string,
@@ -26,4 +28,18 @@ export class Modifier{
 
 		this.lifeTimeMs = lifeTimeMs;
 	}
+
+	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]){
+		if(this.lifeTimeMs){
+			this.lifeTimeMs -= drawsDiffMs;
+
+			if(this.lifeTimeMs <= 0){
+				monster.modifiers = monster.modifiers.filter(modifier => modifier.name != this.name);
+			}
+		}
+	}
+
+	
+	drawBehindMonster(monster: Monster, drawsDiffMs: number){}
+	drawAheadMonster(monster: Monster, drawsDiffMs: number){}
 }

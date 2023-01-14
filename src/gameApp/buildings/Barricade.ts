@@ -2,8 +2,6 @@ import {Building} from './Building';
 
 import {Draw} from '../gameSystems/Draw';
 
-import {Labels} from '../labels/Labels';
-
 import {Monster} from '../monsters/Monster';
 
 import Improvement from '../../models/Improvement';
@@ -76,12 +74,11 @@ export class Barricade extends Building{
 		return this.y + this.height / 4;
 	}
 
-	applyDamage(damage: number, monster: Monster): number{
-		var realDamage = super.applyDamage(damage, monster);
+	applyDamage(damage: number, monster: Monster, x: number, y: number): number{
+		var realDamage = super.applyDamage(damage, monster, x, y);
 
 		var mirrorDamage = damage / 100 * this.damageMirrorPercentage;
-		monster.health -= mirrorDamage;
-		Labels.createMonsterDamageLabel(monster.x + monster.width / 2 + (monster.isLeftSide ? 0: -17), monster.y + monster.height / 2, '-' + mirrorDamage.toFixed(1), 3000);
+		monster.attacked(mirrorDamage, monster.x + monster.width / 2 + (monster.isLeftSide ? 0: -17), monster.y + monster.height / 2);
 
 		return realDamage;
 	}

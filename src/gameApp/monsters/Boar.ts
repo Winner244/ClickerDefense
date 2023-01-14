@@ -144,7 +144,7 @@ export class Boar extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], bottomBorder: number) {
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -182,7 +182,7 @@ export class Boar extends Monster{
 		}
 
 		var oldBuildingGoalX = this._buildingGoal?.centerX;
-		super.logic(drawsDiffMs, buildings, bottomBorder);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder);
 		var newBuildingGoalX = this._buildingGoal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility && Math.abs(newBuildingGoalX - this.centerX) > Boar.minDistanceActivateSpecialAbility){
@@ -195,13 +195,13 @@ export class Boar extends Monster{
 			[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 0.1, false, 1, true);
 	}
 
-	onClicked(): void{
-		super.onClicked();
-		this.attacked();
+	onClicked(damage: number, x: number|null = null, y: number|null = null): void{
+		this.stopSpecialAbility();
+		super.onClicked(damage, x, y);
 	}
 
-	attacked(): void{
-		super.attacked();
+	attacked(damage: number, x: number|null = null, y: number|null = null): void{
+		super.attacked(damage, x, y);
 		this.stopSpecialAbility();
 
 		AudioSystem.playRandomV(this.centerX, 

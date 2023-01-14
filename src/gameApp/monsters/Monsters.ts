@@ -65,9 +65,7 @@ export class Monsters{
 
 				//игрок наносит урон по монстру
 				if(isClick){
-					monster.health -= Gamer.cursorDamage;
-					monster.onClicked();
-					Labels.createGamerDamageLabel(mouseX, mouseY - 10, '-' + Gamer.cursorDamage)
+					monster.onClicked(Gamer.cursorDamage, mouseX, mouseY - 10);
 					Cursor.setCursor(Cursor.swordRed);
 					AudioSystem.play(mouseX, SwordAttackSound, 0.15, 1, true);
 				}
@@ -110,7 +108,7 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.map(monster => monster.logic(drawsDiffMs, buildings, bottomBorder));
+			Monsters.all.map(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder));
 		
 			//логика взаимодействия с монетками
 			if(Coins.all.length){

@@ -22,7 +22,7 @@ export class TestSystem{
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		this.all.forEach(element => {
 			Draw.ctx.beginPath();
-			Draw.ctx.arc(element.location.x, element.location.y + element.size.height - 50, element.size.width, 0, 2 * Math.PI, false);
+			Draw.ctx.arc(element.location.x, element.location.y, element.size.width, 0, 2 * Math.PI, false);
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
 			Draw.ctx.fill();
 			Draw.ctx.lineWidth = 2;

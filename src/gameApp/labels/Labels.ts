@@ -17,7 +17,7 @@ export class Labels{
 	}
 
 	//урон
-	static createMonsterDamageLabel(x: number, y: number, text: string, lifeTimeMs: number = Labels.labelLifetimeMs): void{
+	static createDamageLabel(x: number, y: number, text: string, lifeTimeMs: number = Labels.labelLifetimeMs): void{
 		Labels.labels.push(new Label(x, y, text, (text == '0' ? 0 : 255), 0, 0, lifeTimeMs, true));
 	}
 	static createGamerDamageLabel(x: number, y: number, text: string, lifeTimeMs: number = Labels.labelLifetimeMs): void{

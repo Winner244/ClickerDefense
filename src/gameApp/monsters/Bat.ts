@@ -74,12 +74,12 @@ export class Bat extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], bottomBorder: number): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, bottomBorder);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder);
 
 		if(this._buildingGoal){
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
@@ -118,14 +118,9 @@ export class Bat extends Monster{
 			AudioSystem.playRandom(this.centerX, [Sound1, Sound2], [0.06, 0.06], false, 1, true);
 		}
 	}
-	
-	onClicked(): void{
-		super.onClicked();
-		this.attacked();
-	}
 
-	attacked(): void{
-		super.attacked();
+	attacked(damage: number, x: number|null = null, y: number|null = null): void{
+		super.attacked(damage, x, y);
 		AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [0.09, 0.4, 0.3, 0.3], false, 1, true);
 	}
 

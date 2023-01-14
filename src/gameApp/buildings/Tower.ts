@@ -8,7 +8,7 @@ import {Building} from './Building';
 
 import {Monster} from '../monsters/Monster';
 
-import {Labels} from '../labels/Labels';
+import {FireModifier} from '../modifiers/FireModifier';
 
 import {Arrow} from '../../models/Arrow';
 import {AnimatedObject} from '../../models/AnimatedObject';
@@ -18,7 +18,7 @@ import Improvement from '../../models/Improvement';
 import ParameterItem from '../../models/ParameterItem';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
-import { Helper } from '../helpers/Helper';
+import {Helper} from '../helpers/Helper';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
@@ -68,14 +68,16 @@ export class Tower extends Building{
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
 	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //отображается на башне после улучшения до огненных стрел
 	private _fireAnimation: AnimationInfinite = new AnimationInfinite(35, 1000); //отображается на стреле после улучшения до огненных стрел
-	private _fireDamageInSecond: number = 0.1; //урона от огня стрел в секунду
+	public fireDamageInSecond: number = 0.3; //урона от огня стрел в секунду
+	private _isLastArrowWasFire: boolean = false; //последняя стрела была огненной? (если одновременно стоит динамитные стрелы и огненные, то они чередоваться должны)
+
 
 	//стрелы с динамитом
 	isHasDynamitArrows: boolean = false; //имеет ли взрывающиеся стрелы с динамитом?
 	private _dynamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
 	private _dynamitImage: HTMLImageElement = new Image(); //отображается на стреле после улучшения до взрывных стрел
-	private _dynamitRadius: number = 50; //радиус взрыва динамита
-	private _dynamitDamage: number = 1; //урона от взрыва динамита 
+	public dynamitRadius: number = 50; //радиус взрыва динамита
+	public dynamitDamage: number = 1; //урона от взрыва динамита 
 	private _isDisplayDynamitRadius: boolean = false; //рисовать радиус взрыва динамита? 
 	private _dynamitExplosionImage: HTMLImageElement = new Image(); //анимация взрыва динамита
 
@@ -138,7 +140,8 @@ export class Tower extends Building{
 		this._brazierAnimation.image.src = brazierImage;
 		this._fireAnimation.image.src = fireImage;
 		AudioSystem.load(arrowFireStrikeSound);
-		this.infoItems.push(new ParameterItem('Урон огня', () => this._fireDamageInSecond + '/сек', fireIcon, this.price, () => this._fireDamageInSecond += 0.1));
+		this.infoItems.push(new ParameterItem('Урон огня', () => this.fireDamageInSecond + '/сек', fireIcon, this.price, () => this.fireDamageInSecond += 0.1));
+		FireModifier.loadResources();
 	}
 
 	improveToDynamitArrows(){
@@ -148,8 +151,8 @@ export class Tower extends Building{
 		AudioSystem.load(arrowDynamitStrikeSound);
 		AudioSystem.load(explosionDynamitSound);
 		AudioSystem.load(explosionDynamit2Sound);
-		this.infoItems.push(new ParameterItem('Радиус взрыва', () => this._dynamitRadius, '', this.price, () => this._dynamitRadius += 10, this.displayDynamitRadius.bind(this), this.hideDynamitRadius.bind(this)));
-		this.infoItems.push(new ParameterItem('Урон взрыва', () => this._dynamitDamage, boomIcon, this.price, () => this._dynamitDamage += 1));
+		this.infoItems.push(new ParameterItem('Радиус взрыва', () => this.dynamitRadius, '', this.price, () => this.dynamitRadius += 20, this.displayDynamitRadius.bind(this), this.hideDynamitRadius.bind(this)));
+		this.infoItems.push(new ParameterItem('Урон взрыва', () => this.dynamitDamage, boomIcon, this.price, () => this.dynamitDamage += 1));
 		this._dynamitExplosionImage.src = dynamitExplosionImage;
 	}
 
@@ -157,19 +160,19 @@ export class Tower extends Building{
 		return this.y + this.height / 4;
 	}
 
-	displayRadius(){
+	private displayRadius(){
 		this._isDisplayRadius = true;
 	}
 
-	hideRadius(){
+	private hideRadius(){
 		this._isDisplayRadius = false;
 	}
 
-	displayDynamitRadius(){
+	private displayDynamitRadius(){
 		this._isDisplayDynamitRadius = true;
 	}
 
-	hideDynamitRadius(){
+	private hideDynamitRadius(){
 		this._isDisplayDynamitRadius = false;
 	}
 
@@ -245,8 +248,7 @@ export class Tower extends Building{
 
 				//попадание в цель
 				if(monsterGoal){ 
-					monsterGoal.health -= this.damage;
-					monsterGoal.attacked();
+					monsterGoal.attacked(this.damage);
 					this._arrows.splice(i, 1);
 					i--;
 
@@ -254,7 +256,7 @@ export class Tower extends Building{
 						this.dynamitExplosion(arrow.centerX - Math.sign(arrow.dx) * arrow.dx / arrow.dx * 10, arrow.centerY - Math.sign(arrow.dx) * arrow.dy / arrow.dx * 10, monsters);
 					}
 					else if(arrow.isFire){
-						//TODO: add fire to monster
+						monsterGoal.modifiers.push(new FireModifier(this.fireDamageInSecond));
 					}
 				}
 			}
@@ -280,8 +282,20 @@ export class Tower extends Building{
 		let dx = (x1 - x2) / (distance / this.arrowSpeed);
 		let dy = (y1 - y2) / (distance / this.arrowSpeed);
 
-		const isFireArrow = this.isHasFireArrows;
-		const isDynamitArrow = this.isHasDynamitArrows;
+		let isFireArrow = this.isHasFireArrows;
+		let isDynamitArrow = this.isHasDynamitArrows;
+		if(this.isHasDynamitArrows && this.isHasFireArrows){
+			if(this._isLastArrowWasFire && isFireArrow){
+				isFireArrow = false;
+			}
+			else if(isFireArrow) {
+				isDynamitArrow = false;
+			}
+			else if (isDynamitArrow){
+				isFireArrow = false;
+			}
+		}
+		this._isLastArrowWasFire = isFireArrow;
 		this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, isFireArrow, isDynamitArrow));
 		if(isDynamitArrow){
 			AudioSystem.play(this.centerX, arrowDynamitStrikeSound, 0.1, this.arrowSpeed / Tower.initArrowSpeed, true);
@@ -299,21 +313,17 @@ export class Tower extends Building{
 	}
 
 	dynamitExplosion(centerX: number, centerY: number, monsters: Monster[]){
-		AnimationsSystem.add(new AnimatedObject(centerX - this._dynamitRadius, centerY - this._dynamitRadius, this._dynamitRadius * 2, this._dynamitRadius * 2, true, 
+		AnimationsSystem.add(new AnimatedObject(centerX - this.dynamitRadius, centerY - this.dynamitRadius, this.dynamitRadius * 2, this.dynamitRadius * 2, true, 
 			new Animation(8, 500, this._dynamitExplosionImage))); 
 		monsters
 			.forEach(monster => {
 				const distance = Helper.getDistance(monster.centerX, monster.centerY, centerX, centerY);
-				if(distance <= this._dynamitRadius){
-					monster.health -= this._dynamitDamage;
-					monster.attacked();
-					Labels.createMonsterDamageLabel(monster.centerX, monster.centerY, '-' + this._dynamitDamage.toFixed(1), 3000);
+				if(distance <= this.dynamitRadius){
+					monster.attacked(this.dynamitDamage);
 				}
-				else if(distance < this._dynamitRadius * 2){
-					const damage = this._dynamitDamage * ((this._dynamitRadius * 2 - distance) / this._dynamitRadius);
-					monster.health -= damage;
-					monster.attacked();
-					Labels.createMonsterDamageLabel(monster.centerX, monster.centerY, '-' + damage.toFixed(1), 3000);
+				else if(distance < this.dynamitRadius * 1.5){
+					const damage = this.dynamitDamage * ((this.dynamitRadius * 1.5 - distance) / this.dynamitRadius);
+					monster.attacked(damage);
 				}
 			})
 		
@@ -363,7 +373,7 @@ export class Tower extends Building{
 
 		if(this._isDisplayDynamitRadius){
 			Draw.ctx.beginPath();
-			Draw.ctx.arc(this.centerX + (this.isLeftSide ? -1 : 1) * 200, this.y + this.height - 50, this._dynamitRadius, 0, 2 * Math.PI, false);
+			Draw.ctx.arc(this.centerX + (this.isLeftSide ? -1 : 1) * 200, this.y + this.height - 50, this.dynamitRadius, 0, 2 * Math.PI, false);
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
 			Draw.ctx.fill();
 			Draw.ctx.lineWidth = 2;

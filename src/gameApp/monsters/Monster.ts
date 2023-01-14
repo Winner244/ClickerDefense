@@ -14,7 +14,6 @@ import {Modifier} from "../modifiers/Modifier";
 import {Helper} from "../helpers/Helper";
 
 import {Building} from '../buildings/Building';
-import {Barricade} from '../buildings/Barricade';
 
 import Hit1Sound from '../../assets/sounds/monsters/hit1.mp3'; 
 import Hit2Sound from '../../assets/sounds/monsters/hit2.mp3'; 
@@ -159,7 +158,7 @@ export class Monster{
 		AudioSystem.load(Hit11Sound);
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], bottomBorder: number): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -174,6 +173,8 @@ export class Monster{
 				return;
 			}
 		}
+
+		this.modifiers.forEach(modifier => modifier.logic(this, drawsDiffMs, monsters));
 
 		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 		let speed = this.speed * (drawsDiffMs / 1000);
@@ -274,9 +275,8 @@ export class Monster{
 
 	attack(damage: number): void{
 		if(damage > 0 && this._buildingGoal != null){
-			const realDamage = this._buildingGoal.applyDamage(damage, this); //монстр наносит урон
+			this._buildingGoal.applyDamage(damage, this, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2); //монстр наносит урон
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
-			Labels.createMonsterDamageLabel(this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, '-' + realDamage.toFixed(1), 3000);
 
 			var size = this.width * this.height;
 			var sizeVolumeScale = size / 3000;
@@ -285,9 +285,15 @@ export class Monster{
 		}
 	}
 
-	onClicked(): void{}
+	onClicked(damage: number, x: number|null = null, y: number|null = null): void{
+		this.health -= damage;
+		Labels.createGamerDamageLabel(x || this.centerX, y || this.centerY, '-' + damage);
+	}
 
-	attacked(): void{}
+	attacked(damage: number, x: number|null = null, y: number|null = null): void{
+		this.health -= damage;
+		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + damage.toFixed(1), 3000);
+	}
 
 	destroy(): void{}
 
@@ -300,6 +306,8 @@ export class Monster{
 
 		let isInvert = this.isLeftSide;
 		let scale = isInvert ? -1 : 1;
+
+		this.modifiers.forEach(modifier => modifier.drawBehindMonster(this, drawsDiffMs));
 
 		if(isInvert){
 			Draw.ctx.save();
@@ -318,6 +326,8 @@ export class Monster{
 		if(isInvert){
 			Draw.ctx.restore();
 		}
+
+		this.modifiers.forEach(modifier => modifier.drawAheadMonster(this, drawsDiffMs));
 
 		this.drawHealth();
 	}

@@ -24,6 +24,7 @@ import {Building} from '../../../gameApp/buildings/Building';
 import './TestPage.scss';
 import { ImageHandler } from '../../../gameApp/ImageHandler';
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
+import { FireModifier } from '../../../gameApp/modifiers/FireModifier';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -464,7 +465,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.waveCurrent = 2;
+                Waves.waveCurrent = 1;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(500);
@@ -527,6 +528,53 @@ class TestPage extends React.Component {
                 var barricade2 = new Barricade(1250);
                 barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "Башня - взрывные стрелы - большой радиус",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var tower1 = new Tower(Draw.canvas.width / 2 - 50);
+                tower1.loadedResourcesAfterBuild();
+                tower1.radiusAttack = 500;
+                tower1.improveToDynamitArrows();
+                tower1.dynamitDamage = 2;
+                tower1.dynamitRadius = 150;
+                tower1.improvements.filter(x => x.label == 'Взрывные стрелы').forEach(x => x.isImproved = true);
+                Buildings.all.push(tower1);
+
+                var barricade1 = new Barricade(tower1.x - 100);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+                
+                var barricade2 = new Barricade(tower1.x + 50);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "огонь",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 0;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                FireModifier.loadResources();
+                
+                var zombie = new Zombie(0, 780, true, 1);
+                zombie.modifiers.push(new FireModifier(0.5));
+                Monsters.all.push(zombie);
+
+                var boar = new Boar(Draw.canvas.width - 100, 780, false, 1, true);
+                boar.modifiers.push(new FireModifier(0.5));
+                Monsters.all.push(boar);
             }
         },
 

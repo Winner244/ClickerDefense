@@ -19,6 +19,11 @@ export default class Animation{
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
+		if(!this.image.complete){
+			console.warn(`image src=${this.image.src} is not loaded yet!`);
+			return;
+		}
+
 		if(!isGameOver)
 			this.leftTimeMs -= drawsDiffMs;
 
