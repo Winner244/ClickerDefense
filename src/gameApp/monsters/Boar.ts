@@ -196,6 +196,12 @@ export class Boar extends Monster{
 	}
 
 	onClicked(): void{
+		super.onClicked();
+		this.attacked();
+	}
+
+	attacked(): void{
+		super.attacked();
 		this.stopSpecialAbility();
 
 		AudioSystem.playRandomV(this.centerX, 

@@ -412,6 +412,7 @@ class TestPage extends React.Component {
                 tower1.bowmans = 1;
                 tower1.radiusAttack = 500;
                 tower1.improveToFireArrows();
+                tower1.improvements.filter(x => x.label == 'Огненные стрелы').forEach(x => x.isImproved = true);
                 Buildings.all.push(tower1);
 
                 var barricade1 = new Barricade(400);
@@ -441,6 +442,7 @@ class TestPage extends React.Component {
                 tower1.bowmans = 1;
                 tower1.radiusAttack = 500;
                 tower1.improveToDynamitArrows();
+                tower1.improvements.filter(x => x.label == 'Взрывные стрелы').forEach(x => x.isImproved = true);
                 Buildings.all.push(tower1);
 
                 var barricade1 = new Barricade(400);
@@ -470,7 +472,9 @@ class TestPage extends React.Component {
                 tower1.bowmans = 1;
                 tower1.radiusAttack = 500;
                 tower1.improveToFireArrows();
+                tower1.improvements.filter(x => x.label == 'Огненные стрелы').forEach(x => x.isImproved = true);
                 tower1.improveToDynamitArrows();
+                tower1.improvements.filter(x => x.label == 'Взрывные стрелы').forEach(x => x.isImproved = true);
                 Buildings.all.push(tower1);
 
                 var barricade1 = new Barricade(400);

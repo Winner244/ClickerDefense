@@ -287,6 +287,8 @@ export class Monster{
 
 	onClicked(): void{}
 
+	attacked(): void{}
+
 	destroy(): void{}
 
 	playSound(): void{}

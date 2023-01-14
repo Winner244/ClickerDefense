@@ -239,7 +239,7 @@ export class Tower extends Building{
 				//попадание в цель
 				if(monsterGoal){ 
 					monsterGoal.health -= this.damage;
-					monsterGoal.onClicked();
+					monsterGoal.attacked();
 					this._arrows.splice(i, 1);
 					i--;
 
@@ -299,13 +299,13 @@ export class Tower extends Building{
 				const distance = Helper.getDistance(monster.centerX, monster.centerY, centerX, centerY);
 				if(distance <= this._dynamitRadius){
 					monster.health -= this._dynamitDamage;
-					monster.onClicked();
+					monster.attacked();
 					Labels.createMonsterDamageLabel(monster.centerX, monster.centerY, '-' + this._dynamitDamage.toFixed(1), 3000);
 				}
 				else if(distance < this._dynamitRadius * 2){
 					const damage = this._dynamitDamage * ((this._dynamitRadius * 2 - distance) / this._dynamitRadius);
 					monster.health -= damage;
-					monster.onClicked();
+					monster.attacked();
 					Labels.createMonsterDamageLabel(monster.centerX, monster.centerY, '-' + damage.toFixed(1), 3000);
 				}
 			})

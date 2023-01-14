@@ -118,8 +118,14 @@ export class Bat extends Monster{
 			AudioSystem.playRandom(this.centerX, [Sound1, Sound2], [0.06, 0.06], false, 1, true);
 		}
 	}
+	
+	onClicked(): void{
+		super.onClicked();
+		this.attacked();
+	}
 
-	onClicked(): void {
+	attacked(): void{
+		super.attacked();
 		AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [0.09, 0.4, 0.3, 0.3], false, 1, true);
 	}
 
