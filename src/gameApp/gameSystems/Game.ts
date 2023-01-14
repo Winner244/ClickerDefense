@@ -1,6 +1,7 @@
 import {Draw} from './Draw';
 import {AudioSystem} from './AudioSystem';
 import {AnimationsSystem} from './AnimationsSystem';
+import {TestSystem} from './TestSystem';
 
 import {Waves} from './Waves';
 
@@ -191,6 +192,7 @@ export class Game {
 		
 		Labels.logic(drawsDiffMs);
 
+		TestSystem.logic(drawsDiffMs);
 		AnimationsSystem.logic();
 
 		FPS.counting();
@@ -283,6 +285,7 @@ export class Game {
 
 		Waves.draw();
 
+		TestSystem.draw(drawsDiffMs, Game.isGameOver);
 		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
 	
 		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.health <= 0)){

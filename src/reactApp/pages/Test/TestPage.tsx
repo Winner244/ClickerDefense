@@ -509,13 +509,13 @@ class TestPage extends React.Component {
                 barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
 
-                var tower2 = new Tower(1500);
+                var tower2 = new Tower(1200);
                 tower2.loadedResourcesAfterBuild();
                 tower2.improveToDynamitArrows();
                 Buildings.all.push(tower2);
-                tower2.attack(1500 + 400, Draw.canvas.height + 100);
+                tower2.attack(1200 + 400, Draw.canvas.height + 100);
                 
-                var barricade2 = new Barricade(1500);
+                var barricade2 = new Barricade(1250);
                 barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
             }
