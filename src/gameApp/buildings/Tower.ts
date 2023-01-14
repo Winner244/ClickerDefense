@@ -292,7 +292,7 @@ export class Tower extends Building{
 
 	dynamitExplosion(arrow: Arrow, monsters: Monster[]){
 		AnimationsSystem.add(new AnimatedObject(arrow.centerX - this._dynamitRadius, arrow.centerY - this._dynamitRadius, this._dynamitRadius * 2, this._dynamitRadius * 2, true, 
-			new Animation(8, 800, this._dynamitExplosionImage))); 
+			new Animation(8, 500, this._dynamitExplosionImage))); 
 		monsters
 			.forEach(monster => {
 				const distance = Helper.getDistance(monster.centerX, monster.centerY, arrow.centerX, arrow.centerY);

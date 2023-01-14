@@ -492,7 +492,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.waveCurrent = 2;
+                Waves.waveCurrent = 1;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 //Waves.isStarted = false;
 
