@@ -64,11 +64,13 @@ export class Tower extends Building{
 	radiusAttack: number = 400; //радиус атаки
 	rechargeTimeMs: number = 1000; //время перезарядки (миллисекунды)
 
+	//огненные стрелы
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
 	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //отображается на башне после улучшения до огненных стрел
 	private _fireAnimation: AnimationInfinite = new AnimationInfinite(35, 1000); //отображается на стреле после улучшения до огненных стрел
 	private _fireDamageInSecond: number = 0.1; //урона от огня стрел в секунду
 
+	//стрелы с динамитом
 	isHasDynamitArrows: boolean = false; //имеет ли взрывающиеся стрелы с динамитом?
 	private _dynamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
 	private _dynamitImage: HTMLImageElement = new Image(); //отображается на стреле после улучшения до взрывных стрел
@@ -171,9 +173,9 @@ export class Tower extends Building{
 		this._isDisplayDynamitRadius = false;
 	}
 
-	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number)
+	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean)
 	{
-		super.logic(drawsDiffMs, monsters, bottomShiftBorder);
+		super.logic(drawsDiffMs, monsters, bottomShiftBorder, isWaveStarted);
 
 		if(this._rechargeLeftTimeMs > 0){ //перезарядка
 			this._rechargeLeftTimeMs -= drawsDiffMs;
@@ -208,6 +210,11 @@ export class Tower extends Building{
 					}
 				}
 			}
+		}
+
+		if(isWaveStarted && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
+			this._isDisplayRadius = false;
+			this._isDisplayDynamitRadius = false;
 		}
 
 		for(let i = 0; i < this._arrows.length; i++)

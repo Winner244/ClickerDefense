@@ -184,7 +184,7 @@ export class Game {
 			Waves.logic(drawsDiffMs, Game.bottomShiftBorder);
 		}
 
-		Buildings.logic(drawsDiffMs, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
+		Buildings.logic(drawsDiffMs, Waves.isStarted, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
 		
 		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder);
 		

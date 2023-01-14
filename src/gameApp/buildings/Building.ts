@@ -305,7 +305,7 @@ export class Building extends ShopItem{
 		}
 	}
 
-	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number){
+	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean){
 		if(this._impulse > 1){
 			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
 			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
