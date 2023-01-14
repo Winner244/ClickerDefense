@@ -493,6 +493,9 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 1;
+                Waves.all[2] = { //3-я волна
+                    [Bat.name]: new WaveData(75, 90, 0)
+                };
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 //Waves.isStarted = false;
 
@@ -502,6 +505,7 @@ class TestPage extends React.Component {
                 tower1.bowmans = 1;
                 tower1.radiusAttack = 500;
                 tower1.improveToFireArrows();
+                tower1.improvements.filter(x => x.label == 'Огненные стрелы').forEach(x => x.isImproved = true);
                 Buildings.all.push(tower1);
                 tower1.attack(500 - 400, Draw.canvas.height + 100);
 
@@ -512,6 +516,7 @@ class TestPage extends React.Component {
                 var tower2 = new Tower(1200);
                 tower2.loadedResourcesAfterBuild();
                 tower2.improveToDynamitArrows();
+                tower2.improvements.filter(x => x.label == 'Взрывные стрелы').forEach(x => x.isImproved = true);
                 Buildings.all.push(tower2);
                 tower2.attack(1200 + 400, Draw.canvas.height + 100);
                 

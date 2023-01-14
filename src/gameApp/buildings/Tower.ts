@@ -239,11 +239,12 @@ export class Tower extends Building{
 				//попадание в цель
 				if(monsterGoal){ 
 					monsterGoal.health -= this.damage;
+					monsterGoal.onClicked();
 					this._arrows.splice(i, 1);
 					i--;
 
 					if(arrow.isDynamit){
-						this.dynamitExplosion(arrow, monsters);
+						this.dynamitExplosion(arrow.centerX - Math.sign(arrow.dx) * arrow.dx / arrow.dx * 10, arrow.centerY - Math.sign(arrow.dx) * arrow.dy / arrow.dx * 10, monsters);
 					}
 					else if(arrow.isFire){
 						//TODO: add fire to monster
@@ -253,7 +254,7 @@ export class Tower extends Building{
 			else if(endMoving){
 				arrow.isFire = false;
 				if(this.isHasDynamitArrows){
-					this.dynamitExplosion(arrow, monsters);
+					this.dynamitExplosion(arrow.centerX, arrow.centerY, monsters);
 					this._arrows.splice(i, 1);
 					i--;
 				}
@@ -290,25 +291,26 @@ export class Tower extends Building{
 		this._bowmansWaiting--;
 	}
 
-	dynamitExplosion(arrow: Arrow, monsters: Monster[]){
-		AnimationsSystem.add(new AnimatedObject(arrow.centerX - this._dynamitRadius, arrow.centerY - this._dynamitRadius, this._dynamitRadius * 2, this._dynamitRadius * 2, true, 
+	dynamitExplosion(centerX: number, centerY: number, monsters: Monster[]){
+		AnimationsSystem.add(new AnimatedObject(centerX - this._dynamitRadius, centerY - this._dynamitRadius, this._dynamitRadius * 2, this._dynamitRadius * 2, true, 
 			new Animation(8, 500, this._dynamitExplosionImage))); 
 		monsters
 			.forEach(monster => {
-				const distance = Helper.getDistance(monster.centerX, monster.centerY, arrow.centerX, arrow.centerY);
+				const distance = Helper.getDistance(monster.centerX, monster.centerY, centerX, centerY);
 				if(distance <= this._dynamitRadius){
 					monster.health -= this._dynamitDamage;
+					monster.onClicked();
 					Labels.createMonsterDamageLabel(monster.centerX, monster.centerY, '-' + this._dynamitDamage.toFixed(1), 3000);
 				}
 				else if(distance < this._dynamitRadius * 2){
 					const damage = this._dynamitDamage * ((this._dynamitRadius * 2 - distance) / this._dynamitRadius);
-					console.log('damage', damage);
 					monster.health -= damage;
+					monster.onClicked();
 					Labels.createMonsterDamageLabel(monster.centerX, monster.centerY, '-' + damage.toFixed(1), 3000);
 				}
 			})
 		
-		AudioSystem.playRandomV(arrow.dx, [explosionDynamitSound, explosionDynamit2Sound], 0.1, false, 1, true);
+		AudioSystem.playRandomV(centerX, [explosionDynamitSound, explosionDynamit2Sound], 0.1, false, 1, true);
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
