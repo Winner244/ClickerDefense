@@ -81,14 +81,14 @@ export class FireModifier extends Modifier{
 		}
 	}
 
-	drawBehindMonster(monster: Monster, drawsDiffMs: number){
+	//drawAheadMonster
 
-		//TODO decrease to this.damageDecreasingEndGoalPercentage
-		const sizeScale = (this.lifeTimeMs || 0) / this._lifeTimeMsInitial;
+	drawBehindMonster(monster: Monster, drawsDiffMs: number){
+		const sizeScale = (this.lifeTimeMs || 0) / this._lifeTimeMsInitial * (1 - this.damageDecreasingEndGoalPercentage / 100) + this.damageDecreasingEndGoalPercentage / 100;
 		this._fireAnimation.draw(drawsDiffMs, false, 
-			monster.x - monster.width / 5, 
+			monster.x - monster.width / 5 + (1 - sizeScale) * monster.width / 1.5, 
 			monster.y - monster.height / 2 + (1 - sizeScale) * monster.height, 
-			monster.width + monster.width / 5 * 2, 
+			monster.width * sizeScale + monster.width * sizeScale / 5 * 2, 
 			monster.height * sizeScale);
 	}
 }

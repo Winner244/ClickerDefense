@@ -67,7 +67,7 @@ export class Tower extends Building{
 	//огненные стрелы
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
 	fireDamageInSecond: number = 0.3; //урона от огня стрел в секунду
-	fireDurationMs: number = 5000; //время горения монстров
+	fireDurationMs: number = 7000; //время горения монстров
 	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //отображается на башне после улучшения до огненных стрел
 	private _fireAnimation: AnimationInfinite = new AnimationInfinite(35, 1000); //отображается на стреле после улучшения до огненных стрел
 	private _isLastArrowWasFire: boolean = false; //последняя стрела была огненной? (если одновременно стоит динамитные стрелы и огненные, то они чередоваться должны)
