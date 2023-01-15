@@ -25,6 +25,7 @@ import './TestPage.scss';
 import { ImageHandler } from '../../../gameApp/ImageHandler';
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import { FireModifier } from '../../../gameApp/modifiers/FireModifier';
+import { FlyEarth } from '../../../gameApp/buildings/FlyEarth';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -498,14 +499,14 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 1;
-                Waves.all[2] = { //3-я волна
+                Waves.all[3] = { //3-я волна
                     [Bat.name]: new WaveData(75, 90, 0)
                 };
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 //Waves.isStarted = false;
 
 
-                var tower1 = new Tower(500);
+                var tower1 = new Tower(600);
                 tower1.loadedResourcesAfterBuild();
                 tower1.bowmans = 1;
                 tower1.radiusAttack = 500;
@@ -593,16 +594,28 @@ class TestPage extends React.Component {
                 FireModifier.loadResources();
                 
                 var zombie = new Zombie(0, 780, true, 1);
-                zombie.modifiers.push(new FireModifier(0.5));
+                zombie.modifiers.push(new FireModifier(0.5, 15000));
                 Monsters.all.push(zombie);
 
                 var boar = new Boar(Draw.canvas.width - 100, 780, false, 1, true);
-                boar.modifiers.push(new FireModifier(0.5));
+                boar.modifiers.push(new FireModifier(0.5, 15000));
                 Monsters.all.push(boar);
 
                 var bat = new Bat(0, 280, true, 1);
-                bat.modifiers.push(new FireModifier(0.5));
+                bat.modifiers.push(new FireModifier(0.5, 15000));
                 Monsters.all.push(bat);
+
+                setTimeout(() => {
+
+                    var bat = new Bat(Draw.canvas.width / 2 - FlyEarth.width, Buildings.flyEarth.centerY, true, 1);
+                    bat.modifiers.push(new FireModifier(0.5, 15000));
+                    Monsters.all.push(bat);
+
+
+                    var bat2 = new Bat(Draw.canvas.width / 2 + FlyEarth.width, Buildings.flyEarth.centerY, false, 1);
+                    bat2.modifiers.push(new FireModifier(0.5, 15000));
+                    Monsters.all.push(bat2);
+                }, 15000);
 
                 var barricade1 = new Barricade(300);
                 barricade1.loadedResourcesAfterBuild();

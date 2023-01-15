@@ -141,7 +141,7 @@ export class Tower extends Building{
 		this._brazierAnimation.image.src = brazierImage;
 		this._fireAnimation.image.src = fireImage;
 		AudioSystem.load(arrowFireStrikeSound);
-		this.infoItems.push(new ParameterItem('Урон огня', () => this.fireDamageInSecond + '/сек', fireIcon, this.price, () => this.fireDamageInSecond += 0.1));
+		this.infoItems.push(new ParameterItem('Урон огня', () => this.fireDamageInSecond.toFixed(1) + '/сек', fireIcon, this.price / 2, () => this.fireDamageInSecond += 0.1));
 		FireModifier.loadResources();
 	}
 
@@ -257,7 +257,11 @@ export class Tower extends Building{
 						this.dynamitExplosion(arrow.centerX - Math.sign(arrow.dx) * arrow.dx / arrow.dx * 10, arrow.centerY - Math.sign(arrow.dx) * arrow.dy / arrow.dx * 10, monsters);
 					}
 					else if(arrow.isFire){
-						monsterGoal.addModifier(new FireModifier(this.fireDamageInSecond, this.fireDurationMs));
+						const fireModifier = new FireModifier(this.fireDamageInSecond, this.fireDurationMs);
+						monsterGoal.addModifier(fireModifier);
+						//даже если стрела убьёт, то хотя бы подожгёт рядом стоящих монстров
+						fireModifier.logicSpread(monsterGoal, monsters, true);
+						//TODO: add animation of fire ball
 					}
 				}
 			}

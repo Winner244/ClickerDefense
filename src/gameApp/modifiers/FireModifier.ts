@@ -61,19 +61,19 @@ export class FireModifier extends Modifier{
 	}
 
 	//логика распространения огня
-	logicSpread(monster: Monster, monsters: Monster[]){
+	logicSpread(monster: Monster, monsters: Monster[], isForce: boolean = false){
 		super.logicSpread(monster, monsters);
 
-		if(this._isReadyToSpread){
+		if(this._isReadyToSpread || isForce){
 
 			//распространение на других монстров
 			monsters.forEach(anotherMonster => {
-				if(monster.x < anotherMonster.x + anotherMonster.width && 
-					monster.x + monster.width > anotherMonster.x && 
-					monster.y < anotherMonster.y + anotherMonster.height &&
-					monster.y + monster.height > anotherMonster.y)
+				const procentDecreasing = 0.4;
+				if(monster.x + monster.width * procentDecreasing < anotherMonster.x + anotherMonster.width && 
+					monster.x + monster.width * (1 - procentDecreasing) > anotherMonster.x && 
+					monster.y - monster.height / 2 + monster.height * procentDecreasing < anotherMonster.y + anotherMonster.height &&
+					monster.y + monster.height * (1 - procentDecreasing) > anotherMonster.y)
 				{
-					console.log('logicSpread ready add to another', monster, anotherMonster);
 					//пересеклись либо один входит в другой - передаём огонь с текущими параметрами
 					anotherMonster.addModifier(new FireModifier(this.fireDamageInSecond, this.lifeTimeMs || 0));
 				}
