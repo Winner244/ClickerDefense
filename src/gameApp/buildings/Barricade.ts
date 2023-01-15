@@ -75,10 +75,16 @@ export class Barricade extends Building{
 	}
 
 	applyDamage(damage: number, monster: Monster, x: number, y: number): number{
+		if(damage <= 0){
+			return 0;
+		}
+
 		var realDamage = super.applyDamage(damage, monster, x, y);
 
 		var mirrorDamage = damage / 100 * this.damageMirrorPercentage;
-		monster.attacked(mirrorDamage, monster.x + monster.width / 2 + (monster.isLeftSide ? 0: -17), monster.y + monster.height / 2);
+		if(mirrorDamage > 0){
+			monster.attacked(mirrorDamage, monster.x + monster.width / 2 + (monster.isLeftSide ? 0: -17), monster.y + monster.height / 2);
+		}
 
 		return realDamage;
 	}

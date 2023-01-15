@@ -108,7 +108,10 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.map(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder));
+			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder));
+
+			//вторичная логика модификаторов
+			Monsters.all.forEach(monster => monster.modifiers.forEach(modifier => modifier.logicSpread(monster, this.all)));
 		
 			//логика взаимодействия с монетками
 			if(Coins.all.length){

@@ -7,9 +7,9 @@ export class Modifier{
 	//(если надо увеличить здоровье на 10%, то healthMultiplier должен быть равен 0.1)
 	//если уменьшить, то -0.1
 	// 1 - будет равно увеличению на 100% (2x)
-	readonly healthMultiplier: number; //кратное увеличение здоровья
-	readonly damageMultiplier: number; //кратное увеличение урона
-	readonly speedMultiplier: number; //кратное увеличение скорости передвижения
+	healthMultiplier: number; //кратное увеличение здоровья
+	damageMultiplier: number; //кратное увеличение урона
+	speedMultiplier: number; //кратное увеличение скорости передвижения
 
 	lifeTimeMs: number|null; //время существования (если временное)
 
@@ -29,7 +29,7 @@ export class Modifier{
 		this.lifeTimeMs = lifeTimeMs;
 	}
 
-	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]){
+	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]): void{
 		if(this.lifeTimeMs){
 			this.lifeTimeMs -= drawsDiffMs;
 
@@ -38,6 +38,9 @@ export class Modifier{
 			}
 		}
 	}
+
+	//логика распространения 
+	logicSpread(monster: Monster, monsters: Monster[]): void{}
 
 	
 	drawBehindMonster(monster: Monster, drawsDiffMs: number){}

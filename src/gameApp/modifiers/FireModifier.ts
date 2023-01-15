@@ -11,12 +11,17 @@ import fireImage from '../../assets/img/buildings/tower/fire/fire.png';
 export class FireModifier extends Modifier{
 	static fireImage: HTMLImageElement = new Image(); //изображение огня
 
-	public fireDamageInSecond: number; //урона от огня стрел в секунду
+	fireDamageInSecond: number; //урона от огня стрел в секунду
 
-	protected readonly damageDecreasingInSecond: number = 0.1; //на сколько угосает урон в секунду
+	protected readonly damageDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится урон к концу своей жизни (в процентах, чем ментше, тем меньше урон будет в конце)
+	protected readonly viewDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится внешне огонь к концу своей жизни (в процентах, чем ментше, тем меньше визуально будет огонь в конце)
 	protected readonly damageTimeWaitingMs: number = 300; //частота урона (выражается во времени ожидания после атаки в миллисекундах)
+
 	_damageLeftTimeMs: number = 0; //оставшееся время до следующего получения урона (миллисекунды)
+	_isReadyToSpread: boolean = false; //можно ли запустить логику распространения на данном цикле обновлений?
+	_damageDecreasingInSecond: number = 0; //на сколько угосает урон в секунду
 	_fireAnimation: AnimationInfinite = new AnimationInfinite(35, 1000, FireModifier.fireImage);
+	_lifeTimeMsInitial: number; //изначальное время жизни - нужно для сравнения в % оставшегося времени
 
 	static loadResources(){
 		FireModifier.fireImage.src = fireImage;
@@ -26,33 +31,64 @@ export class FireModifier extends Modifier{
 		super(FireModifier.name, 0, 0, 0, lifeTimeMs);
 
 		this.fireDamageInSecond = fireDamageInSecond;
+		this._damageDecreasingInSecond = fireDamageInSecond / (lifeTimeMs / 1000) * (1 - this.damageDecreasingEndGoalPercentage / 100);
+		this._damageLeftTimeMs = this.damageTimeWaitingMs;
+		this._lifeTimeMsInitial = lifeTimeMs;
 	}
 
 	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]){
 		super.logic(monster, drawsDiffMs, monsters);
 
+		//ожидания времени нанесения урона
 		if(this._damageLeftTimeMs > 0){
 			this._damageLeftTimeMs -= drawsDiffMs;
+			this._isReadyToSpread = false;
 		}
 		else{
+			//наносим урон и перезаряжаем время
 			monster.attacked(this.fireDamageInSecond * (this.damageTimeWaitingMs  / 1000));
 			this._damageLeftTimeMs = this.damageTimeWaitingMs;
 
-			this.fireDamageInSecond -= this.damageDecreasingInSecond * this.damageTimeWaitingMs / 1000;
+			//ослабеваем урон 
+			this.fireDamageInSecond -= this._damageDecreasingInSecond * this.damageTimeWaitingMs / 1000;
 			if(this.fireDamageInSecond <= 0){
 				monster.modifiers = monster.modifiers.filter(modifier => modifier.name != FireModifier.name);
 			}
-		}
 
-		//TODO: распространение на других монстров, передавать текущий оставшийся lifeTime что бы огонь небыл бесконечным
-		//TODO: добавить время огня как улучшения для башни
+
+			this._isReadyToSpread = true;
+		}
+	}
+
+	//логика распространения огня
+	logicSpread(monster: Monster, monsters: Monster[]){
+		super.logicSpread(monster, monsters);
+
+		if(this._isReadyToSpread){
+
+			//распространение на других монстров
+			monsters.forEach(anotherMonster => {
+				if(monster.x < anotherMonster.x + anotherMonster.width && 
+					monster.x + monster.width > anotherMonster.x && 
+					monster.y < anotherMonster.y + anotherMonster.height &&
+					monster.y + monster.height > anotherMonster.y)
+				{
+					console.log('logicSpread ready add to another', monster, anotherMonster);
+					//пересеклись либо один входит в другой - передаём огонь с текущими параметрами
+					anotherMonster.addModifier(new FireModifier(this.fireDamageInSecond, this.lifeTimeMs || 0));
+				}
+			});
+		}
 	}
 
 	drawBehindMonster(monster: Monster, drawsDiffMs: number){
+
+		//TODO decrease to this.damageDecreasingEndGoalPercentage
+		const sizeScale = (this.lifeTimeMs || 0) / this._lifeTimeMsInitial;
 		this._fireAnimation.draw(drawsDiffMs, false, 
 			monster.x - monster.width / 5, 
-			monster.y - monster.height / 2, 
+			monster.y - monster.height / 2 + (1 - sizeScale) * monster.height, 
 			monster.width + monster.width / 5 * 2, 
-			monster.height);
+			monster.height * sizeScale);
 	}
 }

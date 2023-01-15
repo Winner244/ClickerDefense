@@ -10,6 +10,7 @@ import {Labels} from '../labels/Labels';
 import AnimationInfinite from '../../models/AnimationInfinite';
 
 import {Modifier} from "../modifiers/Modifier";
+import {FireModifier} from '../modifiers/FireModifier';
 
 import {Helper} from "../helpers/Helper";
 
@@ -286,13 +287,40 @@ export class Monster{
 	}
 
 	onClicked(damage: number, x: number|null = null, y: number|null = null): void{
+		if(damage <= 0){
+			return;
+		}
+
 		this.health -= damage;
 		Labels.createGamerDamageLabel(x || this.centerX, y || this.centerY, '-' + damage);
 	}
 
 	attacked(damage: number, x: number|null = null, y: number|null = null): void{
+		if(damage <= 0){
+			return;
+		}
+		
 		this.health -= damage;
 		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + damage.toFixed(1), 3000);
+	}
+
+	addModifier(newModifier: Modifier): void{
+		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
+		if(existedModifier){
+			if(existedModifier instanceof FireModifier && newModifier instanceof FireModifier){
+				existedModifier.fireDamageInSecond = Math.max(existedModifier.fireDamageInSecond || 0, newModifier.fireDamageInSecond || 0);
+				existedModifier.lifeTimeMs = Math.max(existedModifier.lifeTimeMs || 0, newModifier.lifeTimeMs || 0);
+			}
+			else{
+				existedModifier.damageMultiplier += newModifier.damageMultiplier;
+				existedModifier.healthMultiplier += newModifier.healthMultiplier;
+				existedModifier.speedMultiplier += newModifier.speedMultiplier;
+			}
+		}
+		else{
+			this.modifiers.push(newModifier);
+		}
+
 	}
 
 	destroy(): void{}

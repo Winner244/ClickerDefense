@@ -66,18 +66,19 @@ export class Tower extends Building{
 
 	//огненные стрелы
 	isHasFireArrows: boolean = false; //имеет ли огненные стрелы?
+	fireDamageInSecond: number = 0.3; //урона от огня стрел в секунду
+	fireDurationMs: number = 5000; //время горения монстров
 	private _brazierAnimation: AnimationInfinite = new AnimationInfinite(6, 900); //отображается на башне после улучшения до огненных стрел
 	private _fireAnimation: AnimationInfinite = new AnimationInfinite(35, 1000); //отображается на стреле после улучшения до огненных стрел
-	public fireDamageInSecond: number = 0.3; //урона от огня стрел в секунду
 	private _isLastArrowWasFire: boolean = false; //последняя стрела была огненной? (если одновременно стоит динамитные стрелы и огненные, то они чередоваться должны)
 
 
 	//стрелы с динамитом
 	isHasDynamitArrows: boolean = false; //имеет ли взрывающиеся стрелы с динамитом?
+	dynamitRadius: number = 50; //радиус взрыва динамита
+	dynamitDamage: number = 1; //урона от взрыва динамита 
 	private _dynamitPackImage: HTMLImageElement = new Image(); //отображается на башне после улучшения до взрывных стрел
 	private _dynamitImage: HTMLImageElement = new Image(); //отображается на стреле после улучшения до взрывных стрел
-	public dynamitRadius: number = 50; //радиус взрыва динамита
-	public dynamitDamage: number = 1; //урона от взрыва динамита 
 	private _isDisplayDynamitRadius: boolean = false; //рисовать радиус взрыва динамита? 
 	private _dynamitExplosionImage: HTMLImageElement = new Image(); //анимация взрыва динамита
 
@@ -256,7 +257,7 @@ export class Tower extends Building{
 						this.dynamitExplosion(arrow.centerX - Math.sign(arrow.dx) * arrow.dx / arrow.dx * 10, arrow.centerY - Math.sign(arrow.dx) * arrow.dy / arrow.dx * 10, monsters);
 					}
 					else if(arrow.isFire){
-						monsterGoal.modifiers.push(new FireModifier(this.fireDamageInSecond));
+						monsterGoal.addModifier(new FireModifier(this.fireDamageInSecond, this.fireDurationMs));
 					}
 				}
 			}

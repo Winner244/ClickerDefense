@@ -559,7 +559,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "огонь",
+            key: "огонь - затухание",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -575,6 +575,44 @@ class TestPage extends React.Component {
                 var boar = new Boar(Draw.canvas.width - 100, 780, false, 1, true);
                 boar.modifiers.push(new FireModifier(0.5));
                 Monsters.all.push(boar);
+
+                var bat = new Bat(0, 280, true, 1);
+                bat.modifiers.push(new FireModifier(0.5));
+                Monsters.all.push(bat);
+            }
+        },
+
+        {
+            key: "огонь - передача",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                FireModifier.loadResources();
+                
+                var zombie = new Zombie(0, 780, true, 1);
+                zombie.modifiers.push(new FireModifier(0.5));
+                Monsters.all.push(zombie);
+
+                var boar = new Boar(Draw.canvas.width - 100, 780, false, 1, true);
+                boar.modifiers.push(new FireModifier(0.5));
+                Monsters.all.push(boar);
+
+                var bat = new Bat(0, 280, true, 1);
+                bat.modifiers.push(new FireModifier(0.5));
+                Monsters.all.push(bat);
+
+                var barricade1 = new Barricade(300);
+                barricade1.loadedResourcesAfterBuild();
+                barricade1.damageMirrorPercentage = 0;
+                Buildings.all.push(barricade1);
+                
+                var barricade2 = new Barricade(Draw.canvas.width - 300);
+                barricade2.loadedResourcesAfterBuild();
+                barricade2.damageMirrorPercentage = 0;
+                Buildings.all.push(barricade2);
             }
         },
 
