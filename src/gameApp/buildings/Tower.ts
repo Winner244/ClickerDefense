@@ -38,6 +38,7 @@ import bowmanIcon from '../../assets/img/icons/bow.png';
 import rechargeIcon from '../../assets/img/icons/recharge.png';  
 import radiusIcon from '../../assets/img/icons/radius.png';  
 import boomIcon from '../../assets/img/icons/boom.png';  
+import timerIcon from '../../assets/img/icons/timer.png';  
 
 import arrowStrikeSound from '../../assets/sounds/buildings/tower/arrow_strike.mp3'; 
 import arrowFireStrikeSound from '../../assets/sounds/buildings/tower/fire_arrow_strike.mp3'; 
@@ -142,6 +143,7 @@ export class Tower extends Building{
 		this._fireAnimation.image.src = fireImage;
 		AudioSystem.load(arrowFireStrikeSound);
 		this.infoItems.push(new ParameterItem('Урон огня', () => this.fireDamageInSecond.toFixed(1) + '/сек', fireIcon, this.price / 2, () => this.fireDamageInSecond += 0.1));
+		this.infoItems.push(new ParameterItem('Время жизни огня', () => (this.fireDurationMs / 1000).toFixed(0) + 'сек', timerIcon, this.price / 2, () => this.fireDurationMs += 1000));
 		FireModifier.loadResources();
 	}
 
@@ -152,8 +154,8 @@ export class Tower extends Building{
 		AudioSystem.load(arrowDynamitStrikeSound);
 		AudioSystem.load(explosionDynamitSound);
 		AudioSystem.load(explosionDynamit2Sound);
-		this.infoItems.push(new ParameterItem('Радиус взрыва', () => this.dynamitRadius, '', this.price, () => this.dynamitRadius += 20, this.displayDynamitRadius.bind(this), this.hideDynamitRadius.bind(this)));
-		this.infoItems.push(new ParameterItem('Урон взрыва', () => this.dynamitDamage, boomIcon, this.price, () => this.dynamitDamage += 1));
+		this.infoItems.push(new ParameterItem('Радиус взрыва', () => this.dynamitRadius, '', this.price / 2, () => this.dynamitRadius += 20, this.displayDynamitRadius.bind(this), this.hideDynamitRadius.bind(this)));
+		this.infoItems.push(new ParameterItem('Урон взрыва', () => this.dynamitDamage.toFixed(1), boomIcon, this.price, () => this.dynamitDamage += 0.5));
 		this._dynamitExplosionImage.src = dynamitExplosionImage;
 	}
 
