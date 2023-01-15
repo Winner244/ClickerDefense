@@ -27,13 +27,13 @@ export class FireModifier extends Modifier{
 		FireModifier.fireImage.src = fireImage;
 	}
 
-	constructor(fireDamageInSecond: number, lifeTimeMs: number = 5000) {
+	constructor(fireDamageInSecond: number, lifeTimeMs: number = 5000, lifeTimeMsInitial: number|null = null) {
 		super(FireModifier.name, 0, 0, 0, lifeTimeMs);
 
 		this.fireDamageInSecond = fireDamageInSecond;
 		this._damageDecreasingInSecond = fireDamageInSecond / (lifeTimeMs / 1000) * (1 - this.damageDecreasingEndGoalPercentage / 100);
 		this._damageLeftTimeMs = this.damageTimeWaitingMs;
-		this._lifeTimeMsInitial = lifeTimeMs;
+		this._lifeTimeMsInitial = lifeTimeMsInitial || lifeTimeMs;
 	}
 
 	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]){
@@ -75,7 +75,7 @@ export class FireModifier extends Modifier{
 					monster.y + monster.height * (1 - procentDecreasing) > anotherMonster.y)
 				{
 					//пересеклись либо один входит в другой - передаём огонь с текущими параметрами
-					anotherMonster.addModifier(new FireModifier(this.fireDamageInSecond, this.lifeTimeMs || 0));
+					anotherMonster.addModifier(new FireModifier(this.fireDamageInSecond, this.lifeTimeMs || 0, this._lifeTimeMsInitial));
 				}
 			});
 		}
