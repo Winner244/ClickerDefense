@@ -17,6 +17,8 @@ import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3';
 export class Builder {
 
 	static readonly smokeAnimation: Animation = new Animation(10, 1000);  
+
+	static readonly buildingBorder: number = 100;	//размер границы слева и справа где уже нельзя строить (в пикселях)
 	
 	static selectedBuildingForBuild: Building | null = null; //выбранное строение для постройки
 
@@ -50,7 +52,8 @@ export class Builder {
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean, buildingsAll: Building[], loadResourcesAfterBuild: (building: Building) => void){
 		if(this.selectedBuildingForBuild && !this._isDrawSmoke){
-			this.selectedBuildingForBuild.x = mouseX - this.selectedBuildingForBuild.width / 2;
+			this.selectedBuildingForBuild.x = Math.min(Math.max(this.buildingBorder, mouseX - this.selectedBuildingForBuild.width / 2), Draw.canvas.width - this.buildingBorder - this.selectedBuildingForBuild.width);
+
 			this._isAnotherBuilding = buildingsAll.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
 			if(isClick && !this._isAnotherBuilding){
 				Gamer.coins -= this.selectedBuildingForBuild.price;
