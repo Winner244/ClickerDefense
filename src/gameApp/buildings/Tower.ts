@@ -351,7 +351,7 @@ export class Tower extends Building{
 			}
 			if(arrow.isFire && this._fireAnimation.image.complete){ 
 				Draw.ctx.rotate(-90 * Math.PI / 180);
-				this._fireAnimation.draw(drawsDiffMs, isGameOver, -arrow.size.height * 1.5, -arrow.size.width, arrow.size.height * 3, arrow.size.width * 2);
+				this._fireAnimation.draw(drawsDiffMs, isGameOver, -arrow.size.height / 2, -arrow.size.width / 2, arrow.size.height, arrow.size.width);
 			}
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
