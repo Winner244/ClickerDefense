@@ -51,6 +51,10 @@
 			причём в самой игре - всё норм, нет зависаний, даже на третей волне с динамитом - всё ок 
 			но с огнём виснит
 			что такого мощного в окне улучшения строений?
+				1 строчка в Building вызывает зависания: Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - this.height / 10, this.width * 2, this.height + this.height / 10)
+					без этой строки фпс стабильно 60
+				
+					
 			
 
 Поменять:
