@@ -84,13 +84,14 @@ export class FlyEarth extends Building{
 		this._particles = [];
 
 		const imgData = Draw.ctx.getImageData(this.x, this.y, this.width, this.height);
-		for (let i = 0, y = 0; y < imgData.height; y++){
-			for (let x = 0; x < imgData.width; x++, i+= 4) {
+		for (let i = 0, y = 0; y < imgData.height; y += 2){
+			for (let x = 0; x < imgData.width; x += 2) {
+				i = x * 4 + y * imgData.width * 4;
 				if(imgData.data[i + 3] == 255){
 					const xIn = Math.round(this.x + x);
 					const yIn = Math.round(this.y + y);
-					let dx = (xIn - this.centerX) / 3 * Math.random();
-					let dy = (yIn - this.centerY) / 3 * Math.random();
+					let dx = (xIn - this.centerX) / 31 * Math.random();
+					let dy = (yIn - this.centerY) / 31 * Math.random();
 					this._particles.push(new Particle(xIn, yIn, 1, 1, 0, dx, dy, 0, imgData.data[i + 0], imgData.data[i + 1], imgData.data[i + 2]));
 				}
 			}
@@ -117,9 +118,15 @@ export class FlyEarth extends Building{
 			const particle = this._particles[i];
 			particle.location.x += particle.dx;
 			particle.location.y += particle.dy;
+			particle.dy += 0.1
 			Draw.ctx.fillStyle = `rgb(${particle.red}, ${particle.green}, ${particle.blue})`;
 			//Draw.ctx.fillStyle = `black`;
-			Draw.ctx.fillRect(particle.location.x, particle.location.y, 1, 1);
-		  }
+			Draw.ctx.fillRect(particle.location.x, particle.location.y, 3, 3);
+		}
+
+		this._particles = this._particles.filter(p => 
+			p.location.x > 0 && p.location.x < Draw.canvas.width &&
+			p.location.y > 0 && p.location.y < Draw.canvas.height && 
+			Math.random() > 0.05);
 	}
 }
