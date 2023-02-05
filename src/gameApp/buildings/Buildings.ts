@@ -23,8 +23,8 @@ export class Buildings{
 	static all: Building[] = []; //все строения
 	static explosions: SimpleObject[] = []; //анимации разрушения 
 
-	static flyEarth: Building; //ключевое воздушное здание
-	static flyEarthRope: Building; //ключивое наземное здание
+	static flyEarth: FlyEarth; //ключевое воздушное здание
+	static flyEarthRope: FlyEarthRope; //ключивое наземное здание
 
 	static init(isLoadResources: boolean = true): void{
 		this.all = [];

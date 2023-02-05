@@ -288,7 +288,7 @@ export class Game {
 		TestSystem.draw(drawsDiffMs, Game.isGameOver);
 		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
 	
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.health <= 0)){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.animationExplosionLifeTimeLeftMs <= 0)){
 			Draw.drawGameOver();
 		}
 
@@ -302,12 +302,17 @@ export class Game {
 	private static gameOverLogic(drawsDiffMs: number) : void{
 		Cursor.setCursor(Cursor.default);
 
-		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
-			Buildings.flyEarthRope.y += 150 * drawsDiffMs / 1000;
+		if(Buildings.flyEarth.health <= 0){
+			//logic in Buildings.flyEarthRope.drawExplosion
+		}
+		else{
+			if(Buildings.flyEarth.y > -FlyEarth.height){
+				Buildings.flyEarth.y -= 150 * drawsDiffMs / 1000;
+			}
 		}
 
-		if(Buildings.flyEarth.y > -FlyEarth.height){
-			Buildings.flyEarth.y -= 150 * drawsDiffMs / 1000;
+		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
+			Buildings.flyEarthRope.y += 150 * drawsDiffMs / 1000;
 		}
 	}
 
