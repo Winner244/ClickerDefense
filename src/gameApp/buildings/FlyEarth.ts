@@ -27,9 +27,9 @@ export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();
 	static readonly width: number = 375;
 	static readonly height: number = 279;
-	static readonly explosionImage:Animation = new Animation(8, 800); //анимация взрыва 
+	static readonly explosionAnimation: Animation = new Animation(8, 800); //анимация взрыва 
 
-	private _particles: Particle[] = [];
+	private _explosionParticles: Particle[] = [];
 
 	constructor(x: number, y: number) {
 		super(x, y, false, false, FlyEarth.name, FlyEarth.image, 4, 700, FlyEarth.width, FlyEarth.height, 15, 100, 0, '', false, false);
@@ -48,12 +48,12 @@ export class FlyEarth extends Building{
 	}
 
 	static loadExplosionResources(){
-		this.explosionImage.image.src = explosionImage;
+		this.explosionAnimation.image.src = explosionImage;
 		AudioSystem.load(ExplosionSound);
 	}
 
 	private static playSoundPick(x: number){
-		var listOfSounds = [
+		const listOfSounds = [
 			PickSoundUrl1,
 			PickSoundUrl2,
 			PickSoundUrl3,
@@ -83,11 +83,11 @@ export class FlyEarth extends Building{
 	}
 
 	createExplosionParticles(){
-		if(this._particles.length){
+		if(this._explosionParticles.length){
 			return;
 		}
 
-		this._particles = [];
+		this._explosionParticles = [];
 
 		const imgData = Draw.ctx.getImageData(this.x, this.y, this.width, this.height);
 		for (let i = 0, y = 0; y < imgData.height; y += 2){
@@ -96,9 +96,9 @@ export class FlyEarth extends Building{
 				if(imgData.data[i + 3] == 255){
 					const xIn = Math.round(this.x + x);
 					const yIn = Math.round(this.y + y);
-					let dx = (xIn - this.centerX) / 10 * Math.random();
-					let dy = (yIn - this.centerY) / 10 * Math.random();
-					this._particles.push(new Particle(xIn, yIn, 1, 1, 0, dx, dy, 0, imgData.data[i + 0], imgData.data[i + 1], imgData.data[i + 2]));
+					const dx = (xIn - this.centerX) / 10 * Math.random();
+					const dy = (yIn - this.centerY) / 10 * Math.random();
+					this._explosionParticles.push(new Particle(xIn, yIn, 1, 1, 0, dx, dy, 0, imgData.data[i + 0], imgData.data[i + 1], imgData.data[i + 2]));
 				}
 			}
 		}
@@ -114,18 +114,18 @@ export class FlyEarth extends Building{
 		}
 		else{
 			super.draw(drawsDiffMs, isGameOver, isBuildingMode);
-			if(!this._particles.length){
-				this.createExplosionParticles();
+			if(!this._explosionParticles.length){
+				this.createExplosionParticles(); //requires image on canvas without excess elements around
 			}
 		}
 	}
 
 	drawExplosion(drawsDiffMs: number): void {
-		if(FlyEarth.explosionImage.leftTimeMs > 0){
-			FlyEarth.explosionImage.draw(drawsDiffMs, false, this.x - this.width, this.y - this.height, this.width * 3, this.height * 3);
+		if(FlyEarth.explosionAnimation.leftTimeMs > 0){
+			FlyEarth.explosionAnimation.draw(drawsDiffMs, false, this.x - this.width, this.y - this.height, this.width * 3, this.height * 3);
 		}
 
-		this._particles = this._particles.filter(p => {
+		this._explosionParticles = this._explosionParticles.filter(p => {
 			p.location.x += p.dx;
 			p.location.y += p.dy;
 			//p.dy += 0.1

@@ -54,7 +54,8 @@ export class Game {
 
 	static isGameRun: boolean = false; //если false - значит на паузе 
 	static isGameOver: boolean = false; //игра заканчивается
-	static gaveOverTime: number = 0; //время проигрыша
+	static readonly gaveOverTimeMs: number = 3000; //время окончания игры после проигрыша
+	static gaveOverTimeLeftMs: number = Game.gaveOverTimeMs; //оставшееся время окончания игры
 	static isEndAfterGameOver: boolean = false; //игра закончилась
 	static isWasInit: boolean = false; //инициализация уже была?
 
@@ -173,11 +174,13 @@ export class Game {
 			if(Buildings.flyEarth.y <= -FlyEarth.height){
 				Game.isEndAfterGameOver = true;
 			}
+
+			Game.gaveOverTimeLeftMs -= drawsDiffMs;
 		}
 		else{
 			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
-				Game.gaveOverTime = Date.now();
+				Game.gaveOverTimeLeftMs = Game.gaveOverTimeMs;
 				AudioSystem.pauseSounds();
 				AudioSystem.play(-1, GameOverSound, 0.5);
 
@@ -209,7 +212,7 @@ export class Game {
 		Game.drawAll(millisecondsFromStart, drawsDiffMs);
 
 		
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Date.now() - Game.gaveOverTime > 3 * 1000)){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
 			cancelAnimationFrame(this._animationId);
 			return;
 		}
@@ -303,7 +306,7 @@ export class Game {
 		TestSystem.draw(drawsDiffMs, Game.isGameOver);
 		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
 	
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Date.now() - Game.gaveOverTime > 3 * 1000)){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
 			Draw.drawGameOver();
 		}
 
@@ -322,7 +325,7 @@ export class Game {
 		}
 		else{
 			if(Buildings.flyEarth.y > -FlyEarth.height){
-				Buildings.flyEarth.y -= 150 * drawsDiffMs / 1000;
+				Buildings.flyEarth.y -= 230 * drawsDiffMs / 1000;
 			}
 		}
 
