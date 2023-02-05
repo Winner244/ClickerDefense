@@ -54,6 +54,7 @@ export class Game {
 
 	static isGameRun: boolean = false; //если false - значит на паузе 
 	static isGameOver: boolean = false; //игра заканчивается
+	static gaveOverTime: number = 0; //время проигрыша
 	static isEndAfterGameOver: boolean = false; //игра закончилась
 	static isWasInit: boolean = false; //инициализация уже была?
 
@@ -173,6 +174,7 @@ export class Game {
 		else{
 			if(Buildings.flyEarthRope.health <= 0 || Buildings.flyEarth.health <= 0){
 				Game.isGameOver = true;
+				Game.gaveOverTime = Date.now();
 				AudioSystem.pauseSounds();
 				AudioSystem.play(-1, GameOverSound, 0.5);
 			}
@@ -198,6 +200,12 @@ export class Game {
 		FPS.counting();
 
 		Game.drawAll(millisecondsFromStart, drawsDiffMs);
+
+		
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Date.now() - Game.gaveOverTime > 3 * 1000)){
+			cancelAnimationFrame(this._animationId);
+			return;
+		}
 
 		if(!Game.isEndAfterGameOver){
 			window.requestAnimationFrame(Game.go.bind(this));
@@ -288,7 +296,7 @@ export class Game {
 		TestSystem.draw(drawsDiffMs, Game.isGameOver);
 		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
 	
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Buildings.flyEarth.animationExplosionLifeTimeLeftMs <= 0)){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Date.now() - Game.gaveOverTime > 3 * 1000)){
 			Draw.drawGameOver();
 		}
 

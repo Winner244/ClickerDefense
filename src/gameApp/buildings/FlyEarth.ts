@@ -25,8 +25,6 @@ export class FlyEarth extends Building{
 	static readonly width: number = 375;
 	static readonly height: number = 279;
 
-	static readonly animationExplosionLifeTimeMs: number = 3000;
-	animationExplosionLifeTimeLeftMs: number = FlyEarth.animationExplosionLifeTimeMs;
 	private _particles: Particle[] = [];
 
 	constructor(x: number, y: number) {
@@ -80,7 +78,6 @@ export class FlyEarth extends Building{
 			return;
 		}
 
-		this.animationExplosionLifeTimeLeftMs = FlyEarth.animationExplosionLifeTimeMs;
 		this._particles = [];
 
 		const imgData = Draw.ctx.getImageData(this.x, this.y, this.width, this.height);
@@ -90,8 +87,8 @@ export class FlyEarth extends Building{
 				if(imgData.data[i + 3] == 255){
 					const xIn = Math.round(this.x + x);
 					const yIn = Math.round(this.y + y);
-					let dx = (xIn - this.centerX) / 31 * Math.random();
-					let dy = (yIn - this.centerY) / 31 * Math.random();
+					let dx = (xIn - this.centerX) / 10 * Math.random();
+					let dy = (yIn - this.centerY) / 10 * Math.random();
 					this._particles.push(new Particle(xIn, yIn, 1, 1, 0, dx, dy, 0, imgData.data[i + 0], imgData.data[i + 1], imgData.data[i + 2]));
 				}
 			}
@@ -100,9 +97,7 @@ export class FlyEarth extends Building{
 
 	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode?: boolean): void {
 		if(this.health <= 0){
-			if(this.animationExplosionLifeTimeLeftMs > 0){
-				this.drawExplosion(drawsDiffMs);
-			}
+			this.drawExplosion(drawsDiffMs);
 		}
 		else{
 			super.draw(drawsDiffMs, isGameOver, isBuildingMode);
@@ -113,14 +108,12 @@ export class FlyEarth extends Building{
 	}
 
 	drawExplosion(drawsDiffMs: number): void {
-		this.animationExplosionLifeTimeLeftMs -= drawsDiffMs;
 		for (let i = 0; i < this._particles.length; i++) {
 			const particle = this._particles[i];
 			particle.location.x += particle.dx;
 			particle.location.y += particle.dy;
-			particle.dy += 0.1
+			//particle.dy += 0.1
 			Draw.ctx.fillStyle = `rgb(${particle.red}, ${particle.green}, ${particle.blue})`;
-			//Draw.ctx.fillStyle = `black`;
 			Draw.ctx.fillRect(particle.location.x, particle.location.y, 3, 3);
 		}
 
