@@ -26,6 +26,7 @@ import { ImageHandler } from '../../../gameApp/ImageHandler';
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import { FireModifier } from '../../../gameApp/modifiers/FireModifier';
 import { FlyEarth } from '../../../gameApp/buildings/FlyEarth';
+import { Necromancer } from '../../../gameApp/monsters/Necromancer';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -338,6 +339,24 @@ class TestPage extends React.Component {
                 barricade2.loadedResourcesAfterBuild();
                 barricade2.impoveToIron();
                 Buildings.all.push(barricade2);
+            }
+        },
+
+        {
+            key: "Баррикада - НЕ возвращает урон Некроманту с дальней атакой",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var barricade1 = new Barricade(200);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var necromancer = new Necromancer(0, 780, true, 1);
+                Monsters.all.push(necromancer);
+
+                Waves.isStarted = false;
             }
         },
 
@@ -724,6 +743,33 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 2;
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+                
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+            }
+        },
+
+
+        {
+            key: "Волна 4",
+            code: () => { 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.waveCurrent = 3;
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
