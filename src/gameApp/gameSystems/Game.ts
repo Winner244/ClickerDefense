@@ -111,6 +111,9 @@ export class Game {
 			Monster.loadHitSounds();
 			AudioSystem.load(SwordEmptySound);
 		}
+		else if(startedWave == 2){
+			FlyEarth.loadExplosionResources();
+		}
 	}
 
 	static loadResourcesAfterEndOfWave(endedWave: number){
@@ -177,6 +180,10 @@ export class Game {
 				Game.gaveOverTime = Date.now();
 				AudioSystem.pauseSounds();
 				AudioSystem.play(-1, GameOverSound, 0.5);
+
+				if(Buildings.flyEarth.health <= 0){
+					Buildings.flyEarth.startExplosion();
+				}
 			}
 
 			Builder.logic();
@@ -311,7 +318,7 @@ export class Game {
 		Cursor.setCursor(Cursor.default);
 
 		if(Buildings.flyEarth.health <= 0){
-			//logic in Buildings.flyEarthRope.drawExplosion
+			//logic in Buildings.flyEarth.drawExplosion
 		}
 		else{
 			if(Buildings.flyEarth.y > -FlyEarth.height){

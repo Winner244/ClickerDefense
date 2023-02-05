@@ -8,22 +8,26 @@ import {AudioSystem} from '../gameSystems/AudioSystem';
 import {Draw} from '../gameSystems/Draw';
 
 import {Particle} from '../../models/Particle';
+import Animation from '../../models/Animation';
 
 import {Cursor} from '../gamer/Cursor';
 
 import flyEarthImage from '../../assets/img/buildings/flyEarth.png';  
+import explosionImage from '../../assets/img/explosionBomb.png'; 
 
 import PickSoundUrl1 from '../../assets/sounds/buildings/flyEarth/pick1.mp3'; 
 import PickSoundUrl2 from '../../assets/sounds/buildings/flyEarth/pick2.mp3'; 
 import PickSoundUrl3 from '../../assets/sounds/buildings/flyEarth/pick3.mp3'; 
 import PickSoundUrl4 from '../../assets/sounds/buildings/flyEarth/pick4.mp3'; 
 
+import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3'; 
 
 /** Летающая земля - главное здание в еденичном экземпляре */
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();
 	static readonly width: number = 375;
 	static readonly height: number = 279;
+	static readonly explosionImage:Animation = new Animation(8, 800); //анимация взрыва 
 
 	private _particles: Particle[] = [];
 
@@ -41,6 +45,11 @@ export class FlyEarth extends Building{
 			AudioSystem.load(PickSoundUrl3);
 			AudioSystem.load(PickSoundUrl4);
 		}
+	}
+
+	static loadExplosionResources(){
+		this.explosionImage.image.src = explosionImage;
+		AudioSystem.load(ExplosionSound);
 	}
 
 	private static playSoundPick(x: number){
@@ -95,6 +104,10 @@ export class FlyEarth extends Building{
 		}
 	}
 
+	startExplosion(){
+		AudioSystem.play(this.centerX, ExplosionSound, 0.5, 1, false);
+	}
+
 	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode?: boolean): void {
 		if(this.health <= 0){
 			this.drawExplosion(drawsDiffMs);
@@ -108,18 +121,27 @@ export class FlyEarth extends Building{
 	}
 
 	drawExplosion(drawsDiffMs: number): void {
-		for (let i = 0; i < this._particles.length; i++) {
-			const particle = this._particles[i];
-			particle.location.x += particle.dx;
-			particle.location.y += particle.dy;
-			//particle.dy += 0.1
-			Draw.ctx.fillStyle = `rgb(${particle.red}, ${particle.green}, ${particle.blue})`;
-			Draw.ctx.fillRect(particle.location.x, particle.location.y, 3, 3);
+		if(FlyEarth.explosionImage.leftTimeMs > 0){
+			FlyEarth.explosionImage.draw(drawsDiffMs, false, this.x - this.width, this.y - this.height, this.width * 3, this.height * 3);
 		}
 
-		this._particles = this._particles.filter(p => 
-			p.location.x > 0 && p.location.x < Draw.canvas.width &&
-			p.location.y > 0 && p.location.y < Draw.canvas.height && 
-			Math.random() > 0.05);
+		this._particles = this._particles.filter(p => {
+			p.location.x += p.dx;
+			p.location.y += p.dy;
+			//p.dy += 0.1
+			Draw.ctx.fillStyle = `rgb(${p.red}, ${p.green}, ${p.blue})`;
+			Draw.ctx.fillRect(p.location.x, p.location.y, 3, 3);
+
+			Draw.ctx.beginPath(); 
+			Draw.ctx.moveTo(p.location.x - p.dx * 5, p.location.y - p.dy * 5); 
+			Draw.ctx.lineTo(p.location.x, p.location.y); 
+			Draw.ctx.strokeStyle = `rgb(${p.red}, ${p.green}, ${p.blue})`;
+			Draw.ctx.lineWidth = 1;
+			Draw.ctx.stroke(); 
+
+			return p.location.x > 0 && p.location.x < Draw.canvas.width &&
+				p.location.y > 0 && p.location.y < Draw.canvas.height && 
+				Math.random() > 0.05;
+		});
 	}
 }

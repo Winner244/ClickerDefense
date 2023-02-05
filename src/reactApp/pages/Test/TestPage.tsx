@@ -876,6 +876,7 @@ class TestPage extends React.Component {
         Zombie.init(true);
         Bat.init(true);
         Builder.init(true);
+        FlyEarth.loadExplosionResources();
 
         const variant = this.getSelectedTestNumber();
         if(variant > 0){
