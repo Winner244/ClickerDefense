@@ -10,7 +10,15 @@ import AudioIIRFilter from "../../models/AudioIIRFilter";
 export class AudioSystem{
 	public static soundVolume: number = 1; //общий уровень звука эффектов (0 - is min value, 1 - is max value)
 	public static musicVolume: number = 1; //общий уровень звука фоновой музыки (0 - is min value, 1 - is max value)
-	public static isEnabled: boolean = true; //включена/отключена система?
+
+	private static _isEnabled: boolean = sessionStorage.getItem('AudioSystem.isEnabled') != 'false'; //включена/отключена система?
+	public static set isEnabled(value: boolean){
+		this._isEnabled = value;
+		sessionStorage.setItem('AudioSystem.isEnabled', value + ''); 
+	}
+	public static get isEnabled(): boolean{
+		return this._isEnabled && !document.hidden; 
+	}
 
 	public static iirFilters = {
 		low: new AudioIIRFilter(

@@ -124,10 +124,16 @@ export class Menu extends React.Component<Props, IState> {
 
   componentDidMount() {
 		document.addEventListener('keydown', this.onKey.bind(this));
+		document.addEventListener('visibilitychange', this.onVisibilityChange.bind(this));
   } 
   
   componentWillUnmount() {
 		document.removeEventListener('keydown', this.onKey.bind(this));
+		document.removeEventListener('visibilitychange', this.onVisibilityChange.bind(this));
+  }
+
+  onVisibilityChange(){
+    this.forceUpdate();
   }
 
   onClickNewGame(){

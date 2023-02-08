@@ -28,13 +28,9 @@ class GameDisplay extends React.Component {
 
     document.addEventListener('visibilitychange', () => {
       if(document.hidden){
-        AudioSystem.isEnabled = false;
         if(Waves.isStarted){
           Game.pause();
         }
-      }
-      else{
-        AudioSystem.isEnabled = true;
       }
     });
   }
