@@ -25,7 +25,7 @@ export class Necromancer extends Monster{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
 	private static readonly image: HTMLImageElement = new Image(); //окраска монстра
-	private static readonly imageFrames = 5;
+	private static readonly imageFrames = 6;
 
 	private static readonly attackImage: HTMLImageElement = new Image();  //атака монстра
 	private static readonly attackImageFrames = 5;
