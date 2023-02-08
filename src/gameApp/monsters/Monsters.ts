@@ -8,6 +8,7 @@ import {Monster} from './Monster';
 import {Zombie} from './Zombie';
 import {Bat} from './Bat';
 import {Boar} from './Boar';
+import {Necromancer} from './Necromancer';
 
 import {Gamer} from '../gamer/Gamer';
 import {Cursor} from '../gamer/Cursor';
@@ -49,6 +50,7 @@ export class Monsters{
 			case Zombie.name: Zombie.init(true); break;
 			case Boar.name: Boar.init(true); break;
 			case Bat.name: Bat.init(true); break;
+			case Necromancer.name: Necromancer.init(true); break;
 			default: throw `unexpected name of the monster (initMonster(${monsterName})).`;
 		}
 	}
@@ -146,6 +148,7 @@ export class Monsters{
 			case Zombie.name: newMonster = new Zombie(0, 0, isLeftSide, scaleSize); break;
 			case Boar.name: newMonster = new Boar(0, 0, isLeftSide, scaleSize); break;
 			case Bat.name: newMonster = new Bat(0, 0, isLeftSide, scaleSize); break;
+			case Necromancer.name: newMonster = new Necromancer(0, 0, isLeftSide, scaleSize); break;
 			default: throw `unexpected name of the monster (add(${name}, ...)).`;
 		}
 

@@ -24,11 +24,11 @@ import SoundAttacked3 from '../../assets/sounds/monsters/necromancer/attacked3.m
 export class Necromancer extends Monster{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
-	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
-	private static readonly imageFrames = 12;
+	private static readonly image: HTMLImageElement = new Image(); //окраска монстра
+	private static readonly imageFrames = 5;
 
-	private static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
-	private static readonly attackImageFrames = 4;
+	private static readonly attackImage: HTMLImageElement = new Image();  //атака монстра
+	private static readonly attackImageFrames = 5;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		super(x, y,
@@ -36,10 +36,10 @@ export class Necromancer extends Monster{
 			isLeftSide,
 			true,  //isLand
 			Necromancer.name,
-			Necromancer1Image,
+			Necromancer.image,
 			Necromancer.imageFrames,
-			900,   //speed animation
-			NecromancerAttack1Image,
+			500,   //speed animation
+			Necromancer.attackImage,
 			Necromancer.attackImageFrames,
 			1000,  //speed animation attack
 			5,     //reduce hover
@@ -54,10 +54,10 @@ export class Necromancer extends Monster{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources && !Necromancer.images.length){
-			Necromancer.imageHandler.add(Necromancer.images).src = Necromancer1Image;
+		if(isLoadResources){
+			Necromancer.imageHandler.new(Necromancer.image).src = Necromancer1Image;
 			
-			Necromancer.imageHandler.add(Necromancer.attackImages).src = NecromancerAttack1Image;
+			Necromancer.imageHandler.new(Necromancer.attackImage).src = NecromancerAttack1Image;
 		}
 	}
 
