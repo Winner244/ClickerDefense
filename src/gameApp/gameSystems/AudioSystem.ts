@@ -269,6 +269,11 @@ export class AudioSystem{
 
 
 	public static pauseSounds(){
+		if (!AudioSystem.isEnabled){
+			this._soundsForPause = [];
+			return;
+		}
+
 		this._soundsForPause.forEach(x => {
 			(<any>x).pausedAt = this._context.currentTime;
 			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this._context.currentTime);
@@ -279,6 +284,11 @@ export class AudioSystem{
 
 	
 	public static resumeSounds(){
+		if (!AudioSystem.isEnabled){
+			this._soundsForPause = [];
+			return;
+		}
+
 		this._soundsForPause.forEach(x => {
 			var pausedAt = (<any>x).pausedAt || 0;
 			var startedAt = (<any>x).startedAt || 0;
@@ -290,6 +300,7 @@ export class AudioSystem{
 				return;
 			}
 
+			console.log('resumeSounds', {delayLeftSec, offsetSec});
 			(<Tone.Player>x).start(delayLeftSec, offsetSec);
 			(<Tone.Player>x).onstop = () => this._soundsForPause = this._soundsForPause.filter(y => y != x);
 		});

@@ -38,7 +38,7 @@ export class Necromancer extends Monster{
 			Necromancer.name,
 			Necromancer.image,
 			Necromancer.imageFrames,
-			500,   //speed animation
+			700,   //speed animation
 			Necromancer.attackImage,
 			Necromancer.attackImageFrames,
 			1000,  //speed animation attack
