@@ -1,6 +1,7 @@
 import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
+import {Draw} from '../gameSystems/Draw';
 
 import {Building} from '../buildings/Building';
 
@@ -30,7 +31,7 @@ export class Necromancer extends Monster{
 	private static readonly imageFrames = 6;
 
 	private static readonly attackImage: HTMLImageElement = new Image();  //атака монстра
-	private static readonly attackImageFrames = 6;
+	private static readonly attackImageFrames = 5;
 
 	private static readonly maxDistanceDamage = 450; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется атака
 	private static readonly minDistanceDamage = 300; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется атака
@@ -109,4 +110,14 @@ export class Necromancer extends Monster{
 			[SoundAttacked1, SoundAttacked2, SoundAttacked3], 
 			[0.05, 0.05, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08], false, 1, true);
 	}*/
+
+	drawHealth(){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		if(this.health != this.healthMax){
+			Draw.drawHealth(this.x + (this.isLeftSide ? -2 : 23), this.y + 2, this.width - 20, this.healthMax, this.health);
+		}
+	}
 }
