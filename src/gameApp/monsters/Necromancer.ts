@@ -2,6 +2,8 @@ import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
+import {Building} from '../buildings/Building';
+
 import {Monster} from './Monster';
 
 import {Helper} from '../helpers/Helper';
@@ -28,9 +30,15 @@ export class Necromancer extends Monster{
 	private static readonly imageFrames = 6;
 
 	private static readonly attackImage: HTMLImageElement = new Image();  //атака монстра
-	private static readonly attackImageFrames = 5;
+	private static readonly attackImageFrames = 6;
+
+	private static readonly maxDistanceDamage = 450; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется атака
+	private static readonly minDistanceDamage = 300; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется атака
+	private _attackXStart: number; //координата x на которой будет активирована атака
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
+		Necromancer.init(true); //reserve init
+
 		super(x, y,
 			scaleSize,
 			isLeftSide,
@@ -50,7 +58,8 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler,
 			7000); //avrTimeSoundWaitMs
 
-			Necromancer.init(true); //reserve init
+		this._attackXStart = 0;
+
 	}
 
 	static init(isLoadResources: boolean = true): void{
@@ -59,6 +68,33 @@ export class Necromancer extends Monster{
 			
 			Necromancer.imageHandler.new(Necromancer.attackImage).src = NecromancerAttack1Image;
 		}
+	}
+
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number) {
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		//активация атаки
+		if(this._buildingGoal && this._attackXStart)
+		{
+			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
+				!this.isLeftSide && this.centerX <= this._attackXStart)
+			{
+				this._isAttack = true; //атакует
+				//TODO: create green magic ball
+				return; //игнорируем базовую логику движения и атаки
+			}
+		}
+
+		var oldBuildingGoalX = this._buildingGoal?.centerX;
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder);
+		var newBuildingGoalX = this._buildingGoal?.centerX;
+
+		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX){
+			this._attackXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Necromancer.minDistanceDamage, Necromancer.maxDistanceDamage) 
+		}
+
 	}
 
 	/*playSound(): void {

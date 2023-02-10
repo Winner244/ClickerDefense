@@ -819,6 +819,44 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Некромант - расстояние срабатывания атаки",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                for(var i = 0; i < 10; i++){
+                    var monster = new Necromancer(0, 780, true, 1);
+                    monster.health--;
+                    Monsters.all.push(monster);
+                }
+
+                for(var i = 0; i < 10; i++){
+                    var monster = new Necromancer(1780, 780, false, 1);
+                    monster.health--;
+                    Monsters.all.push(monster);
+                }
+                Buildings.all.forEach(x => x.healthMax = x.health = 400);
+            }
+        },
+
+        {
             key: "Image Handler, loading images, waiting images",
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
