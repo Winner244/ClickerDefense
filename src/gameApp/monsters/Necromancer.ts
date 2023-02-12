@@ -82,7 +82,8 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.image).src = Necromancer1Image;
 			Necromancer.imageHandler.new(Necromancer.attackImage).src = NecromancerAttack1Image;
 			Necromancer.imageHandler.new(Necromancer.chargeImage).src = ChargeImage;
-			AudioSystem.load(AttackSound);
+			AudioSystem.load(Attack1Sound);
+			AudioSystem.load(Attack2Sound);
 		}
 	}
 
