@@ -287,12 +287,7 @@ export class Monster{
 	}
 
 	onClicked(damage: number, x: number|null = null, y: number|null = null): void{
-		if(damage <= 0){
-			return;
-		}
-
-		this.health -= damage;
-		Labels.createGamerDamageLabel(x || this.centerX, y || this.centerY, '-' + damage);
+		this.attacked(damage, x, y);
 	}
 
 	attacked(damage: number, x: number|null = null, y: number|null = null): void{
@@ -302,6 +297,8 @@ export class Monster{
 		
 		this.health -= damage;
 		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + damage.toFixed(1), 3000);
+		//this.animation.restart();
+		//this.attackAnimation.restart();
 	}
 
 	addModifier(newModifier: Modifier): void{

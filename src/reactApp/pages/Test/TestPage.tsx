@@ -837,6 +837,20 @@ class TestPage extends React.Component {
             }
         },
 
+
+        {
+            key: "Некромант - ходьба",
+            code: () => { 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                { 
+                    [Necromancer.name]: new WaveData(30, 15, 0)
+                }];
+            }
+        },
+
         {
             key: "Полёт летучих мышей",
             code: () => {
