@@ -705,8 +705,29 @@ class TestPage extends React.Component {
                         [Boar.name]: new WaveData(15, 10, 0)
                     }];
 
-                var bat = new Bat(700, 380, true, 1);
+                var bat = new Bat(650, 380, true, 1);
                 Monsters.all.push(bat);
+            }
+        },
+
+        {
+            key: "Атака некроманта - обычная",
+            code: () => {
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var necromancer = new Necromancer(600, 780, true, 1);
+                Monsters.all.push(necromancer);
             }
         },
 

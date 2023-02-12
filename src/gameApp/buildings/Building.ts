@@ -188,7 +188,7 @@ export class Building extends ShopItem{
 		return this._isDisplayedUpgradeWindow;
 	}
 
-	applyDamage(damage: number, monster: Monster, x: number, y: number): number{
+	applyDamage(damage: number, monster: Monster|null, x: number, y: number): number{
 		const realDamage = Math.max(0, Math.abs(damage) - this.defense);
 		this.health -= realDamage;
 		Labels.createDamageLabel(x, y, '-' + realDamage.toFixed(1), 3000);
