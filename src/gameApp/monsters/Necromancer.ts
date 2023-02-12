@@ -18,7 +18,8 @@ import ChargeImage from '../../assets/img/monsters/necromancer/charge.png';
 
 import NecromancerAttack1Image from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
 
-import AttackSound from '../../assets/sounds/monsters/necromancer/attack.mp3'; 
+import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
+import Attack2Sound from '../../assets/sounds/monsters/necromancer/attack2.mp3'; 
 
 /*
 import Sound1 from '../../assets/sounds/monsters/necromancer/1.mp3'; 
@@ -109,8 +110,8 @@ export class Necromancer extends Monster{
 			}
 			else {
 				let buildingGoal = buildings.find(building => 
-					charge.centerX > building.x && charge.centerX < building.x + building.width && 
-					charge.centerY > building.y && charge.centerY < building.y + building.animation.image.height);
+					charge.centerX > building.x + building.reduceHover && charge.centerX < building.x + building.width - building.reduceHover && 
+					charge.centerY > building.y + building.reduceHover && charge.centerY < building.y + building.animation.image.height - building.reduceHover);
 
 				//попадание в цель
 				if(buildingGoal){ 
@@ -168,7 +169,8 @@ export class Necromancer extends Monster{
 			let dy = (y1 - y2) / (distance / Necromancer.chargeSpeed);
 
 			this._charges.push(new MovingObject(x1, y1, Necromancer.chargeImage.width, Necromancer.chargeImage.height, 1000 * 20, dx, dy, rotate));
-			AudioSystem.play(this.centerX, AttackSound, 1.5, 1, true);
+			AudioSystem.play(this.centerX, Attack1Sound, 0.00001, 1, true);
+			AudioSystem.play(this.centerX, Attack2Sound, 0.00001, 1, true);
 
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 		}
