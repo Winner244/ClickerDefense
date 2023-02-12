@@ -44,7 +44,7 @@ export class Necromancer extends Monster{
 	private static readonly minDistanceDamage = 300; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется атака
 	private _attackXStart: number; //координата x на которой будет активирована атака
 
-	static readonly chargeSpeed: number = 500; //скорость полёта заряда (в пикселях за секунду)
+	static readonly chargeSpeed: number = 200; //скорость полёта заряда (в пикселях за секунду)
 	private _charges: MovingObject[]; //атакующие заряды энергии 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -91,6 +91,7 @@ export class Necromancer extends Monster{
 		for(let i = 0; i < this._charges.length; i++)
 		{
 			let charge = this._charges[i];
+			charge.rotate += 1000 * Math.random() / drawsDiffMs;
 			charge.leftTimeMs -= drawsDiffMs;
 			charge.location.x -= charge.dx * (drawsDiffMs / 1000);
 			charge.location.y -= charge.dy * (drawsDiffMs / 1000);
@@ -157,7 +158,7 @@ export class Necromancer extends Monster{
 			let x2 = this._buildingGoal.centerX - Necromancer.chargeImage.width / 2;
 			let y2 = this._buildingGoal.centerY - Necromancer.chargeImage.height / 2;
 
-			let rotate = Helper.getRotateAngle(x1, y1, x2, y2);
+			let rotate = 0;
 			let distance = Helper.getDistance(x1, y1, x2, y2);
 			let dx = (x1 - x2) / (distance / Necromancer.chargeSpeed);
 			let dy = (y1 - y2) / (distance / Necromancer.chargeSpeed);
