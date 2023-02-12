@@ -18,6 +18,8 @@ import ChargeImage from '../../assets/img/monsters/necromancer/charge.png';
 
 import NecromancerAttack1Image from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
 
+import AttackSound from '../../assets/sounds/monsters/necromancer/attack.mp3'; 
+
 /*
 import Sound1 from '../../assets/sounds/monsters/necromancer/1.mp3'; 
 import Sound2 from '../../assets/sounds/monsters/necromancer/2.mp3'; 
@@ -79,6 +81,7 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.image).src = Necromancer1Image;
 			Necromancer.imageHandler.new(Necromancer.attackImage).src = NecromancerAttack1Image;
 			Necromancer.imageHandler.new(Necromancer.chargeImage).src = ChargeImage;
+			AudioSystem.load(AttackSound);
 		}
 	}
 
@@ -119,13 +122,14 @@ export class Necromancer extends Monster{
 		}
 
 		//активация атаки
-		if(this._buildingGoal && this._attackXStart)
+		if(this._buildingGoal && this._buildingGoal.health > 0 && this._attackXStart)
 		{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
 				if(!this._isAttack){
 					this._attackLeftTimeMs = 350;
+					this.attackAnimation.restart();
 				}
 				this._isAttack = true; //атакует
 				if(this._attackLeftTimeMs <= 0){
@@ -164,7 +168,7 @@ export class Necromancer extends Monster{
 			let dy = (y1 - y2) / (distance / Necromancer.chargeSpeed);
 
 			this._charges.push(new MovingObject(x1, y1, Necromancer.chargeImage.width, Necromancer.chargeImage.height, 1000 * 20, dx, dy, rotate));
-			//AudioSystem.play(this.centerX, chargeStrikeSound, 1, 1, true);
+			AudioSystem.play(this.centerX, AttackSound, 1.5, 1, true);
 
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 		}
