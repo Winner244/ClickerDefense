@@ -85,7 +85,7 @@ export class Necromancer extends Monster{
 
 		this._attackXStart = 0;
 		this._charges = [];
-		this.specialAbilityAcidRainCallAnimation = new Animation(8, 800, Necromancer.specialAbilityAcidRainCallImage);
+		this.specialAbilityAcidRainCallAnimation = new Animation(10, 800, Necromancer.specialAbilityAcidRainCallImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this.probabilitySpecialAbilityAcidRainPercentage = Necromancer.probabilitySpecialAbilityAcidRainPercentage;
 
