@@ -251,7 +251,7 @@ export class Necromancer extends Monster{
 		
 		if(this._isSpecialAbilityAcidRainCallStarted){
 			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames;
-			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * 115, 115);
+			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames, this.specialAbilityAcidRainCallAnimation.image.height);
 		}
 		else{
 			super.drawObject(drawsDiffMs, isGameOver, invertSign);
