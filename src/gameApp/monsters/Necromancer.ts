@@ -18,7 +18,7 @@ import Necromancer1Image from '../../assets/img/monsters/necromancer/necromancer
 import ChargeImage from '../../assets/img/monsters/necromancer/charge.png'; 
 
 import NecromancerAttack1Image from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
-import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall2.png'; 
+import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall.png'; 
 
 
 import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
@@ -85,7 +85,7 @@ export class Necromancer extends Monster{
 
 		this._attackXStart = 0;
 		this._charges = [];
-		this.specialAbilityAcidRainCallAnimation = new Animation(11, 800, Necromancer.specialAbilityAcidRainCallImage);
+		this.specialAbilityAcidRainCallAnimation = new Animation(8, 800, Necromancer.specialAbilityAcidRainCallImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this.probabilitySpecialAbilityAcidRainPercentage = Necromancer.probabilitySpecialAbilityAcidRainPercentage;
 
@@ -163,13 +163,18 @@ export class Necromancer extends Monster{
 		const isIsNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 
 		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isIsNotBaseBuildings){ //Кислотный дождь
-			if(!this._isAttack){
+			if(!this._isAttack && this._attackLeftTimeMs <= 0){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
-				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.durationMs + this.attackTimeWaitingMs;
+				this._attackLeftTimeMs = 700;
 				this._isAttack = true; //атакует
 			}
 	
+			if(this._attackLeftTimeMs <= 0){
+				this._isSpecialAbilityAcidRainCallStarted = false;
+				this._isAttack = false; //атакует
+				this._attackLeftTimeMs = 700;
+			}
 		}
 		else{ //энергетический шар
 			if(!this._isAttack){
@@ -183,10 +188,10 @@ export class Necromancer extends Monster{
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attackSimple(damage);
 			}
-	
-			if(this._attackLeftTimeMs > 0)
-				this._attackLeftTimeMs -= drawsDiffMs;
 		}
+	
+		if(this._attackLeftTimeMs > 0)
+			this._attackLeftTimeMs -= drawsDiffMs;
 	}
 
 	attackSimple(damage: number): void { //энергетический шар
@@ -246,7 +251,7 @@ export class Necromancer extends Monster{
 		
 		if(this._isSpecialAbilityAcidRainCallStarted){
 			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames;
-			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + invertSign * (this.width - newWidth) / 2, this.y, invertSign * this.width, this.height);
+			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * 115, 115);
 		}
 		else{
 			super.drawObject(drawsDiffMs, isGameOver, invertSign);
