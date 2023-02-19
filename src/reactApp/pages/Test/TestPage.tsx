@@ -732,29 +732,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Атака некроманта - спес способность - вызов кислотного дождя",
-            code: () => {
-                Gamer.coins = 200;
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
-
-                var necromancer = new Necromancer(600, 780, true, 1);
-                necromancer.isSpecialAbilityAcidRainCallStarted = true;
-                Monsters.all.push(necromancer);
-            }
-        },
-
-        {
-            key: "Атака некроманта - обычная, смена цели",
+            key: "Некромант - обычная атака, смена цели",
             code: () => {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -775,6 +753,35 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
 
                 var necromancer = new Necromancer(100, 780, true, 1);
+                Monsters.all.push(necromancer);
+            }
+        },
+
+        {
+            key: "Некромант - спес способность - вызов кислотного дождя",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                var necromancer = new Necromancer(200, 780, true, 1);
+                necromancer.probabilitySpecialAbilityAcidRainPercentage = 100;
                 Monsters.all.push(necromancer);
             }
         },
@@ -1043,6 +1050,7 @@ class TestPage extends React.Component {
         Boar.init(true);
         Zombie.init(true);
         Bat.init(true);
+        Necromancer.init(true);
         Builder.init(true);
         FlyEarth.loadExplosionResources();
 

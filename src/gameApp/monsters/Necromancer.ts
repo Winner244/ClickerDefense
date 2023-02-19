@@ -18,7 +18,7 @@ import Necromancer1Image from '../../assets/img/monsters/necromancer/necromancer
 import ChargeImage from '../../assets/img/monsters/necromancer/charge.png'; 
 
 import NecromancerAttack1Image from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
-import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall.png'; 
+import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall2.png'; 
 
 
 import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
@@ -29,6 +29,8 @@ import SoundAttacked2 from '../../assets/sounds/monsters/necromancer/attacked2.m
 import SoundAttacked3 from '../../assets/sounds/monsters/necromancer/attacked3.mp3'; 
 import SoundAttacked4 from '../../assets/sounds/monsters/necromancer/attacked4.mp3'; 
 import SoundAttacked5 from '../../assets/sounds/monsters/necromancer/attacked5.mp3'; 
+import { FlyEarth } from '../buildings/FlyEarth';
+import { FlyEarthRope } from '../buildings/FlyEarthRope';
 
 
 /** Некромант - тип монстров */
@@ -55,8 +57,9 @@ export class Necromancer extends Monster{
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
 	private static readonly probabilitySpecialAbilityAcidRainPercentage = 10; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки
-	private readonly specialAbilityAcidRainCallAnimation: Animation = new Animation(8, 800); //анимация вызова спец способности "Кислотный дождь"
-	isSpecialAbilityAcidRainCallStarted = false; //начался вызов спес способности "Кислотный дождь"
+	private readonly specialAbilityAcidRainCallAnimation: Animation; //анимация вызова спец способности "Кислотный дождь"
+	probabilitySpecialAbilityAcidRainPercentage: number; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
+	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -82,7 +85,9 @@ export class Necromancer extends Monster{
 
 		this._attackXStart = 0;
 		this._charges = [];
-		this.specialAbilityAcidRainCallAnimation.image.src = Necromancer.specialAbilityAcidRainCallImage.src;
+		this.specialAbilityAcidRainCallAnimation = new Animation(11, 800, Necromancer.specialAbilityAcidRainCallImage);
+		this._isSpecialAbilityAcidRainCallStarted  = false;
+		this.probabilitySpecialAbilityAcidRainPercentage = Necromancer.probabilitySpecialAbilityAcidRainPercentage;
 
 	}
 
@@ -139,20 +144,7 @@ export class Necromancer extends Monster{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
-				if(!this._isAttack){
-					this._attackLeftTimeMs = 350;
-					this.attackAnimation.restart();
-				}
-
-				this._isAttack = true; //атакует
-				if(this._attackLeftTimeMs <= 0){
-					let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
-					let damage = this.damage + this.damage * damageMultiplier;
-					this.attack(damage);
-				}
-
-				if(this._attackLeftTimeMs > 0)
-					this._attackLeftTimeMs -= drawsDiffMs;
+				this.attack(drawsDiffMs);
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}
@@ -166,34 +158,56 @@ export class Necromancer extends Monster{
 		}
 	}
 
-	attack(damage: number): void {
-		if(damage > 0 && this._buildingGoal != null){
-			const random = Helper.getRandom(0, 100);
+	attack(drawsDiffMs: number): void {
+		const random = Helper.getRandom(0, 100);
+		const isIsNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 
-			if(random <= Necromancer.probabilitySpecialAbilityAcidRainPercentage){ //Кислотный дождь
-				this.isSpecialAbilityAcidRainCallStarted = true;
+		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isIsNotBaseBuildings){ //Кислотный дождь
+			if(!this._isAttack){
+				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.durationMs + this.attackTimeWaitingMs;
+				this._isAttack = true; //атакует
 			}
-			else{ //энергетический шар
-				let x1 = this.isLeftSide 
-					? this.x + this.width 
-					: this.x;
-				let y1 = this.centerY - 15;
-				let x2 = this._buildingGoal.centerX - Necromancer.chargeImage.width / 2;
-				let y2 = this._buildingGoal.centerY - Necromancer.chargeImage.height / 2;
 	
-				let rotate = 0;
-				let distance = Helper.getDistance(x1, y1, x2, y2);
-				let dx = (x1 - x2) / (distance / Necromancer.chargeSpeed);
-				let dy = (y1 - y2) / (distance / Necromancer.chargeSpeed);
+		}
+		else{ //энергетический шар
+			if(!this._isAttack){
+				this._attackLeftTimeMs = 350;
+				this.attackAnimation.restart();
+				this._isAttack = true; //атакует
+			}
 	
-				this._charges.push(new MovingObject(x1, y1, Necromancer.chargeImage.width, Necromancer.chargeImage.height, 1000 * 20, dx, dy, rotate));
-				AudioSystem.play(this.centerX, Attack1Sound, 0.00001, 1, true);
-				AudioSystem.play(this.centerX, Attack2Sound, 0.00001, 1, true);
+			if(this._attackLeftTimeMs <= 0){
+				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
+				let damage = this.damage + this.damage * damageMultiplier;
+				this.attackSimple(damage);
+			}
+	
+			if(this._attackLeftTimeMs > 0)
+				this._attackLeftTimeMs -= drawsDiffMs;
+		}
+	}
 
-				this._attackLeftTimeMs = this.attackTimeWaitingMs;
-			}
+	attackSimple(damage: number): void { //энергетический шар
+		if(damage > 0 && this._buildingGoal != null){
+			let x1 = this.isLeftSide 
+				? this.x + this.width 
+				: this.x;
+			let y1 = this.centerY - 15;
+			let x2 = this._buildingGoal.centerX - Necromancer.chargeImage.width / 2;
+			let y2 = this._buildingGoal.centerY - Necromancer.chargeImage.height / 2;
+
+			let rotate = 0;
+			let distance = Helper.getDistance(x1, y1, x2, y2);
+			let dx = (x1 - x2) / (distance / Necromancer.chargeSpeed);
+			let dy = (y1 - y2) / (distance / Necromancer.chargeSpeed);
+
+			this._charges.push(new MovingObject(x1, y1, Necromancer.chargeImage.width, Necromancer.chargeImage.height, 1000 * 20, dx, dy, rotate));
+			AudioSystem.play(this.centerX, Attack1Sound, 0.00001, 1, true);
+			AudioSystem.play(this.centerX, Attack2Sound, 0.00001, 1, true);
+
+			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 		}
 	}
 
@@ -205,8 +219,8 @@ export class Necromancer extends Monster{
 			0.1, false, 1, true);
 
 		//отмена спец способности
-		if(this.isSpecialAbilityAcidRainCallStarted){
-			this.isSpecialAbilityAcidRainCallStarted = false;
+		if(this._isSpecialAbilityAcidRainCallStarted){
+			this._isSpecialAbilityAcidRainCallStarted = false;
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 			this.animation.restart();
 		}
@@ -225,11 +239,17 @@ export class Necromancer extends Monster{
 			Draw.ctx.rotate(0);
 		}
 
-		if(this.isSpecialAbilityAcidRainCallStarted){
-			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+		super.draw(drawsDiffMs, isGameOver);
+	}
+
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number){
+		
+		if(this._isSpecialAbilityAcidRainCallStarted){
+			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames;
+			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + invertSign * (this.width - newWidth) / 2, this.y, invertSign * this.width, this.height);
 		}
 		else{
-			super.draw(drawsDiffMs, isGameOver);
+			super.drawObject(drawsDiffMs, isGameOver, invertSign);
 		}
 	}
 

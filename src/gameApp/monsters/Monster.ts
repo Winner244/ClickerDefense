@@ -330,7 +330,7 @@ export class Monster{
 		}
 
 		let isInvert = this.isLeftSide;
-		let scale = isInvert ? -1 : 1;
+		let invertSign = isInvert ? -1 : 1;
 
 		this.modifiers.forEach(modifier => modifier.drawBehindMonster(this, drawsDiffMs));
 
@@ -339,14 +339,7 @@ export class Monster{
 			Draw.ctx.scale(-1, 1);
 		}
 
-		if(this._isAttack){
-			//атака
-			this.attackAnimation.draw(drawsDiffMs, isGameOver, scale * this.x, this.y, scale * this.attackWidth, this.attackHeight);
-		}
-		else{
-			//передвижение
-			this.animation.draw(drawsDiffMs, isGameOver, scale * this.x, this.y, scale * this.width, this.height);
-		}
+		this.drawObject(drawsDiffMs, isGameOver, invertSign);
 
 		if(isInvert){
 			Draw.ctx.restore();
@@ -355,6 +348,17 @@ export class Monster{
 		this.modifiers.forEach(modifier => modifier.drawAheadMonster(this, drawsDiffMs));
 
 		this.drawHealth();
+	}
+
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number){
+		if(this._isAttack){
+			//атака
+			this.attackAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.attackWidth, this.attackHeight);
+		}
+		else{
+			//передвижение
+			this.animation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+		}
 	}
 
 	drawHealth(){
