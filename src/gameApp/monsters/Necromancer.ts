@@ -19,6 +19,7 @@ import ChargeImage from '../../assets/img/monsters/necromancer/charge.png';
 
 import NecromancerAttack1Image from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
 import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall.png'; 
+import SpecialAbilityAcidRainCreatingImage from '../../assets/img/monsters/necromancer/cloudCreating.png'; 
 
 
 import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
@@ -56,14 +57,17 @@ export class Necromancer extends Monster{
 	
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
+	private static readonly specialAbilityAcidRainCreatingImage: HTMLImageElement = new Image();  //создание облаков "Кислотный дождь" над целью
 	private static readonly probabilitySpecialAbilityAcidRainPercentage = 10; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки
 	private static readonly startCreatingAcidRainAfterStartCallMs = 700; //через сколько миллисекунд начнётся создание облака над целью?
 	private static readonly endCreatingAcidRainAfterStartCallMs = 1800; //через сколько миллисекунд закончится создание облака над целью и будет добавлен модификатор "Кислотный дождь" объекту?
 	private static readonly acidRainCallDurationMs = 2500; //длительность анимации вызова кислотного дождя (миллисекунды)
 	private readonly specialAbilityAcidRainCallAnimation: Animation; //анимация вызова спец способности "Кислотный дождь"
+	private readonly specialAbilityAcidRainCreatingAnimation: Animation; //анимация создания облаков "Кислотный дождь" над целью
 	probabilitySpecialAbilityAcidRainPercentage: number; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
 	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
 	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
+	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -90,8 +94,10 @@ export class Necromancer extends Monster{
 		this._attackXStart = 0;
 		this._charges = [];
 		this.specialAbilityAcidRainCallAnimation = new Animation(25, Necromancer.acidRainCallDurationMs, Necromancer.specialAbilityAcidRainCallImage);
+		this.specialAbilityAcidRainCreatingAnimation = new Animation(12, 12 * 100, Necromancer.specialAbilityAcidRainCreatingImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
+		this._isSpecialAbilityAcidRainCreatingEnded = false;
 		this.probabilitySpecialAbilityAcidRainPercentage = Necromancer.probabilitySpecialAbilityAcidRainPercentage;
 
 	}
@@ -102,6 +108,7 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.attackImage).src = NecromancerAttack1Image;
 			Necromancer.imageHandler.new(Necromancer.chargeImage).src = ChargeImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCallImage).src = SpecialAbilityAcidRainCallImage;
+			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCreatingImage).src = SpecialAbilityAcidRainCreatingImage;
 			AudioSystem.load(Attack1Sound);
 			AudioSystem.load(Attack2Sound);
 		}
@@ -177,11 +184,20 @@ export class Necromancer extends Monster{
 
 			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingStarted = true;
-				//TODO: start animation of creating clouds
+				this.specialAbilityAcidRainCreatingAnimation.restart();
 			}
+
+
+			if(!this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
+				this._isSpecialAbilityAcidRainCreatingEnded = true;
+				//TODO: set modificator to goal
+			}
+
 	
 			if(this._attackLeftTimeMs <= 0){
 				this._isSpecialAbilityAcidRainCallStarted = false;
+				this._isSpecialAbilityAcidRainCreatingStarted = false;
+				this._isSpecialAbilityAcidRainCreatingEnded = false;
 				this._isAttack = false; //атакует
 				this._attackLeftTimeMs = 700;
 			}
@@ -236,6 +252,8 @@ export class Necromancer extends Monster{
 		//отмена спец способности
 		if(this._isSpecialAbilityAcidRainCallStarted){
 			this._isSpecialAbilityAcidRainCallStarted = false;
+			this._isSpecialAbilityAcidRainCreatingStarted = false;
+			this._isSpecialAbilityAcidRainCreatingEnded = false;
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 			this.animation.restart();
 		}
@@ -264,8 +282,12 @@ export class Necromancer extends Monster{
 			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height;
 			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * newWidth, newHeight);
 
-			if(this._isSpecialAbilityAcidRainCreatingStarted){
-				//TODO: animation
+			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal){
+				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames;
+				const height = this.specialAbilityAcidRainCreatingAnimation.image.height;
+				const x = this._buildingGoal.centerX - width / 2;
+				const y = this._buildingGoal.y - height / 2;
+				this.specialAbilityAcidRainCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * width, height);
 			}
 		}
 		else{
