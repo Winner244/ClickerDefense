@@ -810,6 +810,7 @@ class TestPage extends React.Component {
 
                 var necromancer = new Necromancer(200, 780, true, 1);
                 necromancer.probabilitySpecialAbilityAcidRainPercentage = 100;
+                necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
             }
         },

@@ -157,6 +157,7 @@ export class Necromancer extends Monster{
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
 				this.attack(drawsDiffMs);
+				this.animation.restart();
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}
@@ -182,17 +183,16 @@ export class Necromancer extends Monster{
 				this._isAttack = true; //атакует
 			}
 
-			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
+			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingStarted = true;
 				this.specialAbilityAcidRainCreatingAnimation.restart();
 			}
 
 
-			if(!this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
+			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
 				//TODO: set modificator to goal
 			}
-
 	
 			if(this._attackLeftTimeMs <= 0){
 				this._isSpecialAbilityAcidRainCallStarted = false;
@@ -256,6 +256,8 @@ export class Necromancer extends Monster{
 			this._isSpecialAbilityAcidRainCreatingEnded = false;
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 			this.animation.restart();
+			this.attackAnimation.restart();
+			this._attackLeftTimeMs = 0;
 		}
 	}
 
@@ -282,11 +284,11 @@ export class Necromancer extends Monster{
 			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height;
 			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * newWidth, newHeight);
 
-			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal){
+			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal && this.specialAbilityAcidRainCreatingAnimation.leftTimeMs > 0){
 				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames;
 				const height = this.specialAbilityAcidRainCreatingAnimation.image.height;
 				const x = this._buildingGoal.centerX - width / 2;
-				const y = this._buildingGoal.y - height / 2;
+				const y = this._buildingGoal.y - height;
 				this.specialAbilityAcidRainCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * width, height);
 			}
 		}
