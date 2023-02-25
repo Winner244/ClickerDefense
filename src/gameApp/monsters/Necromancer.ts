@@ -57,9 +57,13 @@ export class Necromancer extends Monster{
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
 	private static readonly probabilitySpecialAbilityAcidRainPercentage = 10; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки
+	private static readonly startCreatingAcidRainAfterStartCallMs = 700; //через сколько миллисекунд начнётся создание облака над целью?
+	private static readonly endCreatingAcidRainAfterStartCallMs = 1800; //через сколько миллисекунд закончится создание облака над целью и будет добавлен модификатор "Кислотный дождь" объекту?
+	private static readonly acidRainCallDurationMs = 2500; //длительность анимации вызова кислотного дождя (миллисекунды)
 	private readonly specialAbilityAcidRainCallAnimation: Animation; //анимация вызова спец способности "Кислотный дождь"
 	probabilitySpecialAbilityAcidRainPercentage: number; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
 	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
+	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -85,8 +89,9 @@ export class Necromancer extends Monster{
 
 		this._attackXStart = 0;
 		this._charges = [];
-		this.specialAbilityAcidRainCallAnimation = new Animation(10, 800, Necromancer.specialAbilityAcidRainCallImage);
+		this.specialAbilityAcidRainCallAnimation = new Animation(25, Necromancer.acidRainCallDurationMs, Necromancer.specialAbilityAcidRainCallImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
+		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this.probabilitySpecialAbilityAcidRainPercentage = Necromancer.probabilitySpecialAbilityAcidRainPercentage;
 
 	}
@@ -160,14 +165,19 @@ export class Necromancer extends Monster{
 
 	attack(drawsDiffMs: number): void {
 		const random = Helper.getRandom(0, 100);
-		const isIsNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
+		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 
-		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isIsNotBaseBuildings){ //Кислотный дождь
+		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings){ //Кислотный дождь
 			if(!this._isAttack && this._attackLeftTimeMs <= 0){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
-				this._attackLeftTimeMs = 700;
+				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
 				this._isAttack = true; //атакует
+			}
+
+			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
+				this._isSpecialAbilityAcidRainCreatingStarted = true;
+				//TODO: start animation of creating clouds
 			}
 	
 			if(this._attackLeftTimeMs <= 0){
@@ -251,7 +261,12 @@ export class Necromancer extends Monster{
 		
 		if(this._isSpecialAbilityAcidRainCallStarted){
 			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames;
-			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames, this.specialAbilityAcidRainCallAnimation.image.height);
+			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height;
+			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * newWidth, newHeight);
+
+			if(this._isSpecialAbilityAcidRainCreatingStarted){
+				//TODO: animation
+			}
 		}
 		else{
 			super.drawObject(drawsDiffMs, isGameOver, invertSign);
