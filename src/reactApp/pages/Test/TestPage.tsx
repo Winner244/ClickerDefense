@@ -168,11 +168,39 @@ class TestPage extends React.Component {
                 var boar2 = new Boar(1850, 780, false, 1, true);
                 boar2.health--;
             // Monsters.all.push(boar2);
-        }
-    },
+            }
+        },
 
-    {
-        key: "Кабан - передача импульса от спец способности кабана к башне (слева)",
+        {
+            key: "Кабан - Спец способность +преждевременное уничтожение цели - кабан бежит дальше",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var boar = new Boar(50, 780, true, 1, true);
+                boar.health--;
+                Monsters.all.push(boar);
+
+                var barricade1 = new Barricade(700);
+                barricade1.loadedResourcesAfterBuild();
+                barricade1.health = 1;
+                setTimeout(() => barricade1.health = 0, 3000);
+                Buildings.all.push(barricade1);
+            // Monsters.all.push(boar2);
+            }
+        },
+
+        {
+            key: "Кабан - передача импульса от спец способности кабана к башне (слева)",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
