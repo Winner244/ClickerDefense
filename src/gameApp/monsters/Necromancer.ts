@@ -141,7 +141,7 @@ export class Necromancer extends Monster{
 			else {
 				let buildingGoal = buildings.find(building => 
 					charge.centerX > building.x + building.reduceHover && charge.centerX < building.x + building.width - building.reduceHover && 
-					charge.centerY > building.y + building.reduceHover && charge.centerY < building.y + building.animation.image.height - building.reduceHover);
+					charge.centerY > building.y + building.reduceHover && charge.centerY < building.y + building.height - building.reduceHover);
 
 				//попадание в цель
 				if(buildingGoal){ 
@@ -159,7 +159,7 @@ export class Necromancer extends Monster{
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
 				this.attack(drawsDiffMs);
-				this.animation.restart();
+				this.animation?.restart();
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}
@@ -257,7 +257,7 @@ export class Necromancer extends Monster{
 			this._isSpecialAbilityAcidRainCreatingStarted = false;
 			this._isSpecialAbilityAcidRainCreatingEnded = false;
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
-			this.animation.restart();
+			this.animation?.restart();
 			this.attackAnimation.restart();
 			this._attackLeftTimeMs = 0;
 		}

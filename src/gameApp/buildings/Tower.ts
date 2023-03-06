@@ -98,7 +98,7 @@ export class Tower extends Building{
 			false,
 			true, //isLand
 			Tower.name, 0.7,
-			Tower.image, 0, 0, Tower.image.width, Tower.image.height, 15, 
+			Tower.image, 0, 0, 15, 
 			100, //health max
 			Tower.shopItem.price,
 			true, true);
@@ -248,7 +248,7 @@ export class Tower extends Building{
 			else if(!endMoving){
 				let monsterGoal = monsters.find(monster => 
 					arrow.centerX > monster.x && arrow.centerX < monster.x + monster.width && 
-					arrow.centerY > monster.y && arrow.centerY < monster.y + monster.animation.image.height);
+					arrow.centerY > monster.y && arrow.centerY < monster.y + monster.height);
 
 				//попадание в цель
 				if(monsterGoal){ 

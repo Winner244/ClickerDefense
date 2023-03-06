@@ -35,7 +35,7 @@ export class Barricade extends Building{
 			false,
 			true, //isLand
 			Barricade.name, 0.7,
-			Barricade.image, 0, 0, Barricade.image.width, Barricade.image.height, 15,
+			Barricade.image, 0, 0, 15,
 			250, //health max
 			Barricade.shopItem.price, 
 			true, true);

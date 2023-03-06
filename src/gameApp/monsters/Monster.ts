@@ -33,7 +33,6 @@ import Hit11Sound from '../../assets/sounds/monsters/hit11.mp3';
 /** Базовый класс для всех монстров */
 export class Monster extends AttackedObject{
 	readonly imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
-	readonly animation: AnimationInfinite; //анимация движения монстра
 	readonly attackAnimation: AnimationInfinite;  //анимация атаки монстра
 
 	//поля свойства экземпляра
@@ -77,9 +76,8 @@ export class Monster extends AttackedObject{
 		imageHandler: ImageHandler,
 		avrTimeSoundWaitMs: number)
 	{
-		super(x, y, healthMax * scaleSize, scaleSize, isLeftSide, isLand, reduceHover, name);
+		super(x, y, healthMax * scaleSize, scaleSize, image, isLeftSide, isLand, reduceHover, name, frames, animationDurationMs);
 
-		this.animation = new AnimationInfinite(frames, animationDurationMs, image); //анимация бега
 		this.attackAnimation = new AnimationInfinite(attackFrames, attackAnimationDurationMs, attackImage);  //анимация атаки
 
 		this.damage = damage * scaleSize; //урон за 1 раз
@@ -96,25 +94,11 @@ export class Monster extends AttackedObject{
 		this.avrTimeSoundWaitMs = avrTimeSoundWaitMs;
 	}
 
-	get height(): number {
-		return this.width / (this.animation.image.width / this.animation.frames) * this.animation.image.height;
-	}
 	get attackHeight(): number {
 		return this.attackWidth / (this.attackAnimation.image.width / this.attackAnimation.frames) * this.attackAnimation.image.height;
 	}
-
-	get width(): number {
-		return this.animation.image.width / this.animation.frames * this.scaleSize;
-	}
 	get attackWidth(): number {
 		return this.attackAnimation.image.width / this.attackAnimation.frames * this.scaleSize;
-	}
-
-	get centerX(): number {
-		return this.x + this.width / 2;
-	}
-	get centerY(): number {
-		return this.y + this.height / 2;
 	}
 
 	public static loadHitSounds(){
@@ -269,8 +253,6 @@ export class Monster extends AttackedObject{
 		
 		this.health -= damage;
 		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + damage.toFixed(1), 3000);
-		//this.animation.restart();
-		//this.attackAnimation.restart();
 	}
 
 	destroy(): void{}
@@ -285,7 +267,7 @@ export class Monster extends AttackedObject{
 		let isInvert = this.isLeftSide;
 		let invertSign = isInvert ? -1 : 1;
 
-		this.modifiers.forEach(modifier => modifier.drawBehindMonster(this, drawsDiffMs));
+		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
 
 		if(isInvert){
 			Draw.ctx.save();
@@ -298,19 +280,19 @@ export class Monster extends AttackedObject{
 			Draw.ctx.restore();
 		}
 
-		this.modifiers.forEach(modifier => modifier.drawAheadMonster(this, drawsDiffMs));
+		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
 
 		this.drawHealth();
 	}
 
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number){
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1){
 		if(this._isAttack){
 			//атака
 			this.attackAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.attackWidth, this.attackHeight);
 		}
 		else{
 			//передвижение
-			this.animation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+			super.drawObject(drawsDiffMs, isGameOver, invertSign);
 		}
 	}
 

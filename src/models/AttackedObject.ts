@@ -1,13 +1,19 @@
 import {Helper} from '../gameApp/helpers/Helper';
 
+import AnimationInfinite from './AnimationInfinite';
+
 import {FireModifier} from '../gameApp/modifiers/FireModifier';
 import {Modifier} from '../gameApp/modifiers/Modifier';
+import { Draw } from '../gameApp/gameSystems/Draw';
 
 /** атакуемый объект (Монстр или Строение) */
 export class AttackedObject {
 	readonly id: string;
 	
 	name: string;
+
+	image: HTMLImageElement;
+	animation: AnimationInfinite|null;
 
 	initialHealthMax: number; //изначальный максимум хп
 	healthMax: number; //максимум хп
@@ -26,8 +32,16 @@ export class AttackedObject {
 
 	modifiers: Modifier[]; //бафы/дебафы
 
-	constructor(x: number, y: number, healthMax: number, scaleSize: number, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string){
+	constructor(x: number, y: number, healthMax: number, scaleSize: number, image: HTMLImageElement, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string, 
+		frames: number, 
+		animationDurationMs: number)
+	{
 		this.id = Helper.generateUid();
+
+		this.animation = frames > 1 
+			? new AnimationInfinite(frames, animationDurationMs, image) 
+			: null;
+		this.image = image;
 
 		this.initialHealthMax = this.healthMax = this.health = healthMax; //максимум хп
 
@@ -47,6 +61,28 @@ export class AttackedObject {
 		this.modifiers = [];
 	}
 
+	get height(): number {
+		if(this.animation){
+			return this.width / (this.animation.image.width / this.animation.frames) * this.animation.image.height;
+		}
+
+		return this.image.height * this.scaleSize;
+	}
+	get width(): number {
+		if(this.animation){
+			return this.animation.image.width / this.animation.frames * this.scaleSize;
+		}
+
+		return this.image.width * this.scaleSize;
+	}
+
+	get centerX(): number {
+		return this.x + this.width / 2;
+	}
+	get centerY(): number {
+		return this.y + this.height / 2;
+	}
+
 	addModifier(newModifier: Modifier): void{
 		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
 		if(existedModifier){
@@ -62,6 +98,15 @@ export class AttackedObject {
 		}
 		else{
 			this.modifiers.push(newModifier);
+		}
+	}
+
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1){
+		if(this.animation){
+			this.animation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+		}
+		else{
+			Draw.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
 		}
 	}
 }

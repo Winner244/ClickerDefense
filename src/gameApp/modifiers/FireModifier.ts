@@ -81,9 +81,9 @@ export class FireModifier extends Modifier{
 		}
 	}
 
-	//drawAheadMonster
+	//drawAheadObject
 
-	drawBehindMonster(monster: Monster, drawsDiffMs: number){
+	drawBehindObject(monster: Monster, drawsDiffMs: number){
 		const sizeScale = (this.lifeTimeMs || 0) / this._lifeTimeMsInitial * (1 - this.damageDecreasingEndGoalPercentage / 100) + this.damageDecreasingEndGoalPercentage / 100;
 		this._fireAnimation.draw(drawsDiffMs, false, 
 			monster.x + monster.width / 5 + (1 - sizeScale) * monster.width / 3, 

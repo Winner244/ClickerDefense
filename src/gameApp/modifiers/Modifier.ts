@@ -1,4 +1,5 @@
-import { Monster } from "../monsters/Monster";
+import {AttackedObject} from "../../models/AttackedObject";
+import {Monster} from "../monsters/Monster";
 
 /* Баф/дебаф - повышение/понижение характеристик юнитов/монстров/строений */
 export class Modifier{
@@ -29,12 +30,12 @@ export class Modifier{
 		this.lifeTimeMs = lifeTimeMs;
 	}
 
-	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]): void{
+	logic(object: AttackedObject, drawsDiffMs: number, monsters: Monster[]): void{
 		if(this.lifeTimeMs){
 			this.lifeTimeMs -= drawsDiffMs;
 
 			if(this.lifeTimeMs <= 0){
-				monster.modifiers = monster.modifiers.filter(modifier => modifier.name != this.name);
+				object.modifiers = object.modifiers.filter(modifier => modifier.name != this.name);
 			}
 		}
 	}
@@ -43,6 +44,6 @@ export class Modifier{
 	logicSpread(monster: Monster, monsters: Monster[]): void{}
 
 	
-	drawBehindMonster(monster: Monster, drawsDiffMs: number){}
-	drawAheadMonster(monster: Monster, drawsDiffMs: number){}
+	drawBehindObject(monster: Monster, drawsDiffMs: number){}
+	drawAheadObject(monster: Monster, drawsDiffMs: number){}
 }

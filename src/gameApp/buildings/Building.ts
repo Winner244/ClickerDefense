@@ -5,7 +5,7 @@ import {Monster} from '../monsters/Monster';
 import ParameterItem from '../../models/ParameterItem';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import Improvement from '../../models/Improvement';
-import { AttackedObject } from '../../models/AttackedObject';
+import {AttackedObject} from '../../models/AttackedObject';
 
 import {Labels} from '../labels/Labels';
 
@@ -33,10 +33,6 @@ export class Building extends AttackedObject{
 	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
 
 	//поля свойства экземпляра
-	image: HTMLImageElement;
-	animation: AnimationInfinite;
-	width: number;  //ширина image
-	height: number; //высота image
 	price: number;
 
 	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
@@ -74,20 +70,14 @@ export class Building extends AttackedObject{
 		image: HTMLImageElement, 
 		frames: number, 
 		animationDurationMs: number,
-		width: number, 
-		height: number, 
 		reduceHover: number, 
 		healthMax: number,
 		price: number,
 		isSupportRepair: boolean,
 		isSupportUpgrade: boolean)
 	{
-		super(x, y, healthMax, scaleSize, isLeftSide, isLand, reduceHover, name);
+		super(x, y, healthMax, scaleSize, image, isLeftSide, isLand, reduceHover, name, frames, animationDurationMs);
 
-		this.animation = new AnimationInfinite(frames, animationDurationMs, image);
-		this.image = image;
-		this.width = width * scaleSize;
-		this.height = height * scaleSize;
 		this.price = price;
 
 		this.isSupportRepair = isSupportRepair;
@@ -149,13 +139,6 @@ export class Building extends AttackedObject{
 		}
 
 		return this._impulse;
-	}
-
-	get centerX(): number {
-		return this.x + this.width / 2;
-	}
-	get centerY(): number {
-		return this.y + this.height / 2;
 	}
 
 	set isDisplayedUpgradeWindow(value: boolean){
@@ -245,17 +228,7 @@ export class Building extends AttackedObject{
 			y = -this.height;
 		}
 
-		if(this.animation.frames > 1){
-			this.animation.draw(drawsDiffMs, isGameOver, x, y, this.width, this.height);
-		}
-		else{
-			if(this.width > 0 && this.height > 0){
-				Draw.ctx.drawImage(this.image, x, y, this.width, this.height);
-			}
-			else{
-				Draw.ctx.drawImage(this.image, x, y);
-			}
-		}
+		super.drawObject(drawsDiffMs, isGameOver);
 
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);

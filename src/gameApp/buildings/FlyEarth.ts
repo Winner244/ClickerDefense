@@ -25,15 +25,13 @@ import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3
 /** Летающая земля - главное здание в еденичном экземпляре */
 export class FlyEarth extends Building{
 	static readonly image: HTMLImageElement = new Image();
-	static readonly width: number = 375;
-	static readonly height: number = 279;
 	static readonly explosionAnimation: Animation = new Animation(8, 800); //анимация взрыва 
 
 	private _explosionParticles: Particle[] = [];
 
 	constructor(x: number, y: number) {
-		super(x, y, false, false, FlyEarth.name, 1,
-			FlyEarth.image, 4, 700, FlyEarth.width, FlyEarth.height, 15, 
+		super(x, y, false, false, FlyEarth.name, 0.75,
+			FlyEarth.image, 4, 700, 15, 
 			100, 0, false, false);
 
 		FlyEarth.init(true);
@@ -71,8 +69,8 @@ export class FlyEarth extends Building{
 			Cursor.setCursor(Cursor.pick);
 	
 			if(isClick){
-				let coinX = this.x + this.reduceHover + Math.random() * (FlyEarth.width - this.reduceHover * 2);
-				let coinY = this.y + FlyEarth.height / 2;
+				let coinX = this.x + this.reduceHover + Math.random() * (this.width - this.reduceHover * 2);
+				let coinY = this.y + this.height / 2;
 				Coins.create(coinX, coinY);
 				Cursor.setCursor(Cursor.pickYellow);
 				FlyEarth.playSoundPick(mouseX);

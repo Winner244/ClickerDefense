@@ -171,7 +171,7 @@ export class Game {
 		if(Game.isGameOver){
 			Game.gameOverLogic(drawsDiffMs);
 
-			if(Buildings.flyEarth.y <= -FlyEarth.height){
+			if(Buildings.flyEarth.y <= -Buildings.flyEarth.height){
 				Game.isEndAfterGameOver = true;
 			}
 
@@ -212,7 +212,7 @@ export class Game {
 		Game.drawAll(millisecondsFromStart, drawsDiffMs);
 
 		
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -Buildings.flyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
 			cancelAnimationFrame(this._animationId);
 			return;
 		}
@@ -306,7 +306,7 @@ export class Game {
 		TestSystem.draw(drawsDiffMs, Game.isGameOver);
 		AnimationsSystem.draw(drawsDiffMs, Game.isGameOver);
 	
-		if(Game.isGameOver && (Buildings.flyEarth.y <= -FlyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
+		if(Game.isGameOver && (Buildings.flyEarth.y <= -Buildings.flyEarth.height || Game.gaveOverTimeLeftMs <= 0)){
 			Draw.drawGameOver();
 		}
 
@@ -324,7 +324,7 @@ export class Game {
 			//logic in Buildings.flyEarth.drawExplosion
 		}
 		else{
-			if(Buildings.flyEarth.y > -FlyEarth.height){
+			if(Buildings.flyEarth.y > -Buildings.flyEarth.height){
 				Buildings.flyEarth.y -= 230 * drawsDiffMs / 1000;
 			}
 		}

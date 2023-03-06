@@ -654,12 +654,12 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
 
-                    var bat = new Bat(Draw.canvas.width / 2 - FlyEarth.width, Buildings.flyEarth.centerY, true, 1);
+                    var bat = new Bat(Draw.canvas.width / 2 - FlyEarth.image.width, Buildings.flyEarth.centerY, true, 1);
                     bat.modifiers.push(new FireModifier(0.5, 15000));
                     Monsters.all.push(bat);
 
 
-                    var bat2 = new Bat(Draw.canvas.width / 2 + FlyEarth.width, Buildings.flyEarth.centerY, false, 1);
+                    var bat2 = new Bat(Draw.canvas.width / 2 + FlyEarth.image.width, Buildings.flyEarth.centerY, false, 1);
                     bat2.modifiers.push(new FireModifier(0.5, 15000));
                     Monsters.all.push(bat2);
                 }, 15000);
