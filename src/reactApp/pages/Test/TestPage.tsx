@@ -1082,6 +1082,9 @@ class TestPage extends React.Component {
         Necromancer.init(true);
         Builder.init(true);
         FlyEarth.loadExplosionResources();
+        Game.loadResourcesAfterEndOfWave(0);
+        Game.loadResourcesAfterBuild(new Tower(0));
+        Game.loadResourcesAfterBuild(new Barricade(0));
 
         const variant = this.getSelectedTestNumber();
         if(variant > 0){

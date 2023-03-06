@@ -61,8 +61,8 @@ function getDefaultOpenState(): ShopState{
         items: {
             [ShopCategoryEnum.MAGIC]: [],
             [ShopCategoryEnum.BUILDINGS]: [
-                new Barricade(0),
-                new Tower(0)
+                Barricade.shopItem,
+                Tower.shopItem
             ],
             [ShopCategoryEnum.UNITS]: []
         }

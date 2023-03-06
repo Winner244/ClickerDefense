@@ -1,5 +1,7 @@
 import sortBy from 'lodash/sortBy';
 
+import {AttackedObject} from '../../models/AttackedObject';
+
 import {ImageHandler} from '../ImageHandler';
 
 import {Draw} from '../gameSystems/Draw';
@@ -10,7 +12,6 @@ import {Labels} from '../labels/Labels';
 import AnimationInfinite from '../../models/AnimationInfinite';
 
 import {Modifier} from "../modifiers/Modifier";
-import {FireModifier} from '../modifiers/FireModifier';
 
 import {Helper} from "../helpers/Helper";
 
@@ -30,31 +31,14 @@ import Hit11Sound from '../../assets/sounds/monsters/hit11.mp3';
 
 
 /** Базовый класс для всех монстров */
-export class Monster{
+export class Monster extends AttackedObject{
 	readonly imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 	readonly animation: AnimationInfinite; //анимация движения монстра
 	readonly attackAnimation: AnimationInfinite;  //анимация атаки монстра
 
 	//поля свойства экземпляра
-	readonly id: string;
-	name: string;
-
-	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
-
-	healthMax: number; //максимум хп
-	health: number;
 	damage: number; //урон (в секунду)
 	speed: number; //скорость передвижения (пикселей в секунду)
-
-	x: number;
-	y: number;
-	scaleSize: number; //1 - размер монстра по размеру картинки, 0.5 - монстр в 2 раза меньше картинки по высоте и ширине, 1.5 - монстр в 2 раза больше.
-
-	isLeftSide: boolean; // с левой стороны движется?
-	isLand: boolean; //наземный?
-
-	modifiers: Modifier[]; //бафы/дебафы
-
 
 
 	//технические поля экземпляра
@@ -93,21 +77,10 @@ export class Monster{
 		imageHandler: ImageHandler,
 		avrTimeSoundWaitMs: number)
 	{
-		this.id = Helper.generateUid();
-		this.x = x;
-		this.y = y;
-		this.isLeftSide = isLeftSide; // с левой стороны движется?
-		this.isLand = isLand; //наземный?
-		this.scaleSize = scaleSize;
-		this.name = name;
+		super(x, y, healthMax * scaleSize, scaleSize, isLeftSide, isLand, reduceHover, name);
 
 		this.animation = new AnimationInfinite(frames, animationDurationMs, image); //анимация бега
 		this.attackAnimation = new AnimationInfinite(attackFrames, attackAnimationDurationMs, attackImage);  //анимация атаки
-
-		this.reduceHover = reduceHover; //на сколько пикселей уменьшить зону наведения?
-
-		this.healthMax = healthMax * scaleSize; //максимум хп
-		this.health = healthMax * scaleSize;
 
 		this.damage = damage * scaleSize; //урон за 1 раз
 		this.attackTimeWaitingMs = attackTimeWaitingMs;
@@ -118,7 +91,6 @@ export class Monster{
 
 		this._isAttack = false; //атакует?
 		this._buildingGoal = null;
-		this.modifiers = [];
 		this._attackLeftTimeMs = 0;
 		this._leftTimeToPlaySoundMs = avrTimeSoundWaitMs / 2;
 		this.avrTimeSoundWaitMs = avrTimeSoundWaitMs;
@@ -299,25 +271,6 @@ export class Monster{
 		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + damage.toFixed(1), 3000);
 		//this.animation.restart();
 		//this.attackAnimation.restart();
-	}
-
-	addModifier(newModifier: Modifier): void{
-		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
-		if(existedModifier){
-			if(existedModifier instanceof FireModifier && newModifier instanceof FireModifier){
-				existedModifier.fireDamageInSecond = Math.max(existedModifier.fireDamageInSecond || 0, newModifier.fireDamageInSecond || 0);
-				existedModifier.lifeTimeMs = Math.max(existedModifier.lifeTimeMs || 0, newModifier.lifeTimeMs || 0);
-			}
-			else{
-				existedModifier.damageMultiplier += newModifier.damageMultiplier;
-				existedModifier.healthMultiplier += newModifier.healthMultiplier;
-				existedModifier.speedMultiplier += newModifier.speedMultiplier;
-			}
-		}
-		else{
-			this.modifiers.push(newModifier);
-		}
-
 	}
 
 	destroy(): void{}

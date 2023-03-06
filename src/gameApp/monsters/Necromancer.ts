@@ -4,11 +4,14 @@ import {MovingObject} from '../../models/MovingObject';
 import Animation from '../../models/Animation';
 
 import {Modifier} from '../modifiers/Modifier';
+import {AcidRainModifier} from '../modifiers/AcidRainModifier';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 import {Draw} from '../gameSystems/Draw';
 
 import {Building} from '../buildings/Building';
+import {FlyEarth} from '../buildings/FlyEarth';
+import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
 import {Monster} from './Monster';
 
@@ -30,8 +33,6 @@ import SoundAttacked2 from '../../assets/sounds/monsters/necromancer/attacked2.m
 import SoundAttacked3 from '../../assets/sounds/monsters/necromancer/attacked3.mp3'; 
 import SoundAttacked4 from '../../assets/sounds/monsters/necromancer/attacked4.mp3'; 
 import SoundAttacked5 from '../../assets/sounds/monsters/necromancer/attacked5.mp3'; 
-import { FlyEarth } from '../buildings/FlyEarth';
-import { FlyEarthRope } from '../buildings/FlyEarthRope';
 
 
 /** Некромант - тип монстров */
@@ -62,6 +63,7 @@ export class Necromancer extends Monster{
 	private static readonly startCreatingAcidRainAfterStartCallMs = 700; //через сколько миллисекунд начнётся создание облака над целью?
 	private static readonly endCreatingAcidRainAfterStartCallMs = 1800; //через сколько миллисекунд закончится создание облака над целью и будет добавлен модификатор "Кислотный дождь" объекту?
 	private static readonly acidRainCallDurationMs = 2500; //длительность анимации вызова кислотного дождя (миллисекунды)
+	private static readonly acidRainDurationMs = 15000; //длительность анимации кислотного дождя (миллисекунды)
 	private readonly specialAbilityAcidRainCallAnimation: Animation; //анимация вызова спец способности "Кислотный дождь"
 	private readonly specialAbilityAcidRainCreatingAnimation: Animation; //анимация создания облаков "Кислотный дождь" над целью
 	probabilitySpecialAbilityAcidRainPercentage: number; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
@@ -191,7 +193,7 @@ export class Necromancer extends Monster{
 
 			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
-				//TODO: set modificator to goal
+				this._buildingGoal?.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs));
 			}
 	
 			if(this._attackLeftTimeMs <= 0){

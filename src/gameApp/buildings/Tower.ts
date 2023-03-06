@@ -17,6 +17,9 @@ import AnimationInfinite from '../../models/AnimationInfinite';
 import Improvement from '../../models/Improvement';
 import ParameterItem from '../../models/ParameterItem';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
+import ShopItem from '../../models/ShopItem';
+
+import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {Helper} from '../helpers/Helper';
 
@@ -51,12 +54,11 @@ import explosionDynamit2Sound from '../../assets/sounds/explosionBomb2.mp3';
 /** Башня - тип здания - стреляет стрелами по монстрам */
 export class Tower extends Building{
 	static readonly image: HTMLImageElement = new Image();
-	static readonly width: number = 200 * 0.7;
-	static readonly height: number = 425 * 0.7;
 
 	static readonly imageArrow: HTMLImageElement = new Image();
-	static readonly price: number = 50; //цена здания
 	static readonly initArrowSpeed: number = 500; 
+
+	static readonly shopItem: ShopItem = new ShopItem('Сторожевая башня', Tower.image, 50, 'Стреляет по монстрам в радиусе действия.', ShopCategoryEnum.BUILDINGS);
 
 	//поля свойства экземпляра
 	bowmans: number = 1; //кол-во лучников
@@ -92,14 +94,13 @@ export class Tower extends Building{
 
 	constructor(x: number) {
 		super(x, 
-			(Draw.canvas ? Draw.canvas.height : 0) - Tower.height + 10, 
+			(Draw.canvas ? Draw.canvas.height : 0) - Tower.image.height * 0.7 + 10, 
 			false,
 			true, //isLand
-			'Сторожевая башня', 
-			Tower.image, 0, 0, Tower.width, Tower.height, 15, 
+			Tower.name, 0.7,
+			Tower.image, 0, 0, Tower.image.width, Tower.image.height, 15, 
 			100, //health max
-			Tower.price, // price
-			'Стреляет по монстрам в радиусе действия.',
+			Tower.shopItem.price,
 			true, true);
 
 		this.maxImpulse = 5;
@@ -110,12 +111,12 @@ export class Tower extends Building{
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
-			this.image.src = towerImage; 
+			Tower.shopItem.image.src = Tower.image.src = towerImage; 
 		}
 	}
 	
 	static loadResourcesAfterBuild() {
-		this.imageArrow.src = arrowImage; 
+		Tower.imageArrow.src = arrowImage; 
 
 		AudioSystem.load(arrowStrikeSound);
 	}

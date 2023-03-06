@@ -6,19 +6,20 @@ import {Monster} from '../monsters/Monster';
 
 import Improvement from '../../models/Improvement';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
+import ParameterItem from '../../models/ParameterItem';
+import ShopItem from '../../models/ShopItem';
+
+import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import BarricadeImage from '../../assets/img/buildings/barricade/barricade.png';  
 import BarricadeIronImage from '../../assets/img/buildings/barricade/barricadeIron.png';  
 
 import SwordIcon from '../../assets/img/icons/sword.png';  
 import ShieldIcon from '../../assets/img/icons/shield.png';
-import ParameterItem from '../../models/ParameterItem';
 
 /** Баррикада - тип здания */
 export class Barricade extends Building{
 	static readonly image: HTMLImageElement = new Image();
-	static readonly width: number = 226 * 0.7;
-	static readonly height: number = 189 * 0.7;
 
 	static readonly damageMirrorPercentage: number = 10; //количество возвращаемого монстрам урона (%)
 	static readonly damageIronMirrorPercentage: number = 20; //количество возвращаемого монстрам урона от железной версии (%)
@@ -26,16 +27,17 @@ export class Barricade extends Building{
 
 	static readonly improvementIronShield: number = 1; //кол-во добавляемой брони для железной версии
 
+	static readonly shopItem: ShopItem = new ShopItem('Баррикада', Barricade.image, 25, 'Колючая и непроходимая. Сдерживает монстров и возвращает часть полученного урона, обратно, монстрам.', ShopCategoryEnum.BUILDINGS);
+
 	constructor(x: number) {
 		super(x, 
-			(Draw.canvas ? Draw.canvas.height : 0) - Barricade.height + 10, 
+			(Draw.canvas ? Draw.canvas.height : 0) - Barricade.image.height * 0.7 + 10, 
 			false,
 			true, //isLand
-			'Баррикада', 
-			Barricade.image, 0, 0, Barricade.width, Barricade.height, 15,
+			Barricade.name, 0.7,
+			Barricade.image, 0, 0, Barricade.image.width, Barricade.image.height, 15,
 			250, //health max
-			25, // price
-			'Колючая и непроходимая. Сдерживает монстров и возвращает часть полученного урона, обратно, монстрам.',
+			Barricade.shopItem.price, 
 			true, true);
 			
 		this.maxImpulse = 2;
@@ -46,7 +48,7 @@ export class Barricade extends Building{
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
-			this.image.src = BarricadeImage;  //load image only once
+			Barricade.image.src = BarricadeImage;  //load image only once
 		}
 	}
 	

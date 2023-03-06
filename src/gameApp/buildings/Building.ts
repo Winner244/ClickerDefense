@@ -2,21 +2,17 @@ import {Gamer} from '../gamer/Gamer';
 
 import {Monster} from '../monsters/Monster';
 
-import ShopItem from '../../models/ShopItem';
 import ParameterItem from '../../models/ParameterItem';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import Improvement from '../../models/Improvement';
+import { AttackedObject } from '../../models/AttackedObject';
 
 import {Labels} from '../labels/Labels';
 
 import {Draw} from '../gameSystems/Draw';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
-import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
-
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
-
-import {Modifier} from '../modifiers/Modifier';
 
 import RepairSoundUrl from '../../assets/sounds/buildings/repair.m4a'; 
 import RepairHammerSoundUrl from '../../assets/sounds/buildings/repair_hammer.mp3'; 
@@ -25,11 +21,9 @@ import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 import HealthIcon from '../../assets/img/icons/health.png';
 import ShieldIcon from '../../assets/img/icons/shield.png';
-import { FireModifier } from '../modifiers/FireModifier';
 
 /** Базовый класс для всех зданий */
-export class Building extends ShopItem{
-	
+export class Building extends AttackedObject{
 	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
 	static readonly upgradeAnimation: AnimationInfinite = new AnimationInfinite(90, 3000); //анимация апгрейда
 
@@ -39,20 +33,11 @@ export class Building extends ShopItem{
 	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
 
 	//поля свойства экземпляра
+	image: HTMLImageElement;
 	animation: AnimationInfinite;
 	width: number;  //ширина image
 	height: number; //высота image
-	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
-	
-	initialHealthMax: number; //изначальный максимум хп
-	healthMax: number; //максимум хп
-	health: number;
-
-	x: number;
-	y: number;
-
-	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
-	isLand: boolean; //наземное? (иначе - воздушное)
+	price: number;
 
 	isSupportRepair: boolean; //можно ли ремонтировать строение? (при наведении будет отображаться кнопка ремонта между волнами)
 	isSupportUpgrade: boolean; //поддерживает ли модернизацию? (при наведении будет отображаться кнопка модернизации между волнами)
@@ -66,8 +51,6 @@ export class Building extends ShopItem{
 
 	maxImpulse: number; //максимальное значение импульса для здания
 	impulseForceDecreasing: number; //сила уменьшения импульса
-
-	modifiers: Modifier[]; //бафы/дебафы
 
 	//технические поля экземпляра
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
@@ -87,6 +70,7 @@ export class Building extends ShopItem{
 		isLeftSide: boolean, 
 		isLand: boolean, 
 		name: string, 
+		scaleSize: number,
 		image: HTMLImageElement, 
 		frames: number, 
 		animationDurationMs: number,
@@ -95,27 +79,16 @@ export class Building extends ShopItem{
 		reduceHover: number, 
 		healthMax: number,
 		price: number,
-		description: string,
 		isSupportRepair: boolean,
 		isSupportUpgrade: boolean)
 	{
-		super(name, image, price, description, ShopCategoryEnum.BUILDINGS);
+		super(x, y, healthMax, scaleSize, isLeftSide, isLand, reduceHover, name);
 
 		this.animation = new AnimationInfinite(frames, animationDurationMs, image);
 		this.image = image;
-		this.name = name;
-		this.width = width;
-		this.height = height;
-		this.reduceHover = reduceHover; 
-
-		this.healthMax = this.initialHealthMax = healthMax; 
-		this.health = healthMax;
-
-		this.x = x;
-		this.y = y;
-
-		this.isLeftSide = isLeftSide; 
-		this.isLand = isLand; 
+		this.width = width * scaleSize;
+		this.height = height * scaleSize;
+		this.price = price;
 
 		this.isSupportRepair = isSupportRepair;
 		this.isSupportUpgrade = isSupportUpgrade;
@@ -137,8 +110,6 @@ export class Building extends ShopItem{
 		this.infoItems = [];
 
 		this.improvements = [];
-
-		this.modifiers = [];
 	}
 
 	static loadRepairResources(): void{
@@ -180,10 +151,10 @@ export class Building extends ShopItem{
 		return this._impulse;
 	}
 
-	get centerX(){
+	get centerX(): number {
 		return this.x + this.width / 2;
 	}
-	get centerY(){
+	get centerY(): number {
 		return this.y + this.height / 2;
 	}
 
@@ -194,24 +165,6 @@ export class Building extends ShopItem{
 		return this._isDisplayedUpgradeWindow;
 	}
 
-
-	addModifier(newModifier: Modifier): void{
-		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
-		if(existedModifier){
-			if(existedModifier instanceof FireModifier && newModifier instanceof FireModifier){
-				existedModifier.fireDamageInSecond = Math.max(existedModifier.fireDamageInSecond || 0, newModifier.fireDamageInSecond || 0);
-				existedModifier.lifeTimeMs = Math.max(existedModifier.lifeTimeMs || 0, newModifier.lifeTimeMs || 0);
-			}
-			else{
-				existedModifier.damageMultiplier += newModifier.damageMultiplier;
-				existedModifier.healthMultiplier += newModifier.healthMultiplier;
-				existedModifier.speedMultiplier += newModifier.speedMultiplier;
-			}
-		}
-		else{
-			this.modifiers.push(newModifier);
-		}
-	}
 
 	applyDamage(damage: number, monster: Monster|null, x: number, y: number): number{
 		const realDamage = Math.max(0, Math.abs(damage) - this.defense);

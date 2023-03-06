@@ -391,10 +391,22 @@ export class Game {
 	}
 
 	/** Игрок купил вещь в магазине */
-	static buyThing(item: ShopItem){
+	static buyThing(shopItem: ShopItem){
 		Game.continue();
-		if(item.category == ShopCategoryEnum.BUILDINGS){
-			var building = <Building>item;
+		if(shopItem.category == ShopCategoryEnum.BUILDINGS){
+			var building: Building|null = null;
+
+			if(Tower.shopItem == shopItem){
+				building = new Tower(0);
+			}
+			else if(Barricade.shopItem == shopItem){
+				building = new Barricade(0);
+			}
+
+			if(building == null){
+				throw `unexpected shopItem with type = Building (buyThing('${shopItem.name}')).`;
+			}
+
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 	}
