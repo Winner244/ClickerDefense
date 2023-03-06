@@ -16,6 +16,8 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 
+import {Modifier} from '../modifiers/Modifier';
+
 import RepairSoundUrl from '../../assets/sounds/buildings/repair.m4a'; 
 import RepairHammerSoundUrl from '../../assets/sounds/buildings/repair_hammer.mp3'; 
 
@@ -23,6 +25,7 @@ import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 import HealthIcon from '../../assets/img/icons/health.png';
 import ShieldIcon from '../../assets/img/icons/shield.png';
+import { FireModifier } from '../modifiers/FireModifier';
 
 /** Базовый класс для всех зданий */
 export class Building extends ShopItem{
@@ -64,6 +67,7 @@ export class Building extends ShopItem{
 	maxImpulse: number; //максимальное значение импульса для здания
 	impulseForceDecreasing: number; //сила уменьшения импульса
 
+	modifiers: Modifier[]; //бафы/дебафы
 
 	//технические поля экземпляра
 	protected _impulse: number; //импульс от сверх ударов и сотрясений
@@ -133,6 +137,8 @@ export class Building extends ShopItem{
 		this.infoItems = [];
 
 		this.improvements = [];
+
+		this.modifiers = [];
 	}
 
 	static loadRepairResources(): void{
@@ -186,6 +192,25 @@ export class Building extends ShopItem{
 	}
 	get isDisplayedUpgradeWindow(): boolean{
 		return this._isDisplayedUpgradeWindow;
+	}
+
+
+	addModifier(newModifier: Modifier): void{
+		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
+		if(existedModifier){
+			if(existedModifier instanceof FireModifier && newModifier instanceof FireModifier){
+				existedModifier.fireDamageInSecond = Math.max(existedModifier.fireDamageInSecond || 0, newModifier.fireDamageInSecond || 0);
+				existedModifier.lifeTimeMs = Math.max(existedModifier.lifeTimeMs || 0, newModifier.lifeTimeMs || 0);
+			}
+			else{
+				existedModifier.damageMultiplier += newModifier.damageMultiplier;
+				existedModifier.healthMultiplier += newModifier.healthMultiplier;
+				existedModifier.speedMultiplier += newModifier.speedMultiplier;
+			}
+		}
+		else{
+			this.modifiers.push(newModifier);
+		}
 	}
 
 	applyDamage(damage: number, monster: Monster|null, x: number, y: number): number{
