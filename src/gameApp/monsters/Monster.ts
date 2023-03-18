@@ -292,8 +292,6 @@ export class Monster extends AttackedObject{
 			return;
 		}
 
-		if(this.health != this.healthMax){
-			Draw.drawHealth(this.x + 10, this.y - 2, this.width - 20, this.healthMax, this.health);
-		}
+		super.drawHealthBase(this.x + 10, this.y - 2, this.width - 20);
 	}
 }

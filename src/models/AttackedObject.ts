@@ -134,4 +134,14 @@ export class AttackedObject {
 			Draw.ctx.drawImage(this.image, x, y, this.width, this.height);
 		}
 	}
+
+	drawHealthBase(x: number|null = null, y: number|null = null, width: number|null = null): void{
+		x = x ?? this.x;
+		y = y ?? this.y;
+		width = width ?? this.width;
+
+		if(this.health < this.healthMax && this.health > 0){
+			Draw.drawHealth(x, y, width, this.healthMax, this.health);
+		}
+	}
 }

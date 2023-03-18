@@ -309,8 +309,6 @@ export class Necromancer extends Monster{
 			return;
 		}
 
-		if(this.health != this.healthMax){
-			Draw.drawHealth(this.x + (this.isLeftSide ? -2 : 23), this.y + 2, this.width - 20, this.healthMax, this.health);
-		}
+		super.drawHealthBase(this.x + (this.isLeftSide ? -2 : 23), this.y + 2, this.width - 20);
 	}
 }

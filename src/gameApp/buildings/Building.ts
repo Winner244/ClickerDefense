@@ -232,9 +232,7 @@ export class Building extends AttackedObject{
 	}
 
 	drawHealth(): void{
-		if(this.health < this.healthMax && this.health > 0){
-			Draw.drawHealth(this.x + 15, this.y - 10, this.width - 30, this.healthMax, this.health);
-		}
+		super.drawHealthBase(this.x + 15, this.y - 10, this.width - 30);
 	}
 
 	drawRepairingAnumation(): void{
