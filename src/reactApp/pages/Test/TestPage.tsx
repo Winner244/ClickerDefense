@@ -650,9 +650,14 @@ class TestPage extends React.Component {
                 boar.modifiers.push(new FireModifier(0.5, 15000));
                 Monsters.all.push(boar);
 
-                var bat = new Bat(0, 280, true, 1);
+                var bat = new Bat(500, 480, true, 1);
                 bat.modifiers.push(new FireModifier(0.5, 15000));
                 Monsters.all.push(bat);
+
+                for(var y = 600; y > 200; y -= 30){
+                    var bat = new Bat(700, y, true, 1);
+                    Monsters.all.push(bat);
+                }
 
                 setTimeout(() => {
 

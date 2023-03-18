@@ -1,5 +1,6 @@
-import {Monster} from "../monsters/Monster";
 import {Modifier} from "./Modifier";
+
+import {AttackedObject} from "../../models/AttackedObject";
 
 import AnimationInfinite from "../../models/AnimationInfinite";
 
@@ -16,7 +17,7 @@ export class FireModifier extends Modifier{
 	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
 	protected readonly damageDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится урон к концу своей жизни (в процентах, чем ментше, тем меньше урон будет в конце)
 	protected readonly viewDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится внешне огонь к концу своей жизни (в процентах, чем ментше, тем меньше визуально будет огонь в конце)
-	protected readonly damageTimeWaitingMs: number = 300; //частота урона (выражается во времени ожидания после атаки в миллисекундах)
+	protected readonly damageTimeWaitingMs: number = 400; //частота урона (выражается во времени ожидания после атаки в миллисекундах)
 
 	_damageLeftTimeMs: number = 0; //оставшееся время до следующего получения урона (миллисекунды)
 	_isReadyToSpread: boolean = false; //можно ли запустить логику распространения на данном цикле обновлений?
@@ -37,8 +38,8 @@ export class FireModifier extends Modifier{
 		this._lifeTimeMsInitial = lifeTimeMsInitial || lifeTimeMs;
 	}
 
-	logic(monster: Monster, drawsDiffMs: number, monsters: Monster[]){
-		super.logic(monster, drawsDiffMs, monsters);
+	logic(object: AttackedObject, drawsDiffMs: number, objects: AttackedObject[]){
+		super.logic(object, drawsDiffMs, objects);
 
 		//ожидания времени нанесения урона
 		if(this._damageLeftTimeMs > 0){
@@ -47,13 +48,13 @@ export class FireModifier extends Modifier{
 		}
 		else{
 			//наносим урон и перезаряжаем время
-			monster.applyDamage(this.fireDamageInSecond * (this.damageTimeWaitingMs  / 1000));
+			object.applyDamage(this.fireDamageInSecond * (this.damageTimeWaitingMs  / 1000));
 			this._damageLeftTimeMs = this.damageTimeWaitingMs;
 
 			//ослабеваем урон 
 			this.fireDamageInSecond -= this._damageDecreasingInSecond * this.damageTimeWaitingMs / 1000;
 			if(this.fireDamageInSecond <= 0){
-				monster.modifiers = monster.modifiers.filter(modifier => modifier.name != FireModifier.name);
+				object.modifiers = object.modifiers.filter(modifier => modifier.name != FireModifier.name);
 			}
 
 
@@ -62,21 +63,21 @@ export class FireModifier extends Modifier{
 	}
 
 	//логика распространения огня
-	logicSpread(monster: Monster, monsters: Monster[], isForce: boolean = false){
-		super.logicSpread(monster, monsters);
+	logicSpread(object: AttackedObject, objects: AttackedObject[], isForce: boolean = false){
+		super.logicSpread(object, objects);
 
 		if(this._isReadyToSpread || isForce){
 
 			//распространение на других монстров
-			monsters.forEach(anotherMonster => {
+			objects.forEach(anotherObject => {
 				const procentDecreasing = 0.4;
-				if(monster.x + monster.width * procentDecreasing < anotherMonster.x + anotherMonster.width && 
-					monster.x + monster.width * (1 - procentDecreasing) > anotherMonster.x && 
-					monster.y - monster.height / 2 + monster.height * procentDecreasing < anotherMonster.y + anotherMonster.height &&
-					monster.y + monster.height * (1 - procentDecreasing) > anotherMonster.y)
+				if(object.x + object.width * procentDecreasing < anotherObject.x + anotherObject.width && 
+					object.x + object.width * (1 - procentDecreasing) > anotherObject.x && 
+					object.y - object.height / 2 + object.height * procentDecreasing < anotherObject.y + anotherObject.height &&
+					object.y + object.height * (1 - procentDecreasing) > anotherObject.y)
 				{
 					//пересеклись либо один входит в другой - передаём огонь с текущими параметрами
-					anotherMonster.addModifier(new FireModifier(this.fireDamageInSecond, this.lifeTimeMs || 0, this._lifeTimeMsInitial));
+					anotherObject.addModifier(new FireModifier(this.fireDamageInSecond, this.lifeTimeMs || 0, this._lifeTimeMsInitial));
 				}
 			});
 		}
@@ -84,12 +85,12 @@ export class FireModifier extends Modifier{
 
 	//drawAheadObject
 
-	drawBehindObject(monster: Monster, drawsDiffMs: number){
+	drawBehindObject(object: AttackedObject, drawsDiffMs: number){
 		const sizeScale = (this.lifeTimeMs || 0) / this._lifeTimeMsInitial * (1 - this.damageDecreasingEndGoalPercentage / 100) + this.damageDecreasingEndGoalPercentage / 100;
 		this._fireAnimation.draw(drawsDiffMs, false, 
-			monster.x + monster.width / 5 + (1 - sizeScale) * monster.width / 3, 
-			monster.y - monster.height / 2 + (1 - sizeScale) * monster.height, 
-			monster.width * sizeScale - monster.width * sizeScale / 5 * 2, 
-			monster.height * sizeScale);
+			object.x + object.width / 5 + (1 - sizeScale) * object.width / 3, 
+			object.y - object.height / 2 + (1 - sizeScale) * object.height, 
+			object.width * sizeScale - object.width * sizeScale / 5 * 2, 
+			object.height * sizeScale);
 	}
 }
