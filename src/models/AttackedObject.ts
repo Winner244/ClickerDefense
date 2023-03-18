@@ -4,6 +4,7 @@ import AnimationInfinite from './AnimationInfinite';
 
 import {FireModifier} from '../gameApp/modifiers/FireModifier';
 import {Modifier} from '../gameApp/modifiers/Modifier';
+import {AcidRainModifier} from '../gameApp/modifiers/AcidRainModifier';
 
 import {Labels} from '../gameApp/labels/Labels';
 
@@ -142,6 +143,10 @@ export class AttackedObject {
 		}
 
 		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
+		const isAcidRain = this.modifiers.find(x => x.name == AcidRainModifier.name);
+		if(isAcidRain){
+			Draw.ctx.filter = 'hue-rotate(40deg)';
+		}
 		
 		x = x ?? this.x;
 		y = y ?? this.y;
@@ -157,6 +162,10 @@ export class AttackedObject {
 
 		if(isInvert){
 			Draw.ctx.restore();
+		}
+
+		if(isAcidRain){
+			Draw.ctx.filter = 'none';
 		}
 
 		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
