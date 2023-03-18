@@ -130,6 +130,10 @@ export class Game {
 		}
 	}
 
+	static endOfWave(){
+		Buildings.clearModifiers();
+	}
+
 	static loadResourcesAfterBuild(building: Building){
 		building.loadedResourcesAfterBuild();
 		

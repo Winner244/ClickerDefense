@@ -113,6 +113,10 @@ export class Buildings{
 		}
 	}
 
+	static clearModifiers(){
+		Buildings.all.forEach(building => building.modifiers = []);
+	}
+
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		//разрушения зданий
 		this.explosions.forEach(explosion => {

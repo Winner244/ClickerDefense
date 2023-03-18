@@ -182,7 +182,7 @@ export class Necromancer extends Monster{
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
 		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
-			if(!this._isAttack && this._attackLeftTimeMs <= 0){
+			if(!this._isSpecialAbilityAcidRainCallStarted){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
@@ -295,10 +295,10 @@ export class Necromancer extends Monster{
 			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * newWidth, newHeight);
 
 			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal && this.specialAbilityAcidRainCreatingAnimation.leftTimeMs > 0){
-				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames;
-				const height = this.specialAbilityAcidRainCreatingAnimation.image.height;
+				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames / 2;
+				const height = this.specialAbilityAcidRainCreatingAnimation.image.height / 2;
 				const x = this._buildingGoal.centerX - width / 2;
-				const y = this._buildingGoal.y - height;
+				const y = this._buildingGoal.y - height * 1.5;
 				this.specialAbilityAcidRainCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * width, height);
 			}
 		}

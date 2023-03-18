@@ -14,7 +14,7 @@ export class AcidRainModifier extends Modifier{
 	static cloudImage: HTMLImageElement = new Image(); //изображение облаков
 
 	acidBlobDamage: number; //урона от кислотных капель
-	_cloudAnimation: AnimationInfinite = new AnimationInfinite(5, 400, AcidRainModifier.cloudImage);
+	_cloudAnimation: AnimationInfinite = new AnimationInfinite(5, 500, AcidRainModifier.cloudImage);
 
 	static readonly damageMultiplier: number = -0.1; //на 10% уменьшает урон
 	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту

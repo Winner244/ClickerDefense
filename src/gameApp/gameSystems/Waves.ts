@@ -126,6 +126,7 @@ export class Waves{
 				Menu.displayNewWaveButton();
 			}
 			Game.loadResourcesAfterEndOfWave(Waves.waveCurrent);
+			Game.endOfWave();
 			MusicSystem.playPeaceTime(this.delayEndTimeMs / 1000);
 			return;
 		}

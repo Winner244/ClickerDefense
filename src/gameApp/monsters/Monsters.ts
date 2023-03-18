@@ -141,6 +141,10 @@ export class Monsters{
 		Monsters.all.forEach(monster => monster.draw(drawsDiffMs, isGameOver));
 	}
 
+	static drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean): void{
+		Monsters.all.forEach(monster => monster.drawModifiersAhead(drawsDiffMs, isGameOver));
+	}
+
 	static create(name: string, isLeftSide: boolean, scaleSize: number): Monster{
 		var newMonster: Monster;
 
