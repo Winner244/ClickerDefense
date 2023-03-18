@@ -132,13 +132,13 @@ export class AttackedObject {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
+
+		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
 		
 		x = x ?? this.x;
 		y = y ?? this.y;
 		let isInvert = this.isLeftSide;
 		let invertSign = isInvert ? -1 : 1;
-
-		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
 
 		if(isInvert){
 			Draw.ctx.save();

@@ -72,6 +72,7 @@ export class Necromancer extends Monster{
 	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
 	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
 	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
+	static readonly acidBlobDamage = 0.1; //урон от кислотных капель
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -178,13 +179,15 @@ export class Necromancer extends Monster{
 	attack(drawsDiffMs: number): void {
 		const random = Helper.getRandom(0, 100);
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
+		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
-		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings){ //Кислотный дождь
+		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings && isNotHaveAcidModifier){ //Кислотный дождь
 			if(!this._isAttack && this._attackLeftTimeMs <= 0){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
 				this._isAttack = true; //атакует
+				AcidRainModifier.loadResources();
 			}
 
 			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
@@ -195,7 +198,7 @@ export class Necromancer extends Monster{
 
 			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
-				this._buildingGoal?.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs));
+				this._buildingGoal?.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
 			}
 	
 			if(this._attackLeftTimeMs <= 0){
