@@ -184,13 +184,13 @@ export class Tower extends Building{
 		this._isDisplayDynamitRadius = false;
 	}
 
-	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean)
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean)
 	{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, monsters, bottomShiftBorder, isWaveStarted);
+		super.logic(drawsDiffMs, buildings, monsters, bottomShiftBorder, isWaveStarted);
 
 		if(this._rechargeLeftTimeMs > 0){ //перезарядка
 			this._rechargeLeftTimeMs -= drawsDiffMs;

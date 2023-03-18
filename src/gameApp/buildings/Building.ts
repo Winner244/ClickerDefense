@@ -181,10 +181,12 @@ export class Building extends AttackedObject{
 		return false;
 	}
 
-	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
+
+		super.logicBase(drawsDiffMs, buildings, monsters, bottomShiftBorder);
 		
 		if(this._impulse > 1){
 			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);

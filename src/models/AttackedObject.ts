@@ -92,6 +92,14 @@ export class AttackedObject {
 	get centerY(): number {
 		return this.y + this.height / 2;
 	}
+	
+	logicBase(drawsDiffMs: number, buildings: AttackedObject[], monsters: AttackedObject[], bottomBorder: number): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		this.modifiers.forEach(modifier => modifier.logic(this, drawsDiffMs, monsters));
+	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
 		if(damage <= 0){

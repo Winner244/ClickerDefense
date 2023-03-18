@@ -163,6 +163,7 @@ export class Necromancer extends Monster{
 			{
 				this.attack(drawsDiffMs);
 				this.animation?.restart();
+				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}

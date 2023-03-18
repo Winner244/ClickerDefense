@@ -107,7 +107,7 @@ export class Buildings{
 					AudioSystem.play(building.centerX, ExplosionSound, 0.1, 2, false, true);
 				}
 				else{
-					building.logic(drawsDiffMs, monsters, bottomShiftBorder, isWaveStarted)
+					building.logic(drawsDiffMs, this.all, monsters, bottomShiftBorder, isWaveStarted)
 				}
 			}
 		}
