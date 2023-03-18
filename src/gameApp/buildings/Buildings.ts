@@ -31,8 +31,9 @@ export class Buildings{
 
 		this.flyEarth = new FlyEarth(0, -1000);
 		let flyEarthImageOnLoad = () => {
-			this.flyEarth.x = Draw.canvas.width / 2 - FlyEarth.image.width / 2;
-			this.flyEarth.y = Draw.canvas.height / 2 - FlyEarth.image.height / 2;
+			console.log('flyEarthImageOnLoad ', FlyEarth.image.width, FlyEarth.image.height, Draw.canvas.width, Draw.canvas.height);
+			this.flyEarth.x = Draw.canvas.width / 2 - this.flyEarth.width / 2;
+			this.flyEarth.y = Draw.canvas.height / 2 - this.flyEarth.height / 2;
 		}
 		FlyEarth.image.onload = flyEarthImageOnLoad;
 		if(FlyEarthRope.image.complete){
@@ -41,8 +42,8 @@ export class Buildings{
 		
 		this.flyEarthRope = new FlyEarthRope(Draw.canvas.width / 2, Draw.canvas.height);
 		let flyEarthRopeImageOnLoad = () => {
-			this.flyEarthRope.x = this.flyEarth.x + FlyEarth.image.width / 2 - FlyEarthRope.image.width / 2;
-			this.flyEarthRope.y = this.flyEarth.y + FlyEarth.image.height - 8;
+			this.flyEarthRope.x = this.flyEarth.x + this.flyEarth.width / 2 - this.flyEarthRope.width / 2;
+			this.flyEarthRope.y = this.flyEarth.y + this.flyEarth.height - 8;
 		}
 		FlyEarthRope.image.onload = flyEarthRopeImageOnLoad;
 		if(FlyEarthRope.image.complete){
