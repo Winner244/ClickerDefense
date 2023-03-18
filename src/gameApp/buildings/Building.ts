@@ -228,7 +228,7 @@ export class Building extends AttackedObject{
 			y = -this.height;
 		}
 
-		super.drawObject(drawsDiffMs, isGameOver);
+		super.drawObject(drawsDiffMs, isGameOver, 1, x, y);
 
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);

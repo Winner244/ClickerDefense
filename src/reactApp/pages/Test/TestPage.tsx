@@ -382,6 +382,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade1);
 
                 var necromancer = new Necromancer(0, 780, true, 1);
+                necromancer.probabilitySpecialAbilityAcidRainPercentage = 0;
                 Monsters.all.push(necromancer);
 
                 Waves.isStarted = false;

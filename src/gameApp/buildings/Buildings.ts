@@ -31,7 +31,6 @@ export class Buildings{
 
 		this.flyEarth = new FlyEarth(0, -1000);
 		let flyEarthImageOnLoad = () => {
-			console.log('flyEarthImageOnLoad ', FlyEarth.image.width, FlyEarth.image.height, Draw.canvas.width, Draw.canvas.height);
 			this.flyEarth.x = Draw.canvas.width / 2 - this.flyEarth.width / 2;
 			this.flyEarth.y = Draw.canvas.height / 2 - this.flyEarth.height / 2;
 		}

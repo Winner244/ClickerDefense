@@ -101,12 +101,15 @@ export class AttackedObject {
 		}
 	}
 
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1){
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null){
+		x = x ?? this.x;
+		y = y ?? this.y;
+		
 		if(this.animation){
-			this.animation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+			this.animation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
 		}
 		else{
-			Draw.ctx.drawImage(this.image, this.x, this.y, this.width, this.height);
+			Draw.ctx.drawImage(this.image, x, y, this.width, this.height);
 		}
 	}
 }
