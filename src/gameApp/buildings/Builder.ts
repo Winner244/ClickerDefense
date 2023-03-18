@@ -53,6 +53,7 @@ export class Builder {
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isRightClick: boolean, buildingsAll: Building[], loadResourcesAfterBuild: (building: Building) => void){
 		if(this.selectedBuildingForBuild && !this._isDrawSmoke){
 			this.selectedBuildingForBuild.x = Math.min(Math.max(this.buildingBorder, mouseX - this.selectedBuildingForBuild.width / 2), Draw.canvas.width - this.buildingBorder - this.selectedBuildingForBuild.width);
+			this.selectedBuildingForBuild.isLeftSide = mouseX < Draw.canvas.width / 2;
 
 			this._isAnotherBuilding = buildingsAll.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
 			if(isClick && !this._isAnotherBuilding){
