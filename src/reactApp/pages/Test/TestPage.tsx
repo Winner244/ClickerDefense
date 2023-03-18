@@ -57,6 +57,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
+                Gamer.coins = 50;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 setTimeout(() => {
                     var tower1 = new Tower(200);

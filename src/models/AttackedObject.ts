@@ -9,9 +9,12 @@ import {Labels} from '../gameApp/labels/Labels';
 
 import {Draw} from '../gameApp/gameSystems/Draw';
 
+import {ImageHandler} from '../gameApp/ImageHandler';
+
 
 /** атакуемый объект (Монстр или Строение) */
 export class AttackedObject {
+	readonly imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 	readonly id: string;
 	
 	name: string;
@@ -37,7 +40,7 @@ export class AttackedObject {
 
 	modifiers: Modifier[]; //бафы/дебафы
 
-	constructor(x: number, y: number, healthMax: number, scaleSize: number, image: HTMLImageElement, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string, 
+	constructor(x: number, y: number, healthMax: number, scaleSize: number, image: HTMLImageElement, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string, imageHandler: ImageHandler,
 		frames: number, 
 		animationDurationMs: number)
 	{
@@ -61,6 +64,8 @@ export class AttackedObject {
 		this.y = y;
 
 		this.name = name;
+
+		this.imageHandler = imageHandler;
 
 
 		this.modifiers = [];
@@ -124,6 +129,12 @@ export class AttackedObject {
 	}
 
 	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+		
+		x = x ?? this.x;
+		y = y ?? this.y;
 		let isInvert = this.isLeftSide;
 		let invertSign = isInvert ? -1 : 1;
 
@@ -151,7 +162,7 @@ export class AttackedObject {
 			this.animation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
 		}
 		else{
-			Draw.ctx.drawImage(this.image, x, y, this.width, this.height);
+			Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
 		}
 	}
 

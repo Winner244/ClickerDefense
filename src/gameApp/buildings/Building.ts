@@ -9,6 +9,8 @@ import {AttackedObject} from '../../models/AttackedObject';
 
 import {Labels} from '../labels/Labels';
 
+import {ImageHandler} from '../ImageHandler';
+
 import {Draw} from '../gameSystems/Draw';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
@@ -21,6 +23,7 @@ import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 import HealthIcon from '../../assets/img/icons/health.png';
 import ShieldIcon from '../../assets/img/icons/shield.png';
+import { Tower } from './Tower';
 
 /** Базовый класс для всех зданий */
 export class Building extends AttackedObject{
@@ -72,9 +75,10 @@ export class Building extends AttackedObject{
 		healthMax: number,
 		price: number,
 		isSupportRepair: boolean,
-		isSupportUpgrade: boolean)
+		isSupportUpgrade: boolean,
+		imageHandler: ImageHandler)
 	{
-		super(x, y, healthMax, scaleSize, image, isLeftSide, isLand, reduceHover, name, frames, animationDurationMs);
+		super(x, y, healthMax, scaleSize, image, isLeftSide, isLand, reduceHover, name, imageHandler, frames, animationDurationMs);
 
 		this.price = price;
 
@@ -177,75 +181,11 @@ export class Building extends AttackedObject{
 		return false;
 	}
 
-	getRepairPrice() : number {
-		return Math.ceil((this.healthMax - this.health) * this.repairPricePerHealth);
-	}
-
-	isCanBeRepaired() : boolean {
-		return Gamer.coins >= this.getRepairPrice();
-	}
-
-	repair(): boolean{
-		let repairPrice = this.getRepairPrice();
-		if(this.isCanBeRepaired()){
-			Gamer.coins -= repairPrice;
-			this.health = this.healthMax;
-			AudioSystem.play(this.centerX, RepairSoundUrl, 0.4, 1, false, true);
-			AudioSystem.play(this.centerX, RepairHammerSoundUrl, 0.2, 1, false, true);
-			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
-			this._isDisplayRepairAnimation = true;
-			this._repairAnimationLeftTimeMs = Building.repairAnimationDurationMs;
-			return true;
-		}
-
-		return false;
-	}
-
-	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
-		let x = this.x;
-		let y = this.y;
-
-		if(this.isDisplayedUpgradeWindow){
-			//Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
-			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 10, y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
-			Draw.ctx.filter = 'brightness(1.7)';
-		}
-
-		if(this.impulse > 0){
-			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
-			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
-			x = -this.width / 2;
-			y = -this.height;
-		}
-
-		super.drawBase(drawsDiffMs, isGameOver, x, y);
-
-		if(this.impulse > 0){
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
-		}
-
-		
-		if(this.isDisplayedUpgradeWindow){
-			Draw.ctx.filter = 'none';
-		}
-	}
-
-	drawHealth(): void{
-		super.drawHealthBase(this.x + 15, this.y - 10, this.width - 30);
-	}
-
-	drawRepairingAnumation(): void{
-		if(this._isDisplayRepairAnimation){
-			Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
-			Draw.ctx.rotate((this._repairAnimationAngle - 45) * Math.PI / 180);
-			Draw.ctx.drawImage(Building.repairImage, -25, -50, 50, 50);
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
-		}
-	}
-
 	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+		
 		if(this._impulse > 1){
 			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
 			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
@@ -283,6 +223,82 @@ export class Building extends AttackedObject{
 					}
 				}
 			}
+		}
+	}
+
+	getRepairPrice() : number {
+		return Math.ceil((this.healthMax - this.health) * this.repairPricePerHealth);
+	}
+
+	isCanBeRepaired() : boolean {
+		return Gamer.coins >= this.getRepairPrice();
+	}
+
+	repair(): boolean{
+		let repairPrice = this.getRepairPrice();
+		if(this.isCanBeRepaired()){
+			Gamer.coins -= repairPrice;
+			this.health = this.healthMax;
+			AudioSystem.play(this.centerX, RepairSoundUrl, 0.4, 1, false, true);
+			AudioSystem.play(this.centerX, RepairHammerSoundUrl, 0.2, 1, false, true);
+			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + repairPrice, 2000);
+			this._isDisplayRepairAnimation = true;
+			this._repairAnimationLeftTimeMs = Building.repairAnimationDurationMs;
+			return true;
+		}
+
+		return false;
+	}
+
+	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		let x = this.x;
+		let y = this.y;
+
+		if(this.isDisplayedUpgradeWindow){
+			//Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
+			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 10, y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
+			Draw.ctx.filter = 'brightness(1.7)';
+		}
+
+		if(this.impulse > 0){
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
+			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
+			x = -this.width / 2;
+			y = -this.height;
+		}
+
+		super.drawBase(drawsDiffMs, isGameOver, x, y);
+
+		if(this.impulse > 0){
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+		}
+
+		
+		if(this.isDisplayedUpgradeWindow){
+			Draw.ctx.filter = 'none';
+		}
+	}
+
+	drawHealth(): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		super.drawHealthBase(this.x + 15, this.y - 10, this.width - 30);
+	}
+
+	drawRepairingAnumation(): void{
+		if(this._isDisplayRepairAnimation){
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
+			Draw.ctx.rotate((this._repairAnimationAngle - 45) * Math.PI / 180);
+			Draw.ctx.drawImage(Building.repairImage, -25, -50, 50, 50);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
 		}
 	}
 }

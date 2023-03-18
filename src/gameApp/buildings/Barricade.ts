@@ -2,6 +2,8 @@ import {Building} from './Building';
 
 import {Draw} from '../gameSystems/Draw';
 
+import {ImageHandler} from '../ImageHandler';
+
 import {AttackedObject} from '../../models/AttackedObject';
 
 import Improvement from '../../models/Improvement';
@@ -19,6 +21,7 @@ import ShieldIcon from '../../assets/img/icons/shield.png';
 
 /** Баррикада - тип здания */
 export class Barricade extends Building{
+	static readonly imageHandler: ImageHandler = new ImageHandler();
 	static readonly image: HTMLImageElement = new Image();
 
 	static readonly damageMirrorPercentage: number = 10; //количество возвращаемого монстрам урона (%)
@@ -38,7 +41,8 @@ export class Barricade extends Building{
 			Barricade.image, 0, 0, 15,
 			250, //health max
 			Barricade.shopItem.price, 
-			true, true);
+			true, true,
+			Barricade.imageHandler);
 			
 		this.maxImpulse = 2;
 		this.impulseForceDecreasing = 5;
@@ -48,7 +52,7 @@ export class Barricade extends Building{
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
-			Barricade.image.src = BarricadeImage;  //load image only once
+			Barricade.imageHandler.new(Barricade.image).src = BarricadeImage;
 		}
 	}
 	

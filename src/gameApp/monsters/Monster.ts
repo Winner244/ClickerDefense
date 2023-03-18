@@ -32,7 +32,6 @@ import Hit11Sound from '../../assets/sounds/monsters/hit11.mp3';
 
 /** Базовый класс для всех монстров */
 export class Monster extends AttackedObject{
-	readonly imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
 	readonly attackAnimation: AnimationInfinite;  //анимация атаки монстра
 
 	//поля свойства экземпляра
@@ -76,15 +75,13 @@ export class Monster extends AttackedObject{
 		imageHandler: ImageHandler,
 		avrTimeSoundWaitMs: number)
 	{
-		super(x, y, healthMax * scaleSize, scaleSize, image, isLeftSide, isLand, reduceHover, name, frames, animationDurationMs);
+		super(x, y, healthMax * scaleSize, scaleSize, image, isLeftSide, isLand, reduceHover, name, imageHandler, frames, animationDurationMs);
 
 		this.attackAnimation = new AnimationInfinite(attackFrames, attackAnimationDurationMs, attackImage);  //анимация атаки
 
 		this.damage = damage * scaleSize; //урон за 1 раз
 		this.attackTimeWaitingMs = attackTimeWaitingMs;
 		this.speed = speed; //скорость (пикселей в секунду)
-
-		this.imageHandler = imageHandler;
 
 
 		this._isAttack = false; //атакует?

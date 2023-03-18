@@ -4,6 +4,8 @@ import {Draw} from '../gameSystems/Draw';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 import {AnimationsSystem} from '../gameSystems/AnimationsSystem';
 
+import {ImageHandler} from '../ImageHandler';
+
 import {Building} from './Building';
 
 import {Monster} from '../monsters/Monster';
@@ -53,6 +55,7 @@ import explosionDynamit2Sound from '../../assets/sounds/explosionBomb2.mp3';
 
 /** Башня - тип здания - стреляет стрелами по монстрам */
 export class Tower extends Building{
+	static readonly imageHandler: ImageHandler = new ImageHandler();
 	static readonly image: HTMLImageElement = new Image();
 
 	static readonly imageArrow: HTMLImageElement = new Image();
@@ -101,7 +104,8 @@ export class Tower extends Building{
 			Tower.image, 0, 0, 15, 
 			100, //health max
 			Tower.shopItem.price,
-			true, true);
+			true, true,
+			Tower.imageHandler);
 
 		this.maxImpulse = 5;
 		this.impulseForceDecreasing = 5;
@@ -111,7 +115,7 @@ export class Tower extends Building{
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
-			Tower.shopItem.image.src = Tower.image.src = towerImage; 
+			Tower.imageHandler.new(Tower.image).src = towerImage;
 		}
 	}
 	
@@ -182,6 +186,10 @@ export class Tower extends Building{
 
 	logic(drawsDiffMs: number, monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean)
 	{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
 		super.logic(drawsDiffMs, monsters, bottomShiftBorder, isWaveStarted);
 
 		if(this._rechargeLeftTimeMs > 0){ //перезарядка
@@ -339,6 +347,10 @@ export class Tower extends Building{
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
 		//стрелы
 		for(let i = 0; i < this._arrows.length; i++)
 		{

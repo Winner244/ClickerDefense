@@ -2,6 +2,8 @@
 
 import {Building} from './Building';
 
+import {ImageHandler} from '../ImageHandler';
+
 import {Coins} from '../coins/Coins';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
@@ -12,8 +14,8 @@ import Animation from '../../models/Animation';
 
 import {Cursor} from '../gamer/Cursor';
 
-import flyEarthImage from '../../assets/img/buildings/flyEarth.png';  
-import explosionImage from '../../assets/img/explosionBomb.png'; 
+import FlyEarthImage from '../../assets/img/buildings/flyEarth.png';  
+import ExplosionImage from '../../assets/img/explosionBomb.png'; 
 
 import PickSoundUrl1 from '../../assets/sounds/buildings/flyEarth/pick1.mp3'; 
 import PickSoundUrl2 from '../../assets/sounds/buildings/flyEarth/pick2.mp3'; 
@@ -24,6 +26,7 @@ import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3
 
 /** Летающая земля - главное здание в еденичном экземпляре */
 export class FlyEarth extends Building{
+	static readonly imageHandler: ImageHandler = new ImageHandler();
 	static readonly image: HTMLImageElement = new Image();
 	static readonly explosionAnimation: Animation = new Animation(8, 800); //анимация взрыва 
 
@@ -32,14 +35,15 @@ export class FlyEarth extends Building{
 	constructor(x: number, y: number) {
 		super(x, y, false, false, FlyEarth.name, 0.75,
 			FlyEarth.image, 4, 700, 15, 
-			100, 0, false, false);
+			100, 0, false, false,
+			FlyEarth.imageHandler);
 
 		FlyEarth.init(true);
 	}
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
-			this.image.src = flyEarthImage;  //load image only once
+			FlyEarth.imageHandler.new(FlyEarth.image).src = FlyEarthImage;
 			AudioSystem.load(PickSoundUrl1);
 			AudioSystem.load(PickSoundUrl2);
 			AudioSystem.load(PickSoundUrl3);
@@ -48,7 +52,7 @@ export class FlyEarth extends Building{
 	}
 
 	static loadExplosionResources(){
-		this.explosionAnimation.image.src = explosionImage;
+		this.explosionAnimation.image.src = ExplosionImage;
 		AudioSystem.load(ExplosionSound);
 	}
 
@@ -60,7 +64,7 @@ export class FlyEarth extends Building{
 			PickSoundUrl4
 		];
 		AudioSystem.playRandomV(x, listOfSounds, 0.05);
-		AudioSystem.playRandomTone(x, 0.01, 5000, 10000);
+		AudioSystem.playRandomTone(x, 0.02, 5000, 10000);
 	}
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean{

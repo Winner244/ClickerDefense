@@ -30,7 +30,7 @@ export class Coins{
 	}
 
 	private static playSoundGet(x: number){
-		AudioSystem.play(x, CoinGetSoundUrl, 0.4);
+		AudioSystem.play(x, CoinGetSoundUrl, 0.7);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
