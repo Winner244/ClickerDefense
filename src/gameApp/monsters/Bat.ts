@@ -11,6 +11,8 @@ import {Helper} from '../helpers/Helper';
 
 import {Modifier} from '../modifiers/Modifier';
 
+import {AttackedObject} from '../../models/AttackedObject';
+
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
 
 import Sound1 from '../../assets/sounds/monsters/bat/1.mp3'; 
@@ -119,9 +121,12 @@ export class Bat extends Monster{
 		}
 	}
 
-	attacked(damage: number, x: number|null = null, y: number|null = null): void{
-		super.attacked(damage, x, y);
-		AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [0.09, 0.4, 0.3, 0.3], false, 1, true);
+	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
+		var damage = super.applyDamage(damage, x, y, attackingObject);
+		if(damage > 0){
+			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [0.09, 0.4, 0.3, 0.3], false, 1, true);
+		}
+		return damage;
 	}
 
 }

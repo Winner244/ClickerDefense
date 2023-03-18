@@ -13,6 +13,7 @@ export class FireModifier extends Modifier{
 
 	fireDamageInSecond: number; //урона от огня стрел в секунду
 
+	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
 	protected readonly damageDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится урон к концу своей жизни (в процентах, чем ментше, тем меньше урон будет в конце)
 	protected readonly viewDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится внешне огонь к концу своей жизни (в процентах, чем ментше, тем меньше визуально будет огонь в конце)
 	protected readonly damageTimeWaitingMs: number = 300; //частота урона (выражается во времени ожидания после атаки в миллисекундах)
@@ -28,7 +29,7 @@ export class FireModifier extends Modifier{
 	}
 
 	constructor(fireDamageInSecond: number, lifeTimeMs: number = 5000, lifeTimeMsInitial: number|null = null) {
-		super(FireModifier.name, 0, 0, 0, lifeTimeMs);
+		super(FireModifier.name, 0, 0, 0, FireModifier.defenceMultiplier, lifeTimeMs);
 
 		this.fireDamageInSecond = fireDamageInSecond;
 		this._damageDecreasingInSecond = fireDamageInSecond / (lifeTimeMs / 1000) * (1 - this.damageDecreasingEndGoalPercentage / 100);
@@ -46,7 +47,7 @@ export class FireModifier extends Modifier{
 		}
 		else{
 			//наносим урон и перезаряжаем время
-			monster.attacked(this.fireDamageInSecond * (this.damageTimeWaitingMs  / 1000));
+			monster.applyDamage(this.fireDamageInSecond * (this.damageTimeWaitingMs  / 1000));
 			this._damageLeftTimeMs = this.damageTimeWaitingMs;
 
 			//ослабеваем урон 

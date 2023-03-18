@@ -5,6 +5,6 @@ import {Modifier} from "./Modifier";
  */
 export class BoarSpecialAbility extends Modifier{
 	constructor() {
-		super(BoarSpecialAbility.name, 0, 0, 1, null);
+		super(BoarSpecialAbility.name, 0, 0, 1, 0, null);
 	}
 }

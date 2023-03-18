@@ -4,7 +4,11 @@ import AnimationInfinite from './AnimationInfinite';
 
 import {FireModifier} from '../gameApp/modifiers/FireModifier';
 import {Modifier} from '../gameApp/modifiers/Modifier';
-import { Draw } from '../gameApp/gameSystems/Draw';
+
+import {Labels} from '../gameApp/labels/Labels';
+
+import {Draw} from '../gameApp/gameSystems/Draw';
+
 
 /** атакуемый объект (Монстр или Строение) */
 export class AttackedObject {
@@ -18,6 +22,7 @@ export class AttackedObject {
 	initialHealthMax: number; //изначальный максимум хп
 	healthMax: number; //максимум хп
 	health: number;
+	defense: number = 0; //защита (уменьшает урон)
 	
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
 	isLand: boolean; //наземное? (иначе - воздушное)
@@ -83,6 +88,17 @@ export class AttackedObject {
 		return this.y + this.height / 2;
 	}
 
+	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
+		const realDamage = Math.max(0, Math.abs(damage) - this.defense);
+		if(realDamage <= 0){
+			return 0;
+		}
+		
+		this.health -= realDamage;
+		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + realDamage.toFixed(1), 3000);
+		return realDamage;
+	}
+
 	addModifier(newModifier: Modifier): void{
 		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
 		if(existedModifier){
@@ -104,7 +120,7 @@ export class AttackedObject {
 	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null){
 		x = x ?? this.x;
 		y = y ?? this.y;
-		
+
 		if(this.animation){
 			this.animation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
 		}

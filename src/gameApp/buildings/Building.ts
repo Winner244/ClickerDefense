@@ -43,8 +43,6 @@ export class Building extends AttackedObject{
 
 	repairPricePerHealth: number; //сколько стоит 1 хп починить
 
-	defense: number = 0; //защита (уменьшает урон)
-
 	maxImpulse: number; //максимальное значение импульса для здания
 	impulseForceDecreasing: number; //сила уменьшения импульса
 
@@ -146,14 +144,6 @@ export class Building extends AttackedObject{
 	}
 	get isDisplayedUpgradeWindow(): boolean{
 		return this._isDisplayedUpgradeWindow;
-	}
-
-
-	applyDamage(damage: number, monster: Monster|null, x: number, y: number): number{
-		const realDamage = Math.max(0, Math.abs(damage) - this.defense);
-		this.health -= realDamage;
-		Labels.createDamageLabel(x, y, '-' + realDamage.toFixed(1), 3000);
-		return realDamage;
 	}
 
 	improveHealthGetValue() : string {

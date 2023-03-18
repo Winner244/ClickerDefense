@@ -11,6 +11,7 @@ export class Modifier{
 	healthMultiplier: number; //кратное увеличение здоровья
 	damageMultiplier: number; //кратное увеличение урона
 	speedMultiplier: number; //кратное увеличение скорости передвижения
+	defenceMultiplier: number; //кратное увеличение защиты
 
 	lifeTimeMs: number|null; //время существования (если временное)
 
@@ -19,6 +20,7 @@ export class Modifier{
 		healthMultiplier: number,
 		damageMultiplier: number,
 		speedMultiplier: number,
+		defenceMultiplier: number,
 		lifeTimeMs: number|null)
 	{
 		this.name = name;
@@ -26,6 +28,7 @@ export class Modifier{
 		this.healthMultiplier = healthMultiplier;
 		this.damageMultiplier = damageMultiplier;
 		this.speedMultiplier = speedMultiplier;
+		this.defenceMultiplier = defenceMultiplier;
 
 		this.lifeTimeMs = lifeTimeMs;
 	}

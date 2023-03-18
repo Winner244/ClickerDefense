@@ -6,6 +6,8 @@ import {Monster} from './Monster';
 
 import {Helper} from '../helpers/Helper';
 
+import {AttackedObject} from '../../models/AttackedObject';
+
 import Zombie1Image from '../../assets/img/monsters/zombie/zombie.png'; 
 import Zombie2Image from '../../assets/img/monsters/zombie/zombie2.png'; 
 import Zombie3Image from '../../assets/img/monsters/zombie/zombie3.png'; 
@@ -98,11 +100,14 @@ export class Zombie extends Monster{
 			[0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);
 	}
 
-	attacked(damage: number, x: number|null = null, y: number|null = null): void{
-		super.attacked(damage, x, y);
-		AudioSystem.playRandom(this.centerX, 
-			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10, SoundAttacked11, SoundAttacked12], 
-			[0.05, 0.05, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08], false, 1, true);
+	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
+		var damage = super.applyDamage(damage, x, y, attackingObject);
+		if(damage > 0){
+			AudioSystem.playRandom(this.centerX, 
+				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10, SoundAttacked11, SoundAttacked12], 
+				[0.05, 0.05, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08], false, 1, true);
+		}
+		return damage;
 	}
 
 }

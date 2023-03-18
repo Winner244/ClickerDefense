@@ -3,6 +3,8 @@ import {ImageHandler} from '../ImageHandler';
 import {MovingObject} from '../../models/MovingObject';
 import Animation from '../../models/Animation';
 
+import {AttackedObject} from '../../models/AttackedObject';
+
 import {Modifier} from '../modifiers/Modifier';
 import {AcidRainModifier} from '../modifiers/AcidRainModifier';
 
@@ -145,7 +147,7 @@ export class Necromancer extends Monster{
 
 				//попадание в цель
 				if(buildingGoal){ 
-					buildingGoal.applyDamage(this.damage, null, charge.centerX, charge.centerY);
+					buildingGoal.applyDamage(this.damage, charge.centerX, charge.centerY);
 					this._charges.splice(i, 1);
 					i--;
 				}
@@ -244,23 +246,26 @@ export class Necromancer extends Monster{
 		}
 	}
 
-	attacked(damage: number, x: number|null = null, y: number|null = null): void{
-		super.attacked(damage, x, y);
-		//this._attackLeftTimeMs = 350;
-		AudioSystem.playRandomV(this.centerX, 
-			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5], 
-			0.1, false, 1, true);
-
-		//отмена спец способности
-		if(this._isSpecialAbilityAcidRainCallStarted){
-			this._isSpecialAbilityAcidRainCallStarted = false;
-			this._isSpecialAbilityAcidRainCreatingStarted = false;
-			this._isSpecialAbilityAcidRainCreatingEnded = false;
-			this._attackLeftTimeMs = this.attackTimeWaitingMs;
-			this.animation?.restart();
-			this.attackAnimation.restart();
-			this._attackLeftTimeMs = 0;
+	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
+		var damage = super.applyDamage(damage, x, y, attackingObject);
+		if(damage > 0){
+			//this._attackLeftTimeMs = 350;
+			AudioSystem.playRandomV(this.centerX, 
+				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5], 
+				0.1, false, 1, true);
+	
+			//отмена спец способности
+			if(this._isSpecialAbilityAcidRainCallStarted){
+				this._isSpecialAbilityAcidRainCallStarted = false;
+				this._isSpecialAbilityAcidRainCreatingStarted = false;
+				this._isSpecialAbilityAcidRainCreatingEnded = false;
+				this._attackLeftTimeMs = this.attackTimeWaitingMs;
+				this.animation?.restart();
+				this.attackAnimation.restart();
+				this._attackLeftTimeMs = 0;
+			}
 		}
+		return damage;
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void {

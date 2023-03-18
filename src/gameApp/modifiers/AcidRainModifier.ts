@@ -6,8 +6,9 @@ import {Modifier} from "./Modifier";
  */
 export class AcidRainModifier extends Modifier{
 	static readonly damageMultiplier: number = -0.1; //на 10% уменьшает урон
+	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
 
 	constructor(lifeTimeMs: number|null) {
-		super(AcidRainModifier.name, 0, AcidRainModifier.damageMultiplier, 0, lifeTimeMs); //TODO: дебаф брони на -1 + увеличение получаемого урона
+		super(AcidRainModifier.name, 0, AcidRainModifier.damageMultiplier, 0, AcidRainModifier.defenceMultiplier, lifeTimeMs); 
 	}
 }

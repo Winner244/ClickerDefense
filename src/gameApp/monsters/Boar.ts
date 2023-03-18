@@ -7,6 +7,8 @@ import {Helper} from '../helpers/Helper';
 import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 
+import {AttackedObject} from '../../models/AttackedObject';
+
 import {Monster} from './Monster';
 
 import {Draw} from "../gameSystems/Draw";
@@ -200,13 +202,16 @@ export class Boar extends Monster{
 		super.onClicked(damage, x, y);
 	}
 
-	attacked(damage: number, x: number|null = null, y: number|null = null): void{
-		super.attacked(damage, x, y);
-		this.stopSpecialAbility();
-
-		AudioSystem.playRandomV(this.centerX, 
-			[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10], 
-			0.2, false, 1, true);
+	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
+		var damage = super.applyDamage(damage, x, y, attackingObject);
+		if(damage > 0){
+			this.stopSpecialAbility();
+	
+			AudioSystem.playRandomV(this.centerX, 
+				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10], 
+				0.2, false, 1, true);
+		}
+		return damage;
 	}
 
 	stopSpecialAbility(): void{

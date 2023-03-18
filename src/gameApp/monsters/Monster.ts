@@ -232,7 +232,7 @@ export class Monster extends AttackedObject{
 
 	attack(damage: number): void{
 		if(damage > 0 && this._buildingGoal != null){
-			this._buildingGoal.applyDamage(damage, this, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2); //монстр наносит урон
+			this._buildingGoal.applyDamage(damage, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //монстр наносит урон
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 
 			var size = this.width * this.height;
@@ -243,16 +243,7 @@ export class Monster extends AttackedObject{
 	}
 
 	onClicked(damage: number, x: number|null = null, y: number|null = null): void{
-		this.attacked(damage, x, y);
-	}
-
-	attacked(damage: number, x: number|null = null, y: number|null = null): void{
-		if(damage <= 0){
-			return;
-		}
-		
-		this.health -= damage;
-		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + damage.toFixed(1), 3000);
+		this.applyDamage(damage, x, y);
 	}
 
 	destroy(): void{}
