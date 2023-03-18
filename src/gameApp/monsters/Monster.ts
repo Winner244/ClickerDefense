@@ -4,10 +4,7 @@ import {AttackedObject} from '../../models/AttackedObject';
 
 import {ImageHandler} from '../ImageHandler';
 
-import {Draw} from '../gameSystems/Draw';
 import {AudioSystem} from '../gameSystems/AudioSystem';
-
-import {Labels} from '../labels/Labels';
 
 import AnimationInfinite from '../../models/AnimationInfinite';
 

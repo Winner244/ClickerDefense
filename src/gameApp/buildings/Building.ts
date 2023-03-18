@@ -224,6 +224,10 @@ export class Building extends AttackedObject{
 				}
 			}
 		}
+
+		if(this.y + this.height > Draw.canvas.height){
+			this.y = Draw.canvas.height - this.height;
+		}
 	}
 
 	getRepairPrice() : number {
