@@ -89,7 +89,13 @@ export class AttackedObject {
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
-		const realDamage = Math.max(0, Math.abs(damage) - this.defense);
+		if(damage <= 0){
+			console.error('negative damage', damage);
+			return 0;
+		}
+
+		let defense = Math.max(0, this.defense + this.defense * this.modifiers.reduce((sum, el) => sum + el.defenceMultiplier, 0));
+		const realDamage = Math.max(0, damage - defense);
 		if(realDamage <= 0){
 			return 0;
 		}
