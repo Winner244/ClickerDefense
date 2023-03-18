@@ -44,9 +44,9 @@ export class Modifier{
 	}
 
 	//логика распространения 
-	logicSpread(monster: Monster, monsters: Monster[]): void{}
+	logicSpread(object: AttackedObject, monsters: Monster[]): void{}
 
 	
-	drawBehindObject(monster: Monster, drawsDiffMs: number){}
-	drawAheadObject(monster: Monster, drawsDiffMs: number){}
+	drawBehindObject(object: AttackedObject, drawsDiffMs: number){}
+	drawAheadObject(object: AttackedObject, drawsDiffMs: number){}
 }

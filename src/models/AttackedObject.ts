@@ -123,6 +123,26 @@ export class AttackedObject {
 		}
 	}
 
+	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null){
+		let isInvert = this.isLeftSide;
+		let invertSign = isInvert ? -1 : 1;
+
+		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
+
+		if(isInvert){
+			Draw.ctx.save();
+			Draw.ctx.scale(-1, 1);
+		}
+
+		this.drawObject(drawsDiffMs, isGameOver, invertSign, x, y);
+
+		if(isInvert){
+			Draw.ctx.restore();
+		}
+
+		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
+	}
+
 	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null){
 		x = x ?? this.x;
 		y = y ?? this.y;

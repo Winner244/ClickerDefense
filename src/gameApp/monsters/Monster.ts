@@ -255,23 +255,7 @@ export class Monster extends AttackedObject{
 			return;
 		}
 
-		let isInvert = this.isLeftSide;
-		let invertSign = isInvert ? -1 : 1;
-
-		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
-
-		if(isInvert){
-			Draw.ctx.save();
-			Draw.ctx.scale(-1, 1);
-		}
-
-		this.drawObject(drawsDiffMs, isGameOver, invertSign);
-
-		if(isInvert){
-			Draw.ctx.restore();
-		}
-
-		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
+		super.drawBase(drawsDiffMs, isGameOver);
 
 		this.drawHealth();
 	}
