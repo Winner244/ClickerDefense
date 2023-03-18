@@ -61,7 +61,7 @@ export class Necromancer extends Monster{
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
 	private static readonly specialAbilityAcidRainCreatingImage: HTMLImageElement = new Image();  //создание облаков "Кислотный дождь" над целью
-	private static readonly probabilitySpecialAbilityAcidRainPercentage = 10; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки
+	private static readonly probabilitySpecialAbilityAcidRainPercentage = 0.1; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки
 	private static readonly startCreatingAcidRainAfterStartCallMs = 700; //через сколько миллисекунд начнётся создание облака над целью?
 	private static readonly endCreatingAcidRainAfterStartCallMs = 1800; //через сколько миллисекунд закончится создание облака над целью и будет добавлен модификатор "Кислотный дождь" объекту?
 	private static readonly acidRainCallDurationMs = 2500; //длительность анимации вызова кислотного дождя (миллисекунды)
@@ -178,7 +178,7 @@ export class Necromancer extends Monster{
 	}
 
 	attack(drawsDiffMs: number): void {
-		const random = Helper.getRandom(0, 100);
+		const random = Math.random() * 100;
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
