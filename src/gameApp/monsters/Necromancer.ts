@@ -45,7 +45,7 @@ export class Necromancer extends Monster{
 	private static readonly imageFrames = 6;
 
 	private static readonly attackImage: HTMLImageElement = new Image();  //атака монстра
-	private static readonly attackImageFrames = 5;
+	private static readonly attackImageFrames = 6;
 
 
 	static readonly chargeImage: HTMLImageElement = new Image();
@@ -212,7 +212,7 @@ export class Necromancer extends Monster{
 		}
 		else{ //энергетический шар
 			if(!this._isAttack){
-				this._attackLeftTimeMs = 350;
+				this._attackLeftTimeMs = 450;
 				this.attackAnimation.restart();
 				this._isAttack = true; //атакует
 			}
