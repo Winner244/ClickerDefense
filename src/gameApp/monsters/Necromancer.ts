@@ -181,7 +181,7 @@ export class Necromancer extends Monster{
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
-		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings && isNotHaveAcidModifier){ //Кислотный дождь
+		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
 			if(!this._isAttack && this._attackLeftTimeMs <= 0){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();

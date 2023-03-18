@@ -48,4 +48,5 @@ export class Modifier{
 	
 	drawBehindObject(object: AttackedObject, drawsDiffMs: number){}
 	drawAheadObject(object: AttackedObject, drawsDiffMs: number){}
+	drawAheadObjects(object: AttackedObject, drawsDiffMs: number){}
 }

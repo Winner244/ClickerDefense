@@ -154,6 +154,10 @@ export class AttackedObject {
 		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
 	}
 
+	drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean){
+		this.modifiers.forEach(modifier => modifier.drawAheadObjects(this, drawsDiffMs));
+	}
+
 	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null){
 		x = x ?? this.x;
 		y = y ?? this.y;

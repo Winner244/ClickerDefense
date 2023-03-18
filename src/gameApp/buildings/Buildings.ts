@@ -131,4 +131,8 @@ export class Buildings{
 	static drawRepairingAnumation(): void{
 		Buildings.all.forEach(building => building.drawRepairingAnumation());
 	}
+
+	static drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean): void{
+		Buildings.all.forEach(building => building.drawModifiersAhead(drawsDiffMs, isGameOver));
+	}
 }

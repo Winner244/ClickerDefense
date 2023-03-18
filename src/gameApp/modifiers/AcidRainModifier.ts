@@ -29,7 +29,7 @@ export class AcidRainModifier extends Modifier{
 		AcidRainModifier.cloudImage.src = cloudImage;
 	}
 
-	drawBehindObject(object: AttackedObject, drawsDiffMs: number){
+	drawAheadObjects(object: AttackedObject, drawsDiffMs: number){
 		const width = this._cloudAnimation.image.width / this._cloudAnimation.frames;
 		const height = this._cloudAnimation.image.height;
 		const x = object.centerX - width / 2;

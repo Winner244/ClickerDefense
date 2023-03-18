@@ -288,12 +288,14 @@ export class Game {
 		Buildings.draw(drawsDiffMs, Game.isGameOver);
 		Buildings.drawHealth();
 		Buildings.drawRepairingAnumation();
+		Buildings.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 
 		Builder.draw(drawsDiffMs, Game.isGameOver);
 	
 		Coins.draw();
 	
 		Monsters.draw(drawsDiffMs, Game.isGameOver);
+		Monsters.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 	
 		Draw.drawGrass(Game.grassImage); 
 	
