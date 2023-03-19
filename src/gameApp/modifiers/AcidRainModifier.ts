@@ -27,8 +27,8 @@ export class AcidRainModifier extends Modifier{
 
 	static readonly damageMultiplier: number = -0.1; //на 10% уменьшает урон
 	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
-	static readonly periodCreatingBlobMs: number = 300; //каждые N мс создаёт кислотную каплу
-	static readonly blobSpeed: number = 300; //скорость движения капель (пикселей в секунду)
+	static readonly periodCreatingBlobMs: number = 100; //каждые N мс создаёт кислотную каплу
+	static readonly blobSpeed: number = 400; //скорость движения капель (пикселей в секунду)
 
 	constructor(lifeTimeMs: number|null, acidBlobDamage: number) {
 		super(AcidRainModifier.name, 0, AcidRainModifier.damageMultiplier, 0, AcidRainModifier.defenceMultiplier, lifeTimeMs); 

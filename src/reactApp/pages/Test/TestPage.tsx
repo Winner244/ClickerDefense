@@ -383,7 +383,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade1);
 
                 var necromancer = new Necromancer(0, 780, true, 1);
-                necromancer.probabilitySpecialAbilityAcidRainPercentage = 0;
+                necromancer.countSimpleAttacksToActivateSpecialAbilityAcidRain = 110;
                 Monsters.all.push(necromancer);
 
                 Waves.isStarted = false;
@@ -816,7 +816,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
 
                 var necromancer = new Necromancer(200, 780, true, 1);
-                necromancer.probabilitySpecialAbilityAcidRainPercentage = 100;
+                necromancer.countSimpleAttacksToActivateSpecialAbilityAcidRain = 0;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
             }

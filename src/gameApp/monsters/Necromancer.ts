@@ -61,18 +61,19 @@ export class Necromancer extends Monster{
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
 	private static readonly specialAbilityAcidRainCreatingImage: HTMLImageElement = new Image();  //создание облаков "Кислотный дождь" над целью
-	private static readonly probabilitySpecialAbilityAcidRainPercentage = 0.1; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки
+	private static readonly countSimpleAttacksToActivateSpecialAbilityAcidRain = 7; //Кол-во обычных атак для активации спец способности "Кислотный дождь"
 	private static readonly startCreatingAcidRainAfterStartCallMs = 700; //через сколько миллисекунд начнётся создание облака над целью?
 	private static readonly endCreatingAcidRainAfterStartCallMs = 1800; //через сколько миллисекунд закончится создание облака над целью и будет добавлен модификатор "Кислотный дождь" объекту?
 	private static readonly acidRainCallDurationMs = 2500; //длительность анимации вызова кислотного дождя (миллисекунды)
 	private static readonly acidRainDurationMs = 15000; //длительность анимации кислотного дождя (миллисекунды)
 	private readonly specialAbilityAcidRainCallAnimation: Animation; //анимация вызова спец способности "Кислотный дождь"
 	private readonly specialAbilityAcidRainCreatingAnimation: Animation; //анимация создания облаков "Кислотный дождь" над целью
-	probabilitySpecialAbilityAcidRainPercentage: number; //(%) Вероятность срабатывания спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
+	countSimpleAttacksToActivateSpecialAbilityAcidRain: number; //Кол-во обычных атак для активации спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
 	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
 	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
 	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
 	static readonly acidBlobDamage = 0.1; //урон от кислотных капель
+	countSimpleAttacks:number;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -103,7 +104,8 @@ export class Necromancer extends Monster{
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
-		this.probabilitySpecialAbilityAcidRainPercentage = Necromancer.probabilitySpecialAbilityAcidRainPercentage;
+		this.countSimpleAttacksToActivateSpecialAbilityAcidRain = Necromancer.countSimpleAttacksToActivateSpecialAbilityAcidRain;
+		this.countSimpleAttacks = 0;
 
 	}
 
@@ -178,11 +180,11 @@ export class Necromancer extends Monster{
 	}
 
 	attack(drawsDiffMs: number): void {
-		const random = Math.random() * 100;
+		const random = Math.random() * 100; //TODO: change
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
-		if(random <= this.probabilitySpecialAbilityAcidRainPercentage && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
+		if(this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbilityAcidRain && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
 			if(!this._isSpecialAbilityAcidRainCallStarted){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
@@ -200,6 +202,7 @@ export class Necromancer extends Monster{
 			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
 				this._buildingGoal?.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
+				this.countSimpleAttacks = 0;
 			}
 	
 			if(this._attackLeftTimeMs <= 0){
@@ -221,6 +224,7 @@ export class Necromancer extends Monster{
 				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attackSimple(damage);
+				this.countSimpleAttacks++;
 			}
 		}
 	
