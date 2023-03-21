@@ -57,18 +57,18 @@ export class Necromancer extends Monster{
 	static readonly chargeSpeed: number = 200; //скорость полёта заряда атаки (в пикселях за секунду)
 	private _charges: MovingObject[]; //атакующие заряды энергии 
 
+	private static readonly averageCountSimpleAttacksToActivateSpecialAbility = 14; //Среднее кол-во обычных атак для активации спец способности
+	countSimpleAttacksToActivateSpecialAbility: number; //Кол-во обычных атак для активации спец способности  (используется для тестирования)
 	
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
 	private static readonly specialAbilityAcidRainCreatingImage: HTMLImageElement = new Image();  //создание облаков "Кислотный дождь" над целью
-	private static readonly countSimpleAttacksToActivateSpecialAbilityAcidRain = 7; //Кол-во обычных атак для активации спец способности "Кислотный дождь"
 	private static readonly startCreatingAcidRainAfterStartCallMs = 700; //через сколько миллисекунд начнётся создание облака над целью?
 	private static readonly endCreatingAcidRainAfterStartCallMs = 1800; //через сколько миллисекунд закончится создание облака над целью и будет добавлен модификатор "Кислотный дождь" объекту?
 	private static readonly acidRainCallDurationMs = 2500; //длительность анимации вызова кислотного дождя (миллисекунды)
 	private static readonly acidRainDurationMs = 15000; //длительность анимации кислотного дождя (миллисекунды)
 	private readonly specialAbilityAcidRainCallAnimation: Animation; //анимация вызова спец способности "Кислотный дождь"
 	private readonly specialAbilityAcidRainCreatingAnimation: Animation; //анимация создания облаков "Кислотный дождь" над целью
-	countSimpleAttacksToActivateSpecialAbilityAcidRain: number; //Кол-во обычных атак для активации спец способности "Кислотный дождь" при активации атаки для текущего экземпляра (используется для тестирования)
 	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
 	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
 	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
@@ -104,7 +104,7 @@ export class Necromancer extends Monster{
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
-		this.countSimpleAttacksToActivateSpecialAbilityAcidRain = Necromancer.countSimpleAttacksToActivateSpecialAbilityAcidRain;
+		this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 		this.countSimpleAttacks = 0;
 
 	}
@@ -119,6 +119,10 @@ export class Necromancer extends Monster{
 			AudioSystem.load(Attack1Sound);
 			AudioSystem.load(Attack2Sound);
 		}
+	}
+
+	static getCountSimpleAttacksToActivateSpecialAbility(): number{
+		return Helper.getRandom(Necromancer.averageCountSimpleAttacksToActivateSpecialAbility / 2, Necromancer.averageCountSimpleAttacksToActivateSpecialAbility * 2);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number) {
@@ -163,7 +167,7 @@ export class Necromancer extends Monster{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
-				this.attack(drawsDiffMs);
+				this.attackLogic(drawsDiffMs);
 				this.animation?.restart();
 				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
@@ -175,52 +179,64 @@ export class Necromancer extends Monster{
 		var newBuildingGoalX = this._buildingGoal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX){
-			this._attackXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Necromancer.minDistanceDamage, Necromancer.maxDistanceDamage) 
+			this._attackXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Necromancer.minDistanceDamage, Necromancer.maxDistanceDamage);
+			if(oldBuildingGoalX){
+				this.countSimpleAttacks = 0;
+				this._isSpecialAbilityAcidRainCallStarted = false;
+				this._isSpecialAbilityAcidRainCreatingStarted = false;
+				this._isSpecialAbilityAcidRainCreatingEnded = false;
+				this._attackLeftTimeMs = 700;
+				this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
+			}
 		}
 	}
 
-	attack(drawsDiffMs: number): void {
-		const random = Math.random() * 100; //TODO: change
+	attackLogic(drawsDiffMs: number): void {
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
-		if(this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbilityAcidRain && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
+		if(this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
+
 			if(!this._isSpecialAbilityAcidRainCallStarted){
 				this._isSpecialAbilityAcidRainCallStarted = true;
 				this.specialAbilityAcidRainCallAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
-				this._isAttack = true; //атакует
+				this._isAttack = true; 
 				AcidRainModifier.loadResources();
 			}
 
-			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
+			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingStarted = true;
 				this.specialAbilityAcidRainCreatingAnimation.restart();
 			}
 
 
-			if(this._isAttack && !this._isSpecialAbilityAcidRainCreatingEnded && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
+			if(!this._isSpecialAbilityAcidRainCreatingEnded && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
 				this._buildingGoal?.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
-				this.countSimpleAttacks = 0;
 			}
 	
-			if(this._attackLeftTimeMs <= 0){
+			if(this._attackLeftTimeMs <= 0 || !isNotBaseBuildings){
 				this._isSpecialAbilityAcidRainCallStarted = false;
 				this._isSpecialAbilityAcidRainCreatingStarted = false;
 				this._isSpecialAbilityAcidRainCreatingEnded = false;
-				this._isAttack = false; //атакует
+				this._isAttack = false; 
 				this._attackLeftTimeMs = 700;
+				this.countSimpleAttacks = 0;
+				this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 			}
 		}
 		else{ //энергетический шар
-			if(!this._isAttack){
+
+			//start attack infinite animation
+			if(!this._isAttack){ 
 				this._attackLeftTimeMs = 450;
 				this.attackAnimation.restart();
-				this._isAttack = true; //атакует
+				this._isAttack = true; 
 			}
 	
-			if(this._attackLeftTimeMs <= 0){
+			//attack
+			if(this._attackLeftTimeMs <= 0){ 
 				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attackSimple(damage);
@@ -303,7 +319,7 @@ export class Necromancer extends Monster{
 				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames / 2;
 				const height = this.specialAbilityAcidRainCreatingAnimation.image.height / 2;
 				const x = this._buildingGoal.centerX - width / 2;
-				const y = this._buildingGoal.y - height * 1.5;
+				const y = this._buildingGoal.y - height * 2;
 				this.specialAbilityAcidRainCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * width, height);
 			}
 		}

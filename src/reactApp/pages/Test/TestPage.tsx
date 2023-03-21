@@ -383,7 +383,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade1);
 
                 var necromancer = new Necromancer(0, 780, true, 1);
-                necromancer.countSimpleAttacksToActivateSpecialAbilityAcidRain = 110;
+                necromancer.countSimpleAttacksToActivateSpecialAbility = 110;
                 Monsters.all.push(necromancer);
 
                 Waves.isStarted = false;
@@ -816,12 +816,43 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
 
                 var necromancer = new Necromancer(200, 780, true, 1);
-                necromancer.countSimpleAttacksToActivateSpecialAbilityAcidRain = 0;
+                necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
             }
         },
 
+        {
+            key: "Некромант - спес способность - вызов кислотного дождя - смена цели",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var barricade1 = new Barricade(600);
+                barricade1.health = 1;
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+                setTimeout(() => barricade1.health-=20, 3000);
+
+                var tower1 = new Tower(650);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                var necromancer = new Necromancer(200, 780, true, 1);
+                necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.health = necromancer.healthMax = 10;
+                Monsters.all.push(necromancer);
+            }
+        },
 
         {
             key: "Волна 2",

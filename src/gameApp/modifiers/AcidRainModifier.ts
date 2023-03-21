@@ -46,7 +46,7 @@ export class AcidRainModifier extends Modifier{
 		if(this._leftTimeToCreateNewBlobMs <= 0){
 			this._leftTimeToCreateNewBlobMs = AcidRainModifier.periodCreatingBlobMs;
 			const x = Helper.getRandom(object.x + object.reduceHover, object.x + object.width - object.reduceHover);
-			const y = object.y - this.cloudAnimation.image.height / 2;
+			const y = object.y - this.cloudAnimation.image.height;
 			const dy = AcidRainModifier.blobSpeed;
 			const goalY = Helper.getRandom(object.y + object.reduceHover, object.y + object.height - object.reduceHover * 2);
 			const leftTimeMs = (goalY - y) / dy * 1000;
@@ -78,7 +78,7 @@ export class AcidRainModifier extends Modifier{
 		const width = this.cloudAnimation.image.width / this.cloudAnimation.frames;
 		const height = this.cloudAnimation.image.height;
 		const x = object.centerX - width / 2;
-		const y = object.y - height;
+		const y = object.y - height * 1.3;
 		this.cloudAnimation.draw(drawsDiffMs, false, x, y, width, height);
 	}
 }
