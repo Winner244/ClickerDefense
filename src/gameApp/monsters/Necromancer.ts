@@ -22,10 +22,11 @@ import {Helper} from '../helpers/Helper';
 import Necromancer1Image from '../../assets/img/monsters/necromancer/necromancer.png'; 
 import ChargeImage from '../../assets/img/monsters/necromancer/charge.png'; 
 
-import NecromancerAttack1Image from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
+import AttackImage from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
 import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall.png'; 
 import SpecialAbilityAcidRainCreatingImage from '../../assets/img/monsters/necromancer/cloudCreating.png'; 
 
+import DebufImage from '../../assets/img/monsters/necromancer/debuf.png'; 
 
 import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
 import Attack2Sound from '../../assets/sounds/monsters/necromancer/attack2.mp3'; 
@@ -41,12 +42,11 @@ import SoundAttacked5 from '../../assets/sounds/monsters/necromancer/attacked5.m
 export class Necromancer extends Monster{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
-	private static readonly image: HTMLImageElement = new Image(); //окраска монстра
+	private static readonly image: HTMLImageElement = new Image(); //внешний вид 
 	private static readonly imageFrames = 6;
 
-	private static readonly attackImage: HTMLImageElement = new Image();  //атака монстра
+	private static readonly attackImage: HTMLImageElement = new Image();  //атака 
 	private static readonly attackImageFrames = 6;
-
 
 	static readonly chargeImage: HTMLImageElement = new Image();
 
@@ -59,6 +59,7 @@ export class Necromancer extends Monster{
 
 	private static readonly averageCountSimpleAttacksToActivateSpecialAbility = 14; //Среднее кол-во обычных атак для активации спец способности
 	countSimpleAttacksToActivateSpecialAbility: number; //Кол-во обычных атак для активации спец способности  (используется для тестирования)
+	
 	
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
@@ -74,6 +75,14 @@ export class Necromancer extends Monster{
 	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
 	static readonly acidBlobDamage = 0.1; //урон от кислотных капель
 	countSimpleAttacks:number;
+
+
+	/* Способность - дебафф - снятие побочных заклинаний */
+	private static readonly debufImage: HTMLImageElement = new Image();  //снятие побочных заклинаний
+	private static readonly debufImageFrames = 10;
+	private readonly debufAnimation: Animation; //анимация снятие побочных заклинаний
+
+
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -101,6 +110,7 @@ export class Necromancer extends Monster{
 		this._charges = [];
 		this.specialAbilityAcidRainCallAnimation = new Animation(25, Necromancer.acidRainCallDurationMs, Necromancer.specialAbilityAcidRainCallImage);
 		this.specialAbilityAcidRainCreatingAnimation = new Animation(12, 12 * 100, Necromancer.specialAbilityAcidRainCreatingImage);
+		this.debufAnimation = new Animation(Necromancer.debufImageFrames, 1000, Necromancer.debufImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
@@ -112,8 +122,9 @@ export class Necromancer extends Monster{
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources){
 			Necromancer.imageHandler.new(Necromancer.image).src = Necromancer1Image;
-			Necromancer.imageHandler.new(Necromancer.attackImage).src = NecromancerAttack1Image;
+			Necromancer.imageHandler.new(Necromancer.attackImage).src = AttackImage;
 			Necromancer.imageHandler.new(Necromancer.chargeImage).src = ChargeImage;
+			Necromancer.imageHandler.new(Necromancer.debufImage).src = DebufImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCallImage).src = SpecialAbilityAcidRainCallImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCreatingImage).src = SpecialAbilityAcidRainCreatingImage;
 			AudioSystem.load(Attack1Sound);
