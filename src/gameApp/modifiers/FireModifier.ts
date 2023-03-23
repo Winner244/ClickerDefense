@@ -88,8 +88,8 @@ export class FireModifier extends Modifier{
 	drawBehindObject(object: AttackedObject, drawsDiffMs: number){
 		const sizeScale = (this.lifeTimeMs || 0) / this._lifeTimeMsInitial * (1 - this.damageDecreasingEndGoalPercentage / 100) + this.damageDecreasingEndGoalPercentage / 100;
 		this._fireAnimation.draw(drawsDiffMs, false, 
-			object.x + object.width / 5 + (1 - sizeScale) * object.width / 3, 
-			object.y - object.height / 2 + (1 - sizeScale) * object.height, 
+			object.x + object.width / 5 + (1 - sizeScale) * object.width / 3 + object.shiftXForCenter, 
+			object.y - object.height / 2 + (1 - sizeScale) * object.height + object.shiftYForCenter, 
 			object.width * sizeScale - object.width * sizeScale / 5 * 2, 
 			object.height * sizeScale);
 	}

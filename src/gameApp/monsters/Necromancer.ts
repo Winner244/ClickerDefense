@@ -135,6 +135,13 @@ export class Necromancer extends Monster{
 		}
 	}
 
+	get shiftXForCenter(){
+		return -16 * this.scaleSize;
+	}
+	get shiftYForCenter(){
+		return 20 * this.scaleSize;
+	}
+
 	static getCountSimpleAttacksToActivateSpecialAbility(): number{
 		return Helper.getRandom(Necromancer.averageCountSimpleAttacksToActivateSpecialAbility / 2, Necromancer.averageCountSimpleAttacksToActivateSpecialAbility * 2);
 	}

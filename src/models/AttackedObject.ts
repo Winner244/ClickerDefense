@@ -87,6 +87,13 @@ export class AttackedObject {
 		return this.image.width * this.scaleSize;
 	}
 
+	get shiftXForCenter(){
+		return 0;
+	}
+	get shiftYForCenter(){
+		return 0;
+	}
+
 	get centerX(): number {
 		return this.x + this.width / 2;
 	}
