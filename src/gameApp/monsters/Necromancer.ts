@@ -190,6 +190,8 @@ export class Necromancer extends Monster{
 			}
 			else if(this.debufAnimation.leftTimeMs <= 0){ //end
 				this._isDebufStarted = false;
+			}
+			else if(this.debufAnimation.leftTimeMs <= this.debufAnimation.durationMs / 2){ //clear from modifiers
 				this.modifiers = this.modifiers.filter(x => x.name != FireModifier.name);
 			}
 
