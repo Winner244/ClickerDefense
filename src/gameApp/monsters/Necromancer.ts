@@ -7,6 +7,7 @@ import {AttackedObject} from '../../models/AttackedObject';
 
 import {Modifier} from '../modifiers/Modifier';
 import {AcidRainModifier} from '../modifiers/AcidRainModifier';
+import {FireModifier} from '../modifiers/FireModifier';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 import {Draw} from '../gameSystems/Draw';
@@ -60,7 +61,7 @@ export class Necromancer extends Monster{
 	private static readonly averageCountSimpleAttacksToActivateSpecialAbility = 14; //Среднее кол-во обычных атак для активации спец способности
 	countSimpleAttacksToActivateSpecialAbility: number; //Кол-во обычных атак для активации спец способности  (используется для тестирования)
 	
-	
+
 	/* Спец Способность 1 - "Кислотный дождь", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityAcidRainCallImage: HTMLImageElement = new Image();  //вызов спец способности "Кислотный дождь"
 	private static readonly specialAbilityAcidRainCreatingImage: HTMLImageElement = new Image();  //создание облаков "Кислотный дождь" над целью
@@ -81,6 +82,7 @@ export class Necromancer extends Monster{
 	private static readonly debufImage: HTMLImageElement = new Image();  //снятие побочных заклинаний
 	private static readonly debufImageFrames = 10;
 	private readonly debufAnimation: Animation; //анимация снятие побочных заклинаний
+	private _isDebufStarted: boolean; //началась анимация дебафа
 
 
 
@@ -116,6 +118,7 @@ export class Necromancer extends Monster{
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
 		this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 		this.countSimpleAttacks = 0;
+		this._isDebufStarted = false;
 
 	}
 
@@ -172,6 +175,21 @@ export class Necromancer extends Monster{
 			}
 		}
 
+		const isBadModifierExists = this.modifiers.some(x => x.name == FireModifier.name);
+		if(isBadModifierExists || this._isDebufStarted){
+			if(!this._isDebufStarted){ //start
+				this.debufAnimation.restart();
+				this._isDebufStarted = true;
+			}
+			else if(this.debufAnimation.leftTimeMs <= 0){ //end
+				this._isDebufStarted = false;
+				this.modifiers = this.modifiers.filter(x => x.name != FireModifier.name);
+			}
+
+			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+			return; //игнорируем базовую логику движения и атаки
+		}
+
 		//активация атаки
 		if(this._buildingGoal && this._buildingGoal.health > 0 && this._attackXStart)
 		{
@@ -206,6 +224,7 @@ export class Necromancer extends Monster{
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 
+		
 		if(this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
 
 			if(!this._isSpecialAbilityAcidRainCallStarted){
@@ -321,10 +340,15 @@ export class Necromancer extends Monster{
 
 	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number){
 		
-		if(this._isSpecialAbilityAcidRainCallStarted){
-			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames;
-			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height;
-			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27, this.y - 17, invertSign * newWidth, newHeight);
+		if(this._isDebufStarted){
+			const newWidth = this.debufAnimation.image.width / this.debufAnimation.frames * this.scaleSize;
+			const newHeight = this.debufAnimation.image.height * this.scaleSize;
+			this.debufAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+		}
+		else if(this._isSpecialAbilityAcidRainCallStarted){
+			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames * this.scaleSize;
+			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height * this.scaleSize;
+			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 
 			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal && this.specialAbilityAcidRainCreatingAnimation.leftTimeMs > 0){
 				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames / 2;

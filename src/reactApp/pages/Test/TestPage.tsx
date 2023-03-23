@@ -629,6 +629,22 @@ class TestPage extends React.Component {
                 var bat = new Bat(0, 280, true, 1);
                 bat.modifiers.push(new FireModifier(0.5));
                 Monsters.all.push(bat);
+
+                var necromancer = new Necromancer(400, 780, true, 1);
+                Monsters.all.push(necromancer);
+
+                setTimeout(() => {
+                    necromancer.modifiers.push(new FireModifier(0.5));
+                }, 1000);
+
+                var necromancer2 = new Necromancer(200, 780, true, 0.7);
+                setTimeout(() => {
+                    Monsters.all.push(necromancer2);
+                }, 3000);
+
+                setTimeout(() => {
+                    necromancer2.modifiers.push(new FireModifier(0.5));
+                }, 5000);
             }
         },
 
@@ -819,6 +835,14 @@ class TestPage extends React.Component {
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
+
+
+                setTimeout(() => {
+                    var necromancer = new Necromancer(0, 780, true, 0.7);
+                    necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                    necromancer.health = necromancer.healthMax = 10;
+                    Monsters.all.push(necromancer);
+                }, 3000);
             }
         },
 
