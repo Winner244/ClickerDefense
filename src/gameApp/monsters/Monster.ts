@@ -240,8 +240,6 @@ export class Monster extends AttackedObject{
 		this.applyDamage(damage, x, y);
 	}
 
-	destroy(): void{}
-
 	playSound(): void{}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void{

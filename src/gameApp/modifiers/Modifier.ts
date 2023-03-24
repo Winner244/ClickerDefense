@@ -42,6 +42,8 @@ export class Modifier{
 		}
 	}
 
+	destroy(): void{}
+
 	//логика распространения 
 	logicSpread(object: AttackedObject, objects: AttackedObject[]): void{}
 

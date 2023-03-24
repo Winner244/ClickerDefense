@@ -179,7 +179,7 @@ export class Boar extends Monster{
 				this.specialAbilitySmokeAnimation.restart();
 				this.modifiers.push(new BoarSpecialAbility());
 
-				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, 1, true, true).then(res => this._startSpecialSound = res);
+				AudioSystem.play(this.centerX, SoundStartSpecial, 0.3, 1, true, true).then(sourse => this._startSpecialSound = sourse);
 				AudioSystem.play(this.centerX, SoundRunning, 0.5, 2, true, true, 1.2).then(sourse => this._runningSound = sourse);
 			}
 		}

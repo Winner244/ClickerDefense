@@ -126,6 +126,10 @@ export class AttackedObject {
 		return realDamage;
 	}
 
+	destroy(): void{
+		this.modifiers.forEach(modifier => modifier.destroy());
+	}
+
 	addModifier(newModifier: Modifier): void{
 		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
 		if(existedModifier){

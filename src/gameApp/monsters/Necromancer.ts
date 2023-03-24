@@ -1,3 +1,5 @@
+import * as Tone from 'tone';
+
 import {ImageHandler} from '../ImageHandler';
 
 import {MovingObject} from '../../models/MovingObject';
@@ -79,6 +81,7 @@ export class Necromancer extends Monster{
 	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
 	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
 	private _isSpecialAbilityAcidRainCreatedSoundPlayed: boolean; //была ли уже запущена озвучка появления облака?
+	private _acidRainCallSound: Tone.Player|null; //звук вызова облаков
 	static readonly acidBlobDamage = 0.1; //урон от кислотных капель
 	countSimpleAttacks:number;
 
@@ -125,6 +128,7 @@ export class Necromancer extends Monster{
 		this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 		this.countSimpleAttacks = 0;
 		this._isDebufStarted = false;
+		this._acidRainCallSound = null;
 
 	}
 
@@ -250,7 +254,7 @@ export class Necromancer extends Monster{
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
 				this._isAttack = true; 
 				AcidRainModifier.loadResources();
-				AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true);
+				AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true).then(sourse => this._acidRainCallSound = sourse);
 			}
 
 			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
@@ -346,9 +350,17 @@ export class Necromancer extends Monster{
 				this.animation?.restart();
 				this.attackAnimation.restart();
 				this._attackLeftTimeMs = 0;
+				this._acidRainCallSound?.stop();
+				this._acidRainCallSound = null;
 			}
 		}
 		return damage;
+	}
+
+	
+	destroy(): void{
+		this._acidRainCallSound?.stop();
+		this._acidRainCallSound = null;
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void {

@@ -1,6 +1,9 @@
+import * as Tone from 'tone';
+
 import {Modifier} from "./Modifier";
 
 import {Draw} from "../gameSystems/Draw";
+import {AudioSystem} from "../gameSystems/AudioSystem";
 
 import {AttackedObject} from "../../models/AttackedObject";
 import {MovingObject} from "../../models/MovingObject";
@@ -11,6 +14,8 @@ import {Helper} from "../helpers/Helper";
 
 import cloudImage from '../../assets/img/monsters/necromancer/clouds.png'; 
 import blobImage from '../../assets/img/monsters/necromancer/blob.png'; 
+
+import SoundRain from '../../assets/sounds/rain.mp3'; 
 
 /* Кислотный дождь 
 	Создаётся монстром Necromancer
@@ -24,6 +29,8 @@ export class AcidRainModifier extends Modifier{
 	cloudAnimation: AnimationInfinite = new AnimationInfinite(5, 500, AcidRainModifier.cloudImage);
 	private _leftTimeToCreateNewBlobMs: number = 0; //сколько осталось времени до создания следующей кислотной капли
 	private _blobs: MovingObject[]; //капли
+	private _isSoundRainStarted: boolean; //запущен ли звук дождя?
+	private _soundRain: Tone.Player|null; //звук дождя
 
 	static readonly damageMultiplier: number = -0.1; //на 10% уменьшает урон
 	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
@@ -35,6 +42,8 @@ export class AcidRainModifier extends Modifier{
 
 		this.acidBlobDamage = acidBlobDamage;
 		this._blobs = [];
+		this._isSoundRainStarted = false;
+		this._soundRain = null;
 	}
 
 	logic(object: AttackedObject, drawsDiffMs: number, objects: AttackedObject[]): void{
@@ -42,7 +51,13 @@ export class AcidRainModifier extends Modifier{
 
 		this._leftTimeToCreateNewBlobMs -= drawsDiffMs;
 
-		//create
+		//play rain sound
+		if(!this._isSoundRainStarted){
+			this._isSoundRainStarted = true;
+			AudioSystem.play(object.centerX, SoundRain, 1, 1, false, true).then(source => this._soundRain = source);
+		}
+
+		//create blobs
 		if(this._leftTimeToCreateNewBlobMs <= 0){
 			this._leftTimeToCreateNewBlobMs = AcidRainModifier.periodCreatingBlobMs;
 			const x = Helper.getRandom(object.x + object.reduceHover, object.x + object.width - object.reduceHover);
@@ -66,10 +81,16 @@ export class AcidRainModifier extends Modifier{
 			}
 		}
 	}
+	
+	destroy(): void{
+		this._soundRain?.stop();
+		this._soundRain = null;
+	}
 
 	static loadResources(){
 		AcidRainModifier.cloudImage.src = cloudImage;
 		AcidRainModifier.blobImage.src = blobImage;
+		AudioSystem.load(SoundRain);
 	}
 
 	drawAheadObjects(object: AttackedObject, drawsDiffMs: number){

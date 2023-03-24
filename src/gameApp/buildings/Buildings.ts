@@ -101,6 +101,7 @@ export class Buildings{
 			{
 				let building = this.all[i];
 				if(this.all[i].health <= 0){ //проверка здоровья
+					building.destroy();
 					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.durationMs));
 					this.all.splice(i, 1);
 					i--;
