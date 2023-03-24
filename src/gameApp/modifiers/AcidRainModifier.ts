@@ -22,23 +22,25 @@ import SoundRain from '../../assets/sounds/rain.mp3';
 	даёт деффаб уменьшения брони + постоянный урон от капель + уменьшает наносимый урон
  */
 export class AcidRainModifier extends Modifier{
+	static readonly damageInMultiplier: number = 0.1; //на 10% увеличивает входящий урон
+	static readonly damageOutMultiplier: number = -0.1; //на 10% уменьшает исходящий урон
+	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
+	static readonly periodCreatingBlobMs: number = 100; //каждые N мс создаёт кислотную каплу
+	static readonly blobSpeed: number = 400; //скорость движения капель (пикселей в секунду)
+
 	static cloudImage: HTMLImageElement = new Image(); //изображение облаков
 	static blobImage: HTMLImageElement = new Image(); //изображение кислотной капли
 
 	acidBlobDamage: number; //урона от кислотных капель
 	cloudAnimation: AnimationInfinite = new AnimationInfinite(5, 500, AcidRainModifier.cloudImage);
+
 	private _leftTimeToCreateNewBlobMs: number = 0; //сколько осталось времени до создания следующей кислотной капли
 	private _blobs: MovingObject[]; //капли
 	private _isSoundRainStarted: boolean; //запущен ли звук дождя?
 	private _soundRain: Tone.Player|null; //звук дождя
 
-	static readonly damageMultiplier: number = -0.1; //на 10% уменьшает урон
-	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
-	static readonly periodCreatingBlobMs: number = 100; //каждые N мс создаёт кислотную каплу
-	static readonly blobSpeed: number = 400; //скорость движения капель (пикселей в секунду)
-
 	constructor(lifeTimeMs: number|null, acidBlobDamage: number) {
-		super(AcidRainModifier.name, 0, AcidRainModifier.damageMultiplier, 0, AcidRainModifier.defenceMultiplier, lifeTimeMs); 
+		super(AcidRainModifier.name, 0, AcidRainModifier.damageInMultiplier, AcidRainModifier.damageOutMultiplier, 0, AcidRainModifier.defenceMultiplier, lifeTimeMs); 
 
 		this.acidBlobDamage = acidBlobDamage;
 		this._blobs = [];

@@ -299,7 +299,7 @@ export class Necromancer extends Monster{
 	
 			//attack
 			if(this._attackLeftTimeMs <= 0){ 
-				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageMultiplier);
+				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageOutMultiplier);
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attackSimple(damage);
 				this.countSimpleAttacks++;

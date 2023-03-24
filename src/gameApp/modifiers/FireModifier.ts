@@ -10,11 +10,14 @@ import fireImage from '../../assets/img/buildings/tower/fire/fire.png';
  * наносит утихающий урон
  */
 export class FireModifier extends Modifier{
+	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
+	static readonly damageInMultiplier: number = 0.1; //на 10% увеличивает входящий урон
+	static readonly damageOutMultiplier: number = -0.1; //на 10% уменьшает исходящий урон
+
 	static fireImage: HTMLImageElement = new Image(); //изображение огня
 
 	fireDamageInSecond: number; //урона от огня стрел в секунду
 
-	static readonly defenceMultiplier: number = -0.1; //на 10% уменьшает защиту
 	protected readonly damageDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится урон к концу своей жизни (в процентах, чем ментше, тем меньше урон будет в конце)
 	protected readonly viewDecreasingEndGoalPercentage: number = 50; //до скольки должен уменьшится внешне огонь к концу своей жизни (в процентах, чем ментше, тем меньше визуально будет огонь в конце)
 	protected readonly damageTimeWaitingMs: number = 400; //частота урона (выражается во времени ожидания после атаки в миллисекундах)
@@ -30,7 +33,7 @@ export class FireModifier extends Modifier{
 	}
 
 	constructor(fireDamageInSecond: number, lifeTimeMs: number = 5000, lifeTimeMsInitial: number|null = null) {
-		super(FireModifier.name, 0, 0, 0, FireModifier.defenceMultiplier, lifeTimeMs);
+		super(FireModifier.name, 0, FireModifier.damageInMultiplier, FireModifier.damageOutMultiplier, 0, FireModifier.defenceMultiplier, lifeTimeMs);
 
 		this.fireDamageInSecond = fireDamageInSecond;
 		this._damageDecreasingInSecond = fireDamageInSecond / (lifeTimeMs / 1000) * (1 - this.damageDecreasingEndGoalPercentage / 100);

@@ -8,7 +8,8 @@ export class Modifier{
 	//если уменьшить, то -0.1
 	// 1 - будет равно увеличению на 100% (2x)
 	healthMultiplier: number; //кратное увеличение здоровья
-	damageMultiplier: number; //кратное увеличение урона
+	damageInMultiplier: number; //кратное увеличение входящего урона
+	damageOutMultiplier: number; //кратное увеличение исходящего урона
 	speedMultiplier: number; //кратное увеличение скорости передвижения
 	defenceMultiplier: number; //кратное увеличение защиты
 
@@ -17,7 +18,8 @@ export class Modifier{
 	constructor(
 		name: string,
 		healthMultiplier: number,
-		damageMultiplier: number,
+		damageInMultiplier: number,
+		damageOutMultiplier: number,
 		speedMultiplier: number,
 		defenceMultiplier: number,
 		lifeTimeMs: number|null)
@@ -25,7 +27,8 @@ export class Modifier{
 		this.name = name;
 
 		this.healthMultiplier = healthMultiplier;
-		this.damageMultiplier = damageMultiplier;
+		this.damageInMultiplier = damageInMultiplier;
+		this.damageOutMultiplier = damageOutMultiplier;
 		this.speedMultiplier = speedMultiplier;
 		this.defenceMultiplier = defenceMultiplier;
 

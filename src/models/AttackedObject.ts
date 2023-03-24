@@ -116,7 +116,9 @@ export class AttackedObject {
 		}
 
 		let defense = Math.max(0, this.defense + this.defense * this.modifiers.reduce((sum, el) => sum + el.defenceMultiplier, 0));
-		const realDamage = Math.max(0, damage - defense);
+		let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageInMultiplier);
+
+		const realDamage = Math.max(0, damage + damage * damageMultiplier - defense);
 		if(realDamage <= 0){
 			return 0;
 		}
@@ -138,7 +140,8 @@ export class AttackedObject {
 				existedModifier.lifeTimeMs = Math.max(existedModifier.lifeTimeMs || 0, newModifier.lifeTimeMs || 0);
 			}
 			else{
-				existedModifier.damageMultiplier += newModifier.damageMultiplier;
+				existedModifier.damageOutMultiplier += newModifier.damageOutMultiplier;
+				existedModifier.damageInMultiplier += newModifier.damageInMultiplier;
 				existedModifier.healthMultiplier += newModifier.healthMultiplier;
 				existedModifier.speedMultiplier += newModifier.speedMultiplier;
 			}
