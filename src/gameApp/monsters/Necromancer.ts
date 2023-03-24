@@ -38,6 +38,10 @@ import SoundAttacked3 from '../../assets/sounds/monsters/necromancer/attacked3.m
 import SoundAttacked4 from '../../assets/sounds/monsters/necromancer/attacked4.mp3'; 
 import SoundAttacked5 from '../../assets/sounds/monsters/necromancer/attacked5.mp3'; 
 
+import SoundCloudCall from '../../assets/sounds/monsters/necromancer/cloudCall.mp3'; 
+import SoundCloudCreated from '../../assets/sounds/monsters/necromancer/cloudCreated.mp3'; 
+
+
 
 /** Некромант - тип монстров */
 export class Necromancer extends Monster{
@@ -74,6 +78,7 @@ export class Necromancer extends Monster{
 	private _isSpecialAbilityAcidRainCallStarted: boolean; //начался вызов спес способности "Кислотный дождь"
 	private _isSpecialAbilityAcidRainCreatingStarted: boolean; //началось формирование облаков "Кислотный дождь" над целью 
 	private _isSpecialAbilityAcidRainCreatingEnded: boolean; //закончилось формирование облаков "Кислотный дождь" над целью и цели присвоен модификатор "Килостный дождь"
+	private _isSpecialAbilityAcidRainCreatedSoundPlayed: boolean; //была ли уже запущена озвучка появления облака?
 	static readonly acidBlobDamage = 0.1; //урон от кислотных капель
 	countSimpleAttacks:number;
 
@@ -116,6 +121,7 @@ export class Necromancer extends Monster{
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
+		this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
 		this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 		this.countSimpleAttacks = 0;
 		this._isDebufStarted = false;
@@ -132,6 +138,8 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCreatingImage).src = SpecialAbilityAcidRainCreatingImage;
 			AudioSystem.load(Attack1Sound);
 			AudioSystem.load(Attack2Sound);
+			AudioSystem.load(SoundCloudCall);
+			AudioSystem.load(SoundCloudCreated);
 		}
 	}
 
@@ -242,6 +250,7 @@ export class Necromancer extends Monster{
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
 				this._isAttack = true; 
 				AcidRainModifier.loadResources();
+				AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true);
 			}
 
 			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
@@ -249,16 +258,26 @@ export class Necromancer extends Monster{
 				this.specialAbilityAcidRainCreatingAnimation.restart();
 			}
 
+			if(!this._isSpecialAbilityAcidRainCreatedSoundPlayed && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs + 100){
+				if(this._buildingGoal){
+					AudioSystem.play(this._buildingGoal.centerX, SoundCloudCreated, 0.5, 1, false, true);
+				}
+				this._isSpecialAbilityAcidRainCreatedSoundPlayed = true;
+			}
+
 
 			if(!this._isSpecialAbilityAcidRainCreatingEnded && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
-				this._buildingGoal?.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
+				if(this._buildingGoal){
+					this._buildingGoal.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
+				}
 			}
 	
 			if(this._attackLeftTimeMs <= 0 || !isNotBaseBuildings){
 				this._isSpecialAbilityAcidRainCallStarted = false;
 				this._isSpecialAbilityAcidRainCreatingStarted = false;
 				this._isSpecialAbilityAcidRainCreatingEnded = false;
+				this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
 				this._isAttack = false; 
 				this._attackLeftTimeMs = 700;
 				this.countSimpleAttacks = 0;
@@ -322,6 +341,7 @@ export class Necromancer extends Monster{
 				this._isSpecialAbilityAcidRainCallStarted = false;
 				this._isSpecialAbilityAcidRainCreatingStarted = false;
 				this._isSpecialAbilityAcidRainCreatingEnded = false;
+				this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
 				this._attackLeftTimeMs = this.attackTimeWaitingMs;
 				this.animation?.restart();
 				this.attackAnimation.restart();
