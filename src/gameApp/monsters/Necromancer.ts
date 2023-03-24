@@ -64,7 +64,7 @@ export class Necromancer extends Monster{
 	static readonly chargeSpeed: number = 200; //скорость полёта заряда атаки (в пикселях за секунду)
 	private _charges: MovingObject[]; //атакующие заряды энергии 
 
-	private static readonly averageCountSimpleAttacksToActivateSpecialAbility = 14; //Среднее кол-во обычных атак для активации спец способности
+	private static readonly averageCountSimpleAttacksToActivateSpecialAbility = 9; //Среднее кол-во обычных атак для активации спец способности
 	countSimpleAttacksToActivateSpecialAbility: number; //Кол-во обычных атак для активации спец способности  (используется для тестирования)
 	
 
@@ -155,7 +155,7 @@ export class Necromancer extends Monster{
 	}
 
 	static getCountSimpleAttacksToActivateSpecialAbility(): number{
-		return Helper.getRandom(Necromancer.averageCountSimpleAttacksToActivateSpecialAbility / 2, Necromancer.averageCountSimpleAttacksToActivateSpecialAbility * 2);
+		return Helper.getRandom(Necromancer.averageCountSimpleAttacksToActivateSpecialAbility / 3, Necromancer.averageCountSimpleAttacksToActivateSpecialAbility * 2);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number) {

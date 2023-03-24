@@ -67,10 +67,10 @@ export class Waves{
 				[Bat.name]: new WaveData(35, 63, 2)
 			},
 			{ //4-ая волна
-				[Zombie.name]: new WaveData(30, 15, 0),
-				[Boar.name]: new WaveData(18, 15, 0),
-				[Bat.name]: new WaveData(35, 15, 0),
-				[Necromancer.name]: new WaveData(15, 10, 0),
+				[Zombie.name]: new WaveData(30, 15, 15),
+				[Boar.name]: new WaveData(70, 70, 0),
+				[Bat.name]: new WaveData(250, 250, 0),
+				[Necromancer.name]: new WaveData(15, 10, 15),
 			}];
 	}
 

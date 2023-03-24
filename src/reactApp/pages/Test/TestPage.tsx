@@ -994,6 +994,39 @@ class TestPage extends React.Component {
         },
 
 
+
+        {
+            key: "Волна 4 - упрощённая - для тестирования всех вместе",
+            code: () => { 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.waveCurrent = 4;
+                Waves.all.push({ //4-ая волна
+                    [Zombie.name]: new WaveData(30, 75, 0),
+                    [Boar.name]: new WaveData(18, 28, 1),
+                    [Bat.name]: new WaveData(90, 93, 2),
+                    [Necromancer.name]: new WaveData(15, 10, 0),
+                });
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+                
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+            }
+        },
+
         {
             key: "Некромант - ходьба",
             code: () => { 
