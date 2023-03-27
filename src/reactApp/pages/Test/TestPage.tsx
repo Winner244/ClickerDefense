@@ -638,9 +638,7 @@ class TestPage extends React.Component {
                 }, 1000);
 
                 var necromancer2 = new Necromancer(200, 780, true, 0.7);
-                setTimeout(() => {
-                    Monsters.all.push(necromancer2);
-                }, 3000);
+                Monsters.all.push(necromancer2);
 
                 setTimeout(() => {
                     necromancer2.modifiers.push(new FireModifier(0.5));
