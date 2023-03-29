@@ -3,7 +3,9 @@ import * as Tone from 'tone';
 import {ImageHandler} from '../ImageHandler';
 
 import {MovingObject} from '../../models/MovingObject';
+
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 
 import {AttackedObject} from '../../models/AttackedObject';
 
@@ -30,6 +32,9 @@ import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromanc
 import SpecialAbilityAcidRainCreatingImage from '../../assets/img/monsters/necromancer/cloudCreating.png'; 
 
 import DebufImage from '../../assets/img/monsters/necromancer/debuf.png'; 
+
+import DefenseCreatingImage from '../../assets/img/monsters/necromancer/defenseCreating.png'; 
+import DefenseInfinityImage from '../../assets/img/monsters/necromancer/defenseInfinity.png'; 
 
 import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
 import Attack2Sound from '../../assets/sounds/monsters/necromancer/attack2.mp3'; 
@@ -93,6 +98,22 @@ export class Necromancer extends Monster{
 	private _isDebufStarted: boolean; //началась анимация дебафа
 
 
+	/* Способность - щит - поглощает почти весь урон */
+	private static readonly defensePercentage: number = 95; //сколько в процентах съедается урона щитом
+	private static readonly defenseModifierName: string = 'Defense'; //имя модифатора защиты
+	private static readonly defenseMinDurationMs: number = 3000; //минимальное время действия щита - если никто больше не атакует
+
+	private static readonly defenseCreatingImage: HTMLImageElement = new Image();  //создание щита
+	private static readonly defenseCreatingFrames = 9;
+	private readonly defenseCreatingAnimation: Animation; //анимация создания щита
+	private _isDefenseCreatingStarted: boolean; //началась анимация создания щита
+
+	private static readonly defenseInfinityImage: HTMLImageElement = new Image();  //удержание щита
+	private static readonly defenseInfinityFrames = 7;
+	private readonly defenseInfinityAnimation: AnimationInfinite; //анимация удержания щита
+	private _isDefenseInfinityStarted: boolean; //началась анимация удержания щита
+
+
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Necromancer.init(true); //reserve init
@@ -121,6 +142,8 @@ export class Necromancer extends Monster{
 		this.specialAbilityAcidRainCallAnimation = new Animation(25, Necromancer.acidRainCallDurationMs, Necromancer.specialAbilityAcidRainCallImage);
 		this.specialAbilityAcidRainCreatingAnimation = new Animation(12, 12 * 100, Necromancer.specialAbilityAcidRainCreatingImage);
 		this.debufAnimation = new Animation(Necromancer.debufImageFrames, 1000, Necromancer.debufImage);
+		this.defenseCreatingAnimation = new Animation(Necromancer.defenseCreatingFrames, 900, Necromancer.defenseCreatingImage);
+		this.defenseInfinityAnimation = new AnimationInfinite(Necromancer.defenseInfinityFrames, 700, Necromancer.defenseInfinityImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
@@ -138,6 +161,8 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.attackImage).src = AttackImage;
 			Necromancer.imageHandler.new(Necromancer.chargeImage).src = ChargeImage;
 			Necromancer.imageHandler.new(Necromancer.debufImage).src = DebufImage;
+			Necromancer.imageHandler.new(Necromancer.defenseCreatingImage).src = DefenseCreatingImage;
+			Necromancer.imageHandler.new(Necromancer.defenseInfinityImage).src = DefenseInfinityImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCallImage).src = SpecialAbilityAcidRainCallImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCreatingImage).src = SpecialAbilityAcidRainCreatingImage;
 			AudioSystem.load(Attack1Sound);
@@ -194,11 +219,14 @@ export class Necromancer extends Monster{
 			}
 		}
 
+		//дебаф
 		const isBadModifierExists = this.modifiers.some(x => x.name == FireModifier.name);
 		if(isBadModifierExists || this._isDebufStarted){
 			if(!this._isDebufStarted){ //start
 				this.debufAnimation.restart();
 				this._isDebufStarted = true;
+				this._isDefenseCreatingStarted = false;
+				this._isDefenseInfinityStarted = false;
 			}
 			else if(this.debufAnimation.leftTimeMs <= 0){ //end
 				this._isDebufStarted = false;
@@ -209,6 +237,30 @@ export class Necromancer extends Monster{
 
 			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 			return; //игнорируем базовую логику движения и атаки
+		}
+
+		//создание щита
+		if(this._isDefenseCreatingStarted){
+			if(this.defenseCreatingAnimation.leftTimeMs <= 0) {
+				this._isDefenseInfinityStarted = true;
+				this._isDefenseCreatingStarted = false;
+				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
+			}
+
+			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+			return; //игнорируем базовую логику движения и атаки
+		}
+
+		//удержание щита
+		if(this._isDefenseInfinityStarted){
+			let modifier = this.modifiers.find(x => x.name == Necromancer.defenseModifierName);
+			if(!modifier){
+				this._isDefenseInfinityStarted = false;
+			}
+			else{
+				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+				return; //игнорируем базовую логику движения и атаки
+			}
 		}
 
 		//активация атаки
@@ -353,6 +405,20 @@ export class Necromancer extends Monster{
 				this._acidRainCallSound?.stop();
 				this._acidRainCallSound = null;
 			}
+
+			//активация щита
+			if(!this._isDefenseCreatingStarted && !this._isDefenseInfinityStarted && !this._isDebufStarted){
+				this._isDefenseCreatingStarted = true;
+				this.defenseCreatingAnimation.restart();
+			}
+		}
+
+		//если щит активен и снова атакуют - продлеваем щит
+		if(this._isDefenseInfinityStarted){
+			let modifier = this.modifiers.find(x => x.name == Necromancer.defenseModifierName);
+			if(modifier){
+				modifier.lifeTimeMs = Necromancer.defenseMinDurationMs;
+			}
 		}
 		return damage;
 	}
@@ -385,6 +451,16 @@ export class Necromancer extends Monster{
 			const newWidth = this.debufAnimation.image.width / this.debufAnimation.frames * this.scaleSize;
 			const newHeight = this.debufAnimation.image.height * this.scaleSize;
 			this.debufAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+		}
+		else if (this._isDefenseInfinityStarted){
+			const newWidth = this.defenseInfinityAnimation.image.width / this.defenseInfinityAnimation.frames * this.scaleSize;
+			const newHeight = this.defenseInfinityAnimation.image.height * this.scaleSize;
+			this.defenseInfinityAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+		}
+		else if(this._isDefenseCreatingStarted){
+			const newWidth = this.defenseCreatingAnimation.image.width / this.defenseCreatingAnimation.frames * this.scaleSize;
+			const newHeight = this.defenseCreatingAnimation.image.height * this.scaleSize;
+			this.defenseCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
 		else if(this._isSpecialAbilityAcidRainCallStarted){
 			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames * this.scaleSize;

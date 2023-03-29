@@ -913,6 +913,68 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Некромант - щит",
+            code: () => {
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+                
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                setTimeout(() => {
+                    tower1.health = 0;
+                }, 15000);
+
+                var necromancer = new Necromancer(350, 780, true, 1);
+                Monsters.all.push(necromancer);
+            }
+        },
+
+        {
+            key: "Некромант - щит - сбиваем огнём",
+            code: () => {
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+                
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                setTimeout(() => {
+                    tower1.health = 0;
+                }, 500);
+
+                var necromancer = new Necromancer(350, 780, true, 1);
+                Monsters.all.push(necromancer);
+
+                setTimeout(() => {
+                    necromancer.modifiers.push(new FireModifier(0.5));
+                }, 2500);
+            }
+        },
+
+        {
             key: "Волна 2",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
