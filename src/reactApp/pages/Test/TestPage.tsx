@@ -633,8 +633,12 @@ class TestPage extends React.Component {
                 var necromancer = new Necromancer(400, 780, true, 1);
                 Monsters.all.push(necromancer);
 
+                var necromancer3 = new Necromancer(1400, 780, false, 1);
+                Monsters.all.push(necromancer3);
+
                 setTimeout(() => {
                     necromancer.modifiers.push(new FireModifier(0.5));
+                    necromancer3.modifiers.push(new FireModifier(0.5));
                 }, 1000);
 
                 var necromancer2 = new Necromancer(200, 780, true, 0.7);
@@ -829,11 +833,19 @@ class TestPage extends React.Component {
                 tower1.loadedResourcesAfterBuild();
                 Buildings.all.push(tower1);
 
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+
                 var necromancer = new Necromancer(200, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
 
+
+                var necromancer = new Necromancer(1800, 780, false, 1);
+                necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                Monsters.all.push(necromancer);
 
                 setTimeout(() => {
                     var necromancer = new Necromancer(0, 780, true, 0.7);

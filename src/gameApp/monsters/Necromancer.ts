@@ -142,7 +142,7 @@ export class Necromancer extends Monster{
 		this.specialAbilityAcidRainCallAnimation = new Animation(25, Necromancer.acidRainCallDurationMs, Necromancer.specialAbilityAcidRainCallImage);
 		this.specialAbilityAcidRainCreatingAnimation = new Animation(12, 12 * 100, Necromancer.specialAbilityAcidRainCreatingImage);
 		this.debufAnimation = new Animation(Necromancer.debufImageFrames, 1000, Necromancer.debufImage);
-		this.defenseCreatingAnimation = new Animation(Necromancer.defenseCreatingFrames, 900, Necromancer.defenseCreatingImage);
+		this.defenseCreatingAnimation = new Animation(Necromancer.defenseCreatingFrames, 400, Necromancer.defenseCreatingImage);
 		this.defenseInfinityAnimation = new AnimationInfinite(Necromancer.defenseInfinityFrames, 700, Necromancer.defenseInfinityImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
@@ -175,7 +175,7 @@ export class Necromancer extends Monster{
 	}
 
 	get shiftXForCenter(){
-		return -16 * this.scaleSize;
+		return this.isLeftSide ? -16 * this.scaleSize : 18 * this.scaleSize;
 	}
 	get shiftYForCenter(){
 		return 20 * this.scaleSize;
@@ -452,22 +452,22 @@ export class Necromancer extends Monster{
 		if(this._isDebufStarted){
 			const newWidth = this.debufAnimation.image.width / this.debufAnimation.frames * this.scaleSize;
 			const newHeight = this.debufAnimation.image.height * this.scaleSize;
-			this.debufAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+			this.debufAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
 		else if (this._isDefenseInfinityStarted){
 			const newWidth = this.defenseInfinityAnimation.image.width / this.defenseInfinityAnimation.frames * this.scaleSize;
 			const newHeight = this.defenseInfinityAnimation.image.height * this.scaleSize;
-			this.defenseInfinityAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+			this.defenseInfinityAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
 		else if(this._isDefenseCreatingStarted){
 			const newWidth = this.defenseCreatingAnimation.image.width / this.defenseCreatingAnimation.frames * this.scaleSize;
 			const newHeight = this.defenseCreatingAnimation.image.height * this.scaleSize;
-			this.defenseCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+			this.defenseCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
 		else if(this._isSpecialAbilityAcidRainCallStarted){
 			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames * this.scaleSize;
 			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height * this.scaleSize;
-			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x - invertSign * 27 * this.scaleSize, this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
+			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 
 			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal && this.specialAbilityAcidRainCreatingAnimation.leftTimeMs > 0){
 				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames / 2;
