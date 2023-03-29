@@ -963,11 +963,12 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     tower1.health = 0;
-                }, 500);
+                }, 1000);
 
                 var necromancer = new Necromancer(350, 780, true, 1);
                 Monsters.all.push(necromancer);
 
+                FireModifier.loadResources();
                 setTimeout(() => {
                     necromancer.modifiers.push(new FireModifier(0.5));
                 }, 2500);

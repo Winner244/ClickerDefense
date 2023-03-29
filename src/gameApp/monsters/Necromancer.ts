@@ -148,6 +148,8 @@ export class Necromancer extends Monster{
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
 		this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
+		this._isDefenseInfinityStarted = false;
+		this._isDefenseCreatingStarted = false;
 		this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 		this.countSimpleAttacks = 0;
 		this._isDebufStarted = false;
