@@ -246,6 +246,8 @@ export class Necromancer extends Monster{
 			if(this.defenseCreatingAnimation.leftTimeMs <= 0) {
 				this._isDefenseInfinityStarted = true;
 				this._isDefenseCreatingStarted = false;
+			}
+			else if(this.defenseCreatingAnimation.leftTimeMs <= 200){
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 			}
 
