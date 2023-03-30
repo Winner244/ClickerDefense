@@ -5,7 +5,7 @@ import {ImageHandler} from '../ImageHandler';
 import {MovingObject} from '../../models/MovingObject';
 
 import Animation from '../../models/Animation';
-import AnimationInfinite from '../../models/AnimationInfinite';
+import AnimationRandom from '../../models/AnimationRandom';
 
 import {AttackedObject} from '../../models/AttackedObject';
 
@@ -110,7 +110,7 @@ export class Necromancer extends Monster{
 
 	private static readonly defenseInfinityImage: HTMLImageElement = new Image();  //удержание щита
 	private static readonly defenseInfinityFrames = 7;
-	private readonly defenseInfinityAnimation: AnimationInfinite; //анимация удержания щита
+	private readonly defenseInfinityAnimation: AnimationRandom; //анимация удержания щита
 	private _isDefenseInfinityStarted: boolean; //началась анимация удержания щита
 
 	private _isDefenseEnding: boolean; //заканчивается анимация удержания щита
@@ -145,7 +145,7 @@ export class Necromancer extends Monster{
 		this.specialAbilityAcidRainCreatingAnimation = new Animation(12, 12 * 100, Necromancer.specialAbilityAcidRainCreatingImage);
 		this.debufAnimation = new Animation(Necromancer.debufImageFrames, 1000, Necromancer.debufImage);
 		this.defenseCreatingAnimation = new Animation(Necromancer.defenseCreatingFrames, 400, Necromancer.defenseCreatingImage);
-		this.defenseInfinityAnimation = new AnimationInfinite(Necromancer.defenseInfinityFrames, 700, Necromancer.defenseInfinityImage);
+		this.defenseInfinityAnimation = new AnimationRandom(Necromancer.defenseInfinityFrames, 700, Necromancer.defenseInfinityImage);
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
