@@ -113,6 +113,8 @@ export class Necromancer extends Monster{
 	private readonly defenseInfinityAnimation: AnimationInfinite; //анимация удержания щита
 	private _isDefenseInfinityStarted: boolean; //началась анимация удержания щита
 
+	private _isDefenseEnding: boolean; //заканчивается анимация удержания щита
+
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -150,6 +152,7 @@ export class Necromancer extends Monster{
 		this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
 		this._isDefenseInfinityStarted = false;
 		this._isDefenseCreatingStarted = false;
+		this._isDefenseEnding = false;
 		this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 		this.countSimpleAttacks = 0;
 		this._isDebufStarted = false;
@@ -229,6 +232,7 @@ export class Necromancer extends Monster{
 				this._isDebufStarted = true;
 				this._isDefenseCreatingStarted = false;
 				this._isDefenseInfinityStarted = false;
+				this._isDefenseEnding = false;
 			}
 			else if(this.debufAnimation.leftTimeMs <= 0){ //end
 				this._isDebufStarted = false;
@@ -243,11 +247,15 @@ export class Necromancer extends Monster{
 
 		//создание щита
 		if(this._isDefenseCreatingStarted){
+			let defenseModifier = this.modifiers.find(x => x.name == Necromancer.defenseModifierName);
 			if(this.defenseCreatingAnimation.leftTimeMs <= 0) {
 				this._isDefenseInfinityStarted = true;
 				this._isDefenseCreatingStarted = false;
+				if(!defenseModifier){
+					this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
+				}
 			}
-			else if(this.defenseCreatingAnimation.leftTimeMs <= 200){
+			else if(this.defenseCreatingAnimation.leftTimeMs <= 200 && !defenseModifier){
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 			}
 
@@ -257,14 +265,24 @@ export class Necromancer extends Monster{
 
 		//удержание щита
 		if(this._isDefenseInfinityStarted){
-			let modifier = this.modifiers.find(x => x.name == Necromancer.defenseModifierName);
-			if(!modifier){
+			let defenseModifier = this.modifiers.find(x => x.name == Necromancer.defenseModifierName);
+			if(!defenseModifier){
 				this._isDefenseInfinityStarted = false;
+				this._isDefenseEnding = true;
+				this.defenseCreatingAnimation.restart();
 			}
 			else{
 				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
 			}
+		}
+
+		if(this._isDefenseEnding){
+			if(this.defenseCreatingAnimation.leftTimeMs <= 0){
+				this._isDefenseEnding = false;
+			}
+			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+			return; //игнорируем базовую логику движения и атаки
 		}
 
 		//активация атаки
@@ -413,6 +431,7 @@ export class Necromancer extends Monster{
 			//активация щита
 			if(!this._isDefenseCreatingStarted && !this._isDefenseInfinityStarted && !this._isDebufStarted){
 				this._isDefenseCreatingStarted = true;
+				this._isDefenseEnding = false;
 				this.defenseCreatingAnimation.restart();
 			}
 		}
@@ -451,7 +470,7 @@ export class Necromancer extends Monster{
 
 	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number){
 		
-		if(this._isDebufStarted){
+		if (this._isDebufStarted){
 			const newWidth = this.debufAnimation.image.width / this.debufAnimation.frames * this.scaleSize;
 			const newHeight = this.debufAnimation.image.height * this.scaleSize;
 			this.debufAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
@@ -461,12 +480,17 @@ export class Necromancer extends Monster{
 			const newHeight = this.defenseInfinityAnimation.image.height * this.scaleSize;
 			this.defenseInfinityAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
-		else if(this._isDefenseCreatingStarted){
+		else if (this._isDefenseCreatingStarted){
 			const newWidth = this.defenseCreatingAnimation.image.width / this.defenseCreatingAnimation.frames * this.scaleSize;
 			const newHeight = this.defenseCreatingAnimation.image.height * this.scaleSize;
 			this.defenseCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
-		else if(this._isSpecialAbilityAcidRainCallStarted){
+		else if (this._isDefenseEnding){
+			const newWidth = this.defenseCreatingAnimation.image.width / this.defenseCreatingAnimation.frames * this.scaleSize;
+			const newHeight = this.defenseCreatingAnimation.image.height * this.scaleSize;
+			this.defenseCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight, true);
+		}
+		else if (this._isSpecialAbilityAcidRainCallStarted){
 			const newWidth = this.specialAbilityAcidRainCallAnimation.image.width / this.specialAbilityAcidRainCallAnimation.frames * this.scaleSize;
 			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height * this.scaleSize;
 			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);

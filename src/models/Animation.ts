@@ -18,7 +18,7 @@ export default class Animation{
 		this.leftTimeMs = this.durationMs;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number){
+	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, isInvert: boolean = false){
 		if(!this.image.complete){
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
 			return;
@@ -32,6 +32,14 @@ export default class Animation{
 			: isGameOver 
 				? 0 
 				: Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames));
+
+		if(isInvert){
+			frame = this.leftTimeMs <= 0 
+			? 0
+			: isGameOver 
+				? this.frames - 1 
+				: this.frames - Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames));
+		}
 
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
