@@ -33,6 +33,33 @@ class TestPage extends React.Component {
 
     listOfTests = [
         {
+            key: "Image Handler, loading images, waiting images",
+            code: () => { 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+                setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
+
+                var boar = new Boar(0, 780, true, 1, true);
+                boar.name = 'boar1';
+                Monsters.all.push(boar);
+
+                var z = new Zombie(1780, 780, false, 1);
+                Monsters.all.push(z);
+                setTimeout(() => Monsters.all.forEach(x => x.health--), 300);
+
+                Waves.isStarted = false;
+            }
+        },
+        {
             key: "Разрушение строений", 
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -144,6 +171,47 @@ class TestPage extends React.Component {
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
+            }
+        },
+
+        {
+            key: "Зомби - атака",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var zombie = new Zombie(800, 780, true, 1);
+                Monsters.all.push(zombie);
+            }
+        },
+
+        {
+            key: "Кабан - Атака",
+            code: () => {
+                Gamer.coins = 200;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Boar.name]: new WaveData(1, 1, 6)
+                    },
+                    { //2-я волна
+                        [Boar.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var boar = new Boar(1000, 780, true, 1, true);
+                Monsters.all.push(boar);
             }
         },
 
@@ -609,7 +677,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "огонь - затухание",
+            key: "Огонь - затухание",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -651,7 +719,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "огонь - передача",
+            key: "Огонь - передача",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -702,48 +770,36 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Атака зомби",
+            key: "Летучая мышь - полёт",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                { 
+                    [Bat.name]: new WaveData(30, 60, 0)
+                }];
 
-                var zombie = new Zombie(800, 780, true, 1);
-                Monsters.all.push(zombie);
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                var barricade2 = new Barricade(1300);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+
+                var tower2 = new Tower(1200);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
             }
         },
 
         {
-            key: "Атака кабана",
-            code: () => {
-                Gamer.coins = 200;
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
-
-                var boar = new Boar(1000, 780, true, 1, true);
-                Monsters.all.push(boar);
-            }
-        },
-
-        {
-            key: "Атака летучей мыши",
+            key: "Летучая мышь - атака",
             code: () => {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -764,7 +820,58 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Атака некроманта - обычная",
+            key: "Некромант - ходьба",
+            code: () => { 
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                { 
+                    [Necromancer.name]: new WaveData(30, 15, 0)
+                }];
+            }
+        },
+
+        {
+            key: "Некромант - расстояние срабатывания атаки",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower1 = new Tower(700);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                for(var i = 0; i < 10; i++){
+                    var monster = new Necromancer(0, 780, true, 1);
+                    monster.health--;
+                    Monsters.all.push(monster);
+                }
+
+                for(var i = 0; i < 10; i++){
+                    var monster = new Necromancer(1780, 780, false, 1);
+                    monster.health--;
+                    Monsters.all.push(monster);
+                }
+                Buildings.all.forEach(x => x.healthMax = x.health = 400);
+            }
+        },
+
+        {
+            key: "Некромант- обычная атака",
             code: () => {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -1097,114 +1204,6 @@ class TestPage extends React.Component {
                 var tower2 = new Tower(1200);
                 tower2.loadedResourcesAfterBuild();
                 Buildings.all.push(tower2);
-            }
-        },
-
-        {
-            key: "Некромант - ходьба",
-            code: () => { 
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                { 
-                    [Necromancer.name]: new WaveData(30, 15, 0)
-                }];
-            }
-        },
-
-        {
-            key: "Полёт летучих мышей",
-            code: () => {
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                { 
-                    [Bat.name]: new WaveData(30, 60, 0)
-                }];
-
-                var barricade1 = new Barricade(600);
-                barricade1.loadedResourcesAfterBuild();
-                Buildings.all.push(barricade1);
-
-                var tower1 = new Tower(700);
-                tower1.loadedResourcesAfterBuild();
-                Buildings.all.push(tower1);
-
-                var barricade2 = new Barricade(1300);
-                barricade2.loadedResourcesAfterBuild();
-                Buildings.all.push(barricade2);
-
-                var tower2 = new Tower(1200);
-                tower2.loadedResourcesAfterBuild();
-                Buildings.all.push(tower2);
-            }
-        },
-
-        {
-            key: "Некромант - расстояние срабатывания атаки",
-            code: () => {
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
-
-                var barricade1 = new Barricade(600);
-                barricade1.loadedResourcesAfterBuild();
-                Buildings.all.push(barricade1);
-
-                var tower1 = new Tower(700);
-                tower1.loadedResourcesAfterBuild();
-                Buildings.all.push(tower1);
-
-                for(var i = 0; i < 10; i++){
-                    var monster = new Necromancer(0, 780, true, 1);
-                    monster.health--;
-                    Monsters.all.push(monster);
-                }
-
-                for(var i = 0; i < 10; i++){
-                    var monster = new Necromancer(1780, 780, false, 1);
-                    monster.health--;
-                    Monsters.all.push(monster);
-                }
-                Buildings.all.forEach(x => x.healthMax = x.health = 400);
-            }
-        },
-
-        {
-            key: "Image Handler, loading images, waiting images",
-            code: () => { 
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
-
-                var barricade1 = new Barricade(600);
-                barricade1.loadedResourcesAfterBuild();
-                Buildings.all.push(barricade1);
-
-                var tower2 = new Tower(1200);
-                tower2.loadedResourcesAfterBuild();
-                Buildings.all.push(tower2);
-                setTimeout(() => Buildings.all.forEach(x => x.health--), 300);
-
-                var boar = new Boar(0, 780, true, 1, true);
-                boar.name = 'boar1';
-                Monsters.all.push(boar);
-
-                var z = new Zombie(1780, 780, false, 1);
-                Monsters.all.push(z);
-                setTimeout(() => Monsters.all.forEach(x => x.health--), 300);
-
-                Waves.isStarted = false;
             }
         },
 
