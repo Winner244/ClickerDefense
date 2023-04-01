@@ -48,6 +48,8 @@ import SoundAttacked5 from '../../assets/sounds/monsters/necromancer/attacked5.m
 import SoundCloudCall from '../../assets/sounds/monsters/necromancer/cloudCall.mp3'; 
 import SoundCloudCreated from '../../assets/sounds/monsters/necromancer/cloudCreated.mp3'; 
 
+import ShieldSound from '../../assets/sounds/monsters/necromancer/shield.mp3'; 
+
 
 
 /** Некромант - тип монстров */
@@ -115,6 +117,8 @@ export class Necromancer extends Monster{
 
 	private _isDefenseEnding: boolean; //заканчивается анимация удержания щита
 
+	private _shieldSound: Tone.Player|null; //звук щита
+
 
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
@@ -157,6 +161,7 @@ export class Necromancer extends Monster{
 		this.countSimpleAttacks = 0;
 		this._isDebufStarted = false;
 		this._acidRainCallSound = null;
+		this._shieldSound = null;
 
 	}
 
@@ -174,6 +179,7 @@ export class Necromancer extends Monster{
 			AudioSystem.load(Attack2Sound);
 			AudioSystem.load(SoundCloudCall);
 			AudioSystem.load(SoundCloudCreated);
+			AudioSystem.load(ShieldSound);
 		}
 	}
 
@@ -254,6 +260,7 @@ export class Necromancer extends Monster{
 				if(!defenseModifier){
 					this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 				}
+				AudioSystem.play(this.centerX, ShieldSound, 0.5, 1, true, true).then(sourse => this._shieldSound = sourse);
 			}
 			else if(this.defenseCreatingAnimation.leftTimeMs <= 200 && !defenseModifier){
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
@@ -277,10 +284,14 @@ export class Necromancer extends Monster{
 			}
 		}
 
+		//убираем щит
 		if(this._isDefenseEnding){
 			if(this.defenseCreatingAnimation.leftTimeMs <= 0){
 				this._isDefenseEnding = false;
 			}
+			this._shieldSound?.stop();
+			this._shieldSound = null;
+			
 			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 			return; //игнорируем базовую логику движения и атаки
 		}
@@ -450,6 +461,8 @@ export class Necromancer extends Monster{
 	destroy(): void{
 		this._acidRainCallSound?.stop();
 		this._acidRainCallSound = null;
+		this._shieldSound?.stop();
+		this._shieldSound = null;
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void {
