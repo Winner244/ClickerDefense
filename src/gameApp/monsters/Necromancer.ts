@@ -260,7 +260,7 @@ export class Necromancer extends Monster{
 				if(!defenseModifier){
 					this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 				}
-				AudioSystem.play(this.centerX, ShieldSound, 0.5, 1, true, true).then(sourse => this._shieldSound = sourse);
+				AudioSystem.play(this.centerX, ShieldSound, 0.2, 1, true, true, 0, 0, false, true).then(sourse => this._shieldSound = sourse);
 			}
 			else if(this.defenseCreatingAnimation.leftTimeMs <= 200 && !defenseModifier){
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
@@ -289,9 +289,12 @@ export class Necromancer extends Monster{
 			if(this.defenseCreatingAnimation.leftTimeMs <= 0){
 				this._isDefenseEnding = false;
 			}
-			this._shieldSound?.stop();
-			this._shieldSound = null;
-			
+			if(this._shieldSound){
+				this._shieldSound.autostart = false;
+				this._shieldSound.stop();
+				this._shieldSound = null;
+			}
+
 			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 			return; //игнорируем базовую логику движения и атаки
 		}
@@ -461,8 +464,11 @@ export class Necromancer extends Monster{
 	destroy(): void{
 		this._acidRainCallSound?.stop();
 		this._acidRainCallSound = null;
-		this._shieldSound?.stop();
-		this._shieldSound = null;
+		if(this._shieldSound){
+			this._shieldSound.autostart = false;
+			this._shieldSound.stop();
+			this._shieldSound = null;
+		}
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void {

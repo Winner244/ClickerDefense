@@ -103,7 +103,8 @@ export class AudioSystem{
 		isUseAutoPauseAndResume: boolean = false, 
 		delayStartingSeconds: number = 0, 
 		offsetStartingSeconds: number = 0,
-		isMusic: boolean = false): Promise<Tone.Player|null>
+		isMusic: boolean = false,
+		isCycling: boolean = false): Promise<Tone.Player|null>
 	{
 		if (!AudioSystem.isEnabled){
 			return new Promise(done => done(null));
@@ -120,13 +121,33 @@ export class AudioSystem{
 		return this._load(pathToAudioFile)
 			.then(buffer => AudioSystem._play(x, buffer, gainNode, speed, isUseBiquadFilterRandom, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
-				if(isUseAutoPauseAndResume && source){
+				if(!source){
+					return null;
+				}
+
+				if(isCycling){
+					source.autostart = true;
+				}
+
+				if(isUseAutoPauseAndResume){
 					(<any>source).startedAt = this._context.currentTime + delayStartingSeconds;
 					this._soundsForPause.push(source);
 					source.onstop = () => {
 						this._soundsForPause = this._soundsForPause.filter(x => x != source);
+						
+						if(isCycling && source.autostart){
+							source.start(0);
+						}
 					};
-			}
+				}
+				else if(isCycling){
+					source.onstop = () => {
+						if(source.autostart){
+							source.start(0);
+						}
+					};
+				}
+
 				return source;
 			});
 	}
@@ -280,8 +301,8 @@ export class AudioSystem{
 		this._soundsForPause.forEach(x => {
 			(<any>x).pausedAt = this._context.currentTime;
 			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this._context.currentTime);
-			(<Tone.Player>x).onstop = () => {};
-			(<Tone.Player>x).stop(0);
+			x.onstop = () => {};
+			x.stop(0);
 		});
 	}
 
@@ -303,8 +324,8 @@ export class AudioSystem{
 				return;
 			}
 
-			(<Tone.Player>x).start(delayLeftSec, offsetSec);
-			(<Tone.Player>x).onstop = () => this._soundsForPause = this._soundsForPause.filter(y => y != x);
+			x.start(delayLeftSec, offsetSec);
+			x.onstop = () => this._soundsForPause = this._soundsForPause.filter(y => y != x);
 		});
 	}
 }
