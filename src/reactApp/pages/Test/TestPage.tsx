@@ -871,7 +871,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Некромант- обычная атака",
+            key: "Некромант - обычная атака",
             code: () => {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

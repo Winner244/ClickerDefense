@@ -36,8 +36,10 @@ import DebufImage from '../../assets/img/monsters/necromancer/debuf.png';
 import DefenseCreatingImage from '../../assets/img/monsters/necromancer/defenseCreating.png'; 
 import DefenseInfinityImage from '../../assets/img/monsters/necromancer/defenseInfinity.png'; 
 
+import AttackStartingSound from '../../assets/sounds/monsters/necromancer/attackStarting.mp3'; 
 import Attack1Sound from '../../assets/sounds/monsters/necromancer/attack1.mp3'; 
 import Attack2Sound from '../../assets/sounds/monsters/necromancer/attack2.mp3'; 
+
 
 import SoundAttacked1 from '../../assets/sounds/monsters/necromancer/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/monsters/necromancer/attacked2.mp3'; 
@@ -67,6 +69,7 @@ export class Necromancer extends Monster{
 	private static readonly maxDistanceDamage = 450; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется атака
 	private static readonly minDistanceDamage = 300; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется атака
 	private _attackXStart: number; //координата x на которой будет активирована атака
+	private _isAattackStartingSoundStarted: boolean; //уже начато звуковое воспроизведение начала атаки?
 
 	static readonly chargeSpeed: number = 200; //скорость полёта заряда атаки (в пикселях за секунду)
 	private _charges: MovingObject[]; //атакующие заряды энергии 
@@ -150,6 +153,7 @@ export class Necromancer extends Monster{
 		this.debufAnimation = new Animation(Necromancer.debufImageFrames, 1000, Necromancer.debufImage);
 		this.defenseCreatingAnimation = new Animation(Necromancer.defenseCreatingFrames, 400, Necromancer.defenseCreatingImage);
 		this.defenseInfinityAnimation = new AnimationRandom(Necromancer.defenseInfinityFrames, 700, Necromancer.defenseInfinityImage);
+		this._isAattackStartingSoundStarted = false;
 		this._isSpecialAbilityAcidRainCallStarted  = false;
 		this._isSpecialAbilityAcidRainCreatingStarted = false;
 		this._isSpecialAbilityAcidRainCreatingEnded = false;
@@ -177,6 +181,7 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCreatingImage).src = SpecialAbilityAcidRainCreatingImage;
 			AudioSystem.load(Attack1Sound);
 			AudioSystem.load(Attack2Sound);
+			AudioSystem.load(AttackStartingSound);
 			AudioSystem.load(SoundCloudCall);
 			AudioSystem.load(SoundCloudCreated);
 			AudioSystem.load(ShieldSound);
@@ -391,6 +396,11 @@ export class Necromancer extends Monster{
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attackSimple(damage);
 				this.countSimpleAttacks++;
+				this._isAattackStartingSoundStarted = false;
+			}
+			else if(this._attackLeftTimeMs < 700 && !this._isAattackStartingSoundStarted){
+				AudioSystem.play(this.centerX, AttackStartingSound, 0.2, 1, true, true);
+				this._isAattackStartingSoundStarted = true;
 			}
 		}
 	

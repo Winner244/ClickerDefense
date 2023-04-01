@@ -127,6 +127,7 @@ export class AudioSystem{
 
 				if(isCycling){
 					source.autostart = true;
+					(<any>source).isCycling = true;
 				}
 
 				if(isUseAutoPauseAndResume){
@@ -302,6 +303,7 @@ export class AudioSystem{
 			(<any>x).pausedAt = this._context.currentTime;
 			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this._context.currentTime);
 			x.onstop = () => {};
+			x.autostart = false;
 			x.stop(0);
 		});
 	}
@@ -317,6 +319,11 @@ export class AudioSystem{
 			var pausedAt = (<any>x).pausedAt || 0;
 			var startedAt = (<any>x).startedAt || 0;
 			var delayLeftSec = (<any>x).delayLeftSec || 0;
+
+			var isCycling = (<any>x).isCycling || false;
+			if(isCycling){
+				x.autostart = true;
+			}
 
 			var offsetSec = delayLeftSec > 0 ? 0 : (pausedAt - startedAt);
 			if(offsetSec < 0){ //develop hot reload code
