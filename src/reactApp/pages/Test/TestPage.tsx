@@ -27,6 +27,7 @@ import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 import { FireModifier } from '../../../gameApp/modifiers/FireModifier';
 import { FlyEarth } from '../../../gameApp/buildings/FlyEarth';
 import { Necromancer } from '../../../gameApp/monsters/Necromancer';
+import { Skelet } from '../../../gameApp/monsters/Skelet';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -344,6 +345,22 @@ class TestPage extends React.Component {
                 }
 
                 Buildings.all.forEach(x => x.healthMax = x.health = 400);
+            }
+        },
+
+        {
+            key: "Скелет - бег",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        [Skelet.name]: new WaveData(1, 60, 0)
+                    },
+                    { //2-я волна
+                        [Skelet.name]: new WaveData(15, 10, 0)
+                    }];
             }
         },
 
@@ -1284,6 +1301,7 @@ class TestPage extends React.Component {
         Bat.init(true);
         Necromancer.init(true);
         Builder.init(true);
+        Skelet.init(true);
         FlyEarth.loadExplosionResources();
         Game.loadResourcesAfterEndOfWave(0);
         Game.loadResourcesAfterBuild(new Tower(0));

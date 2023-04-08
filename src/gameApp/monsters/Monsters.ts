@@ -24,6 +24,7 @@ import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png';
 
 import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
 import SwordAttackSound from '../../assets/sounds/gamer/sword_attack.mp3'; 
+import { Skelet } from './Skelet';
 
 
 
@@ -51,6 +52,7 @@ export class Monsters{
 			case Boar.name: Boar.init(true); break;
 			case Bat.name: Bat.init(true); break;
 			case Necromancer.name: Necromancer.init(true); break;
+			case Skelet.name: Skelet.init(true); break;
 			default: throw `unexpected name of the monster (initMonster(${monsterName})).`;
 		}
 	}
@@ -153,6 +155,7 @@ export class Monsters{
 			case Boar.name: newMonster = new Boar(0, 0, isLeftSide, scaleSize); break;
 			case Bat.name: newMonster = new Bat(0, 0, isLeftSide, scaleSize); break;
 			case Necromancer.name: newMonster = new Necromancer(0, 0, isLeftSide, scaleSize); break;
+			case Skelet.name: newMonster = new Skelet(0, 0, isLeftSide, scaleSize); break;
 			default: throw `unexpected name of the monster (add(${name}, ...)).`;
 		}
 
