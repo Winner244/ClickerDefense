@@ -74,7 +74,7 @@ export class AttackedObject {
 
 	get height(): number {
 		if(this.animation){
-			return this.width / (this.animation.image.width / this.animation.frames) * this.animation.image.height;
+			return this.width / ((this.animation.image.width || 1) / this.animation.frames) * (this.animation.image.height || 1);
 		}
 
 		return this.image.height * this.scaleSize;
