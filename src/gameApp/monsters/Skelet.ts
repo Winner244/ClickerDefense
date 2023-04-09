@@ -39,11 +39,11 @@ export class Skelet extends Monster{
 			500,   //speed animation
 			selectedAttackImage,
 			Skelet.attackImageFrames,
-			1000,  //speed animation attack
+			500,  //speed animation attack
 			5,     //reduce hover
 			3,     //health
 			3,     //damage
-			990,   //time attack wait
+			500,   //time attack wait
 			150,    //speed
 			Skelet.imageHandler,
 			3000); //avrTimeSoundWaitMs
