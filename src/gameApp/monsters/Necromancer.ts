@@ -93,8 +93,12 @@ export class Necromancer extends Monster{
 	private _isSpecialAbilityAcidRainCreatedSoundPlayed: boolean; //была ли уже запущена озвучка появления облака?
 	private _acidRainCallSound: Tone.Player|null; //звук вызова облаков
 	static readonly acidBlobDamage = 0.1; //урон от кислотных капель
-	countSimpleAttacks:number;
+	isForceSpecialAbilityAcidRain: boolean; //использовать только спец способность "Кислотный дождь" (для тестов)
 
+	countSimpleAttacks: number;
+
+	/* Спец Способность 2 - "Вызов скелетов", отменяется при нанесении урона монстру */
+	isForceSpecialAbilitySkeletons: boolean; //использовать только спец способность "Вызов скелетонов" (для тестов)
 
 	/* Способность - дебафф - снятие побочных заклинаний */
 	private static readonly debufImage: HTMLImageElement = new Image();  //снятие побочных заклинаний
@@ -166,6 +170,8 @@ export class Necromancer extends Monster{
 		this._isDebufStarted = false;
 		this._acidRainCallSound = null;
 		this._shieldSound = null;
+		this.isForceSpecialAbilityAcidRain = false;
+		this.isForceSpecialAbilitySkeletons = false;
 
 	}
 
@@ -337,51 +343,60 @@ export class Necromancer extends Monster{
 	attackLogic(drawsDiffMs: number): void {
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
+		const isCallSpecialAbility = this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility;
 
 		
-		if(this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){ //Кислотный дождь
+		//спец способность
+		if(isCallSpecialAbility || this._isSpecialAbilityAcidRainCreatingStarted){ 
+			const isCallAcidRain = (Math.random() > 0.5 || this.isForceSpecialAbilityAcidRain) && !this.isForceSpecialAbilitySkeletons;
 
-			if(!this._isSpecialAbilityAcidRainCallStarted){
-				this._isSpecialAbilityAcidRainCallStarted = true;
-				this.specialAbilityAcidRainCallAnimation.restart();
-				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
-				this._isAttack = true; 
-				AcidRainModifier.loadResources();
-				AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true).then(sourse => this._acidRainCallSound = sourse);
-			}
-
-			if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
-				this._isSpecialAbilityAcidRainCreatingStarted = true;
-				this.specialAbilityAcidRainCreatingAnimation.restart();
-			}
-
-			if(!this._isSpecialAbilityAcidRainCreatedSoundPlayed && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs + 100){
-				if(this._buildingGoal){
-					AudioSystem.play(this._buildingGoal.centerX, SoundCloudCreated, 0.5, 1, false, true);
+			//кислотный дождь
+			if(isCallAcidRain && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){
+				if(!this._isSpecialAbilityAcidRainCallStarted){
+					this._isSpecialAbilityAcidRainCallStarted = true;
+					this.specialAbilityAcidRainCallAnimation.restart();
+					this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
+					this._isAttack = true; 
+					AcidRainModifier.loadResources();
+					AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true).then(sourse => this._acidRainCallSound = sourse);
 				}
-				this._isSpecialAbilityAcidRainCreatedSoundPlayed = true;
-			}
-
-
-			if(!this._isSpecialAbilityAcidRainCreatingEnded && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
-				this._isSpecialAbilityAcidRainCreatingEnded = true;
-				if(this._buildingGoal){
-					this._buildingGoal.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
-				}
-			}
 	
-			if(this._attackLeftTimeMs <= 0 || !isNotBaseBuildings){
-				this._isSpecialAbilityAcidRainCallStarted = false;
-				this._isSpecialAbilityAcidRainCreatingStarted = false;
-				this._isSpecialAbilityAcidRainCreatingEnded = false;
-				this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
-				this._isAttack = false; 
-				this._attackLeftTimeMs = 700;
-				this.countSimpleAttacks = 0;
-				this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
+				if(!this._isSpecialAbilityAcidRainCreatingStarted && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.startCreatingAcidRainAfterStartCallMs){
+					this._isSpecialAbilityAcidRainCreatingStarted = true;
+					this.specialAbilityAcidRainCreatingAnimation.restart();
+				}
+	
+				if(!this._isSpecialAbilityAcidRainCreatedSoundPlayed && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs + 100){
+					if(this._buildingGoal){
+						AudioSystem.play(this._buildingGoal.centerX, SoundCloudCreated, 0.5, 1, false, true);
+					}
+					this._isSpecialAbilityAcidRainCreatedSoundPlayed = true;
+				}
+	
+	
+				if(!this._isSpecialAbilityAcidRainCreatingEnded && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
+					this._isSpecialAbilityAcidRainCreatingEnded = true;
+					if(this._buildingGoal){
+						this._buildingGoal.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
+					}
+				}
+		
+				if(this._attackLeftTimeMs <= 0 || !isNotBaseBuildings){
+					this._isSpecialAbilityAcidRainCallStarted = false;
+					this._isSpecialAbilityAcidRainCreatingStarted = false;
+					this._isSpecialAbilityAcidRainCreatingEnded = false;
+					this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
+					this._isAttack = false; 
+					this._attackLeftTimeMs = 700;
+					this.countSimpleAttacks = 0;
+					this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
+				}
+			}
+			else { //вызов скелетов
+				//TODO
 			}
 		}
-		else{ //энергетический шар
+		else { //энергетический шар
 
 			//start attack infinite animation
 			if(!this._isAttack){ 

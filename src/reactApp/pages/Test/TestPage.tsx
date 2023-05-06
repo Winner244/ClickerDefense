@@ -963,17 +963,20 @@ class TestPage extends React.Component {
 
                 var necromancer = new Necromancer(200, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.isForceSpecialAbilityAcidRain = true;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
 
 
                 var necromancer = new Necromancer(1800, 780, false, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.isForceSpecialAbilityAcidRain = true;
                 Monsters.all.push(necromancer);
 
                 setTimeout(() => {
                     var necromancer = new Necromancer(0, 780, true, 0.7);
                     necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                    necromancer.isForceSpecialAbilityAcidRain = true;
                     necromancer.health = necromancer.healthMax = 10;
                     Monsters.all.push(necromancer);
                 }, 3000);
@@ -1005,6 +1008,7 @@ class TestPage extends React.Component {
 
                 var necromancer = new Necromancer(200, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.isForceSpecialAbilityAcidRain = true;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
 
@@ -1043,8 +1047,46 @@ class TestPage extends React.Component {
 
                 var necromancer = new Necromancer(200, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.isForceSpecialAbilityAcidRain = true;
                 necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
+            }
+        },
+
+        {
+            key: "Некромант - спес способность - вызов скелетов",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        //[Zombie.name]: new WaveData(7, 80, 0),
+                        [Necromancer.name]: new WaveData(1, 60, 6)
+                    },
+                    { //2-я волна
+                        [Necromancer.name]: new WaveData(15, 10, 0)
+                    }];
+
+                var necromancer = new Necromancer(200, 780, true, 1);
+                necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.isForceSpecialAbilitySkeletons = true;
+                necromancer.health = necromancer.healthMax = 10;
+                Monsters.all.push(necromancer);
+
+
+                var necromancer = new Necromancer(1800, 780, false, 1);
+                necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                necromancer.isForceSpecialAbilitySkeletons = true;
+                Monsters.all.push(necromancer);
+
+                setTimeout(() => {
+                    var necromancer = new Necromancer(0, 780, true, 0.7);
+                    necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
+                    necromancer.isForceSpecialAbilitySkeletons = true;
+                    necromancer.health = necromancer.healthMax = 10;
+                    Monsters.all.push(necromancer);
+                }, 3000);
             }
         },
 
