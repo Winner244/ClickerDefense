@@ -2,6 +2,10 @@ import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
+import Animation from '../../models/Animation';
+
+import {Building} from '../buildings/Building';
+
 import {Monster} from './Monster';
 
 import {Helper} from '../helpers/Helper';
@@ -12,6 +16,8 @@ import Skelet1Image from '../../assets/img/monsters/skelet/skelet.png';
 
 import SkeletAttack1Image from '../../assets/img/monsters/skelet/skeletAttack.png'; 
 
+import SkeletCreating1Image from '../../assets/img/monsters/skelet/creating.png'; 
+
 
 
 /** Скелет - тип монстров, которые вызываются Некромантом */
@@ -21,13 +27,20 @@ export class Skelet extends Monster{
 	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	private static readonly imageFrames = 6;
 
-	private static readonly attackImages: HTMLImageElement[] = [];  //разные окраски монстра
+	private static readonly attackImages: HTMLImageElement[] = [];  //разные окраски атаки монстра
 	private static readonly attackImageFrames = 6;
+
+	private static readonly creatingImages: HTMLImageElement[] = [];  //разные окраски появления монстра
+	private static readonly creatingImageFrames = 16;
+	private readonly creatingAnimation: Animation; //анимация повяления из под земли от вызова Некроманта
+
+	isDisplayCreatingFromUndegroundAnimation: boolean; //отображать анимацию появления монстра из под земли?
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Skelet.images.length) - 1;
 		let selectedImage = Skelet.images[random];
 		let selectedAttackImage = Skelet.attackImages[random];
+		let selectedCreatingImage = Skelet.creatingImages[random];
 
 		super(x, y,
 			scaleSize,
@@ -49,6 +62,9 @@ export class Skelet extends Monster{
 			3000); //avrTimeSoundWaitMs
 
 			Skelet.init(true); //reserve init
+
+			this.isDisplayCreatingFromUndegroundAnimation = false;
+			this.creatingAnimation = new Animation(Skelet.creatingImageFrames, Skelet.creatingImageFrames * 100, selectedCreatingImage);
 	}
 
 	static init(isLoadResources: boolean = true): void{
@@ -56,7 +72,26 @@ export class Skelet extends Monster{
 			Skelet.imageHandler.add(Skelet.images).src = Skelet1Image;
 			
 			Skelet.imageHandler.add(Skelet.attackImages).src = SkeletAttack1Image;
+
+			Skelet.imageHandler.add(Skelet.creatingImages).src = SkeletCreating1Image;
 		}
+	}
+
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		if(this.isDisplayCreatingFromUndegroundAnimation){
+			if(this.creatingAnimation.leftTimeMs <= 0){
+				this.isDisplayCreatingFromUndegroundAnimation = false;
+			}
+			else{
+				return;
+			}
+		}
+
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder);
 	}
 
 	playSound(): void {
@@ -75,4 +110,27 @@ export class Skelet extends Monster{
 		return damage;
 	}
 
+	
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1){
+		if(this.isDisplayCreatingFromUndegroundAnimation){
+			this.creatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+		}
+		else{
+			super.drawObject(drawsDiffMs, isGameOver, invertSign);
+		}
+	}
+
+	drawHealth(){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		if(this.isDisplayCreatingFromUndegroundAnimation){
+			//TODO
+			super.drawHealth();
+		}
+		else{
+			super.drawHealth();
+		}
+	}
 }

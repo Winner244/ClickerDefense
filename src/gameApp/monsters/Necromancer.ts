@@ -21,6 +21,7 @@ import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
 import {Monster} from './Monster';
+import {Skelet} from './Skelet';
 
 import {Helper} from '../helpers/Helper';
 
@@ -70,7 +71,7 @@ export class Necromancer extends Monster{
 
 	static readonly chargeImage: HTMLImageElement = new Image();
 
-	private static readonly maxDistanceDamage = 450; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется атака
+	private static readonly maxDistanceDamage = 550; //(px) Макс Дистанция до ближайшего строения - цели, при котором активируется атака
 	private static readonly minDistanceDamage = 300; //(px) Мин Дистанция до ближайшего строения - цели, при котором активируется атака
 	private _attackXStart: number; //координата x на которой будет активирована атака
 	private _isAattackStartingSoundStarted: boolean; //уже начато звуковое воспроизведение начала атаки?
@@ -104,7 +105,9 @@ export class Necromancer extends Monster{
 	/* Спец Способность 2 - "Вызов скелетов", отменяется при нанесении урона монстру */
 	private static readonly specialAbilityCallSkeletesImage: HTMLImageElement = new Image();  //спец способность "Вызов скелетов"
 	private static readonly skeletesCallDurationMs = 3000; //длительность анимации вызова скелетов (миллисекунды)
-	private static readonly appersSkeletesAfterStartCallMs = 2300; //через сколько миллисекунд начнут появляться скелеты после начала их вызова?
+	private static readonly skeletesCount = 3; //Количество создаваемых скелетов
+	private static readonly skeletesSizeDifferentScalePercentage = 50; //(в процентах) разница в размерах создаваемых скелетов
+	private static readonly appersSkeletesAfterStartCallMs = 2000; //через сколько миллисекунд начнут появляться скелеты после начала их вызова?
 	private readonly specialAbilityCallSkeletesAnimation: Animation; //анимация спец способности "Вызов скелетов"
 	private _isSpecialAbilitySkeletesCallStarted: boolean; //началась спес способность "Вызов скелетов"
 	private _isSpecialAbilitySkeletesCreatingStarted: boolean; //началось создание скелетов
@@ -184,6 +187,8 @@ export class Necromancer extends Monster{
 		this._shieldSound = null;
 		this.isForceSpecialAbilityAcidRain = false;
 		this.isForceSpecialAbilitySkeletons = false;
+		this._isSpecialAbilitySkeletesCallStarted = false;
+		this._isSpecialAbilitySkeletesCreatingStarted = false;
 
 	}
 
@@ -329,7 +334,7 @@ export class Necromancer extends Monster{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
-				this.attackLogic(drawsDiffMs);
+				this.attackLogic(drawsDiffMs, monsters, bottomBorder);
 				this.animation?.restart();
 				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
@@ -353,7 +358,7 @@ export class Necromancer extends Monster{
 		}
 	}
 
-	attackLogic(drawsDiffMs: number): void {
+	attackLogic(drawsDiffMs: number, monsters: Monster[], bottomBorder: number): void {
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 		const isCallSpecialAbility = this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility;
@@ -365,6 +370,8 @@ export class Necromancer extends Monster{
 
 			//кислотный дождь
 			if(isCallAcidRain && isNotBaseBuildings && isNotHaveAcidModifier || this._isSpecialAbilityAcidRainCreatingStarted){
+
+				//start
 				if(!this._isSpecialAbilityAcidRainCallStarted){
 					this._isSpecialAbilityAcidRainCallStarted = true;
 					this.specialAbilityAcidRainCallAnimation.restart();
@@ -394,6 +401,7 @@ export class Necromancer extends Monster{
 					}
 				}
 		
+				//end
 				if(this._attackLeftTimeMs <= 0 || !isNotBaseBuildings){
 					this._isSpecialAbilityAcidRainCallStarted = false;
 					this._isSpecialAbilityAcidRainCreatingStarted = false;
@@ -406,7 +414,9 @@ export class Necromancer extends Monster{
 				}
 			}
 			else { //вызов скелетов
-				if(!this._isSpecialAbilitySkeletesCallStarted) {
+
+				//start
+				if (!this._isSpecialAbilitySkeletesCallStarted) {
 					this._isSpecialAbilitySkeletesCallStarted = true;
 					this.specialAbilityCallSkeletesAnimation.restart();
 					this._attackLeftTimeMs = this.specialAbilityCallSkeletesAnimation.leftTimeMs;
@@ -414,12 +424,45 @@ export class Necromancer extends Monster{
 					//TODO: AudioSystem.play(this.centerX, SoundSkeletesCall, 0.7, 1.3, false, true).then(sourse => this._skeletesCallSound = sourse);
 				}
 
+				//creating skeletes
 				if (!this._isSpecialAbilitySkeletesCreatingStarted && this._attackLeftTimeMs < Necromancer.skeletesCallDurationMs - Necromancer.appersSkeletesAfterStartCallMs) {
 					this._isSpecialAbilitySkeletesCreatingStarted = true;
-					//TODO: creating skeletes
+
+					for(let i = 0; i < Necromancer.skeletesCount; i++){
+						let scaleSkeletSize = 1 - Necromancer.skeletesSizeDifferentScalePercentage / 100 * Math.random();
+						let newSkelet = new Skelet(this.x, this.y, this.isLeftSide, scaleSkeletSize);
+
+						newSkelet.isDisplayCreatingFromUndegroundAnimation = true;
+						newSkelet.y = bottomBorder - newSkelet.height;
+						if(this._buildingGoal) {
+							let from = this.isLeftSide 
+								? this.x + this.width + 10 
+								: this._buildingGoal.x + this._buildingGoal.width + 10;
+							let to = this.isLeftSide 
+								? this._buildingGoal.x - newSkelet.width - 10
+								: this.x - newSkelet.width - 10;
+							let length = to - from;
+							
+							let allowedLength = length / Necromancer.skeletesCount;
+							
+							let shiftFrom = i > 0 
+								? newSkelet.width / 2 
+								: 0;
+							let shiftTo = i > 0 && i < Necromancer.skeletesCount - 1 
+								? newSkelet.width 
+								: newSkelet.width / 2;
+
+							from = from + i * allowedLength + shiftFrom;
+							to = from + allowedLength - shiftTo;
+							newSkelet.x = Helper.getRandom(from, to);
+						}
+
+						monsters.push(newSkelet);
+					}
 				}
 
-				if(this._attackLeftTimeMs <= 0) {
+				//end
+				if (this._attackLeftTimeMs <= 0) {
 					this._isSpecialAbilitySkeletesCallStarted = false;
 					this._isSpecialAbilitySkeletesCreatingStarted = false;
 					this._isAttack = false; 
@@ -432,21 +475,21 @@ export class Necromancer extends Monster{
 		else { //энергетический шар
 
 			//start attack infinite animation
-			if(!this._isAttack){ 
+			if (!this._isAttack){ 
 				this._attackLeftTimeMs = 450;
 				this.attackAnimation.restart();
 				this._isAttack = true; 
 			}
 	
 			//attack
-			if(this._attackLeftTimeMs <= 0){ 
+			if (this._attackLeftTimeMs <= 0){ 
 				let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageOutMultiplier);
 				let damage = this.damage + this.damage * damageMultiplier;
 				this.attackSimple(damage);
 				this.countSimpleAttacks++;
 				this._isAattackStartingSoundStarted = false;
 			}
-			else if(this._attackLeftTimeMs < 700 && !this._isAattackStartingSoundStarted){
+			else if (this._attackLeftTimeMs < 700 && !this._isAattackStartingSoundStarted){
 				AudioSystem.play(this.centerX, AttackStartingSound, 0.2, 1, true, true);
 				this._isAattackStartingSoundStarted = true;
 			}
@@ -487,17 +530,22 @@ export class Necromancer extends Monster{
 				0.1, false, 1, true);
 	
 			//отмена спец способности
-			if(this._isSpecialAbilityAcidRainCallStarted){
+			if(this._isSpecialAbilityAcidRainCallStarted || this._isSpecialAbilitySkeletesCallStarted){
 				this._isSpecialAbilityAcidRainCallStarted = false;
 				this._isSpecialAbilityAcidRainCreatingStarted = false;
 				this._isSpecialAbilityAcidRainCreatingEnded = false;
 				this._isSpecialAbilityAcidRainCreatedSoundPlayed = false;
+				this._isSpecialAbilitySkeletesCallStarted = false;
+				this._isSpecialAbilitySkeletesCreatingStarted = false;
 				this._attackLeftTimeMs = this.attackTimeWaitingMs;
 				this.animation?.restart();
 				this.attackAnimation.restart();
 				this._attackLeftTimeMs = 0;
 				this._acidRainCallSound?.stop();
 				this._acidRainCallSound = null;
+				this.isForceSpecialAbilityAcidRain = false;
+				this.isForceSpecialAbilitySkeletons = false;
+				this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
 			}
 
 			//активация щита
