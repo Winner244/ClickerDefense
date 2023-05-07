@@ -227,13 +227,15 @@ export class Game {
 	}
 
 	private static mouseLogic(drawsDiffMs: number) : void {
-		if(Game.isBlockMouseLogic){
+		if(Game.isBlockMouseLogic || !Mouse.x || !Mouse.y){
 			return;
 		}
 
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+		let alpha = Draw.ctx.getImageData(x, y, 1, 1).data[3];
+		let isHoverFound = alpha > 200; //если какой-либо объект находится под курсором (минимум 179 - затемнение фона)
 		let isWaveStarted = Waves.isStarted && Waves.delayStartLeftTimeMs <= 0;
 		let isWaveEnded = !Waves.isStarted && Waves.delayEndLeftTimeMs <= 0;
 
@@ -241,15 +243,15 @@ export class Game {
 
 		let isSetCursor = false;
 		if(!isSetCursor){
-			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick);
+			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick, isHoverFound);
 		}
 
 		if(!isSetCursor){
-			isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick);
+			isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick, isHoverFound);
 		}
 
 		if(!isSetCursor){
-			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isWaveStarted, isWaveEnded);
+			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded);
 		}
 
 		if(Cursor.cursorWaitLeftTimeMs > 0){

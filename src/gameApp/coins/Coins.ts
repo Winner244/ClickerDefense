@@ -33,7 +33,11 @@ export class Coins{
 		AudioSystem.play(x, CoinGetSoundUrl, 0.7);
 	}
 
-	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean): boolean{
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean): boolean{
+		if(!isHoverFound){
+			return false;
+		}
+		
 		for(let i = 0; i < Coins.all.length; i++){
 			if(Math.pow(mouseX - Coins.all[i].x - Coin.image.width / 2, 2) + Math.pow(mouseY - Coins.all[i].y - Coin.image.height / 2, 2) < Math.pow(Coin.image.width / 2, 2)){
 				Cursor.setCursor(Cursor.hand);
