@@ -365,6 +365,29 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Скелет - появление",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    { //1-я волна
+                        [Skelet.name]: new WaveData(1, 60, 10)
+                    },
+                    { //2-я волна
+                        [Skelet.name]: new WaveData(15, 10, 10)
+                    }];
+
+                
+                let newSkelet = new Skelet(500, 0, true, 1);
+                newSkelet.isDisplayCreatingFromUndegroundAnimation = true;
+                newSkelet.y = Draw.canvas.height - Game.bottomShiftBorder - newSkelet.height;
+                newSkelet.health -= 1;
+                Monsters.all.push(newSkelet);
+            }
+        },
+
+        {
             key: "Баррикада - возврат урона - зомби",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

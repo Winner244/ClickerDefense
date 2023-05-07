@@ -126,8 +126,7 @@ export class Skelet extends Monster{
 		}
 
 		if(this.isDisplayCreatingFromUndegroundAnimation){
-			//TODO
-			super.drawHealth();
+			super.drawHealthBase(this.x + 10, this.y - 2 + this.height * (this.creatingAnimation.leftTimeMs / this.creatingAnimation.durationMs), this.width - 20);
 		}
 		else{
 			super.drawHealth();
