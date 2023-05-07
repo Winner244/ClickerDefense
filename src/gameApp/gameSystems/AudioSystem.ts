@@ -134,10 +134,11 @@ export class AudioSystem{
 					(<any>source).startedAt = this._context.currentTime + delayStartingSeconds;
 					this._soundsForPause.push(source);
 					source.onstop = () => {
-						this._soundsForPause = this._soundsForPause.filter(x => x != source);
-						
 						if(isCycling && source.autostart){
 							source.start(0);
+						}
+						else{
+							this._soundsForPause = this._soundsForPause.filter(x => x != source);
 						}
 					};
 				}
@@ -302,6 +303,7 @@ export class AudioSystem{
 		this._soundsForPause.forEach(x => {
 			(<any>x).pausedAt = this._context.currentTime;
 			(<any>x).delayLeftSec = Math.max(0, (<any>x).startedAt - this._context.currentTime);
+			(<any>x).onstop2 = x.onstop;
 			x.onstop = () => {};
 			x.autostart = false;
 			x.stop(0);
@@ -332,7 +334,7 @@ export class AudioSystem{
 			}
 
 			x.start(delayLeftSec, offsetSec);
-			x.onstop = () => this._soundsForPause = this._soundsForPause.filter(y => y != x);
+			x.onstop = (<any>x).onstop2;
 		});
 	}
 }
