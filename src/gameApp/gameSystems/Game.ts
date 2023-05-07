@@ -202,7 +202,7 @@ export class Game {
 
 		Buildings.logic(drawsDiffMs, Waves.isStarted, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
 		
-		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder);
+		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
 		
 		Coins.logic(drawsDiffMs, Game.bottomShiftBorder);
 		

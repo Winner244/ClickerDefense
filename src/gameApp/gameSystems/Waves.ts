@@ -3,8 +3,8 @@ import sum from 'lodash/sum';
 import {Draw} from './Draw';
 import {Game} from './Game';
 import {AudioSystem} from './AudioSystem';
+import {MusicSystem} from './MusicSystem';
 
-import {Size} from '../../models/Size';
 import {WaveData} from '../../models/WaveData';
 
 import {Helper} from '../helpers/Helper';
@@ -20,7 +20,6 @@ import {Menu} from '../../reactApp/components/Menu/Menu';
 import StartNewWaveSound from '../../assets/sounds/startWave.mp3'; 
 
 import MonsterImage from '../../assets/img/monster.png'; 
-import { MusicSystem } from './MusicSystem';
 
 
 /** Система управления волнами монстров - единичный статичный экземпляр */
@@ -42,10 +41,10 @@ export class Waves{
 	static all: { [id: string] : WaveData; }[] = [];
 
 	static get waveCountKilledMonsters(): number{
-		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.wasCreatedCount)) - Monsters.all.length;
+		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.wasKilledCount));
 	};
 	static get waveCountMonsters(): number {
-		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.count))
+		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.count));
 	}
 
 	static init(isLoadResources: boolean = true): void{
@@ -118,7 +117,7 @@ export class Waves{
 		this.waveTimeMs += drawsDiffMs;
 
 		//end of wave
-		if(this.waveCountKilledMonsters == this.waveCountMonsters){
+		if(this.waveCountKilledMonsters >= this.waveCountMonsters && Monsters.all.length == 0){
 			Menu.displayShopButton();
 			this.isStarted = false;
 			this.delayEndLeftTimeMs = this.delayEndTimeMs;
@@ -168,7 +167,7 @@ export class Waves{
 		if(Waves.isStarted && Waves.delayStartLeftTimeMs > 0){
 			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartLeftTimeMs, Waves.delayStartTimeMs);
 		}
-		else if(Waves.waveCountKilledMonsters == Waves.waveCountMonsters && Waves.delayEndLeftTimeMs > 0){
+		else if(Waves.waveCountKilledMonsters >= Waves.waveCountMonsters && Waves.delayEndLeftTimeMs > 0 && Monsters.all.length == 0){
 			Draw.drawEndNewWave(Waves.delayEndLeftTimeMs, Waves.delayEndTimeMs);
 		}
 

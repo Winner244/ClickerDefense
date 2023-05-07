@@ -12,6 +12,7 @@ import {Helper} from '../helpers/Helper';
 import {Modifier} from '../modifiers/Modifier';
 
 import {AttackedObject} from '../../models/AttackedObject';
+import {WaveData} from '../../models/WaveData';
 
 import Bat1Image from '../../assets/img/monsters/bat/bat.png';  
 
@@ -76,12 +77,12 @@ export class Bat extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveData);
 
 		if(this._buildingGoal){
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);

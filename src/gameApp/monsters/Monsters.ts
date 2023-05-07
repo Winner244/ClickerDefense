@@ -1,4 +1,5 @@
 import {SimpleObject} from '../../models/SimpleObject';
+import {WaveData} from '../../models/WaveData';
 import Animation from '../../models/Animation';
 
 import {Building} from '../buildings/Building';
@@ -9,6 +10,7 @@ import {Zombie} from './Zombie';
 import {Bat} from './Bat';
 import {Boar} from './Boar';
 import {Necromancer} from './Necromancer';
+import {Skelet} from './Skelet';
 
 import {Gamer} from '../gamer/Gamer';
 import {Cursor} from '../gamer/Cursor';
@@ -24,7 +26,6 @@ import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png';
 
 import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
 import SwordAttackSound from '../../assets/sounds/gamer/sword_attack.mp3'; 
-import { Skelet } from './Skelet';
 
 
 
@@ -85,12 +86,13 @@ export class Monsters{
 		return false;
 	}
 
-	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number): void{
+	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number, waveData: { [id: string] : WaveData; }): void{
 		//уничтожение монстров
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
 				if(monster.health <= 0){
+					waveData[monster.name].wasKilledCount++;
 					monster.destroy();
 					Labels.createCoinLabel(monster.x, monster.y, '+1');
 					Monsters.all.splice(i, 1);
@@ -116,7 +118,7 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder));
+			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder, waveData));
 
 			//вторичная логика модификаторов
 			Monsters.all.forEach(monster => monster.modifiers.forEach(modifier => modifier.logicSpread(monster, this.all)));

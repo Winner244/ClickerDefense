@@ -8,6 +8,7 @@ import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 
 import {AttackedObject} from '../../models/AttackedObject';
+import {WaveData} from '../../models/WaveData';
 
 import {Monster} from './Monster';
 
@@ -146,7 +147,7 @@ export class Boar extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number) {
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -185,7 +186,7 @@ export class Boar extends Monster{
 		}
 
 		var oldBuildingGoalX = this._buildingGoal?.centerX;
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveData);
 		var newBuildingGoalX = this._buildingGoal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility && Math.abs(newBuildingGoalX - this.centerX) > Boar.minDistanceActivateSpecialAbility){

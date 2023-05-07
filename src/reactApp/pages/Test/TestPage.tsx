@@ -1094,7 +1094,6 @@ class TestPage extends React.Component {
                 var necromancer = new Necromancer(500, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
                 necromancer.isForceSpecialAbilitySkeletons = true;
-                necromancer.health = necromancer.healthMax = 10;
                 Monsters.all.push(necromancer);
 
 

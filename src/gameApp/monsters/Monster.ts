@@ -1,6 +1,7 @@
 import sortBy from 'lodash/sortBy';
 
 import {AttackedObject} from '../../models/AttackedObject';
+import {WaveData} from '../../models/WaveData';
 
 import {ImageHandler} from '../ImageHandler';
 
@@ -109,7 +110,7 @@ export class Monster extends AttackedObject{
 		AudioSystem.load(Hit11Sound);
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
