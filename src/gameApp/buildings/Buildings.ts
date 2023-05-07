@@ -58,10 +58,10 @@ export class Buildings{
 		AudioSystem.load(ExplosionSound);
 	}
 
-	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
 		let isProcessed = false;
 		let isAnyMouseIn = false;
-		
+
 		if(isHoverFound){
 			let buildings = this.all.slice().reverse();
 			for(var i = 0; i < buildings.length; i++){
@@ -73,7 +73,7 @@ export class Buildings{
 					mouseY < building.y + building.height - building.reduceHover;
 				isAnyMouseIn = isAnyMouseIn || isMouseIn;
 				
-				isProcessed = building.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn);
+				isProcessed = building.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn, isBuilderActive);
 				if(isProcessed){
 					break;
 				}

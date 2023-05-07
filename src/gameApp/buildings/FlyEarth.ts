@@ -67,7 +67,7 @@ export class FlyEarth extends Building{
 		AudioSystem.playRandomTone(x, 0.02, 5000, 10000);
 	}
 
-	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean{
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean, isBuilderActive: boolean): boolean{
 		if(isWaveStarted && isMouseIn)
 		{
 			Cursor.setCursor(Cursor.pick);
@@ -83,7 +83,7 @@ export class FlyEarth extends Building{
 			return true;
 		}
 
-		return super.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn);
+		return super.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn, isBuilderActive);
 	}
 
 	createExplosionParticles(){

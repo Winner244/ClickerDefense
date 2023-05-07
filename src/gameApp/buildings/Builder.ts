@@ -99,10 +99,10 @@ export class Builder {
 			}
 			else{
 				if(this._isAnotherBuilding){
-					Draw.ctx.filter="grayscale(1) ";
+					Draw.ctx.filter = "grayscale(1) ";
 				}
 				this.selectedBuildingForBuild.draw(drawsDiffMs, isGameOver, true);
-				Draw.ctx.filter="none";
+				Draw.ctx.filter = "none";
 			}
 		}
 	}

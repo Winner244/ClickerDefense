@@ -251,7 +251,7 @@ export class Game {
 		}
 
 		if(!isSetCursor){
-			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded);
+			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
 		}
 
 		if(Cursor.cursorWaitLeftTimeMs > 0){

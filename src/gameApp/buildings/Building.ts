@@ -23,7 +23,6 @@ import HammerImage from '../../assets/img/buttons/hammer.png';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 import HealthIcon from '../../assets/img/icons/health.png';
 import ShieldIcon from '../../assets/img/icons/shield.png';
-import { Tower } from './Tower';
 
 /** Базовый класс для всех зданий */
 export class Building extends AttackedObject{
@@ -163,8 +162,8 @@ export class Building extends AttackedObject{
 		this.healthMax += improvePoints;
 	}
 
-	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean): boolean {
-		if(isWaveEnded && isMouseIn){
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean, isBuilderActive: boolean): boolean {
+		if(isWaveEnded && isMouseIn && !isBuilderActive){
 			let isDisplayRepairButton =  this.isSupportRepair && this.health < this.healthMax;
 			if(isDisplayRepairButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
 				if(!BuildingButtons.isEnterMouse){
