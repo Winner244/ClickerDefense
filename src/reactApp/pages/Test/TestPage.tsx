@@ -618,6 +618,42 @@ class TestPage extends React.Component {
             }
         },
 
+        /*{ //need to закоментировать базовую логику у летучей мыши
+            key: "Башня - взрывные стрелы - угол наклона",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 0;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                
+                Waves.all = [ //монстры на волнах
+                { //1-я волна
+                    //[Zombie.name]: new WaveData(7, 80, 0),
+                    [Boar.name]: new WaveData(111, 1, 61)
+                },
+                { //2-я волна
+                    [Boar.name]: new WaveData(15, 10, 0)
+                }];
+
+                var tower1 = new Tower(500);
+                tower1.loadedResourcesAfterBuild();
+                tower1.bowmans = 1;
+                tower1.radiusAttack = 1500;
+                tower1.improveToDynamitArrows();
+                tower1.improvements.filter(x => x.label == 'Взрывные стрелы').forEach(x => x.isImproved = true);
+                Buildings.all.push(tower1); 
+
+                let x = 0;
+
+                setInterval(() => {
+                    var bat = new Bat(x, 380, true, 1);
+                    Monsters.all.push(bat);
+                    x+=30;
+                }, 1000);
+
+            }
+        },*/
+
         {
             key: "Башня - огненные + взрывные стрелы",
             code: () => {

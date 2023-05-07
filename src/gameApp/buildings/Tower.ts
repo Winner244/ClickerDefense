@@ -265,7 +265,7 @@ export class Tower extends Building{
 					i--;
 
 					if(arrow.isDynamit){
-						this.dynamitExplosion(arrow.centerX - Math.sign(arrow.dx) * arrow.dx / arrow.dx * 10, arrow.centerY - Math.sign(arrow.dx) * arrow.dy / arrow.dx * 10, monsters);
+						this.dynamitExplosion(arrow.centerX - arrow.dx / 20, arrow.centerY - arrow.dy / 20, monsters);
 					}
 					else if(arrow.isFire){
 						const fireModifier = new FireModifier(this.fireDamageInSecond, this.fireDurationMs);

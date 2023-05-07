@@ -92,6 +92,10 @@ export class Monsters{
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
 				if(monster.health <= 0){
+					if(!waveData[monster.name]){
+						waveData[monster.name] = new WaveData(1, 0, 0);
+						waveData[monster.name].wasCreatedCount++;
+					}
 					waveData[monster.name].wasKilledCount++;
 					monster.destroy();
 					Labels.createCoinLabel(monster.x, monster.y, '+1');
