@@ -28,8 +28,12 @@ import Necromancer1Image from '../../assets/img/monsters/necromancer/necromancer
 import ChargeImage from '../../assets/img/monsters/necromancer/charge.png'; 
 
 import AttackImage from '../../assets/img/monsters/necromancer/necromancerAttack.png'; 
+
 import SpecialAbilityAcidRainCallImage from '../../assets/img/monsters/necromancer/cloudCall.png'; 
 import SpecialAbilityAcidRainCreatingImage from '../../assets/img/monsters/necromancer/cloudCreating.png'; 
+
+import SpecialAbilityCallSkeletesImage from '../../assets/img/monsters/necromancer/skeletesCall.png'; 
+
 
 import DebufImage from '../../assets/img/monsters/necromancer/debuf.png'; 
 
@@ -98,7 +102,14 @@ export class Necromancer extends Monster{
 	countSimpleAttacks: number;
 
 	/* Спец Способность 2 - "Вызов скелетов", отменяется при нанесении урона монстру */
+	private static readonly specialAbilityCallSkeletesImage: HTMLImageElement = new Image();  //спец способность "Вызов скелетов"
+	private static readonly skeletesCallDurationMs = 3000; //длительность анимации вызова скелетов (миллисекунды)
+	private static readonly appersSkeletesAfterStartCallMs = 2300; //через сколько миллисекунд начнут появляться скелеты после начала их вызова?
+	private readonly specialAbilityCallSkeletesAnimation: Animation; //анимация спец способности "Вызов скелетов"
+	private _isSpecialAbilitySkeletesCallStarted: boolean; //началась спес способность "Вызов скелетов"
+	private _isSpecialAbilitySkeletesCreatingStarted: boolean; //началось создание скелетов
 	isForceSpecialAbilitySkeletons: boolean; //использовать только спец способность "Вызов скелетонов" (для тестов)
+	
 
 	/* Способность - дебафф - снятие побочных заклинаний */
 	private static readonly debufImage: HTMLImageElement = new Image();  //снятие побочных заклинаний
@@ -154,6 +165,7 @@ export class Necromancer extends Monster{
 		this._charges = [];
 		this.specialAbilityAcidRainCallAnimation = new Animation(25, Necromancer.acidRainCallDurationMs, Necromancer.specialAbilityAcidRainCallImage);
 		this.specialAbilityAcidRainCreatingAnimation = new Animation(12, 12 * 100, Necromancer.specialAbilityAcidRainCreatingImage);
+		this.specialAbilityCallSkeletesAnimation = new Animation(30, Necromancer.skeletesCallDurationMs, Necromancer.specialAbilityCallSkeletesImage);
 		this.debufAnimation = new Animation(Necromancer.debufImageFrames, 1000, Necromancer.debufImage);
 		this.defenseCreatingAnimation = new Animation(Necromancer.defenseCreatingFrames, 400, Necromancer.defenseCreatingImage);
 		this.defenseInfinityAnimation = new AnimationRandom(Necromancer.defenseInfinityFrames, 700, Necromancer.defenseInfinityImage);
@@ -185,6 +197,7 @@ export class Necromancer extends Monster{
 			Necromancer.imageHandler.new(Necromancer.defenseInfinityImage).src = DefenseInfinityImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCallImage).src = SpecialAbilityAcidRainCallImage;
 			Necromancer.imageHandler.new(Necromancer.specialAbilityAcidRainCreatingImage).src = SpecialAbilityAcidRainCreatingImage;
+			Necromancer.imageHandler.new(Necromancer.specialAbilityCallSkeletesImage).src = SpecialAbilityCallSkeletesImage;
 			AudioSystem.load(Attack1Sound);
 			AudioSystem.load(Attack2Sound);
 			AudioSystem.load(AttackStartingSound);
@@ -393,7 +406,27 @@ export class Necromancer extends Monster{
 				}
 			}
 			else { //вызов скелетов
-				//TODO
+				if(!this._isSpecialAbilitySkeletesCallStarted) {
+					this._isSpecialAbilitySkeletesCallStarted = true;
+					this.specialAbilityCallSkeletesAnimation.restart();
+					this._attackLeftTimeMs = this.specialAbilityCallSkeletesAnimation.leftTimeMs;
+					this._isAttack = true; 
+					//TODO: AudioSystem.play(this.centerX, SoundSkeletesCall, 0.7, 1.3, false, true).then(sourse => this._skeletesCallSound = sourse);
+				}
+
+				if (!this._isSpecialAbilitySkeletesCreatingStarted && this._attackLeftTimeMs < Necromancer.skeletesCallDurationMs - Necromancer.appersSkeletesAfterStartCallMs) {
+					this._isSpecialAbilitySkeletesCreatingStarted = true;
+					//TODO: creating skeletes
+				}
+
+				if(this._attackLeftTimeMs <= 0) {
+					this._isSpecialAbilitySkeletesCallStarted = false;
+					this._isSpecialAbilitySkeletesCreatingStarted = false;
+					this._isAttack = false; 
+					this._attackLeftTimeMs = 700;
+					this.countSimpleAttacks = 0;
+					this.countSimpleAttacksToActivateSpecialAbility = Necromancer.getCountSimpleAttacksToActivateSpecialAbility();
+				}
 			}
 		}
 		else { //энергетический шар
@@ -546,6 +579,11 @@ export class Necromancer extends Monster{
 				const y = this._buildingGoal.y - height * 2;
 				this.specialAbilityAcidRainCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * width, height);
 			}
+		}
+		else if (this._isSpecialAbilitySkeletesCallStarted){
+			const newWidth = this.specialAbilityCallSkeletesAnimation.image.width / this.specialAbilityCallSkeletesAnimation.frames * this.scaleSize;
+			const newHeight = this.specialAbilityCallSkeletesAnimation.image.height * this.scaleSize;
+			this.specialAbilityCallSkeletesAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
 		else{
 			super.drawObject(drawsDiffMs, isGameOver, invertSign);
