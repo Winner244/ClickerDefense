@@ -19,6 +19,9 @@ import SkeletAttack1Image from '../../assets/img/monsters/skelet/skeletAttack.pn
 
 import SkeletCreating1Image from '../../assets/img/monsters/skelet/creating.png'; 
 
+import SkeletCreating1Sound from '../../assets/sounds/monsters/skeletes/creating.mp3'; 
+import SkeletCreating2Sound from '../../assets/sounds/monsters/skeletes/creating2.mp3'; 
+
 
 
 /** Скелет - тип монстров, которые вызываются Некромантом */
@@ -36,6 +39,7 @@ export class Skelet extends Monster{
 	private readonly creatingAnimation: Animation; //анимация повяления из под земли от вызова Некроманта
 
 	isDisplayCreatingFromUndegroundAnimation: boolean; //отображать анимацию появления монстра из под земли?
+	isStartedSoundOfCreating: boolean; //началось ли воспроизведение звука появления скелета из под земли?
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		let random = Helper.getRandom(1, Skelet.images.length) - 1;
@@ -65,6 +69,7 @@ export class Skelet extends Monster{
 			Skelet.init(true); //reserve init
 
 			this.isDisplayCreatingFromUndegroundAnimation = false;
+			this.isStartedSoundOfCreating = false;
 			this.creatingAnimation = new Animation(Skelet.creatingImageFrames, Skelet.creatingImageFrames * 100, selectedCreatingImage);
 	}
 
@@ -75,6 +80,9 @@ export class Skelet extends Monster{
 			Skelet.imageHandler.add(Skelet.attackImages).src = SkeletAttack1Image;
 
 			Skelet.imageHandler.add(Skelet.creatingImages).src = SkeletCreating1Image;
+
+			AudioSystem.load(SkeletCreating1Sound);
+			AudioSystem.load(SkeletCreating2Sound);
 		}
 	}
 
@@ -88,6 +96,11 @@ export class Skelet extends Monster{
 				this.isDisplayCreatingFromUndegroundAnimation = false;
 			}
 			else{
+				if(!this.isStartedSoundOfCreating){
+					this.isStartedSoundOfCreating = true;
+					AudioSystem.play(this.centerX, SkeletCreating1Sound, 0.1, 1, true, true, 0, 0, false, false);
+					AudioSystem.play(this.centerX, SkeletCreating2Sound, 0.2, 1, true, true, 0, 0, false, false);
+				}
 				return;
 			}
 		}

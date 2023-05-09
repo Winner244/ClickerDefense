@@ -57,6 +57,9 @@ import SoundCloudCreated from '../../assets/sounds/monsters/necromancer/cloudCre
 
 import ShieldSound from '../../assets/sounds/monsters/necromancer/shield.mp3'; 
 
+import SkeletesCall1Sound from '../../assets/sounds/monsters/necromancer/skeletesCall1.mp3'; 
+import SkeletesCall2Sound from '../../assets/sounds/monsters/necromancer/skeletesCall2.mp3'; 
+
 
 
 /** Некромант - тип монстров */
@@ -209,6 +212,8 @@ export class Necromancer extends Monster{
 			AudioSystem.load(SoundCloudCall);
 			AudioSystem.load(SoundCloudCreated);
 			AudioSystem.load(ShieldSound);
+			AudioSystem.load(SkeletesCall1Sound);
+			AudioSystem.load(SkeletesCall2Sound);
 		}
 	}
 
@@ -469,7 +474,8 @@ export class Necromancer extends Monster{
 				this.specialAbilityCallSkeletesAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityCallSkeletesAnimation.leftTimeMs;
 				this._isAttack = true; 
-				//TODO: AudioSystem.play(this.centerX, SoundSkeletesCall, 0.7, 1.3, false, true).then(sourse => this._skeletesCallSound = sourse);
+				AudioSystem.play(this.centerX, SkeletesCall1Sound, 0.2, 1, true, true, 0.4, 0, false, false);
+				AudioSystem.play(this.centerX, SkeletesCall2Sound, 0.2, 1, true, true, 0.5, 0, false, false);
 			}
 		}
 		else { //энергетический шар
