@@ -70,6 +70,12 @@ export class Waves{
 				[Boar.name]: new WaveData(70, 70, 0),
 				[Bat.name]: new WaveData(250, 250, 0),
 				[Necromancer.name]: new WaveData(15, 10, 15),
+			},
+			{ //5-ая волна (демо - без нового монстра)
+				[Zombie.name]: new WaveData(30, 75, 0),
+				[Boar.name]: new WaveData(18, 28, 1),
+				[Bat.name]: new WaveData(90, 93, 2),
+				[Necromancer.name]: new WaveData(15, 10, 0),
 			}];
 	}
 
