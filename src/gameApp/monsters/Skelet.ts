@@ -21,6 +21,13 @@ import SkeletCreating1Image from '../../assets/img/monsters/skelet/creating.png'
 
 import SkeletCreating1Sound from '../../assets/sounds/monsters/skeletes/creating.mp3'; 
 import SkeletCreating2Sound from '../../assets/sounds/monsters/skeletes/creating2.mp3'; 
+import SkeletCreating3Sound from '../../assets/sounds/monsters/skeletes/creating3.mp3'; 
+
+import SoundAttacked1 from '../../assets/sounds/monsters/skeletes/attacked1.mp3'; 
+import SoundAttacked2 from '../../assets/sounds/monsters/skeletes/attacked2.mp3'; 
+import SoundAttacked3 from '../../assets/sounds/monsters/skeletes/attacked3.mp3'; 
+import SoundAttacked4 from '../../assets/sounds/monsters/skeletes/attacked4.mp3'; 
+import SoundAttacked5 from '../../assets/sounds/monsters/skeletes/attacked5.mp3'; 
 
 
 
@@ -83,6 +90,13 @@ export class Skelet extends Monster{
 
 			AudioSystem.load(SkeletCreating1Sound);
 			AudioSystem.load(SkeletCreating2Sound);
+			AudioSystem.load(SkeletCreating3Sound);
+
+			AudioSystem.load(SoundAttacked1);
+			AudioSystem.load(SoundAttacked2);
+			AudioSystem.load(SoundAttacked3);
+			AudioSystem.load(SoundAttacked4);
+			AudioSystem.load(SoundAttacked5);
 		}
 	}
 
@@ -100,6 +114,7 @@ export class Skelet extends Monster{
 					this.isStartedSoundOfCreating = true;
 					AudioSystem.play(this.centerX, SkeletCreating1Sound, 0.1, 1, true, true, 0, 0, false, false);
 					AudioSystem.play(this.centerX, SkeletCreating2Sound, 0.2, 1, true, true, 0, 0, false, false);
+					AudioSystem.play(this.centerX, SkeletCreating3Sound, 0.7 + Math.random() / 2, 1, true, true, Math.random(), 0, false, false);
 				}
 				return;
 			}
@@ -109,17 +124,12 @@ export class Skelet extends Monster{
 	}
 
 	playSound(): void {
-		/*AudioSystem.playRandom(this.centerX, 
-			[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 
-			[0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);*/
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
 		var damage = super.applyDamage(damage, x, y, attackingObject);
 		if(damage > 0){
-			/*AudioSystem.playRandom(this.centerX, 
-				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10, SoundAttacked11, SoundAttacked12], 
-				[0.05, 0.05, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08], false, 1, true);*/
+			AudioSystem.playRandomV(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5], 0.5, false, 1, true);
 		}
 		return damage;
 	}

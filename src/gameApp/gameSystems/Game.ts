@@ -263,7 +263,7 @@ export class Game {
 		}
 
 		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
-			AudioSystem.play(x, SwordEmptySound, 0.5, 1, true);
+			AudioSystem.play(x, SwordEmptySound, 0.7, 1, true);
 		}
 
 		Mouse.isClick = false;
