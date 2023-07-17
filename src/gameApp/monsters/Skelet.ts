@@ -100,7 +100,7 @@ export class Skelet extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -120,7 +120,7 @@ export class Skelet extends Monster{
 			}
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveData);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
 	}
 
 	playSound(): void {

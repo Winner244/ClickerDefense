@@ -52,6 +52,15 @@ export class Helper{
 		return array.reduce((accumulator, currentEl) => accumulator + getValue(currentEl), 0);
 	}
 
+	/**
+	 * Возвращает только уникальные значения
+	 * @param array массив
+	 * @returns 
+	 */
+	static distinct(array: any[]): any[] {
+		return array.filter((value, index, self) => self.indexOf(value) === index);
+	}
+
     /** создаёт уникальный идентификатор */
     public static generateUid(): string{
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {

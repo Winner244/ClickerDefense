@@ -86,17 +86,19 @@ export class Monsters{
 		return false;
 	}
 
-	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number, waveData: { [id: string] : WaveData; }): void{
+	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number, waveLevel: WaveData[]): void{
 		//уничтожение монстров
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
 				let monster = Monsters.all[i];
 				if(monster.health <= 0){
-					if(!waveData[monster.name]){
-						waveData[monster.name] = new WaveData(1, 0, 0);
-						waveData[monster.name].wasCreatedCount++;
+					let newMonsterOfLevel = waveLevel.find(x => x.monsterName == monster.name);
+					if(!newMonsterOfLevel) {
+						newMonsterOfLevel = new WaveData(monster.name, 1, 0, 0);
+						newMonsterOfLevel.wasCreatedCount++;
+						waveLevel.push(newMonsterOfLevel);
 					}
-					waveData[monster.name].wasKilledCount++;
+					newMonsterOfLevel.wasKilledCount++;
 					monster.destroy();
 					Labels.createCoinLabel(monster.x, monster.y, '+1');
 					Monsters.all.splice(i, 1);
@@ -122,7 +124,7 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder, waveData));
+			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder, waveLevel));
 
 			//вторичная логика модификаторов
 			Monsters.all.forEach(monster => monster.modifiers.forEach(modifier => modifier.logicSpread(monster, this.all)));

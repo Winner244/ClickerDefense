@@ -228,7 +228,7 @@ export class Necromancer extends Monster{
 		return Helper.getRandom(Necromancer.averageCountSimpleAttacksToActivateSpecialAbility / 3, Necromancer.averageCountSimpleAttacksToActivateSpecialAbility * 2);
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }) {
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -340,7 +340,7 @@ export class Necromancer extends Monster{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
-				this.attackLogic(drawsDiffMs, monsters, bottomBorder, waveData);
+				this.attackLogic(drawsDiffMs, monsters, bottomBorder, waveLevel);
 				this.animation?.restart();
 				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
@@ -348,7 +348,7 @@ export class Necromancer extends Monster{
 		}
 
 		var oldBuildingGoalX = this._buildingGoal?.centerX;
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveData);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
 		var newBuildingGoalX = this._buildingGoal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX){
@@ -364,7 +364,7 @@ export class Necromancer extends Monster{
 		}
 	}
 
-	attackLogic(drawsDiffMs: number, monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }): void {
+	attackLogic(drawsDiffMs: number, monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]): void {
 		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
 		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
 		const isCallSpecialAbility = this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility;
@@ -439,12 +439,14 @@ export class Necromancer extends Monster{
 
 					monsters.push(newSkelet);
 					
-					if(Object.keys(waveData).indexOf(newSkelet.name) == -1){
-						waveData[newSkelet.name] = new WaveData(0, 0, 0);
+					let newMonsterOfLevel = waveLevel.find(x => x.monsterName == newSkelet.name);
+					if(!newMonsterOfLevel){
+						newMonsterOfLevel = new WaveData(newSkelet.name, 0, 0, 0);
+						waveLevel.push(newMonsterOfLevel);
 					}
 
-					waveData[newSkelet.name].count++;
-					waveData[newSkelet.name].wasCreatedCount++;
+					newMonsterOfLevel.count++;
+					newMonsterOfLevel.wasCreatedCount++;
 				}
 			}
 

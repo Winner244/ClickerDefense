@@ -38,13 +38,13 @@ export class Waves{
 	static waveTimeMs: number = 0; //(миллисекунды) сколько по времени волна уже идёт
 
 	static waveCurrent: number = 0; //текущая волна нападения 
-	static all: { [id: string] : WaveData; }[] = [];
+	static all: WaveData[][] = [];
 
 	static get waveCountKilledMonsters(): number{
-		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.wasKilledCount));
+		return sum(Waves.all[Waves.waveCurrent].map(x => x.wasKilledCount));
 	};
 	static get waveCountMonsters(): number {
-		return sum(Object.values(Waves.all[Waves.waveCurrent]).map(x => x.count));
+		return sum(Waves.all[Waves.waveCurrent].map(x => x.count));
 	}
 
 	static init(isLoadResources: boolean = true): void{
@@ -53,34 +53,34 @@ export class Waves{
 		}
 		
 		Waves.all = [ //монстры на волнах
-			{ //1-я волна
-				[Zombie.name]: new WaveData(15, 30, 0),
-			},
-			{ //2-я волна
-				[Zombie.name]: new WaveData(22, 80, 0),
-				[Boar.name]: new WaveData(13, 30, 5)
-			},
-			{ //3-я волна
-				[Zombie.name]: new WaveData(30, 75, 0),
-				[Boar.name]: new WaveData(18, 28, 1),
-				[Bat.name]: new WaveData(35, 63, 2)
-			},
-			{ //4-ая волна
-				[Boar.name]: new WaveData(23, 70, 0),
-				[Bat.name]: new WaveData(87, 250, 0),
+			[ //1-я волна
+				new WaveData(Zombie.name, 15, 30, 0),
+			],
+			[ //2-я волна
+				new WaveData(Zombie.name, 22, 80, 0),
+				new WaveData(Boar.name, 13, 30, 5)
+			],
+			[ //3-я волна
+				new WaveData(Zombie.name, 30, 75, 0),
+				new WaveData(Boar.name, 18, 28, 1),
+				new WaveData(Bat.name, 35, 63, 2)
+			],
+			[ //4-ая волна
+				new WaveData(Boar.name, 23, 70, 0),
+				new WaveData(Bat.name, 87, 250, 0),
 
-				[Zombie.name]: new WaveData(75, 50, 15),
-				[Necromancer.name]: new WaveData(15, 10, 15),
+				new WaveData(Zombie.name, 75, 50, 15),
+				new WaveData(Necromancer.name, 15, 10, 15),
 
-				//[Boar.name]: new WaveData(9, 9, 20),
-				//[Bat.name]: new WaveData(15, 15, 20),
-			},
-			{ //5-ая волна (демо - без нового монстра)
-				[Zombie.name]: new WaveData(30, 75, 0),
-				[Boar.name]: new WaveData(18, 28, 1),
-				[Bat.name]: new WaveData(90, 93, 2),
-				[Necromancer.name]: new WaveData(15, 10, 0),
-			}];
+				new WaveData(Boar.name, 9, 9, 20),
+				new WaveData(Bat.name, 15, 15, 20),
+			],
+			[ //5-ая волна (демо - без нового монстра)
+				new WaveData(Zombie.name, 30, 75, 0),
+				new WaveData(Boar.name, 18, 28, 1),
+				new WaveData(Bat.name, 90, 93, 2),
+				new WaveData(Necromancer.name, 15, 10, 0),
+			]];
 	}
 
 	static startFirstWave(){
@@ -97,7 +97,7 @@ export class Waves{
 
 		//call "init" in are used classes in new wave to preload lazy images
 		let currentWave = Waves.all[Waves.waveCurrent];
-		let monstersName = Object.keys(currentWave);
+		let monstersName = Helper.distinct(currentWave.map(x => x.monsterName));
 		monstersName.forEach(monsterName => Monsters.initMonster(monsterName));
 
 		Game.loadResourcesAfterStartOfWave(this.waveCurrent);
@@ -142,10 +142,8 @@ export class Waves{
 
 		//логика создания монстров
 		let currentWave = Waves.all[Waves.waveCurrent];
-		let wavesData = Object.keys(currentWave);
-		for(let i = 0; i < wavesData.length; i++){
-			let key = wavesData[i];
-			let waveData = currentWave[key];
+		for(let i = 0; i < currentWave.length; i++){
+			let waveData = currentWave[i];
 
 			if(this.waveTimeMs < waveData.startDelayMs){
 				continue;
@@ -156,7 +154,7 @@ export class Waves{
 			{
 				let isLeftSide = Math.random() < 0.5;
 				let scaleMonsterSize = 1 - Waves.monsterSizeDifferentScalePercentage / 100 * Math.random();
-				let monster = Monsters.create(key, isLeftSide, scaleMonsterSize);
+				let monster = Monsters.create(waveData.monsterName, isLeftSide, scaleMonsterSize);
 				let bottomPosition = Draw.canvas.height - bottomShiftBorder - monster.height * scaleMonsterSize;
 				monster.x = isLeftSide ? -monster.width * scaleMonsterSize : Draw.canvas.width;
 				monster.y = monster.isLand 

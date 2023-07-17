@@ -147,7 +147,7 @@ export class Boar extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveData: { [id: string] : WaveData; }) {
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -186,7 +186,7 @@ export class Boar extends Monster{
 		}
 
 		var oldBuildingGoalX = this._buildingGoal?.centerX;
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveData);
+		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
 		var newBuildingGoalX = this._buildingGoal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility && Math.abs(newBuildingGoalX - this.centerX) > Boar.minDistanceActivateSpecialAbility){

@@ -138,7 +138,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 500;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Waves.all[0][Zombie.name] = new WaveData(1, 30, 0);
+                Waves.all[0].push(new WaveData(Zombie.name, 1, 30, 0));
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -182,13 +182,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var zombie = new Zombie(800, 780, true, 1);
                 Monsters.all.push(zombie);
@@ -203,13 +203,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var boar = new Boar(1000, 780, true, 1, true);
                 Monsters.all.push(boar);
@@ -223,13 +223,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var boar = new Boar(50, 780, true, 1, true);
                 boar.health--;
@@ -248,13 +248,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var boar = new Boar(50, 780, true, 1, true);
                 boar.health--;
@@ -276,13 +276,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var tower1 = new Tower(700);
                 tower1.loadedResourcesAfterBuild();
@@ -303,13 +303,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var tower1 = new Tower(1100);
                 tower1.loadedResourcesAfterBuild();
@@ -330,13 +330,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 for(var i = 0; i < 10; i++){
                     var boar = new Boar(0, 780, true, 1, true);
@@ -355,12 +355,12 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        [Skelet.name]: new WaveData(1, 60, 0)
-                    },
-                    { //2-я волна
-                        [Skelet.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        new WaveData(Skelet.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Skelet.name, 15, 10, 0)
+                    ]];
             }
         },
 
@@ -371,12 +371,12 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        [Skelet.name]: new WaveData(1, 60, 10)
-                    },
-                    { //2-я волна
-                        [Skelet.name]: new WaveData(15, 10, 10)
-                    }];
+                    [ //1-я волна
+                        new WaveData(Skelet.name, 1, 60, 10)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Skelet.name, 15, 10, 10)
+                    ]];
 
                 
                 let newSkelet = new Skelet(500, 0, true, 1);
@@ -627,13 +627,13 @@ class TestPage extends React.Component {
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 
                 Waves.all = [ //монстры на волнах
-                { //1-я волна
-                    //[Zombie.name]: new WaveData(7, 80, 0),
-                    [Boar.name]: new WaveData(111, 1, 61)
-                },
-                { //2-я волна
-                    [Boar.name]: new WaveData(15, 10, 0)
-                }];
+                [ //1-я волна
+                    //new WaveData(Zombie.name, 7, 80, 0),
+                    new WaveData(Boar.name, 111, 1, 61)
+                ],
+                [ //2-я волна
+                    new WaveData(Boar.name, 15, 10, 0)
+                ]];
 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -692,9 +692,9 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 1;
-                Waves.all[3] = { //3-я волна
-                    [Bat.name]: new WaveData(75, 90, 0)
-                };
+                Waves.all[3] = [ //3-я волна
+                    new WaveData(Bat.name, 75, 90, 0)
+                ];
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 //Waves.isStarted = false;
 
@@ -852,9 +852,9 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                { 
-                    [Bat.name]: new WaveData(30, 60, 0)
-                }];
+                [ 
+                    new WaveData(Bat.name, 30, 60, 0)
+                ]];
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -882,13 +882,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Boar.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Boar.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
 
                 var bat = new Bat(650, 380, true, 1);
                 Monsters.all.push(bat);
@@ -902,9 +902,9 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                { 
-                    [Necromancer.name]: new WaveData(30, 15, 0)
-                }];
+                [ 
+                    new WaveData(Necromancer.name, 30, 15, 0)
+                ]];
             }
         },
 
@@ -915,13 +915,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -954,13 +954,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var necromancer = new Necromancer(600, 780, true, 1);
                 Monsters.all.push(necromancer);
@@ -975,13 +975,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
                 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -1000,13 +1000,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -1049,13 +1049,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -1086,13 +1086,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var barricade1 = new Barricade(600);
                 barricade1.health = 1;
@@ -1119,13 +1119,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 16)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 60, 16)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var necromancer = new Necromancer(500, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
@@ -1147,13 +1147,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 60, 16)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 60, 16)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
 
                 var necromancer = new Necromancer(200, 780, true, 1);
                 necromancer.countSimpleAttacksToActivateSpecialAbility = 0;
@@ -1174,13 +1174,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
                 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -1203,13 +1203,13 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
-                    { //1-я волна
-                        //[Zombie.name]: new WaveData(7, 80, 0),
-                        [Necromancer.name]: new WaveData(1, 1, 6)
-                    },
-                    { //2-я волна
-                        [Necromancer.name]: new WaveData(15, 10, 0)
-                    }];
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Necromancer.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Necromancer.name, 15, 10, 0)
+                    ]];
                 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -1317,12 +1317,12 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 4;
-                Waves.all.push({ //4-ая волна
-                    [Zombie.name]: new WaveData(30, 75, 0),
-                    [Boar.name]: new WaveData(18, 28, 1),
-                    [Bat.name]: new WaveData(90, 93, 2),
-                    [Necromancer.name]: new WaveData(15, 10, 0),
-                });
+                Waves.all.push([ //4-ая волна
+                    new WaveData(Zombie.name, 30, 75, 0),
+                    new WaveData(Boar.name, 18, 28, 1),
+                    new WaveData(Bat.name, 90, 93, 2),
+                    new WaveData(Necromancer.name, 15, 10, 0),
+                ]);
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -1348,10 +1348,10 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                     Waves.waveCurrent = 0;
-                    Waves.all =[{ 
-                    [Zombie.name]: new WaveData(301, 70, 0),
-                    [Boar.name]: new WaveData(351, 25, 1)
-                }]
+                    Waves.all =[[ 
+                    new WaveData(Zombie.name, 301, 70, 0),
+                    new WaveData(Boar.name, 351, 25, 1)
+                ]]
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
 
                 setTimeout(() => Buildings.flyEarthRope.health-=20, 300);
@@ -1371,10 +1371,10 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                     Waves.waveCurrent = 0;
-                    Waves.all =[{ 
-                    [Zombie.name]: new WaveData(301, 70, 0),
-                    [Boar.name]: new WaveData(351, 25, 1)
-                }]
+                    Waves.all =[[ 
+                    new WaveData(Zombie.name, 301, 70, 0),
+                    new WaveData(Boar.name, 351, 25, 1)
+                ]]
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
 
                 setTimeout(() => Buildings.flyEarth.health-=20, 300);
