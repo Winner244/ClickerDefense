@@ -44,6 +44,10 @@ export class Skelet extends Monster{
 	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	private static readonly imageFrames = 6;
 
+	public static get countSkins(): number {
+		return this.images.length; 
+	}
+
 	private static readonly attackImages: HTMLImageElement[] = [];  //разные окраски атаки монстра
 	private static readonly attackImageFrames = 6;
 
@@ -54,8 +58,8 @@ export class Skelet extends Monster{
 	isDisplayCreatingFromUndegroundAnimation: boolean; //отображать анимацию появления монстра из под земли?
 	isStartedSoundOfCreating: boolean; //началось ли воспроизведение звука появления скелета из под земли?
 
-	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
-		let random = Helper.getRandom(1, Skelet.images.length) - 1;
+	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number, forseSkinNumber: number|null = null) {
+		let random = forseSkinNumber ?? Helper.getRandom(1, Skelet.images.length) - 1;
 		let selectedImage = Skelet.images[random];
 		let selectedAttackImage = Skelet.attackImages[random];
 		let selectedCreatingImage = Skelet.creatingImages[random];

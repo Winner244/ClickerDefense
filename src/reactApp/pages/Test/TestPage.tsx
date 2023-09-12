@@ -1423,7 +1423,7 @@ class TestPage extends React.Component {
         Bat.init(true);
         Necromancer.init(true);
         Builder.init(true);
-        Skelet.init(true);
+        //Skelet.init(true);
         FlyEarth.loadExplosionResources();
         Game.loadResourcesAfterEndOfWave(0);
         Game.loadResourcesAfterBuild(new Tower(0));

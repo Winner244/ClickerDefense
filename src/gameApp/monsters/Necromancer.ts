@@ -408,9 +408,16 @@ export class Necromancer extends Monster{
 			if (!this._isSpecialAbilitySkeletesCreatingStarted && this._attackLeftTimeMs < Necromancer.skeletesCallDurationMs - Necromancer.appersSkeletesAfterStartCallMs) {
 				this._isSpecialAbilitySkeletesCreatingStarted = true;
 
+				let listSkins: number[] = [];
+				for(let i = 0; i < Skelet.countSkins; i++){
+					listSkins.push(i);
+				}
+
 				for(let i = 0; i < Necromancer.skeletesCount; i++){
 					let scaleSkeletSize = 1 - Necromancer.skeletesSizeDifferentScalePercentage / 100 * Math.random();
-					let newSkelet = new Skelet(this.x, this.y, this.isLeftSide, scaleSkeletSize);
+					let randomSkin = Helper.getRandom(0, listSkins.length - 1);
+					let newSkelet = new Skelet(this.x, this.y, this.isLeftSide, scaleSkeletSize, listSkins[randomSkin]);
+					listSkins.splice(randomSkin, 1);
 
 					newSkelet.isDisplayCreatingFromUndegroundAnimation = true;
 					newSkelet.y = bottomBorder - newSkelet.height;
@@ -472,6 +479,7 @@ export class Necromancer extends Monster{
 				AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true).then(sourse => this._acidRainCallSound = sourse);
 			}
 			else {
+				Skelet.init(true);
 				this._isSpecialAbilitySkeletesCallStarted = true;
 				this.specialAbilityCallSkeletesAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityCallSkeletesAnimation.leftTimeMs;
