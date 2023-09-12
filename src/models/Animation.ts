@@ -6,6 +6,8 @@ export default class Animation{
 	readonly durationMs: number; //время полной анимации в миллисекундах
 	leftTimeMs: number; //оставшееся время анимации (миллисекунды)
 
+	private lastFrame: number = 0; //кадр из прошлой прорисовки
+
 	constructor(frames: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
 		this.image = image || new Image();
@@ -30,16 +32,18 @@ export default class Animation{
 		let frame = this.leftTimeMs <= 0 
 			? this.frames - 1
 			: isGameOver 
-				? 0 
+				? this.lastFrame 
 				: Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames));
 
 		if(isInvert){
 			frame = this.leftTimeMs <= 0 
 			? 0
 			: isGameOver 
-				? this.frames - 1 
+				? this.lastFrame
 				: this.frames - Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames));
 		}
+
+		this.lastFrame = frame;
 
 		Draw.ctx.drawImage(this.image, 
 			this.image.width / this.frames * frame, //crop from x
