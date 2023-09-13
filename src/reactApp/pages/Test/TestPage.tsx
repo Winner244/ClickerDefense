@@ -1291,7 +1291,7 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 3;
 
                 var barricade1 = new Barricade(600);
-                barricade1.health = 1000;
+                //barricade1.health = 1000;
                 barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
                 
@@ -1301,7 +1301,7 @@ class TestPage extends React.Component {
                 Buildings.all.push(tower1);
 
                 var barricade2 = new Barricade(1300);
-                barricade2.health = 1000;
+                //barricade2.health = 1000;
                 barricade2.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade2);
 
