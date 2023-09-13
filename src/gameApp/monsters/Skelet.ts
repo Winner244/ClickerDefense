@@ -16,14 +16,17 @@ import {WaveData} from '../../models/WaveData';
 import Skelet1Image from '../../assets/img/monsters/skelet/skelet.png'; 
 import Skelet2Image from '../../assets/img/monsters/skelet/skelet2.png'; 
 import Skelet3Image from '../../assets/img/monsters/skelet/skelet3.png'; 
+import Skelet4Image from '../../assets/img/monsters/skelet/skelet4.png'; 
 
 import SkeletAttack1Image from '../../assets/img/monsters/skelet/skeletAttack.png'; 
 import SkeletAttack2Image from '../../assets/img/monsters/skelet/skeletAttack2.png'; 
 import SkeletAttack3Image from '../../assets/img/monsters/skelet/skeletAttack3.png'; 
+import SkeletAttack4Image from '../../assets/img/monsters/skelet/skeletAttack4.png'; 
 
 import SkeletCreating1Image from '../../assets/img/monsters/skelet/creating.png'; 
 import SkeletCreating2Image from '../../assets/img/monsters/skelet/creating2.png'; 
 import SkeletCreating3Image from '../../assets/img/monsters/skelet/creating3.png'; 
+import SkeletCreating4Image from '../../assets/img/monsters/skelet/creating4.png'; 
 
 import SkeletCreating1Sound from '../../assets/sounds/monsters/skeletes/creating.mp3'; 
 import SkeletCreating2Sound from '../../assets/sounds/monsters/skeletes/creating2.mp3'; 
@@ -95,14 +98,17 @@ export class Skelet extends Monster{
 			Skelet.imageHandler.add(Skelet.images).src = Skelet1Image;
 			Skelet.imageHandler.add(Skelet.images).src = Skelet2Image;
 			Skelet.imageHandler.add(Skelet.images).src = Skelet3Image;
+			Skelet.imageHandler.add(Skelet.images).src = Skelet4Image;
 			
 			Skelet.imageHandler.add(Skelet.attackImages).src = SkeletAttack1Image;
 			Skelet.imageHandler.add(Skelet.attackImages).src = SkeletAttack2Image;
 			Skelet.imageHandler.add(Skelet.attackImages).src = SkeletAttack3Image;
+			Skelet.imageHandler.add(Skelet.attackImages).src = SkeletAttack4Image;
 
 			Skelet.imageHandler.add(Skelet.creatingImages).src = SkeletCreating1Image;
 			Skelet.imageHandler.add(Skelet.creatingImages).src = SkeletCreating2Image;
 			Skelet.imageHandler.add(Skelet.creatingImages).src = SkeletCreating3Image;
+			Skelet.imageHandler.add(Skelet.creatingImages).src = SkeletCreating4Image;
 
 			AudioSystem.load(SkeletCreating1Sound);
 			AudioSystem.load(SkeletCreating2Sound);
