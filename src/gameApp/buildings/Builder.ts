@@ -98,11 +98,7 @@ export class Builder {
 				Draw.ctx.globalAlpha = 1;
 			}
 			else{
-				if(this._isAnotherBuilding){
-					Draw.ctx.filter = "grayscale(1) ";
-				}
-				this.selectedBuildingForBuild.draw(drawsDiffMs, isGameOver, true);
-				Draw.ctx.filter = "none";
+				this.selectedBuildingForBuild.draw(drawsDiffMs, isGameOver, true, this._isAnotherBuilding);
 			}
 		}
 	}

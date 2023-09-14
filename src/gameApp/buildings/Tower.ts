@@ -346,7 +346,7 @@ export class Tower extends Building{
 		AudioSystem.playRandomV(centerX, [explosionDynamitSound, explosionDynamit2Sound], 0.1, false, 1, true);
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false, isAnotherBuildingHereInBuildingMode: boolean = false): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -371,7 +371,7 @@ export class Tower extends Building{
 		}
 
 		//display radius attack
-		if(isBuildingMode || this._isDisplayRadius){
+		if(isBuildingMode && !isAnotherBuildingHereInBuildingMode || this._isDisplayRadius){
 			Draw.ctx.beginPath();
 			Draw.ctx.arc(this.centerX, this.centerY, this.radiusAttack, 0, 2 * Math.PI, false);
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
@@ -381,7 +381,7 @@ export class Tower extends Building{
 			Draw.ctx.stroke();
 		}
 
-		super.draw(drawsDiffMs, isGameOver, isBuildingMode);
+		super.draw(drawsDiffMs, isGameOver, isBuildingMode, isAnotherBuildingHereInBuildingMode);
 
 		if(this.isHasDynamitArrows && this._dynamitPackImage.complete){
 			Draw.ctx.drawImage(this._dynamitPackImage, this.x + 35, this.y + 115, this._dynamitPackImage.width, this._dynamitPackImage.height);

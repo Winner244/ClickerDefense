@@ -151,7 +151,7 @@ export class AttackedObject {
 		}
 	}
 
-	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null){
+	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null, isApplyGrayFilter: boolean = false, isApplyBrightnessFilter: boolean = false){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -161,7 +161,16 @@ export class AttackedObject {
 		if(isAcidRain){
 			Draw.ctx.filter = 'hue-rotate(40deg)';
 		}
+
+		if(isApplyGrayFilter){
+			Draw.ctx.filter = 'grayscale(1)';
+		}
 		
+		if(isApplyBrightnessFilter){
+			Draw.ctx.filter = 'brightness(1.7)';
+		}
+
+
 		x = x ?? this.x;
 		y = y ?? this.y;
 		let isInvert = this.isLeftSide;
@@ -178,7 +187,7 @@ export class AttackedObject {
 			Draw.ctx.restore();
 		}
 
-		if(isAcidRain){
+		if(isAcidRain || isApplyGrayFilter || isApplyBrightnessFilter){
 			Draw.ctx.filter = 'none';
 		}
 

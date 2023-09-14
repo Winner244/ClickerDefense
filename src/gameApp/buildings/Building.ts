@@ -255,7 +255,7 @@ export class Building extends AttackedObject{
 		return false;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false): void{
+	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false, isAnotherBuildingHereInBuildingMode: boolean = false): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -266,7 +266,6 @@ export class Building extends AttackedObject{
 		if(this.isDisplayedUpgradeWindow){
 			//Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 2, y - Building.upgradeAnimation.image.height / 2, this.width * 2, Building.upgradeAnimation.image.height)
 			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 10, y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
-			Draw.ctx.filter = 'brightness(1.7)';
 		}
 
 		if(this.impulse > 0){
@@ -276,16 +275,11 @@ export class Building extends AttackedObject{
 			y = -this.height;
 		}
 
-		super.drawBase(drawsDiffMs, isGameOver, x, y);
+		super.drawBase(drawsDiffMs, isGameOver, x, y, isAnotherBuildingHereInBuildingMode, this.isDisplayedUpgradeWindow);
 
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
-		}
-
-		
-		if(this.isDisplayedUpgradeWindow){
-			Draw.ctx.filter = 'none';
 		}
 	}
 

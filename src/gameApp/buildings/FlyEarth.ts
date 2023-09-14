@@ -112,12 +112,12 @@ export class FlyEarth extends Building{
 		AudioSystem.play(this.centerX, ExplosionSound, 0.5, 1, false);
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode?: boolean): void {
+	draw(drawsDiffMs: number, isGameOver: boolean): void {
 		if(this.health <= 0){
 			this.drawExplosion(drawsDiffMs);
 		}
 		else{
-			super.draw(drawsDiffMs, isGameOver, isBuildingMode);
+			super.draw(drawsDiffMs, isGameOver, false, false);
 			if(!this._explosionParticles.length){
 				this.createExplosionParticles(); //requires image on canvas without excess elements around
 			}
