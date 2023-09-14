@@ -151,7 +151,7 @@ export class AttackedObject {
 		}
 	}
 
-	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null, isApplyGrayFilter: boolean = false, isApplyBrightnessFilter: boolean = false){
+	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null, filter: string|null = null){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -159,15 +159,11 @@ export class AttackedObject {
 		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
 		const isAcidRain = this.modifiers.find(x => x.name == AcidRainModifier.name);
 		if(isAcidRain){
-			Draw.ctx.filter = 'hue-rotate(40deg)';
+			filter = 'hue-rotate(40deg)';
 		}
 
-		if(isApplyGrayFilter){
-			Draw.ctx.filter = 'grayscale(1)';
-		}
-		
-		if(isApplyBrightnessFilter){
-			Draw.ctx.filter = 'brightness(1.7)';
+		if(filter){
+			Draw.ctx.filter = filter;
 		}
 
 
@@ -187,7 +183,7 @@ export class AttackedObject {
 			Draw.ctx.restore();
 		}
 
-		if(isAcidRain || isApplyGrayFilter || isApplyBrightnessFilter){
+		if(filter){
 			Draw.ctx.filter = 'none';
 		}
 

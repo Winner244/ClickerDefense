@@ -275,7 +275,15 @@ export class Building extends AttackedObject{
 			y = -this.height;
 		}
 
-		super.drawBase(drawsDiffMs, isGameOver, x, y, isAnotherBuildingHereInBuildingMode, this.isDisplayedUpgradeWindow);
+		let filter: string|null = null;
+		if (this.isDisplayedUpgradeWindow) {
+			filter = 'brightness(1.7)';
+		}
+		else if (isAnotherBuildingHereInBuildingMode) {
+			filter = 'grayscale(1)';
+		}
+
+		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
 
 		if(this.impulse > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
