@@ -21,6 +21,7 @@ export class AttackedObject {
 	name: string;
 
 	image: HTMLImageElement;
+	filteredImages: { [Key: string]: ImageBitmap|null };
 	animation: AnimationInfinite|null;
 
 	initialHealthMax: number; //изначальный максимум хп
@@ -68,6 +69,7 @@ export class AttackedObject {
 
 		this.imageHandler = imageHandler;
 
+		this.filteredImages = {};
 
 		this.modifiers = [];
 	}
@@ -162,10 +164,6 @@ export class AttackedObject {
 			filter = 'hue-rotate(40deg)';
 		}
 
-		if(filter){
-			Draw.ctx.filter = filter;
-		}
-
 
 		x = x ?? this.x;
 		y = y ?? this.y;
@@ -177,14 +175,10 @@ export class AttackedObject {
 			Draw.ctx.scale(-1, 1);
 		}
 
-		this.drawObject(drawsDiffMs, isGameOver, invertSign, x, y);
+		this.drawObject(drawsDiffMs, isGameOver, invertSign, x, y, filter);
 
 		if(isInvert){
 			Draw.ctx.restore();
-		}
-
-		if(filter){
-			Draw.ctx.filter = 'none';
 		}
 
 		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
@@ -194,14 +188,36 @@ export class AttackedObject {
 		this.modifiers.forEach(modifier => modifier.drawAheadObjects(this, drawsDiffMs));
 	}
 
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null){
+	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
 		x = x ?? this.x;
 		y = y ?? this.y;
-
 		if(this.animation){
+			if(filter){
+				throw 'filter for animation is not implemented yet!';
+			}
+
 			this.animation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
 		}
 		else{
+			if(filter){
+				if(filter in this.filteredImages){
+					if(this.filteredImages[filter]){
+						Draw.ctx.drawImage(<ImageBitmap>this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
+					}
+					else{
+						Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
+					}
+				}
+				else {
+					//create filtered image
+					this.filteredImages[filter] = null;
+					Draw.ctx.filter = filter;    //TODO: drawImage is not see filter 
+					Draw.ctx.drawImage(this.image, -this.width * 2, -this.height * 2, this.width, this.height);
+					Draw.ctx.filter = 'none';
+					createImageBitmap(Draw.ctx.getImageData(-this.width * 2, -this.height * 2, this.width, this.height)).then(result => this.filteredImages[filter] = result);
+				}
+			}
+			
 			Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
 		}
 	}
