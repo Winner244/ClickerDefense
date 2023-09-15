@@ -1,4 +1,5 @@
 import {Helper} from '../gameApp/helpers/Helper';
+import {FilterHelper} from '../gameApp/helpers/FilterHelper';
 
 import AnimationInfinite from './AnimationInfinite';
 
@@ -21,7 +22,7 @@ export class AttackedObject {
 	name: string;
 
 	image: HTMLImageElement;
-	filteredImages: { [Key: string]: ImageBitmap|null };
+	filteredImages: { [Key: string]: OffscreenCanvas };
 	animation: AnimationInfinite|null;
 
 	initialHealthMax: number; //изначальный максимум хп
@@ -193,7 +194,7 @@ export class AttackedObject {
 		y = y ?? this.y;
 		if(this.animation){
 			if(filter){
-				throw 'filter for animation is not implemented yet!';
+				throw `filter for animation is not implemented yet! filter: '${filter}'.`;
 			}
 
 			this.animation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
@@ -201,20 +202,20 @@ export class AttackedObject {
 		else{
 			if(filter){
 				if(filter in this.filteredImages){
-					if(this.filteredImages[filter]){
-						Draw.ctx.drawImage(<ImageBitmap>this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
-					}
-					else{
-						Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
-					}
+					Draw.ctx.drawImage(this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
 				}
 				else {
 					//create filtered image
-					this.filteredImages[filter] = null;
-					Draw.ctx.filter = filter;    //TODO: drawImage is not see filter 
-					Draw.ctx.drawImage(this.image, -this.width * 2, -this.height * 2, this.width, this.height);
-					Draw.ctx.filter = 'none';
-					createImageBitmap(Draw.ctx.getImageData(-this.width * 2, -this.height * 2, this.width, this.height)).then(result => this.filteredImages[filter] = result);
+					this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
+					let context = this.filteredImages[filter].getContext('2d');
+					if(context){
+						//context.filter = filter; - is not saved - it is separate css layout
+						context.drawImage(this.image, 0, 0, this.width, this.height);
+						FilterHelper.applyFilter(filter, context);
+					}
+					else{
+						console.error('offscreen context to fileting image is empty!');
+					}
 				}
 			}
 			

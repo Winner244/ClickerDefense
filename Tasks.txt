@@ -78,6 +78,29 @@
 	> в режиме строительства при наведении нового здания на уже построенное - применяется фильтр в canvas: Draw.ctx.filter = "grayscale(1) "
 		из-за чего фпс проседает и это заметно 
 		было бы хорошо один раз модернизировать изображение здания с фильтром и сохранить его в переменную, а потом просто юзать если надо
+		
+			фильтр не применяется ни для get/putImageData
+			ни для OffscreenCanvas
+				if(filter in this.filteredImages){
+					console.log('draw filtered');
+					Draw.ctx.drawImage(this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
+				}
+				else {
+					console.log('create');
+					//create filtered image
+					this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
+					let context = this.filteredImages[filter].getContext('2d');
+					if(context){
+						console.log('create - draw in context');
+						context.filter = filter;
+						context.drawImage(this.image, -this.width * 2, -this.height * 2, this.width, this.height);
+						context.filter = 'none';
+					}
+					console.log('create - end');
+				}
+			> нужно делать свои фильтры 
+				
+		
 		> при апгрейде здания так же накладывается фильтр: Draw.ctx.filter = 'brightness(1.7)';
 		> во время кислотного дождя фильтр: Draw.ctx.filter = 'hue-rotate(40deg)';
 		можно попробовать после загрузки изображения - отрисовать его за пределами canvas с фильтром, 
@@ -213,7 +236,7 @@
 					> звук появления в момент преобразования души в человечка 
 				> ограничение на количество?
 					пока без этого глянем - что да как.
-				
+			> во время уничтожения земли - он так же должен уничтожиться или исчезнуть без анимации
 		> золотособирателей 
 			можно прокачивать инструменты сбора (
 				сперва он вручную нагинается и подбирает монетки, 
