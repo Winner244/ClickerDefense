@@ -209,17 +209,17 @@ export class AttackedObject {
 					this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
 					let context = this.filteredImages[filter].getContext('2d');
 					if(context){
-						//context.filter = filter; - is not saved - it is separate css layout
+						context.filter = filter;
 						context.drawImage(this.image, 0, 0, this.width, this.height);
-						FilterHelper.applyFilter(filter, context);
 					}
 					else{
 						console.error('offscreen context to fileting image is empty!');
 					}
 				}
 			}
-			
-			Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
+			else {
+				Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
+			}
 		}
 	}
 

@@ -33,6 +33,22 @@ export class FilterHelper{
 			value, 
 			canvasContext.canvas.width,
 			canvasContext.canvas.height);
+			if(value != 1){
+				throw 'value != 1 is not implemented yet for grayscale filter!';
+			}
+
+			const imgData = canvasContext.getImageData(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
+			for(let x = 0; x < imgData.width; x++){
+				for(let y = 0; y < imgData.height; y++){
+					let i = x * 4 + y * imgData.width * 4;
+					var brightness = 0.34 * imgData.data[i] + 0.5 * imgData.data[i + 1] + 0.16 * imgData.data[i + 2];
+					imgData.data[i] = brightness;//r 
+					imgData.data[i + 1] = brightness; //g 
+					imgData.data[i + 2] = brightness; //b 
+					//var grayScale = (int)((oc.R * 0.3) + (oc.G * 0.59) + (oc.B * 0.11));
+				}
+			}
+			canvasContext.putImageData(imgData, 100, 300);
 	}
 
 }
