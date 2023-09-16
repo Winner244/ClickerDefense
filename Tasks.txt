@@ -75,39 +75,8 @@
 		
 
 Оптимизации/Рефакторинг:
-	> в режиме строительства при наведении нового здания на уже построенное - применяется фильтр в canvas: Draw.ctx.filter = "grayscale(1) "
-		из-за чего фпс проседает и это заметно 
-		было бы хорошо один раз модернизировать изображение здания с фильтром и сохранить его в переменную, а потом просто юзать если надо
-		
-			фильтр не применяется ни для get/putImageData
-			ни для OffscreenCanvas
-				if(filter in this.filteredImages){
-					console.log('draw filtered');
-					Draw.ctx.drawImage(this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
-				}
-				else {
-					console.log('create');
-					//create filtered image
-					this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
-					let context = this.filteredImages[filter].getContext('2d');
-					if(context){
-						console.log('create - draw in context');
-						context.filter = filter;
-						context.drawImage(this.image, -this.width * 2, -this.height * 2, this.width, this.height);
-						context.filter = 'none';
-					}
-					console.log('create - end');
-				}
-			> нужно делать свои фильтры 
-				
-		
-		> при апгрейде здания так же накладывается фильтр: Draw.ctx.filter = 'brightness(1.7)';
-		> во время кислотного дождя фильтр: Draw.ctx.filter = 'hue-rotate(40deg)';
-		можно попробовать после загрузки изображения - отрисовать его за пределами canvas с фильтром, 
-			а затем вырезать изображение и сохранить в переменную
-			это должно быть общим решением и под разные фильтры
-		
-		
+	-
+
 Баги: 
 	> редкий баг. много раз в меню заходить надо. The time must be greater than or equal to the last scheduled time
 		AudioSystem
@@ -1465,7 +1434,41 @@ ok. волна 4. некромант с посохом,
 		ok. добавить звук грома
 		ok. Добавить звук дождя
 		ok. добавить в модификатор - усиление урона
-		
+
+ok. в режиме строительства при наведении нового здания на уже построенное - применяется фильтр в canvas: Draw.ctx.filter = "grayscale(1) "
+	из-за чего фпс проседает и это заметно 
+	было бы хорошо один раз модернизировать изображение здания с фильтром и сохранить его в переменную, а потом просто юзать если надо
+	
+		фильтр не применяется ни для get/putImageData
+		ни для OffscreenCanvas
+			if(filter in this.filteredImages){
+				console.log('draw filtered');
+				Draw.ctx.drawImage(this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
+			}
+			else {
+				console.log('create');
+				//create filtered image
+				this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
+				let context = this.filteredImages[filter].getContext('2d');
+				if(context){
+					console.log('create - draw in context');
+					context.filter = filter;
+					context.drawImage(this.image, -this.width * 2, -this.height * 2, this.width, this.height);
+					context.filter = 'none';
+				}
+				console.log('create - end');
+			}
+		no. нужно делать свои фильтры 
+			оказывается я сверху оригинал перерисовывал - забыл убрат ьв else блок код
+			
+	
+	ok. при апгрейде здания так же накладывается фильтр: Draw.ctx.filter = 'brightness(1.7)';
+	ok. во время кислотного дождя фильтр: Draw.ctx.filter = 'hue-rotate(40deg)';
+	можно попробовать после загрузки изображения - отрисовать его за пределами canvas с фильтром, 
+		а затем вырезать изображение и сохранить в переменную
+		это должно быть общим решением и под разные фильтры
+	
+			
 ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 Справочная
 	> кнопки ремонта и апгрейда находятся в /reactApp/components/BuildingButtons/BuildingButtons.tsx
