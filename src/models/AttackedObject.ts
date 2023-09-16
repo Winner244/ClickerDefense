@@ -1,5 +1,4 @@
 import {Helper} from '../gameApp/helpers/Helper';
-import {FilterHelper} from '../gameApp/helpers/FilterHelper';
 
 import AnimationInfinite from './AnimationInfinite';
 
