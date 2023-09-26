@@ -2,16 +2,21 @@ import {Draw} from "../gameApp/gameSystems/Draw";
 
 export default class Animation{
 	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
-	readonly frames: number; //количество кадров на изображении
+	readonly frames: number; //количество кадров в изображении
 	readonly durationMs: number; //время полной анимации в миллисекундах
 	leftTimeMs: number; //оставшееся время анимации (миллисекунды)
 
 	private lastFrame: number = 0; //кадр из прошлой прорисовки
 
-	constructor(frames: number, durationMs: number, image: HTMLImageElement|null = null)
+	/**
+	 * @param framesCount - количество фреймов в изображении image
+	 * @param durationMs - время полной анимации в миллисекундах
+	 * @param image - изображение содержащее все кадры анимации
+	 */
+	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
 		this.image = image || new Image();
-		this.frames = frames;
+		this.frames = framesCount;
 		this.durationMs = durationMs;
 		this.leftTimeMs = durationMs;
 	}

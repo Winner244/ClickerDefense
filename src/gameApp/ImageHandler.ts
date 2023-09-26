@@ -19,6 +19,10 @@ export class ImageHandler {
 		return image;
 	}
 
+	get isEmpty(): boolean {
+		return this.waitingImages.length == 0;
+	}
+
 	get isImagesCompleted(): boolean {
 		return this.waitingImages.every(x => x.complete);
 	}

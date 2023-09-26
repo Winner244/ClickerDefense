@@ -196,7 +196,7 @@ export class Necromancer extends Monster{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources){
+		if(isLoadResources && Necromancer.imageHandler.isEmpty){
 			Necromancer.imageHandler.new(Necromancer.image).src = Necromancer1Image;
 			Necromancer.imageHandler.new(Necromancer.attackImage).src = AttackImage;
 			Necromancer.imageHandler.new(Necromancer.chargeImage).src = ChargeImage;

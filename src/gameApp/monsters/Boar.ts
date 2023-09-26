@@ -135,7 +135,7 @@ export class Boar extends Monster{
 	}
 
 	static init(isLoadResources: boolean = true): void {
-		if(isLoadResources && !Boar.images.length) {
+		if(isLoadResources && Boar.imageHandler.isEmpty) {
 			Boar.imageHandler.add(Boar.images).src = Boar1Image;
 
 			Boar.imageHandler.add(Boar.attackImages).src = BoarAttack1Image;

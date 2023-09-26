@@ -72,7 +72,7 @@ export class Bat extends Monster{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources && !Bat.images.length){
+		if(isLoadResources && Bat.imageHandler.isEmpty){
 			Bat.imageHandler.add(Bat.images).src = Bat1Image;
 		}
 	}

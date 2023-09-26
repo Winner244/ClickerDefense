@@ -42,7 +42,7 @@ export class FlyEarth extends Building{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources){
+		if(isLoadResources && FlyEarth.imageHandler.isEmpty){
 			FlyEarth.imageHandler.new(FlyEarth.image).src = FlyEarthImage;
 			AudioSystem.load(PickSoundUrl1);
 			AudioSystem.load(PickSoundUrl2);

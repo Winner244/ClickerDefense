@@ -81,7 +81,7 @@ export class Zombie extends Monster{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources && !Zombie.images.length){
+		if(isLoadResources && Zombie.imageHandler.isEmpty){
 			Zombie.imageHandler.add(Zombie.images).src = Zombie1Image;
 			Zombie.imageHandler.add(Zombie.images).src = Zombie2Image;
 			Zombie.imageHandler.add(Zombie.images).src = Zombie3Image;

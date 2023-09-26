@@ -114,7 +114,7 @@ export class Tower extends Building{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources){
+		if(isLoadResources && Tower.imageHandler.isEmpty){
 			Tower.imageHandler.new(Tower.image).src = towerImage;
 		}
 	}

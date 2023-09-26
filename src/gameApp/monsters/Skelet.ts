@@ -94,7 +94,7 @@ export class Skelet extends Monster{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources && !Skelet.images.length){
+		if(isLoadResources && Skelet.imageHandler.isEmpty){
 			Skelet.imageHandler.add(Skelet.images).src = Skelet1Image;
 			Skelet.imageHandler.add(Skelet.images).src = Skelet2Image;
 			Skelet.imageHandler.add(Skelet.images).src = Skelet3Image;

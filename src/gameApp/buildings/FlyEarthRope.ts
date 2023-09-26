@@ -19,7 +19,7 @@ export class FlyEarthRope extends Building{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources){
+		if(isLoadResources && FlyEarthRope.imageHandler.isEmpty){
 			FlyEarthRope.imageHandler.new(FlyEarthRope.image).src = FlyEarthRopeImage;
 		}
 	}

@@ -51,7 +51,7 @@ export class Barricade extends Building{
 	}
 
 	static init(isLoadResources: boolean = true): void{
-		if(isLoadResources){
+		if(isLoadResources && Barricade.imageHandler.isEmpty){
 			Barricade.imageHandler.new(Barricade.image).src = BarricadeImage;
 		}
 	}
