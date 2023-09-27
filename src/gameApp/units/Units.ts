@@ -1,5 +1,7 @@
 import {SimpleObject} from "../../models/SimpleObject";
 
+import {Building} from "../buildings/Building";
+
 import {Monster} from "../monsters/Monster";
 
 import {Unit} from "./Unit";
@@ -49,7 +51,7 @@ export class Units {
 		return isProcessed;
 	}
 
-	static logic(drawsDiffMs: number, isWaveStarted: boolean, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){
+	static logic(drawsDiffMs: number, isWaveStarted: boolean, isGameOver: boolean, buildings: Building[], monsters: Monster[], bottomShiftBorder: number){
 		//логика анимации гибели юнита
 		if(this.deaths.length){
 			for(let i = 0; i < this.deaths.length; i++){
@@ -73,7 +75,7 @@ export class Units {
 					//AudioSystem.play(unit.centerX, DeathSound, 0.1, 2, false, true);
 				}
 				else{
-					unit.logic(drawsDiffMs, this.all, monsters, bottomShiftBorder, isWaveStarted)
+					unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
 				}
 			}
 		}

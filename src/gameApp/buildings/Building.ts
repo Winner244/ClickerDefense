@@ -84,7 +84,7 @@ export class Building extends AttackedObject{
 		this.maxImpulse = 10;
 		this.impulseForceDecreasing = 1;
 		
-		this._impulse = this._impulsePharos = 0;
+		this._impulsePharos = 0;
 		this._impulsePharosSign = false;
 		this._impulsePharosForceDecreasing = 5;
 

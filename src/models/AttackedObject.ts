@@ -81,6 +81,8 @@ export class AttackedObject {
 
 		this.maxImpulse = 0; //отключён по умолчанию
 		this.impulseForceDecreasing = 1;
+
+		this._impulse = 0;
 	}
 
 	get height(): number {
@@ -134,7 +136,7 @@ export class AttackedObject {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
-		
+
 		if(this._impulse > 1){
 			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
 		}
