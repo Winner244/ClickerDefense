@@ -1,9 +1,10 @@
 import { Reducer } from 'redux';
 
 import {ShopCategoryEnum} from '../../../enum/ShopCategoryEnum';
+import ShopItem from '../../../models/ShopItem';
 import { Barricade } from '../../../gameApp/buildings/Barricade';
 import { Tower } from '../../../gameApp/buildings/Tower';
-import ShopItem from '../../../models/ShopItem';
+import { Miner } from '../../../gameApp/units/Miner';
 
 // STATE
 export interface ShopState {
@@ -64,7 +65,9 @@ function getDefaultOpenState(): ShopState{
                 Barricade.shopItem,
                 Tower.shopItem
             ],
-            [ShopCategoryEnum.UNITS]: []
+            [ShopCategoryEnum.UNITS]: [
+                Miner.shopItem
+            ]
         }
     };
 }

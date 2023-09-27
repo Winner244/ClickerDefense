@@ -29,18 +29,24 @@ export class AttackedObject {
 	health: number;
 	defense: number = 0; //защита (уменьшает урон)
 	
-	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание)
+	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание) isRightMoving?
 	isLand: boolean; //наземное? (иначе - воздушное)
 
 	scaleSize: number; //1 - размер монстра по размеру картинки, 0.5 - монстр в 2 раза меньше картинки по высоте и ширине, 1.5 - монстр в 2 раза больше.
 
-	reduceHover: number; //на сколько пикселей уменьшить зону наведения?
+	reduceHover: number; //на сколько пикселей уменьшить зону наведения для игрока?
 
 	x: number;
 	y: number;
 
-
 	modifiers: Modifier[]; //бафы/дебафы
+
+	maxImpulse: number; //максимальное значение импульса 
+	impulseForceDecreasing: number; //сила уменьшения импульса
+	
+	//технические поля экземпляра
+	protected _impulse: number; //импульс от сверх ударов и сотрясений
+
 
 	constructor(x: number, y: number, healthMax: number, scaleSize: number, image: HTMLImageElement, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string, imageHandler: ImageHandler,
 		frames: number, 
@@ -72,6 +78,9 @@ export class AttackedObject {
 		this.filteredImages = {};
 
 		this.modifiers = [];
+
+		this.maxImpulse = 0; //отключён по умолчанию
+		this.impulseForceDecreasing = 1;
 	}
 
 	get height(): number {
@@ -102,13 +111,35 @@ export class AttackedObject {
 	get centerY(): number {
 		return this.y + this.height / 2;
 	}
+
+	set impulse(value: number){
+		if(value > this.maxImpulse){
+			value = this.maxImpulse;
+		}
+		if(value < this.maxImpulse * -1){
+			value = this.maxImpulse * -1;
+		}
+
+		this._impulse = Math.abs(value);
+	}
+	get impulse(): number{
+		if(this._impulse <= 1){
+			return 0;
+		}
+
+		return this._impulse;
+	}
 	
-	logicBase(drawsDiffMs: number, buildings: AttackedObject[], monsters: AttackedObject[], bottomBorder: number): void{
+	logicBase(drawsDiffMs: number, buildings: AttackedObject[], monsters: AttackedObject[], units: AttackedObject[], bottomBorder: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
+		
+		if(this._impulse > 1){
+			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
+		}
 
-		this.modifiers.forEach(modifier => modifier.logic(this, drawsDiffMs, monsters));
+		this.modifiers.forEach(modifier => modifier.logic(this, drawsDiffMs));
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{

@@ -12,6 +12,8 @@ import {WaveData} from '../../models/WaveData';
 
 import {Monster} from './Monster';
 
+import {Unit} from '../units/Unit';
+
 import {Draw} from "../gameSystems/Draw";
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
@@ -49,7 +51,6 @@ import SoundAttacked10 from '../../assets/sounds/monsters/boar/attacked10.mp3';
 
 import SoundStartSpecial from '../../assets/sounds/monsters/boar/special/start.mp3'; 
 import SoundRunning from '../../assets/sounds/monsters/boar/special/running.mp3'; 
-
 
 /** Кабан - тип монстров */
 export class Boar extends Monster{
@@ -147,7 +148,7 @@ export class Boar extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]) {
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -155,12 +156,12 @@ export class Boar extends Monster{
 		if(this._isActivatedSpecialAbility) {
 			if(this._specialAbilityActivationLeftTimeMs > 0) {
 				this._specialAbilityActivationLeftTimeMs -= drawsDiffMs;
-				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+				super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
 			}
-			else if(this._isAttack && this._buildingGoal) {
+			else if(this._isAttack && this._goal) {
 				super.attack(this.specialAbilityDamage); //наносим урон от спец способности
-				this._buildingGoal.impulse += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
+				this._goal.impulse += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
 				this.stopSpecialAbility();
 				this._isActivatedSpecialDamage = true;
 				this.specialAbilityDamageParticlesAnimation.restart();
@@ -169,7 +170,7 @@ export class Boar extends Monster{
 				this._attackLeftTimeMs = this.attackTimeWaitingMs; //что бы не сработала первая обычная атака в базовом методе
 			}
 		}
-		else if(this._isWillUseSpecialAbility && this._specialAbilityXStart > 0 && this._buildingGoal) {
+		else if(this._isWillUseSpecialAbility && this._specialAbilityXStart > 0 && this._goal) {
 			//активация спец способности
 			if ( this.isLeftSide && this.centerX >= this._specialAbilityXStart || 
 				!this.isLeftSide && this.centerX <= this._specialAbilityXStart)
@@ -185,9 +186,9 @@ export class Boar extends Monster{
 			}
 		}
 
-		var oldBuildingGoalX = this._buildingGoal?.centerX;
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
-		var newBuildingGoalX = this._buildingGoal?.centerX;
+		var oldBuildingGoalX = this._goal?.centerX;
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomBorder, waveLevel);
+		var newBuildingGoalX = this._goal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX && this._isWillUseSpecialAbility && Math.abs(newBuildingGoalX - this.centerX) > Boar.minDistanceActivateSpecialAbility){
 			this._specialAbilityXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Boar.minDistanceActivateSpecialAbility, Boar.maxDistanceActivateSpecialAbility) 

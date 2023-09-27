@@ -2,7 +2,10 @@ import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
+import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
+
 import Animation from '../../models/Animation';
+import ShopItem from '../../models/ShopItem';
 
 import {Helper} from '../helpers/Helper';
 
@@ -19,24 +22,30 @@ import MinerWait1Image from '../../assets/img/units/miner/wait1.png';
 export class Miner extends Unit{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
-	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly wait1Image: HTMLImageElement = new Image();
+	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
 
 	private readonly fallEndAnimation: Animation;
 
+	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.wait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS);
+
 	constructor(x: number, y: number) {
-		super(x, y, 3, Miner.wait1Image, Miner.name, Miner.imageHandler); 
+		super(x, y, 3, Miner.wait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
 
 		this.fallEndAnimation = new Animation(31, 31 * 100, );
 
         Miner.init(true); //reserve init
 	}
 
+	static initForShop(): void{
+		Miner.wait1Image.src = MinerWait1Image;
+	}
+
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources && Miner.imageHandler.isEmpty){
-			Miner.imageHandler.new(Miner.fallImage).src = MinerFallImage;
 			Miner.imageHandler.new(Miner.wait1Image).src = MinerWait1Image;
+			Miner.imageHandler.new(Miner.fallImage).src = MinerFallImage;
 			Miner.imageHandler.new(Miner.fallEndImage).src = MinerFallEndImage;
 		}
 	}

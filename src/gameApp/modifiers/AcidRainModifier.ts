@@ -48,8 +48,8 @@ export class AcidRainModifier extends Modifier{
 		this._soundRain = null;
 	}
 
-	logic(object: AttackedObject, drawsDiffMs: number, objects: AttackedObject[]): void{
-		super.logic(object, drawsDiffMs, objects);
+	logic(object: AttackedObject, drawsDiffMs: number): void{
+		super.logic(object, drawsDiffMs);
 
 		this._leftTimeToCreateNewBlobMs -= drawsDiffMs;
 

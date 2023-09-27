@@ -8,6 +8,8 @@ import {Building} from '../buildings/Building';
 
 import {Monster} from './Monster';
 
+import {Unit} from '../units/Unit';
+
 import {Helper} from '../helpers/Helper';
 
 import {AttackedObject} from '../../models/AttackedObject';
@@ -122,7 +124,7 @@ export class Skelet extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -142,7 +144,7 @@ export class Skelet extends Monster{
 			}
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomBorder, waveLevel);
 	}
 
 	playSound(): void {

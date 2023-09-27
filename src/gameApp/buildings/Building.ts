@@ -1,6 +1,7 @@
 import {Gamer} from '../gamer/Gamer';
 
 import {Monster} from '../monsters/Monster';
+import {Unit} from '../units/Unit';
 
 import ParameterItem from '../../models/ParameterItem';
 import AnimationInfinite from '../../models/AnimationInfinite';
@@ -45,11 +46,7 @@ export class Building extends AttackedObject{
 
 	repairPricePerHealth: number; //сколько стоит 1 хп починить
 
-	maxImpulse: number; //максимальное значение импульса для здания
-	impulseForceDecreasing: number; //сила уменьшения импульса
-
 	//технические поля экземпляра
-	protected _impulse: number; //импульс от сверх ударов и сотрясений
 	protected _impulsePharos: number; //маятниковый импульс от сверх ударов и сотрясений (0 - середина, значение движется от Z образно между отрицательными и положительными велечинами в пределах максимального значения по abs)
 	protected _impulsePharosSign: boolean; //знак маятникового импульса в данный момент (0 - уменьшение, 1 - увеличение), нужен для указания Z образного движение по мере затухания импульса
 	protected _impulsePharosForceDecreasing: number; //сила уменьшения маятникового импульса
@@ -132,14 +129,7 @@ export class Building extends AttackedObject{
 
 		this._impulsePharosSign = value < 0 ? true : false;
 		this._impulsePharos = value;
-		this._impulse = Math.abs(value);
-	}
-	get impulse(): number{
-		if(this._impulse <= 1){
-			return 0;
-		}
-
-		return this._impulse;
+		super.impulse = value;
 	}
 
 	set isDisplayedUpgradeWindow(value: boolean){
@@ -180,15 +170,14 @@ export class Building extends AttackedObject{
 		return false;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logicBase(drawsDiffMs, buildings, monsters, bottomShiftBorder);
+		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
 		
 		if(this._impulse > 1){
-			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
 			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
 
 			if(this._impulsePharos < -this._impulse){

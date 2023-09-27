@@ -1,9 +1,13 @@
 import {ImageHandler} from '../ImageHandler';
 
 import {Monster} from './Monster';
-import {Monsters} from './Monsters';
+import {Monsters} from './Monsters'; 
+
+import {Unit} from '../units/Unit';
+import {Miner} from '../units/Miner';
 
 import {Building} from '../buildings/Building';
+import {FlyEarth} from '../buildings/FlyEarth';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
@@ -26,7 +30,7 @@ import SoundMany3 from '../../assets/sounds/monsters/bat/many3.mp3';
 import SoundAttacked1 from '../../assets/sounds/monsters/bat/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/monsters/bat/attacked2.mp3'; 
 import SoundAttacked3 from '../../assets/sounds/monsters/bat/attacked3.mp3'; 
-import SoundAttacked4 from '../../assets/sounds/monsters/bat/attacked4.mp3'; 
+import SoundAttacked4 from '../../assets/sounds/monsters/bat/attacked4.mp3';
 
 
 
@@ -77,20 +81,26 @@ export class Bat extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomBorder, waveLevel);
 
-		if(this._buildingGoal){
+		if(this._goal){
+			//напасть на майнера, если он есть на той же половине карты
+			const miners = units.filter(x => x.name == Miner.name && x.isLeftSide == this.isLeftSide);
+			if(this._goal.name == FlyEarth.name && miners.length && Helper.getRandom(0, 100) == 1){ 
+				this._goal = miners[0];
+			}
+
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 			let speed = this.speed * (drawsDiffMs / 1000);
 			speed += speed * speedMultiplier;
 
 			if(!this._isAttack){
-				this.y += (this._buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY) * speed;
+				this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 	
 				//Зигзагообразное перемещение
 				var changes = drawsDiffMs / 10 * (this._isZigzagToTop ? 1 : -1);
@@ -103,10 +113,10 @@ export class Bat extends Monster{
 				
 			}
 			else{
-				if(this.y < this._buildingGoal.y + this._buildingGoal.reduceHover){
+				if(this.y < this._goal.y + this._goal.reduceHover){
 					this.y++;
 				}
-				else if(this.y > this._buildingGoal.y + this._buildingGoal.height - this._buildingGoal.reduceHover){
+				else if(this.y > this._goal.y + this._goal.height - this._goal.reduceHover){
 					this.y--;
 				}
 			}

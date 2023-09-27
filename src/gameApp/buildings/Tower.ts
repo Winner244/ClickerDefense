@@ -10,6 +10,8 @@ import {Building} from './Building';
 
 import {Monster} from '../monsters/Monster';
 
+import {Unit} from '../units/Unit';
+
 import {FireModifier} from '../modifiers/FireModifier';
 
 import {Arrow} from '../../models/Arrow';
@@ -30,7 +32,7 @@ import arrowImage from '../../assets/img/buildings/tower/arrow.png';
 
 import fireArrowImproveImage from '../../assets/img/buildings/tower/fire/fireArrowImprove.png';  
 import brazierImage from '../../assets/img/buildings/tower/fire/brazier.png'; 
-import fireImage from '../../assets/img/buildings/tower/fire/fire.png'; 
+import fireImage from '../../assets/img/fire.png'; 
 
 import dynamitArrowImproveImage from '../../assets/img/buildings/tower/dynamit/dynamitArrowImprove.png'; 
 import dynamitPackImage from '../../assets/img/buildings/tower/dynamit/dynamitPack.png'; 
@@ -184,13 +186,13 @@ export class Tower extends Building{
 		this._isDisplayDynamitRadius = false;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomShiftBorder: number, isWaveStarted: boolean)
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean)
 	{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, bottomShiftBorder, isWaveStarted);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarted);
 
 		if(this._rechargeLeftTimeMs > 0){ //перезарядка
 			this._rechargeLeftTimeMs -= drawsDiffMs;

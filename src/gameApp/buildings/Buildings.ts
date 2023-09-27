@@ -8,6 +8,8 @@ import {FlyEarthRope} from './FlyEarthRope';
 import {SimpleObject} from '../../models/SimpleObject';
 import Animation from '../../models/Animation';
 
+import {Unit} from '../units/Unit';
+
 import {Monster} from '../monsters/Monster';
 
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
@@ -87,7 +89,7 @@ export class Buildings{
 		return isProcessed;
 	}
 
-	static logic(drawsDiffMs: number, isWaveStarted: boolean, isGameOver: boolean, monsters: Monster[], bottomShiftBorder: number){
+	static logic(drawsDiffMs: number, isWaveStarted: boolean, isGameOver: boolean, monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		//логика анимации разрушения здания
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
@@ -111,7 +113,7 @@ export class Buildings{
 					AudioSystem.play(building.centerX, ExplosionSound, 0.1, 2, false, true);
 				}
 				else{
-					building.logic(drawsDiffMs, this.all, monsters, bottomShiftBorder, isWaveStarted)
+					building.logic(drawsDiffMs, this.all, monsters, units, bottomShiftBorder, isWaveStarted)
 				}
 			}
 		}

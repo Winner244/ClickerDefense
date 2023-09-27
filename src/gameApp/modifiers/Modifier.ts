@@ -35,7 +35,7 @@ export class Modifier{
 		this.lifeTimeMs = lifeTimeMs;
 	}
 
-	logic(object: AttackedObject, drawsDiffMs: number, objects: AttackedObject[]): void{
+	logic(object: AttackedObject, drawsDiffMs: number): void{
 		if(this.lifeTimeMs){
 			this.lifeTimeMs -= drawsDiffMs;
 

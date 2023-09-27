@@ -14,6 +14,7 @@ import {Modifier} from "../modifiers/Modifier";
 import {Helper} from "../helpers/Helper";
 
 import {Building} from '../buildings/Building';
+import {Unit} from '../units/Unit';
 
 import Hit1Sound from '../../assets/sounds/monsters/hit1.mp3'; 
 import Hit2Sound from '../../assets/sounds/monsters/hit2.mp3'; 
@@ -38,7 +39,7 @@ export class Monster extends AttackedObject{
 
 
 	//технические поля экземпляра
-	protected _buildingGoal: Building|null; //цель-здание для атаки
+	protected _goal: AttackedObject|null; //цель (здание или юнит) для атаки
 
 	protected readonly attackTimeWaitingMs: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
 	_attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
@@ -83,7 +84,7 @@ export class Monster extends AttackedObject{
 
 
 		this._isAttack = false; //атакует?
-		this._buildingGoal = null;
+		this._goal = null;
 		this._attackLeftTimeMs = 0;
 		this._leftTimeToPlaySoundMs = avrTimeSoundWaitMs / 2;
 		this.avrTimeSoundWaitMs = avrTimeSoundWaitMs;
@@ -110,23 +111,27 @@ export class Monster extends AttackedObject{
 		AudioSystem.load(Hit11Sound);
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]): void{
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
 		//логика передвижения
-		if(this._buildingGoal == null || this._buildingGoal.health <= 0){
-			let buildingsGoal = buildings.filter(building => building.isLand == this.isLand);
-			buildingsGoal = sortBy(buildingsGoal, [building => this.isLeftSide ? building.x : building.x + building.width]);
-			this._buildingGoal = this.isLeftSide ? buildingsGoal[0] : buildingsGoal[buildingsGoal.length - 1];
+		if(this._goal == null || this._goal.health <= 0){
+			//TODO: process units, but if it is unit, need to check sometimes - maybe it has moved further than some building, OR vice versa got closer than the some building
+			//моно сделать для левой и правой стороны по списку, которые обновляются при перемещении юнита - там будут юниты и здания ближайшие к монстрам, что бы им не искать цель, 
+			//а просто брать первого из списка + при уничтожении здания будет проще
+			let goal: AttackedObject[] = [];
+			goal = goal.concat(buildings).concat(units).filter(x => x.isLand == this.isLand);
+			goal = sortBy(goal, [x => this.isLeftSide ? x.x : x.x + x.width]);
+			this._goal = this.isLeftSide ? goal[0] : goal[goal.length - 1];
 
-			if(this._buildingGoal == null){
+			if(this._goal == null){
 				return;
 			}
 		}
 
-		super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+		super.logicBase(drawsDiffMs, buildings, units, monsters, bottomBorder);
 
 		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 		let speed = this.speed * (drawsDiffMs / 1000);
@@ -135,21 +140,21 @@ export class Monster extends AttackedObject{
 		if(this.isLeftSide) //если монстр идёт с левой стороны
 		{
 			let condition = this.isLand 
-				? this.x + this.width < this._buildingGoal.x + this.width / 5
-				: this._buildingGoal.width / 2 - this._buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY);
+				? this.x + this.width < this._goal.x + this.width / 5
+				: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
 
 			if (condition) { //ещё не дошёл
 				this.x += speed;
 
 				if(!this.isLand){
-					//this.y += (this._buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY) * speed;
+					//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 				}
 				this._isAttack = false;
 			}
 			else //дошёл
 			{
 				if(this.isLand){
-					this.x = this._buildingGoal.x - this.width + this.width / 5;
+					this.x = this._goal.x - this.width + this.width / 5;
 				}
 				if(!this._isAttack){
 					this.attackAnimation.restart();
@@ -160,21 +165,21 @@ export class Monster extends AttackedObject{
 		else 
 		{
 			let condition = this.isLand 
-				? this.x > this._buildingGoal.x + this._buildingGoal.width - this.width / 5
-				: this._buildingGoal.width / 2 - this._buildingGoal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY);
+				? this.x > this._goal.x + this._goal.width - this.width / 5
+				: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
 
 			if (condition) { //ещё не дошёл
 				this.x -= speed;
 
 				if(!this.isLand){
-					//this.y += (this._buildingGoal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._buildingGoal.centerX, this._buildingGoal.centerY) * speed;
+					//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 				}
 				this._isAttack = false;
 			}
 			else //дошёл
 			{
 				if(this.isLand){
-					this.x = this._buildingGoal.x + this._buildingGoal.width - this.width / 5;
+					this.x = this._goal.x + this._goal.width - this.width / 5;
 				}
 				if(!this._isAttack){
 					this.attackAnimation.restart();
@@ -226,8 +231,8 @@ export class Monster extends AttackedObject{
 	}
 
 	attack(damage: number): void{
-		if(damage > 0 && this._buildingGoal != null){
-			this._buildingGoal.applyDamage(damage, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //монстр наносит урон
+		if(damage > 0 && this._goal != null){
+			this._goal.applyDamage(damage, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //монстр наносит урон
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 
 			var size = this.width * this.height;

@@ -20,6 +20,8 @@ import {Building} from '../buildings/Building';
 import {FlyEarth} from '../buildings/FlyEarth';
 import {FlyEarthRope} from '../buildings/FlyEarthRope';
 
+import {Unit} from '../units/Unit';
+
 import {Monster} from './Monster';
 import {Skelet} from './Skelet';
 
@@ -228,7 +230,7 @@ export class Necromancer extends Monster{
 		return Helper.getRandom(Necromancer.averageCountSimpleAttacksToActivateSpecialAbility / 3, Necromancer.averageCountSimpleAttacksToActivateSpecialAbility * 2);
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]) {
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]) {
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -282,7 +284,7 @@ export class Necromancer extends Monster{
 				this.modifiers = this.modifiers.filter(x => x.name != FireModifier.name);
 			}
 
-			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+			super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
 			return; //игнорируем базовую логику движения и атаки
 		}
 
@@ -301,7 +303,7 @@ export class Necromancer extends Monster{
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 			}
 
-			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+			super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
 			return; //игнорируем базовую логику движения и атаки
 		}
 
@@ -314,7 +316,7 @@ export class Necromancer extends Monster{
 				this.defenseCreatingAnimation.restart();
 			}
 			else{
-				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+				super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}
@@ -330,26 +332,26 @@ export class Necromancer extends Monster{
 				this._shieldSound = null;
 			}
 
-			super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+			super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
 			return; //игнорируем базовую логику движения и атаки
 		}
 
 		//активация атаки
-		if(this._buildingGoal && this._buildingGoal.health > 0 && this._attackXStart)
+		if(this._goal && this._goal.health > 0 && this._attackXStart)
 		{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
 			{
 				this.attackLogic(drawsDiffMs, monsters, bottomBorder, waveLevel);
 				this.animation?.restart();
-				super.logicBase(drawsDiffMs, buildings, monsters, bottomBorder);
+				super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}
 
-		var oldBuildingGoalX = this._buildingGoal?.centerX;
-		super.logic(drawsDiffMs, buildings, monsters, bottomBorder, waveLevel);
-		var newBuildingGoalX = this._buildingGoal?.centerX;
+		var oldBuildingGoalX = this._goal?.centerX;
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomBorder, waveLevel);
+		var newBuildingGoalX = this._goal?.centerX;
 
 		if(newBuildingGoalX && oldBuildingGoalX != newBuildingGoalX){
 			this._attackXStart = newBuildingGoalX - (this.isLeftSide ? 1 : -1) * Helper.getRandom(Necromancer.minDistanceDamage, Necromancer.maxDistanceDamage);
@@ -365,8 +367,8 @@ export class Necromancer extends Monster{
 	}
 
 	attackLogic(drawsDiffMs: number, monsters: Monster[], bottomBorder: number, waveLevel: WaveData[]): void {
-		const isNotBaseBuildings = this._buildingGoal != null && this._buildingGoal.name != FlyEarth.name && this._buildingGoal.name != FlyEarthRope.name;
-		const isNotHaveAcidModifier = this._buildingGoal != null && !this._buildingGoal.modifiers.find(x => x.name == AcidRainModifier.name);
+		const isNotBaseBuildings = this._goal != null && this._goal.name != FlyEarth.name && this._goal.name != FlyEarthRope.name;
+		const isNotHaveAcidModifier = this._goal != null && !this._goal.modifiers.find(x => x.name == AcidRainModifier.name);
 		const isCallSpecialAbility = this.countSimpleAttacks >= this.countSimpleAttacksToActivateSpecialAbility;
 
 		
@@ -377,8 +379,8 @@ export class Necromancer extends Monster{
 			}
 
 			if(!this._isSpecialAbilityAcidRainCreatedSoundPlayed && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs + 100){
-				if(this._buildingGoal){
-					AudioSystem.play(this._buildingGoal.centerX, SoundCloudCreated, 0.5, 1, false, true);
+				if(this._goal){
+					AudioSystem.play(this._goal.centerX, SoundCloudCreated, 0.5, 1, false, true);
 				}
 				this._isSpecialAbilityAcidRainCreatedSoundPlayed = true;
 			}
@@ -386,8 +388,8 @@ export class Necromancer extends Monster{
 
 			if(!this._isSpecialAbilityAcidRainCreatingEnded && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs){
 				this._isSpecialAbilityAcidRainCreatingEnded = true;
-				if(this._buildingGoal){
-					this._buildingGoal.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
+				if(this._goal){
+					this._goal.addModifier(new AcidRainModifier(Necromancer.acidRainDurationMs, Necromancer.acidBlobDamage));
 				}
 			}
 	
@@ -421,12 +423,12 @@ export class Necromancer extends Monster{
 
 					newSkelet.isDisplayCreatingFromUndegroundAnimation = true;
 					newSkelet.y = bottomBorder - newSkelet.height;
-					if(this._buildingGoal) {
+					if(this._goal) {
 						let from = this.isLeftSide 
 							? this.x + this.width + 10 
-							: this._buildingGoal.x + this._buildingGoal.width + 10;
+							: this._goal.x + this._goal.width + 10;
 						let to = this.isLeftSide 
-							? this._buildingGoal.x - newSkelet.width - 10
+							? this._goal.x - newSkelet.width - 10
 							: this.x - newSkelet.width - 10;
 						let length = to - from;
 						
@@ -516,13 +518,13 @@ export class Necromancer extends Monster{
 	}
 
 	attackSimple(damage: number): void { //энергетический шар
-		if(damage > 0 && this._buildingGoal != null){
+		if(damage > 0 && this._goal != null){
 			let x1 = this.isLeftSide 
 				? this.x + this.width 
 				: this.x;
 			let y1 = this.centerY - 15;
-			let x2 = this._buildingGoal.centerX - Necromancer.chargeImage.width / 2;
-			let y2 = this._buildingGoal.centerY - Necromancer.chargeImage.height / 2;
+			let x2 = this._goal.centerX - Necromancer.chargeImage.width / 2;
+			let y2 = this._goal.centerY - Necromancer.chargeImage.height / 2;
 
 			let rotate = 0;
 			let distance = Helper.getDistance(x1, y1, x2, y2);
@@ -636,11 +638,11 @@ export class Necromancer extends Monster{
 			const newHeight = this.specialAbilityAcidRainCallAnimation.image.height * this.scaleSize;
 			this.specialAbilityAcidRainCallAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 
-			if(this._isSpecialAbilityAcidRainCreatingStarted && this._buildingGoal && this.specialAbilityAcidRainCreatingAnimation.leftTimeMs > 0){
+			if(this._isSpecialAbilityAcidRainCreatingStarted && this._goal && this.specialAbilityAcidRainCreatingAnimation.leftTimeMs > 0){
 				const width = this.specialAbilityAcidRainCreatingAnimation.image.width / this.specialAbilityAcidRainCreatingAnimation.frames / 2;
 				const height = this.specialAbilityAcidRainCreatingAnimation.image.height / 2;
-				const x = this._buildingGoal.centerX - width / 2;
-				const y = this._buildingGoal.y - height * 2;
+				const x = this._goal.centerX - width / 2;
+				const y = this._goal.y - height * 2;
 				this.specialAbilityAcidRainCreatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * width, height);
 			}
 		}

@@ -20,6 +20,10 @@ import {Coins} from '../coins/Coins';
 import {Monster} from '../monsters/Monster';
 import {Monsters} from '../monsters/Monsters';
 
+import {Units} from '../units/Units';
+import {Unit} from '../units/Unit';
+import {Miner} from '../units/Miner';
+
 import {Builder} from '../buildings/Builder';
 import {Building} from '../buildings/Building';
 import {Buildings} from '../buildings/Buildings';
@@ -80,6 +84,7 @@ export class Game {
 
 		Draw.init(canvas);
 		Mouse.init();
+		Units.init();
 		Buildings.init(isLoadResources);
 		Monsters.init(isLoadResources);
 		Coins.init(isLoadResources);
@@ -122,10 +127,14 @@ export class Game {
 			Tower.init(true);
 			Barricade.init(true);
 			Builder.init(true);
+			Miner.initForShop();
 		}
 		else{
 			if(Buildings.all.find(x => x.health < x.healthMax)){
 				Building.loadRepairResources();
+			}
+			if(Units.all.find(x => x.health < x.healthMax)){
+				Unit.loadHealingResources();
 			}
 		}
 	}
@@ -144,6 +153,8 @@ export class Game {
 			Barricade.loadResourcesAfterBuild();
 		}
 
+		Units.loadResources();
+		Unit.loadUpgradeResources();
 		Buildings.loadResources();
 		Building.loadUpgradeResources();
 		Upgrade.loadResources();
@@ -200,9 +211,9 @@ export class Game {
 			Waves.logic(drawsDiffMs, Game.bottomShiftBorder);
 		}
 
-		Buildings.logic(drawsDiffMs, Waves.isStarted, Game.isGameOver, Monsters.all, Game.bottomShiftBorder);
+		Buildings.logic(drawsDiffMs, Waves.isStarted, Game.isGameOver, Monsters.all, Units.all, Game.bottomShiftBorder);
 		
-		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
+		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Units.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
 		
 		Coins.logic(drawsDiffMs, Game.bottomShiftBorder);
 		
@@ -410,12 +421,25 @@ export class Game {
 			else if(Barricade.shopItem == shopItem){
 				building = new Barricade(0);
 			}
-
-			if(building == null){
+			else{
 				throw `unexpected shopItem with type = Building (buyThing('${shopItem.name}')).`;
 			}
 
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
+		}
+		else if(shopItem.category == ShopCategoryEnum.UNITS){
+			const paddingFlyEarch = Buildings.flyEarth.width / 10;
+			const x = Helper.getRandom(Buildings.flyEarth.x + paddingFlyEarch, Buildings.flyEarth.x + Buildings.flyEarth.width - paddingFlyEarch)
+			
+			if(Miner.shopItem == shopItem){
+				new Miner(x); //TODO
+			}
+			else{
+				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
+			}
+		}
+		else{
+			throw `unexpected shopItem category = '${shopItem.category}'`;
 		}
 	}
 }

@@ -4,7 +4,7 @@ import {AttackedObject} from "../../models/AttackedObject";
 
 import AnimationInfinite from "../../models/AnimationInfinite";
 
-import fireImage from '../../assets/img/buildings/tower/fire/fire.png'; 
+import fireImage from '../../assets/img/fire.png'; 
 
 /* Горит
  * наносит утихающий урон
@@ -41,8 +41,8 @@ export class FireModifier extends Modifier{
 		this._lifeTimeMsInitial = lifeTimeMsInitial || lifeTimeMs;
 	}
 
-	logic(object: AttackedObject, drawsDiffMs: number, objects: AttackedObject[]){
-		super.logic(object, drawsDiffMs, objects);
+	logic(object: AttackedObject, drawsDiffMs: number){
+		super.logic(object, drawsDiffMs);
 
 		//ожидания времени нанесения урона
 		if(this._damageLeftTimeMs > 0){

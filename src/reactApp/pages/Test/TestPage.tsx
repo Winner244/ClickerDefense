@@ -28,6 +28,8 @@ import { FireModifier } from '../../../gameApp/modifiers/FireModifier';
 import { FlyEarth } from '../../../gameApp/buildings/FlyEarth';
 import { Necromancer } from '../../../gameApp/monsters/Necromancer';
 import { Skelet } from '../../../gameApp/monsters/Skelet';
+import { Units } from '../../../gameApp/units/Units';
+import { Unit } from '../../../gameApp/units/Unit';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -1410,7 +1412,10 @@ class TestPage extends React.Component {
 
     componentDidMount(){
         //pre load sounds/images
+        Units.loadResources();
         Buildings.loadResources();
+        Unit.loadHealingResources();
+        Unit.loadUpgradeResources();
         Building.loadRepairResources();
         Building.loadUpgradeResources();
         Monster.loadHitSounds();

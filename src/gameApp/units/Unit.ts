@@ -1,201 +1,226 @@
-import {FireModifier} from '../gameApp/modifiers/FireModifier';
-import {Modifier} from '../gameApp/modifiers/Modifier';
-import {AcidRainModifier} from '../gameApp/modifiers/AcidRainModifier';
+import {Draw} from '../gameSystems/Draw';
 
-import {Labels} from '../gameApp/labels/Labels';
-
-import {Draw} from '../gameApp/gameSystems/Draw';
-
-import {ImageHandler} from '../gameApp/ImageHandler';
-
-import {Helper} from '../helpers/Helper';
-
+import {ImageHandler} from '../../gameApp/ImageHandler';
 import {AttackedObject} from '../../models/AttackedObject';
+import AnimationInfinite from '../../models/AnimationInfinite';
+import ParameterItem from '../../models/ParameterItem';
+import Improvement from '../../models/Improvement';
+
+import {Labels} from '../labels/Labels';
+
+import {Gamer} from '../gamer/Gamer';
+
+import {Monster} from '../monsters/Monster';
+import {Building} from '../buildings/Building';
+
+import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
+import HealthIcon from '../../assets/img/icons/health.png';
+import ShieldIcon from '../../assets/img/icons/shield.png';
 
 
 /** Базовый класс для всех Юнитов пользователя */
-export class Unit {
-	readonly imageHandler: ImageHandler; //управление lazy загрузкой картинок и их готовности к отображению
-	readonly id: string;
-	
-	name: string;
+export class Unit extends AttackedObject {
+	static readonly healingImage: HTMLImageElement = new Image(); //картинка для анимации лечения
+	static readonly upgradeAnimation: AnimationInfinite = new AnimationInfinite(90, 3000); //анимация апгрейда
 
-	image: HTMLImageElement;
-	filteredImages: { [Key: string]: OffscreenCanvas };
-
-	initialHealthMax: number; //изначальный максимум хп
-	healthMax: number; //максимум хп
-	health: number;
-	defense: number = 0; //защита (уменьшает урон)
-	
-	isLeftDirection: boolean; // движется налево?
-
-	x: number;
-	y: number;
+	static readonly healingAnimationDurationMs: number = 1800; //продолжительность анимации лечения (миллисекунды)
+	static readonly healingDiscount: number = 2; //во сколько раз будет дешевле лечение по отношению к его стоимости
 
 
-	modifiers: Modifier[]; //бафы/дебафы
+	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки лечения в окне апгрейда юнита рядом с этой характеристикой
 
-	constructor(x: number, y: number, healthMax: number, image: HTMLImageElement, name: string, imageHandler: ImageHandler)
+	//поля свойства экземпляра
+	price: number;
+
+	isSupportHealing: boolean; //можно ли лечить? (при наведении будет отображаться кнопка лечения между волнами)
+	isSupportUpgrade: boolean; //поддерживает ли апгрейд? (при наведении будет отображаться кнопка апгрейда между волнами)
+
+	infoItems: ParameterItem[];  //информация отображаемая в окне юнита
+	improvements: Improvement[]; //улучшения юнита
+
+	healingPricePerHealth: number; //сколько стоит 1 хп вылечить
+
+	//технические поля экземпляра
+	protected _isDisplayHealingAnimation: boolean; //отображается ли сейчас анимация лечения?
+	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации починки (миллисекунды)
+	protected _isDisplayedUpgradeWindow: boolean; //открыто ли в данный момент окно по апгрейду данного здания? если да, то нужно подсвечивать данного юнита
+
+
+	constructor(x: number, y: number, 
+		healthMax: number, 
+		image: HTMLImageElement, 
+		name: string, 
+		imageHandler: ImageHandler,
+		frames: number, 
+		animationDurationMs: number,
+		price: number, 
+		isLand: boolean = true, 
+		reduceHover: number = 0,
+		isSupportHealing: boolean = true,
+		isSupportUpgrade: boolean = true)
 	{
-		this.id = Helper.generateUid();
+		super(x, y, healthMax, 1, image, true, isLand, reduceHover, name, imageHandler, frames, animationDurationMs);
 
-		this.image = image;
+		this.price = price;
 
-		this.initialHealthMax = this.healthMax = this.health = healthMax; //максимум хп
+		this.isSupportHealing = isSupportHealing;
+		this.isSupportUpgrade = isSupportUpgrade;
 
-		this.isLeftDirection = false; // движется налево?
+		this._isDisplayHealingAnimation = false;
+		this._healingAnimationLeftTimeMs = 0;
 
-		this.x = x;
-		this.y = y;
+		this._isDisplayedUpgradeWindow = false;
 
-		this.name = name;
+		this.healingPricePerHealth = this.price / this.healthMax / Unit.healingDiscount;
 
-		this.imageHandler = imageHandler;
+		this.infoItems = [];
 
-		this.filteredImages = {};
-
-		this.modifiers = [];
+		this.improvements = [];
 	}
 
-	get height(): number {
-		return this.image.height;
-	}
-	get width(): number {
-		return this.image.width;
-	}
-
-	get shiftXForCenter(){
-		return 0;
-	}
-	get shiftYForCenter(){
-		return 0;
-	}
-
-	get centerX(): number {
-		return this.x + this.width / 2;
-	}
-	get centerY(): number {
-		return this.y + this.height / 2;
-	}
 	
-	logicBase(drawsDiffMs: number, monsters: AttackedObject[], bottomBorder: number): void{
-		if(!this.imageHandler.isImagesCompleted){
-			return;
-		}
-
-		this.modifiers.forEach(modifier => modifier.logic(this, drawsDiffMs, monsters));
+	static loadHealingResources(): void{
+		//Unit.healingImage.src = HealingImage;
+		//AudioSystem.load(HealingSoundUrl);
 	}
 
-	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{
-		if(damage <= 0){
-			console.error('negative damage', damage);
-			return 0;
-		}
+	static loadUpgradeResources(): void{
+		Unit.upgradeAnimation.image.src = UpgradeAnimation;
+	}
 
-		let defense = Math.max(0, this.defense + this.defense * this.modifiers.reduce((sum, el) => sum + el.defenceMultiplier, 0));
-		let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageInMultiplier);
+	loadedResourcesAfterBuild(){
+		this.infoItems = [
+			new ParameterItem(Unit.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
-		const realDamage = Math.max(0, damage + damage * damageMultiplier - defense);
-		if(realDamage <= 0){
-			return 0;
+			new ParameterItem('Защита', () => this.defense.toFixed(1), ShieldIcon, this.price * 2, () => this.defense += 0.1)
+		];
+	}
+
+
+
+
+	set isDisplayedUpgradeWindow(value: boolean){
+		this._isDisplayedUpgradeWindow = value;
+	}
+	get isDisplayedUpgradeWindow(): boolean{
+		return this._isDisplayedUpgradeWindow;
+	}
+
+	improveHealthGetValue() : string {
+		let value = this.health != this.healthMax 
+			? `${this.health.toFixed(0)}<span> из ${this.healthMax}</span>` 
+			: this.healthMax;
+
+		return value + '';
+	}
+
+	improveHealth(improvePoints: number) : void {
+		this.health += improvePoints;
+		this.healthMax += improvePoints;
+	}
+
+
+	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean, isBuilderActive: boolean): boolean {
+		if(isWaveEnded && isMouseIn && !isBuilderActive){
+			let isDisplayRepairButton =  this.isSupportHealing && this.health < this.healthMax;
+			if(isDisplayRepairButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
+				/*if(!UnitsButtons.isEnterMouse){
+					let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
+					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
+					let healingPrice = this.getHealingPrice();
+					UnitsButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, healingPrice, this);
+				}*/
+			}
 		}
 		
-		this.health -= realDamage;
-		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + realDamage.toFixed(1), 3000);
-		return realDamage;
+		return false;
 	}
 
-	destroy(): void{
-		this.modifiers.forEach(modifier => modifier.destroy());
-	}
-
-	addModifier(newModifier: Modifier): void{
-		const existedModifier = this.modifiers.find(modifier => modifier.name == newModifier.name);
-		if(existedModifier){
-			if(existedModifier instanceof FireModifier && newModifier instanceof FireModifier){
-				existedModifier.fireDamageInSecond = Math.max(existedModifier.fireDamageInSecond || 0, newModifier.fireDamageInSecond || 0);
-				existedModifier.lifeTimeMs = Math.max(existedModifier.lifeTimeMs || 0, newModifier.lifeTimeMs || 0);
-			}
-			else{
-				existedModifier.damageOutMultiplier += newModifier.damageOutMultiplier;
-				existedModifier.damageInMultiplier += newModifier.damageInMultiplier;
-				existedModifier.healthMultiplier += newModifier.healthMultiplier;
-				existedModifier.speedMultiplier += newModifier.speedMultiplier;
-			}
-		}
-		else{
-			this.modifiers.push(newModifier);
-		}
-	}
-
-	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null, filter: string|null = null){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		this.modifiers.forEach(modifier => modifier.drawBehindObject(this, drawsDiffMs));
-		const isAcidRain = this.modifiers.find(x => x.name == AcidRainModifier.name);
-		if(isAcidRain){
-			filter = 'hue-rotate(40deg)';
+		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
+		
+		if(this._impulse > 1){
+			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
 		}
 
-
-		x = x ?? this.x;
-		y = y ?? this.y;
-		let isInvert = !this.isLeftDirection;
-		let invertSign = isInvert ? -1 : 1;
-
-		if(isInvert){
-			Draw.ctx.save();
-			Draw.ctx.scale(-1, 1);
-		}
-
-		this.drawObject(drawsDiffMs, isGameOver, invertSign, x, y, filter);
-
-		if(isInvert){
-			Draw.ctx.restore();
-		}
-
-		this.modifiers.forEach(modifier => modifier.drawAheadObject(this, drawsDiffMs));
-	}
-
-	drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean){
-		this.modifiers.forEach(modifier => modifier.drawAheadObjects(this, drawsDiffMs));
-	}
-
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
-		x = x ?? this.x;
-		y = y ?? this.y;
-		if(filter){
-			if(filter in this.filteredImages){
-				Draw.ctx.drawImage(this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
-			}
-			else {
-				//create filtered image
-				this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
-				let context = this.filteredImages[filter].getContext('2d');
-				if(context){
-					context.filter = filter;
-					context.drawImage(this.image, 0, 0, this.width, this.height);
-				}
-				else{
-					console.error('offscreen context to fileting image is empty!');
-				}
+		if(this._isDisplayHealingAnimation){
+			this._healingAnimationLeftTimeMs -= drawsDiffMs;
+			if(this._healingAnimationLeftTimeMs <= 0){
+				this._isDisplayHealingAnimation = false;
 			}
 		}
-		else {
-			Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
+
+		if(this.y + this.height > Draw.canvas.height){
+			this.y = Draw.canvas.height - this.height;
 		}
 	}
 
-	drawHealthBase(x: number|null = null, y: number|null = null, width: number|null = null): void{
-		x = x ?? this.x;
-		y = y ?? this.y;
-		width = width ?? this.width;
+	getHealingPrice() : number {
+		return Math.ceil((this.healthMax - this.health) * this.healingPricePerHealth);
+	}
 
-		if(this.health < this.healthMax && this.health > 0){
-			Draw.drawHealth(x, y, width, this.healthMax, this.health);
+	isCanBeRepaired() : boolean {
+		return Gamer.coins >= this.getHealingPrice();
+	}
+
+	healing(): boolean{
+		let healingPrice = this.getHealingPrice();
+		if(this.isCanBeRepaired()){
+			Gamer.coins -= healingPrice;
+			this.health = this.healthMax;
+			//AudioSystem.play(this.centerX, HealingSoundUrl, 0.4, 1, false, true);
+			Labels.createCoinLabel(this.x + this.width, this.y + this.height / 3, '-' + healingPrice, 2000);
+			this._isDisplayHealingAnimation = true;
+			this._healingAnimationLeftTimeMs = Unit.healingAnimationDurationMs;
+			return true;
+		}
+
+		return false;
+	}
+
+	draw(drawsDiffMs: number, isGameOver: boolean): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		let x = this.x;
+		let y = this.y;
+
+		if(this.isDisplayedUpgradeWindow){
+			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 10, y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
+		}
+
+		let filter: string|null = null;
+		if (this.isDisplayedUpgradeWindow) {
+			filter = 'brightness(1.7)';
+		}
+
+		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
+
+		if(this.impulse > 0){
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+		}
+	}
+
+	drawHealth(): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		super.drawHealthBase(this.x + 15, this.y - 10, this.width - 30);
+	}
+
+	drawRepairingAnumation(): void{
+		if(this._isDisplayHealingAnimation){
+			//Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
+			//Draw.ctx.drawImage(Building.healingImage, -25, -50, 50, 50);
+			//Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		}
 	}
 }

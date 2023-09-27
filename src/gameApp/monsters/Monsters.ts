@@ -2,6 +2,8 @@ import {SimpleObject} from '../../models/SimpleObject';
 import {WaveData} from '../../models/WaveData';
 import Animation from '../../models/Animation';
 
+import {Unit} from '../units/Unit';
+
 import {Building} from '../buildings/Building';
 import {FlyEarth} from '../buildings/FlyEarth';
 
@@ -86,7 +88,7 @@ export class Monsters{
 		return false;
 	}
 
-	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], isGameOver: boolean, bottomBorder: number, waveLevel: WaveData[]): void{
+	static logic(drawsDiffMs: number, flyEarth: FlyEarth, buildings: Building[], units: Unit[], isGameOver: boolean, bottomBorder: number, waveLevel: WaveData[]): void{
 		//уничтожение монстров
 		if(!isGameOver && Monsters.all.length){
 			for(let i = 0; i < Monsters.all.length; i++){
@@ -124,7 +126,7 @@ export class Monsters{
 
 		if(Monsters.all.length && !isGameOver){
 			//логика передвижения
-			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, bottomBorder, waveLevel));
+			Monsters.all.forEach(monster => monster.logic(drawsDiffMs, buildings, this.all, units, bottomBorder, waveLevel));
 
 			//вторичная логика модификаторов
 			Monsters.all.forEach(monster => monster.modifiers.forEach(modifier => modifier.logicSpread(monster, this.all)));
