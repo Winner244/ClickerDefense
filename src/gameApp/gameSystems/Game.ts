@@ -432,11 +432,10 @@ export class Game {
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 		else if(shopItem.category == ShopCategoryEnum.UNITS){
-			const paddingFlyEarch = Buildings.flyEarth.width / 10;
-			const x = Helper.getRandom(Buildings.flyEarth.x + paddingFlyEarch, Buildings.flyEarth.x + Buildings.flyEarth.width - paddingFlyEarch)
+			const x = Helper.getRandom(Buildings.flyEarth.x + 10, Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageLength - 10)
 			
 			if(Miner.shopItem == shopItem){
-				Units.all.push(new Miner(x, Buildings.flyEarth.y));
+				Units.add(new Miner(x, Buildings.flyEarth.y));
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;

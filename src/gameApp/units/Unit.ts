@@ -202,10 +202,6 @@ export class Unit extends AttackedObject {
 		}
 
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
-
-		if(this.impulse > 0){
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-		}
 	}
 
 	drawHealth(): void{

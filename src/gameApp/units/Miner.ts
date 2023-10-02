@@ -1,8 +1,14 @@
 import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
+import {Draw} from '../gameSystems/Draw';
 
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
+
+import {Monster} from '../monsters/Monster';
+
+import {Buildings} from '../buildings/Buildings';
+import {Building} from '../buildings/Building';
 
 import Animation from '../../models/Animation';
 import ShopItem from '../../models/ShopItem';
@@ -26,16 +32,32 @@ export class Miner extends Unit{
 	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
 
-	private readonly fallEndAnimation: Animation;
-
 	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.wait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS);
+
+	public goalY: number;
+
+	private readonly _fallEndAnimation: Animation;
+	private _isFall: boolean;
 
 	constructor(x: number, y: number) {
 		super(x, y, 3, Miner.wait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
 
-		this.fallEndAnimation = new Animation(31, 31 * 100, );
+		this._fallEndAnimation = new Animation(31, 31 * 100, );
+
+		this._isFall = false;
+		this.isLeftSide = false;
+
+		
+		const flyEarth = Buildings.flyEarth;
+		const yTop = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32;
+		const yBottom = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32;
+		this.goalY = Helper.getRandom(yBottom, yTop);
 
         Miner.init(true); //reserve init
+	}
+
+	public static get imageLength() : number{
+		return Miner.wait1Image?.width || 75;
 	}
 
 	static initForShop(): void{
@@ -50,6 +72,25 @@ export class Miner extends Unit{
 		}
 	}
 
+
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
+		
+		//gravitations
+		if(this.y + this.height < this.goalY){
+			this.y++;
+			this._isFall = true;
+		}
+		else{
+			this._isFall = false;
+		}
+		
+	}
+
 	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
@@ -58,6 +99,20 @@ export class Miner extends Unit{
 			//	[0.05], false, 1, true);
 		}
 		return damage;
+	}
+
+
+	draw(drawsDiffMs: number, isGameOver: boolean): void{
+		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		if(this._isFall){
+			Draw.ctx.drawImage(Miner.fallImage, this.x, this.y, this.width, this.height);
+		}
+		else{
+			super.draw(drawsDiffMs, isGameOver);
+		}
 	}
 
 }

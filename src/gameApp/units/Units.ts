@@ -4,6 +4,8 @@ import {Building} from "../buildings/Building";
 
 import {Monster} from "../monsters/Monster";
 
+import {Miner} from "./Miner";
+
 import {Unit} from "./Unit";
 
 
@@ -20,6 +22,16 @@ export class Units {
 	static loadResources(){
 		//this.deathAnimation.image.src = DeathImage;
 		//AudioSystem.load(DeathSound);
+	}
+
+	static add(unit: Unit){
+		if(unit.name == Miner.name){
+			const max = Units.all.findIndex(x => x.name == Miner.name && (<Miner>x).goalY > (<Miner>unit).goalY);
+			Units.all.splice(max || 0, 0, unit);
+		}
+		else{
+			Units.all.push(unit);
+		}
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
