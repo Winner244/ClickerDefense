@@ -42,7 +42,7 @@ export class Miner extends Unit{
 	constructor(x: number, y: number) {
 		super(x, y, 3, Miner.wait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
 
-		this._fallEndAnimation = new Animation(31, 31 * 100, );
+		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
 
 		this._isFall = false;
 		this.isLeftSide = false;
@@ -109,6 +109,9 @@ export class Miner extends Unit{
 
 		if(this._isFall){
 			Draw.ctx.drawImage(Miner.fallImage, this.x, this.y, this.width, this.height);
+		}
+		else if(this._fallEndAnimation.leftTimeMs > 0){
+			this._fallEndAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
 		}
 		else{
 			super.draw(drawsDiffMs, isGameOver);
