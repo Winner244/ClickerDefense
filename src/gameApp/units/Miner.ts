@@ -56,8 +56,17 @@ export class Miner extends Unit{
         Miner.init(true); //reserve init
 	}
 
-	public static get imageLength() : number{
-		return Miner.wait1Image?.width || 75;
+	get width(){
+		return 75;
+	}
+
+	get height(){
+		return 77;
+	}
+
+	public static get imageWidth() : number{
+		//return Miner.wait1Image?.width || 75;
+		return 75;
 	}
 
 	static initForShop(): void{
@@ -82,7 +91,7 @@ export class Miner extends Unit{
 		
 		//gravitations
 		if(this.y + this.height < this.goalY){
-			this.y++;
+			this.y+=1.5;
 			this._isFall = true;
 		}
 		else{

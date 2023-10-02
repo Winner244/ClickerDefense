@@ -432,7 +432,7 @@ export class Game {
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 		else if(shopItem.category == ShopCategoryEnum.UNITS){
-			const x = Helper.getRandom(Buildings.flyEarth.x + 10, Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageLength - 10)
+			const x = Helper.getRandom(Buildings.flyEarth.x + 10, Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageWidth - 10)
 			
 			if(Miner.shopItem == shopItem){
 				Units.add(new Miner(x, Buildings.flyEarth.y));
