@@ -215,7 +215,7 @@ export class Building extends AttackedObject{
 			}
 		}
 
-		if(this.y + this.height > Draw.canvas.height){
+		if(this.y + this.height - bottomShiftBorder > Draw.canvas.height){
 			this.y = Draw.canvas.height - this.height;
 		}
 	}
