@@ -86,7 +86,7 @@ export class Units {
 	}
 
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
-		//разрушения зданий
+		//гибель юнитов
 		this.deaths.forEach(explosion => {
 			//let newHeight = this.deathAnimation.image.height * (explosion.size.width / (this.deathAnimation.image.width / this.deathAnimation.frames));
 			//this.deathAnimation.leftTimeMs = explosion.leftTimeMs;

@@ -119,7 +119,7 @@ export class Building extends AttackedObject{
 	}
 
 
-	set impulse(value: number){
+	public set impulse(value: number){
 		if(value > this.maxImpulse){
 			value = this.maxImpulse;
 		}
@@ -129,7 +129,7 @@ export class Building extends AttackedObject{
 
 		this._impulsePharosSign = value < 0 ? true : false;
 		this._impulsePharos = value;
-		super.impulse = value;
+		this._impulse = value <= 1 ? 0 : value;
 	}
 
 	set isDisplayedUpgradeWindow(value: boolean){

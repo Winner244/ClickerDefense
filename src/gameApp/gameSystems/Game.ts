@@ -312,6 +312,8 @@ export class Game {
 		Builder.draw(drawsDiffMs, Game.isGameOver);
 	
 		Coins.draw();
+
+		Units.draw(drawsDiffMs, Game.isGameOver);
 	
 		Monsters.draw(drawsDiffMs, Game.isGameOver);
 		Monsters.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
@@ -434,7 +436,7 @@ export class Game {
 			const x = Helper.getRandom(Buildings.flyEarth.x + paddingFlyEarch, Buildings.flyEarth.x + Buildings.flyEarth.width - paddingFlyEarch)
 			
 			if(Miner.shopItem == shopItem){
-				new Miner(x); //TODO
+				Units.all.push(new Miner(x, Buildings.flyEarth.y));
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;

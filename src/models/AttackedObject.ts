@@ -114,7 +114,7 @@ export class AttackedObject {
 		return this.y + this.height / 2;
 	}
 
-	set impulse(value: number){
+	public set impulse(value: number){
 		if(value > this.maxImpulse){
 			value = this.maxImpulse;
 		}
@@ -124,7 +124,7 @@ export class AttackedObject {
 
 		this._impulse = Math.abs(value);
 	}
-	get impulse(): number{
+	public get impulse(): number{
 		if(this._impulse <= 1){
 			return 0;
 		}
