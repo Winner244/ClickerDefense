@@ -436,6 +436,7 @@ export class Game {
 			
 			if(Miner.shopItem == shopItem){
 				Units.add(new Miner(x, Buildings.flyEarth.y));
+				FlyEarth.loadSeparateCrystals();
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;

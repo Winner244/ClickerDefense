@@ -105,7 +105,9 @@ export class Units {
 			//this.deathAnimation.draw(drawsDiffMs, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
 		});
 
-		Units.all.forEach(unit => unit.draw(drawsDiffMs, isGameOver));
+		Units.all.forEach(unit => {
+			unit.draw(drawsDiffMs, isGameOver);
+		});
 	}
 
 	static drawHealth(): void{
