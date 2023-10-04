@@ -8,7 +8,7 @@
 		color: #ff0404;
 	}
 
-	&__button-next, &__button-all{
+	&__button-next, &__button-all, &__button-prev{
 		position: absolute;
 		right: 0;
 		top: 0;
@@ -16,6 +16,10 @@
 		color: black;
 		text-decoration: none;
 		padding: 2px 5px;
+	}
+	
+	&__button-prev{
+		right: 150px;
 	}
 
 	&__button-all{

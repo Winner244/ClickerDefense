@@ -1415,6 +1415,115 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Золотодобытчики - порядок отрисовки 1",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y);
+                    miner2.goalY = y;
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y);
+                    miner3.goalY = y;
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - порядок отрисовки 2",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y);
+                    miner2.goalY = y;
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y);
+                    miner3.goalY = y;
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - порядок отрисовки 3",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y);
+                    miner3.goalY = y;
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+                    
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y);
+                    miner2.goalY = y;
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                }, 300);
+            }
+        },
+
+        {
             key: "Золотодобытчик - за кристаллом",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -1678,6 +1787,7 @@ class TestPage extends React.Component {
         if(this.text){
             return <div className='test-page'>
                 <div className='test-page__name-test noselect'>{this.text}</div>
+                <a className='test-page__button-prev' href={'/test?v=' + (variant - 1)}>Prev test</a>
                 <a className='test-page__button-all' href={'/test'}>all</a>
                 <a className='test-page__button-next' href={'/test?v=' + (variant + 1)}>Next test</a>
             </div>;
