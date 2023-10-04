@@ -30,6 +30,7 @@ import { Necromancer } from '../../../gameApp/monsters/Necromancer';
 import { Skelet } from '../../../gameApp/monsters/Skelet';
 import { Units } from '../../../gameApp/units/Units';
 import { Unit } from '../../../gameApp/units/Unit';
+import { Miner } from '../../../gameApp/units/Miner';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -1391,6 +1392,226 @@ class TestPage extends React.Component {
                 setTimeout(() => Buildings.flyEarth.health-=10, 1400);
                 setTimeout(() => Buildings.flyEarth.health-=10, 1500);
                 setTimeout(() => Buildings.flyEarth.health-=100, 1800);
+            }
+        },
+
+        {
+            key: "Золотодобытчик - Авто появление",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                setTimeout(() => {
+                    Game.buyThing(Miner.shopItem);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчик - за кристаллом",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчик - перед кристаллом",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - за кристаллами",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y);
+                    miner2.goalY = y;
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y);
+                    miner3.goalY = y;
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    var y = Buildings.flyEarth.centerY - 85;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y);
+                    miner4.goalY = y;
+                    miner4.loadedResourcesAfterBuild();
+                    Units.all.push(miner4);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - перед кристаллами",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 70 + 25;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y);
+                    miner2.goalY = y;
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80 + 25;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y);
+                    miner3.goalY = y;
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    var y = Buildings.flyEarth.centerY - 85 + 25;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y);
+                    miner4.goalY = y;
+                    miner4.loadedResourcesAfterBuild();
+                    Units.all.push(miner4);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - перед и за кристаллами",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
+                    miner1.goalY = y;
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y);
+                    miner2.goalY = y;
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y);
+                    miner3.goalY = y;
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    var y = Buildings.flyEarth.centerY - 85;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y);
+                    miner4.goalY = y;
+                    miner4.loadedResourcesAfterBuild();
+                    Units.all.push(miner4);
+
+                    
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner5 = new Miner(Buildings.flyEarth.centerX - 20 + 10, y);
+                    miner5.goalY = y;
+                    miner5.loadedResourcesAfterBuild();
+                    Units.all.push(miner5);
+
+
+                    var y = Buildings.flyEarth.centerY - 70 + 25;
+                    var miner6 = new Miner(Buildings.flyEarth.centerX - 100 + 10, y);
+                    miner6.goalY = y;
+                    miner6.loadedResourcesAfterBuild();
+                    Units.all.push(miner6);
+
+
+                    var y = Buildings.flyEarth.centerY - 80 + 25;
+                    var miner7 = new Miner(Buildings.flyEarth.centerX - 180 + 10, y);
+                    miner7.goalY = y;
+                    miner7.loadedResourcesAfterBuild();
+                    Units.all.push(miner7);
+
+
+                    var y = Buildings.flyEarth.centerY - 85 + 25;
+                    var miner8 = new Miner(Buildings.flyEarth.centerX + 75 + 10, y);
+                    miner8.goalY = y;
+                    miner8.loadedResourcesAfterBuild();
+                    Units.all.push(miner8);
+                }, 300);
             }
         },
     ];
