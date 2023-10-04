@@ -14,7 +14,7 @@ import Animation from '../../models/Animation';
 
 import {Cursor} from '../gamer/Cursor';
 
-import FlyEarthImage from '../../assets/img/buildings/flyEarth.png';  
+import FlyEarthImage from '../../assets/img/buildings/flyEarth/flyEarth.png';  
 import ExplosionImage from '../../assets/img/explosionBomb.png'; 
 
 import PickSoundUrl1 from '../../assets/sounds/buildings/flyEarth/pick1.mp3'; 
