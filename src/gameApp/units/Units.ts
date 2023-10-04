@@ -1,6 +1,7 @@
 import {SimpleObject} from "../../models/SimpleObject";
 
 import {Building} from "../buildings/Building";
+import {Buildings} from "../buildings/Buildings";
 
 import {Monster} from "../monsters/Monster";
 
@@ -105,9 +106,51 @@ export class Units {
 			//this.deathAnimation.draw(drawsDiffMs, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
 		});
 
-		Units.all.forEach(unit => {
-			unit.draw(drawsDiffMs, isGameOver);
-		});
+		//отдельная отрисовка золотодобытчиков на летающей земле
+		var miners = Units.all.filter(x => x.name == Miner.name);
+		if(miners.length){
+			var prevMiner: Miner|null = null;
+
+			miners.forEach(unit => {
+				unit.draw(drawsDiffMs, isGameOver);
+				this.drawFlyEarthCrystals(drawsDiffMs, isGameOver, prevMiner, <Miner>unit);
+				prevMiner = <Miner>unit;
+			});
+			
+			this.drawFlyEarthCrystals(drawsDiffMs, isGameOver, prevMiner);
+		}
+
+		//отрисовка остальных юнитов
+		Units.all
+			.filter(x => x.name != Miner.name)
+			.forEach(unit => unit.draw(drawsDiffMs, isGameOver));
+	}
+
+	static drawFlyEarthCrystals(drawsDiffMs: number, isGameOver: boolean, prevMiner: Miner|null, nextMiner: Miner|null = null){
+		if(!prevMiner){
+			return;
+		}
+
+		var crystal1YBottom = Buildings.flyEarth.crystal1PositionReDraw.location.y + Buildings.flyEarth.crystal1PositionReDraw.size.height;
+		var crystal2YBottom = Buildings.flyEarth.crystal2PositionReDraw.location.y + Buildings.flyEarth.crystal2PositionReDraw.size.height;
+		var crystal3YBottom = Buildings.flyEarth.crystal3PositionReDraw.location.y + Buildings.flyEarth.crystal3PositionReDraw.size.height;
+		var crystal4YBottom = Buildings.flyEarth.crystal4PositionReDraw.location.y + Buildings.flyEarth.crystal4PositionReDraw.size.height;
+
+		if((!nextMiner || nextMiner.goalY > crystal1YBottom) && prevMiner.goalY < crystal1YBottom){
+			Buildings.flyEarth.drawCrystal1(drawsDiffMs, isGameOver);
+		}
+		
+		if((!nextMiner || nextMiner.goalY > crystal2YBottom) && prevMiner.goalY < crystal2YBottom){
+			Buildings.flyEarth.drawCrystal2(drawsDiffMs, isGameOver);
+		}
+
+		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom){
+			Buildings.flyEarth.drawCrystal3(drawsDiffMs, isGameOver);
+		}
+
+		if((!nextMiner || nextMiner.goalY > crystal4YBottom) && prevMiner.goalY < crystal4YBottom){
+			Buildings.flyEarth.drawCrystal4(drawsDiffMs, isGameOver);
+		}
 	}
 
 	static drawHealth(): void{
