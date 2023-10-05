@@ -205,15 +205,15 @@ export class FlyEarth extends Building{
 	}
 
 	drawCrystal1(drawsDiffMs: number, isGameOver: boolean){
-		FlyEarth.crystal1Image.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+		FlyEarth.crystal1Image.draw(drawsDiffMs, isGameOver, this.crystal1PositionReDraw.location.x, this.crystal1PositionReDraw.location.y, this.crystal1PositionReDraw.size.width, this.crystal1PositionReDraw.size.height);
 	}
 	drawCrystal2(drawsDiffMs: number, isGameOver: boolean){
-		FlyEarth.crystal2Image.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+		FlyEarth.crystal2Image.draw(drawsDiffMs, isGameOver, this.crystal2PositionReDraw.location.x, this.crystal2PositionReDraw.location.y, this.crystal2PositionReDraw.size.width, this.crystal2PositionReDraw.size.height);
 	}
 	drawCrystal3(drawsDiffMs: number, isGameOver: boolean){
-		FlyEarth.crystal3Image.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+		FlyEarth.crystal3Image.draw(drawsDiffMs, isGameOver, this.crystal3PositionReDraw.location.x, this.crystal3PositionReDraw.location.y, this.crystal3PositionReDraw.size.width, this.crystal3PositionReDraw.size.height);
 	}
 	drawCrystal4(drawsDiffMs: number, isGameOver: boolean){
-		FlyEarth.crystal4Image.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+		FlyEarth.crystal4Image.draw(drawsDiffMs, isGameOver, this.crystal4PositionReDraw.location.x, this.crystal4PositionReDraw.location.y, this.crystal4PositionReDraw.size.width, this.crystal4PositionReDraw.size.height);
 	}
 }
