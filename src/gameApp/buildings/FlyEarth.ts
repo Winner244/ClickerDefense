@@ -39,6 +39,7 @@ export class FlyEarth extends Building{
 
 	private static readonly frames: number = 4;
 	private static readonly animationDuration: number = 700;
+	private static readonly scaleSize: number = 0.75;
 
 
 	//отдельные кристаллы - нужны для отрисовки золотодобытчиков на летающей земле за кристаллами (сама картинка земли так же имеет эти кристаллы)
@@ -50,7 +51,7 @@ export class FlyEarth extends Building{
 	private _explosionParticles: Particle[] = [];
 
 	constructor(x: number, y: number) {
-		super(x, y, false, false, FlyEarth.name, 0.75,
+		super(x, y, false, false, FlyEarth.name, FlyEarth.scaleSize,
 			FlyEarth.image, FlyEarth.frames, FlyEarth.animationDuration, 15, 
 			100, 0, false, false,
 			FlyEarth.imageHandler);
@@ -60,30 +61,30 @@ export class FlyEarth extends Building{
 
 	//позиция кристалов, если нижняя часть майнера внутри него - то нужно отрисовать кристалл поверх
 	public get crystal1PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 50, this.y + 160, 36, 37, 0);
+		return new SimpleObject(this.x + 50 * FlyEarth.scaleSize, this.y + 160 * FlyEarth.scaleSize, 36 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal2PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 139, this.y + 164, 41, 45, 0);
+		return new SimpleObject(this.x + 139 * FlyEarth.scaleSize, this.y + 164 * FlyEarth.scaleSize, 41 * FlyEarth.scaleSize, 45 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal3PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 257, this.y + 152, 37, 35, 0);
+		return new SimpleObject(this.x + 257 * FlyEarth.scaleSize, this.y + 152 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal4PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 374, this.y + 154, 35, 35, 0);
+		return new SimpleObject(this.x + 374 * FlyEarth.scaleSize, this.y + 154 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 0);
 	}
 
 	//позиция кристаллов, где майнеры не должны находится и пробегать
 	public get crystal1PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 57, this.y + 185, 27, 10, 0);
+		return new SimpleObject(this.x + 57 * FlyEarth.scaleSize, this.y + 185 * FlyEarth.scaleSize, 27 * FlyEarth.scaleSize, 10 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal2PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 145, this.y + 193, 31, 15, 0);
+		return new SimpleObject(this.x + 145 * FlyEarth.scaleSize, this.y + 193 * FlyEarth.scaleSize, 31 * FlyEarth.scaleSize, 15 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal3PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 260, this.y + 170, 23, 15, 0);
+		return new SimpleObject(this.x + 260 * FlyEarth.scaleSize, this.y + 170 * FlyEarth.scaleSize, 23 * FlyEarth.scaleSize, 15 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal4PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 380, this.y + 177, 25, 17, 0);
+		return new SimpleObject(this.x + 380 * FlyEarth.scaleSize, this.y + 177 * FlyEarth.scaleSize, 25 * FlyEarth.scaleSize, 17 * FlyEarth.scaleSize, 0);
 	}
 
 	static init(isLoadResources: boolean = true): void{
