@@ -39,7 +39,7 @@ export class Miner extends Unit{
 	private readonly _fallEndAnimation: Animation;
 	private _isFall: boolean;
 
-	constructor(x: number, y: number, goalY: number = 0) {
+	constructor(x: number, y: number, goalY: number) {
 		super(x, y, 3, Miner.wait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
 
 		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
@@ -47,7 +47,7 @@ export class Miner extends Unit{
 		this._isFall = false;
 		this.isLeftSide = false;
 
-		this.goalY = goalY || Miner.getGoalY(x);
+		this.goalY = goalY;
 
         Miner.init(true); //reserve init
 	}
@@ -58,14 +58,6 @@ export class Miner extends Unit{
 
 	get height(): number{
 		return Miner.imageHeight;
-	}
-
-	public static getGoalY(x: number){
-		const flyEarth = Buildings.flyEarth;
-		var yTop = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - x - Miner.imageWidth / 2)) / 6 + 32;
-		var yBottom = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - x - Miner.imageWidth / 2)) / 7 - 32;
-		var goalY = Helper.getRandom(yBottom, yTop);
-		return goalY;
 	}
 
 	public static get imageWidth() : number{

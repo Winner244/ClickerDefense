@@ -28,39 +28,56 @@ export class Units {
 	}
 
 	static addMiner(){
+		const flyEarth = Buildings.flyEarth;
 		const miners = Units.all.filter(x => x.name == Miner.name).map(x => <Miner>x);
+		const xMin = Buildings.flyEarth.x;
 		const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageWidth - 10;
-		const xMin = Buildings.flyEarth.x + 30;
 		var x = Helper.getRandom(xMin, xMax);
 		var goalY = 0;
-		
+
 		//нельзя на других майнерах появляться
-		if(miners.length > 0 && miners.length < 15){
+		if(miners.length < 15){
 			var miner: Miner|null = null;
-			var attemptsMax = 10;
+			var attemptsXMax = 150;
 			do {
-				goalY =  Miner.getGoalY(x);
-				var xScaleSize = 0.75;
-				var yScaleSize = 0.5;
+				var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - x - Miner.imageWidth / 2)) / 6 + 32;
+				var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - x - Miner.imageWidth / 2)) / 7 - 32;
+				goalY = Helper.getRandom(yMin, yMax);
+				var xScaleSize = 1 - miners.length / 100 * 2;
+				var yScaleSize = 0.75 - miners.length / 100 * 2;
 				var xCompare = x + Miner.imageWidth * (1 - xScaleSize) / 2;
-				var yCompare = goalY + Miner.imageHeight * (1 - yScaleSize) / 2;
 				var widthCompare = Miner.imageWidth * xScaleSize;
 				var heightCompare = Miner.imageHeight * yScaleSize;
-				miner = miners.find(miner => Helper.isIntersectByCenter(miner.x, miner.goalY, miner.width, miner.height, xCompare, yCompare, widthCompare, heightCompare)) ?? null;
-				if(miner){
-					console.log('founded intersection');
-					x += Helper.getRandom(miner.width / 10, miner.width);
-					if(x > xMax){
-						x = xMin + Helper.getRandom(1, (xMax - x));
+
+				var attemptsYMax = 10;
+				do{
+					var yCompare = goalY + Miner.imageHeight * (1 - yScaleSize) / 2;
+					miner = miners.find(miner => Helper.isIntersectByCenter(miner.x, miner.goalY, miner.width, miner.height, xCompare, yCompare, widthCompare, heightCompare)) ?? null;
+					if(miner){
+						goalY += (yMax - yMin) / 10;
+						if(goalY > yMax){
+							goalY = yMin;
+						}
+						attemptsYMax--;
 					}
+				} while(miner && attemptsYMax > 0);
+
+				if(miner){
+					x += (xMax - xMin) / 150;
+					if(x > xMax){
+						x = xMin;
+					}
+					attemptsXMax--;
 				}
-				attemptsMax--;
-			} while(miner && attemptsMax > 0);
+
+				if(attemptsXMax == 0){
+					console.log("can't find position for miner, created on another miner!");
+				}
+			} while(miner && attemptsXMax > 0);
 		}
 
 		//TODO: нельзя на кристаллах появляться
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
-		console.log('created');
 		Units.all.push(unit);
 	}
 
@@ -181,11 +198,11 @@ export class Units {
 			Buildings.flyEarth.drawCrystal2(drawsDiffMs, isGameOver);
 		}
 
-		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom){
+		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom - 10){
 			Buildings.flyEarth.drawCrystal3(drawsDiffMs, isGameOver);
 		}
 
-		if((!nextMiner || nextMiner.goalY > crystal4YBottom) && prevMiner.goalY < crystal4YBottom){
+		if((!nextMiner || nextMiner.goalY > crystal4YBottom) && prevMiner.goalY < crystal4YBottom - 5){
 			Buildings.flyEarth.drawCrystal4(drawsDiffMs, isGameOver);
 		}
 	}
