@@ -1415,6 +1415,57 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Золотодобытчики - Авто появление множественное",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                setTimeout(() => {
+                    Game.buyThing(Miner.shopItem);
+
+                    setTimeout(() => {
+                        Game.buyThing(Miner.shopItem);
+
+                        setTimeout(() => {
+                            Game.buyThing(Miner.shopItem);
+
+                            setTimeout(() => {
+                                Game.buyThing(Miner.shopItem);
+
+                                setTimeout(() => {
+                                    Game.buyThing(Miner.shopItem);
+
+                                    setTimeout(() => {
+                                        Game.buyThing(Miner.shopItem);
+
+                                        setTimeout(() => {
+                                            Game.buyThing(Miner.shopItem);
+
+                                            setTimeout(() => {
+                                                Game.buyThing(Miner.shopItem);
+
+                                                setTimeout(() => {
+                                                    Game.buyThing(Miner.shopItem);
+                                                }, 300);
+                                            }, 300);
+                                        }, 300);
+                                    }, 300);
+                                }, 300);
+                            }, 300);
+                        }, 300);
+                    }, 300);
+                }, 300);
+            }
+        },
+
+        {
             key: "Золотодобытчики - порядок отрисовки 1",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
