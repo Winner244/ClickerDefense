@@ -26,13 +26,7 @@ export class Units {
 	}
 
 	static add(unit: Unit){
-		if(unit.name == Miner.name){
-			const max = Units.all.findIndex(x => x.name == Miner.name && (<Miner>x).goalY > (<Miner>unit).goalY);
-			Units.all.splice(max || 0, 0, unit);
-		}
-		else{
-			Units.all.push(unit);
-		}
+		Units.all.push(unit);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
@@ -107,7 +101,11 @@ export class Units {
 		});
 
 		//отдельная отрисовка золотодобытчиков на летающей земле
-		var miners = Units.all.filter(x => x.name == Miner.name);
+		var miners = Units.all
+			.filter(x => x.name == Miner.name)
+			.map(x => <Miner>x)
+			.sort((a: Miner, b: Miner) => a.goalY > b.goalY ? 1 : -1);
+		
 		if(miners.length){
 			var prevMiner: Miner|null = null;
 
