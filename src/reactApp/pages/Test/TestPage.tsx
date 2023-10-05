@@ -1453,6 +1453,22 @@ class TestPage extends React.Component {
 
                                                 setTimeout(() => {
                                                     Game.buyThing(Miner.shopItem);
+
+                                                    setTimeout(() => {
+                                                        Game.buyThing(Miner.shopItem);
+
+                                                        setTimeout(() => {
+                                                            Game.buyThing(Miner.shopItem);
+
+                                                            setTimeout(() => {
+                                                                Game.buyThing(Miner.shopItem);
+
+                                                                setTimeout(() => {
+                                                                    Game.buyThing(Miner.shopItem);
+                                                                }, 300);
+                                                            }, 300);
+                                                        }, 300);
+                                                    }, 300);
                                                 }, 300);
                                             }, 300);
                                         }, 300);
@@ -1460,6 +1476,29 @@ class TestPage extends React.Component {
                                 }, 300);
                             }, 300);
                         }, 300);
+                    }, 300);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - Авто появление 2",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                setTimeout(() => {
+                    Game.buyThing(Miner.shopItem);
+
+                    setTimeout(() => {
+                        Game.buyThing(Miner.shopItem);
                     }, 300);
                 }, 300);
             }
@@ -1479,22 +1518,19 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 90;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
 
 
                     var y = Buildings.flyEarth.centerY - 70;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y);
-                    miner2.goalY = y + miner2.height;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y, y + Miner.imageHeight);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
 
 
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y);
-                    miner3.goalY = y + miner3.height;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
                 }, 300);
@@ -1515,21 +1551,18 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 70;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y);
-                    miner2.goalY = y + miner2.height;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y, y + Miner.imageHeight);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
 
 
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y);
-                    miner3.goalY = y + miner3.height;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
 
                     var y = Buildings.flyEarth.centerY - 90;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
 
@@ -1552,20 +1585,17 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y);
-                    miner3.goalY = y + miner3.height;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 5, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
                     
                     var y = Buildings.flyEarth.centerY - 90;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
 
                     var y = Buildings.flyEarth.centerY - 70;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y);
-                    miner2.goalY = y + miner1.height;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y, y + Miner.imageHeight);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
 
@@ -1588,8 +1618,7 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 90;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
                 }, 300);
@@ -1610,8 +1639,7 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 90 + 25;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
                 }, 300);
@@ -1632,29 +1660,25 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 90;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
 
 
                     var y = Buildings.flyEarth.centerY - 70;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y);
-                    miner2.goalY = y + miner1.height;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y, y + Miner.imageHeight);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
 
 
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y);
-                    miner3.goalY = y + miner1.height;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
 
 
                     var y = Buildings.flyEarth.centerY - 85;
-                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y);
-                    miner4.goalY = y + miner1.height;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
                     miner4.loadedResourcesAfterBuild();
                     Units.all.push(miner4);
                 }, 300);
@@ -1675,29 +1699,25 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 90 + 25;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
 
 
                     var y = Buildings.flyEarth.centerY - 70 + 25;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y);
-                    miner2.goalY = y + miner1.height;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y, y + Miner.imageHeight);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
 
 
                     var y = Buildings.flyEarth.centerY - 80 + 25;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y);
-                    miner3.goalY = y + miner1.height;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
 
 
                     var y = Buildings.flyEarth.centerY - 85 + 25;
-                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y);
-                    miner4.goalY = y + miner1.height;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
                     miner4.loadedResourcesAfterBuild();
                     Units.all.push(miner4);
                 }, 300);
@@ -1718,57 +1738,49 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 90;
-                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y);
-                    miner1.goalY = y + miner1.height;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
                     Units.all.push(miner1);
 
 
                     var y = Buildings.flyEarth.centerY - 70;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y);
-                    miner2.goalY = y + miner1.height;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y, y + Miner.imageHeight);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
 
 
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y);
-                    miner3.goalY = y + miner1.height;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
 
 
                     var y = Buildings.flyEarth.centerY - 85;
-                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y);
-                    miner4.goalY = y + miner1.height;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
                     miner4.loadedResourcesAfterBuild();
                     Units.all.push(miner4);
 
                     
                     var y = Buildings.flyEarth.centerY - 90 + 25;
-                    var miner5 = new Miner(Buildings.flyEarth.centerX - 20 + 10, y);
-                    miner5.goalY = y + miner1.height;
+                    var miner5 = new Miner(Buildings.flyEarth.centerX - 20 + 10, y, y + Miner.imageHeight);
                     miner5.loadedResourcesAfterBuild();
                     Units.all.push(miner5);
 
 
                     var y = Buildings.flyEarth.centerY - 70 + 25;
-                    var miner6 = new Miner(Buildings.flyEarth.centerX - 100 + 10, y);
-                    miner6.goalY = y + miner1.height;
+                    var miner6 = new Miner(Buildings.flyEarth.centerX - 100 + 10, y, y + Miner.imageHeight);
                     miner6.loadedResourcesAfterBuild();
                     Units.all.push(miner6);
 
 
                     var y = Buildings.flyEarth.centerY - 80 + 25;
-                    var miner7 = new Miner(Buildings.flyEarth.centerX - 180 + 10, y);
-                    miner7.goalY = y + miner1.height;
+                    var miner7 = new Miner(Buildings.flyEarth.centerX - 180 + 10, y, y + Miner.imageHeight);
                     miner7.loadedResourcesAfterBuild();
                     Units.all.push(miner7);
 
 
                     var y = Buildings.flyEarth.centerY - 85 + 25;
-                    var miner8 = new Miner(Buildings.flyEarth.centerX + 75 + 10, y);
-                    miner8.goalY = y + miner1.height;
+                    var miner8 = new Miner(Buildings.flyEarth.centerX + 75 + 10, y, y + Miner.imageHeight);
                     miner8.loadedResourcesAfterBuild();
                     Units.all.push(miner8);
                 }, 300);

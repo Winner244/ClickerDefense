@@ -1,3 +1,5 @@
+import {Helper} from "../helpers/Helper";
+
 import {SimpleObject} from "../../models/SimpleObject";
 
 import {Building} from "../buildings/Building";
@@ -23,6 +25,43 @@ export class Units {
 	static loadResources(){
 		//this.deathAnimation.image.src = DeathImage;
 		//AudioSystem.load(DeathSound);
+	}
+
+	static addMiner(){
+		const miners = Units.all.filter(x => x.name == Miner.name).map(x => <Miner>x);
+		const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageWidth - 10;
+		const xMin = Buildings.flyEarth.x + 30;
+		var x = Helper.getRandom(xMin, xMax);
+		var goalY = 0;
+		
+		//нельзя на других майнерах появляться
+		if(miners.length > 0 && miners.length < 15){
+			var miner: Miner|null = null;
+			var attemptsMax = 10;
+			do {
+				goalY =  Miner.getGoalY(x);
+				var xScaleSize = 0.75;
+				var yScaleSize = 0.5;
+				var xCompare = x + Miner.imageWidth * (1 - xScaleSize) / 2;
+				var yCompare = goalY + Miner.imageHeight * (1 - yScaleSize) / 2;
+				var widthCompare = Miner.imageWidth * xScaleSize;
+				var heightCompare = Miner.imageHeight * yScaleSize;
+				miner = miners.find(miner => Helper.isIntersectByCenter(miner.x, miner.goalY, miner.width, miner.height, xCompare, yCompare, widthCompare, heightCompare)) ?? null;
+				if(miner){
+					console.log('founded intersection');
+					x += Helper.getRandom(miner.width / 10, miner.width);
+					if(x > xMax){
+						x = xMin + Helper.getRandom(1, (xMax - x));
+					}
+				}
+				attemptsMax--;
+			} while(miner && attemptsMax > 0);
+		}
+
+		//TODO: нельзя на кристаллах появляться
+		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
+		console.log('created');
+		Units.all.push(unit);
 	}
 
 	static add(unit: Unit){

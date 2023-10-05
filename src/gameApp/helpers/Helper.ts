@@ -61,6 +61,17 @@ export class Helper{
 		return array.filter((value, index, self) => self.indexOf(value) === index);
 	}
 
+	/**
+	 * Пересекаются ли прямоугольники?
+	 * @returns 
+	 */
+	static isIntersectByCenter(x1: number, y1: number, width1: number, height1: number, x2: number, y2: number, width2: number, height2: number): boolean {
+		var centerX1 = x1 + width1 / 2;
+		var centerY1 = y1 + height1 / 2;
+		return centerX1 > x2 && centerX1 < x2 + width2 && 
+			   centerY1 > y2 && centerY1 < y2 + height2;
+	}
+
     /** создаёт уникальный идентификатор */
     public static generateUid(): string{
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
