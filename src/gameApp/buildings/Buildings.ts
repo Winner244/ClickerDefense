@@ -32,16 +32,19 @@ export class Buildings{
 		this.all = [];
 
 		this.flyEarth = new FlyEarth(0, -1000);
+		this.flyEarthRope = new FlyEarthRope(0, -1000);
+		
 		let flyEarthImageOnLoad = () => {
 			this.flyEarth.x = Draw.canvas.width / 2 - this.flyEarth.width / 2;
 			this.flyEarth.y = Draw.canvas.height / 2 - this.flyEarth.height / 2;
+			this.flyEarthRope.x = this.flyEarth.x + this.flyEarth.width / 2 - this.flyEarthRope.width / 2;
+			this.flyEarthRope.y = this.flyEarth.y + this.flyEarth.height - 8;
 		}
 		FlyEarth.image.onload = flyEarthImageOnLoad;
 		if(FlyEarthRope.image.complete){
 			flyEarthImageOnLoad();
 		}
 		
-		this.flyEarthRope = new FlyEarthRope(Draw.canvas.width / 2, Draw.canvas.height);
 		let flyEarthRopeImageOnLoad = () => {
 			this.flyEarthRope.x = this.flyEarth.x + this.flyEarth.width / 2 - this.flyEarthRope.width / 2;
 			this.flyEarthRope.y = this.flyEarth.y + this.flyEarth.height - 8;
