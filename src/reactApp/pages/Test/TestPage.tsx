@@ -1427,57 +1427,19 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-                setTimeout(() => {
-                    Game.buyThing(Miner.shopItem);
-
+                var countMax = 20;
+                var count = 0;
+                var create = () => {
                     setTimeout(() => {
                         Game.buyThing(Miner.shopItem);
+                        count++;
 
-                        setTimeout(() => {
-                            Game.buyThing(Miner.shopItem);
-
-                            setTimeout(() => {
-                                Game.buyThing(Miner.shopItem);
-
-                                setTimeout(() => {
-                                    Game.buyThing(Miner.shopItem);
-
-                                    setTimeout(() => {
-                                        Game.buyThing(Miner.shopItem);
-
-                                        setTimeout(() => {
-                                            Game.buyThing(Miner.shopItem);
-
-                                            setTimeout(() => {
-                                                Game.buyThing(Miner.shopItem);
-
-                                                setTimeout(() => {
-                                                    Game.buyThing(Miner.shopItem);
-
-                                                    setTimeout(() => {
-                                                        Game.buyThing(Miner.shopItem);
-
-                                                        setTimeout(() => {
-                                                            Game.buyThing(Miner.shopItem);
-
-                                                            setTimeout(() => {
-                                                                Game.buyThing(Miner.shopItem);
-
-                                                                setTimeout(() => {
-                                                                    Game.buyThing(Miner.shopItem);
-                                                                }, 300);
-                                                            }, 300);
-                                                        }, 300);
-                                                    }, 300);
-                                                }, 300);
-                                            }, 300);
-                                        }, 300);
-                                    }, 300);
-                                }, 300);
-                            }, 300);
-                        }, 300);
+                        if(count < countMax){
+                            create();
+                        }
                     }, 300);
-                }, 300);
+                }
+                create();
             }
         },
 

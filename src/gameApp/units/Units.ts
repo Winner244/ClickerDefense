@@ -36,7 +36,7 @@ export class Units {
 		var goalY = 0;
 
 		//нельзя на других майнерах появляться
-		if(miners.length < 15){
+		if(miners.length < 20){
 			var miner: Miner|null = null;
 			var attemptsXMax = 150;
 			do {
