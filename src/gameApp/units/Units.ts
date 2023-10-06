@@ -76,7 +76,6 @@ export class Units {
 			} while(miner && attemptsXMax > 0);
 		}
 
-		//TODO: нельзя на кристаллах появляться
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
 		Units.all.push(unit);
 	}
@@ -130,7 +129,8 @@ export class Units {
 			for(let i = 0; i < this.all.length; i++)
 			{
 				let unit = this.all[i];
-				if(this.all[i].health <= 0){ //проверка здоровья
+
+				if(unit.health <= 0){ //проверка здоровья
 					unit.destroy();
 					//this.deaths.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.deathAnimation.durationMs));
 					this.all.splice(i, 1);
@@ -139,6 +139,26 @@ export class Units {
 				}
 				else{
 					unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
+
+					//выталкивание из кристаллов
+					if(unit.name == Miner.name && (<Miner>unit).goalY - unit.height == unit.y){
+						var goalY = (<Miner>unit).goalY;
+
+						var crystal1 = Buildings.flyEarth.crystal1PositionBlocking;
+						var crystal2 = Buildings.flyEarth.crystal2PositionBlocking;
+						var crystal3 = Buildings.flyEarth.crystal3PositionBlocking;
+						var crystal4 = Buildings.flyEarth.crystal4PositionBlocking;
+
+						if ((goalY > crystal1.location.y && goalY < crystal1.location.y + crystal1.size.height && unit.centerX > crystal1.location.x - unit.width / 8 && unit.centerX < crystal1.location.x + crystal1.size.width + unit.width / 8) || 
+							(goalY > crystal2.location.y && goalY < crystal2.location.y + crystal2.size.height && unit.centerX > crystal2.location.x - unit.width / 8 && unit.centerX < crystal2.location.x + crystal2.size.width + unit.width / 8) ||
+							(goalY > crystal3.location.y && goalY < crystal3.location.y + crystal3.size.height && unit.centerX > crystal3.location.x - unit.width / 8 && unit.centerX < crystal3.location.x + crystal3.size.width + unit.width / 8) ||
+							(goalY > crystal4.location.y && goalY < crystal4.location.y + crystal4.size.height && unit.centerX > crystal4.location.x - unit.width / 8 && unit.centerX < crystal4.location.x + crystal4.size.width + unit.width / 8)) 
+						{
+							console.log('unit', unit.id);
+							unit.y -= 2; 
+							(<Miner>unit).goalY -= 2;
+						}
+					}
 				}
 			}
 		}
@@ -198,11 +218,11 @@ export class Units {
 			Buildings.flyEarth.drawCrystal2(drawsDiffMs, isGameOver);
 		}
 
-		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom - 10){
+		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom){
 			Buildings.flyEarth.drawCrystal3(drawsDiffMs, isGameOver);
 		}
 
-		if((!nextMiner || nextMiner.goalY > crystal4YBottom) && prevMiner.goalY < crystal4YBottom - 5){
+		if((!nextMiner || nextMiner.goalY > crystal4YBottom) && prevMiner.goalY < crystal4YBottom){
 			Buildings.flyEarth.drawCrystal4(drawsDiffMs, isGameOver);
 		}
 	}

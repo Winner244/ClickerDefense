@@ -649,7 +649,7 @@ class TestPage extends React.Component {
 
                 let x = 0;
 
-                setInterval(() => {
+                this.interval = setInterval(() => {
                     var bat = new Bat(x, 380, true, 1);
                     Monsters.all.push(bat);
                     x+=30;
@@ -1751,7 +1751,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - движение за кристаллы",
+            key: "Золотодобытчики - движение за мышкой",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1786,25 +1786,49 @@ class TestPage extends React.Component {
                     miner4.loadedResourcesAfterBuild();
                     Units.all.push(miner4);
 
-                    var interval = setInterval(() => {
-                        /*miner1.goalY--;
-                        miner2.goalY--;
-                        miner3.goalY--;
-                        miner4.goalY--;
-
-                        miner1.y--;
-                        miner2.y--;
-                        miner3.y--;
-                        miner4.y--;
-
-                        if(miner1.y < 320){
-                            clearInterval(interval);
-                        }
-                        */
-
-                        miner1.y = miner1.goalY = miner2.y = miner2.goalY = miner3.y = miner3.goalY = miner4.y = miner4.goalY = Mouse.y; 
+                    this.interval = setInterval(() => {
+                        let mouseX = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+                        let mouseY = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
                         
+                        miner1.y =  miner2.y = miner3.y = miner4.y = mouseY - Miner.imageHeight; 
+                        miner1.goalY = miner2.goalY = miner3.goalY = miner4.goalY = mouseY; 
+                        
+                        miner1.x = mouseX - 15; 
+                        miner2.x = mouseX - 100
+                        miner3.x = mouseX - 174
+                        miner4.x = mouseX + 75; 
                     }, 10);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - движение за мышкой - проверка выталкивания из кристаллов",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 15, y, y + Miner.imageHeight);
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+                    this.interval = setInterval(() => {
+                        let mouseX = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+                        let mouseY = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+
+                        miner1.y = mouseY - Miner.imageHeight + 2; 
+                        miner1.goalY = mouseY + 2; 
+                        
+                        miner1.x = mouseX - miner1.width / 2;
+                    }, 300);
                 }, 300);
             }
         },
@@ -1823,6 +1847,13 @@ class TestPage extends React.Component {
 
     getSelectedTestNumber(): number {
         return +(Helper.getUrlQuery()['variant'] || Helper.getUrlQuery()['v']);
+    }
+
+    interval:NodeJS.Timeout|null = null;
+    componentWillUnmount(){
+        if(this.interval){
+            clearInterval(this.interval);
+        }
     }
 
     componentDidMount(){

@@ -75,13 +75,13 @@ export class FlyEarth extends Building{
 
 	//позиция кристаллов, где майнеры не должны находится и пробегать
 	public get crystal1PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 57 * FlyEarth.scaleSize, this.y + 185 * FlyEarth.scaleSize, 27 * FlyEarth.scaleSize, 10 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 57 * FlyEarth.scaleSize, this.y + 187 * FlyEarth.scaleSize, 27 * FlyEarth.scaleSize, 10 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal2PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 145 * FlyEarth.scaleSize, this.y + 193 * FlyEarth.scaleSize, 31 * FlyEarth.scaleSize, 15 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 145 * FlyEarth.scaleSize, this.y + 197 * FlyEarth.scaleSize, 31 * FlyEarth.scaleSize, 14 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal3PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 260 * FlyEarth.scaleSize, this.y + 170 * FlyEarth.scaleSize, 23 * FlyEarth.scaleSize, 15 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 260 * FlyEarth.scaleSize, this.y + 176 * FlyEarth.scaleSize, 23 * FlyEarth.scaleSize, 12 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal4PositionBlocking(): SimpleObject{
 		return new SimpleObject(this.x + 380 * FlyEarth.scaleSize, this.y + 177 * FlyEarth.scaleSize, 25 * FlyEarth.scaleSize, 17 * FlyEarth.scaleSize, 0);
