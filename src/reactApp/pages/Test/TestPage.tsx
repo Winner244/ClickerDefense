@@ -1416,6 +1416,26 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Золотодобытчик - Авто появление - на кристалле",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                setTimeout(() => {
+                    const unit = new Miner(Buildings.flyEarth.centerX - 22, Buildings.flyEarth.y, Buildings.flyEarth.y + 140); 
+                    Units.add(unit);
+                }, 300);
+            }
+        },
+
+        {
             key: "Золотодобытчики - Авто появление множественное",
             code: () => {
                 AudioSystem.isEnabled = false;
