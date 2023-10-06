@@ -39,6 +39,15 @@ export class Helper{
 	}
 
 	/**
+	 * находится ли точка внутри элипса?
+	 * (формула круга (x^2 * y^2 < r^2) с коэффициентом растяжения по высоте)
+	 */
+	static isInsideEllipse(xEllipse: number, yEllipse: number, widthEllipse: number, heightEllipse: number, x: number, y: number) : boolean
+	{
+		return Math.pow(x - xEllipse, 2) + Math.pow((y - yEllipse) * widthEllipse / heightEllipse, 2) < Math.pow(widthEllipse / 2, 2);   
+	}
+
+	/**
 	 * Сумма массива по выбраннмоу полю в getValue функции
 	 * @param array массив
 	 * @param getValue функция для выбора суммируемых полей

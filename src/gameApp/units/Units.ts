@@ -76,6 +76,7 @@ export class Units {
 			} while(miner && attemptsXMax > 0);
 		}
 
+		//TODO: нельзя на кристаллах появляться
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
 		Units.all.push(unit);
 	}
@@ -149,7 +150,17 @@ export class Units {
 						var crystal3 = Buildings.flyEarth.crystal3PositionBlocking;
 						var crystal4 = Buildings.flyEarth.crystal4PositionBlocking;
 
-						if ((goalY > crystal1.location.y && goalY < crystal1.location.y + crystal1.size.height && unit.centerX > crystal1.location.x - unit.width / 8 && unit.centerX < crystal1.location.x + crystal1.size.width + unit.width / 8) || 
+						if (Helper.isInsideEllipse(crystal1.centerX, crystal1.centerY, crystal1.size.width + unit.width / 4, crystal1.size.height, unit.centerX, goalY) || 
+							Helper.isInsideEllipse(crystal2.centerX, crystal2.centerY, crystal2.size.width + unit.width / 4, crystal2.size.height, unit.centerX, goalY) ||
+							Helper.isInsideEllipse(crystal3.centerX, crystal3.centerY, crystal3.size.width + unit.width / 4, crystal3.size.height, unit.centerX, goalY) ||
+							Helper.isInsideEllipse(crystal4.centerX, crystal4.centerY, crystal4.size.width + unit.width / 4, crystal4.size.height, unit.centerX, goalY)) 
+						{
+							console.log('unit', unit.id);
+							unit.y -= 2; 
+							(<Miner>unit).goalY -= 2;
+						}
+
+						/*if ((goalY > crystal1.location.y && goalY < crystal1.location.y + crystal1.size.height && unit.centerX > crystal1.location.x - unit.width / 8 && unit.centerX < crystal1.location.x + crystal1.size.width + unit.width / 8) || 
 							(goalY > crystal2.location.y && goalY < crystal2.location.y + crystal2.size.height && unit.centerX > crystal2.location.x - unit.width / 8 && unit.centerX < crystal2.location.x + crystal2.size.width + unit.width / 8) ||
 							(goalY > crystal3.location.y && goalY < crystal3.location.y + crystal3.size.height && unit.centerX > crystal3.location.x - unit.width / 8 && unit.centerX < crystal3.location.x + crystal3.size.width + unit.width / 8) ||
 							(goalY > crystal4.location.y && goalY < crystal4.location.y + crystal4.size.height && unit.centerX > crystal4.location.x - unit.width / 8 && unit.centerX < crystal4.location.x + crystal4.size.width + unit.width / 8)) 
@@ -157,7 +168,7 @@ export class Units {
 							console.log('unit', unit.id);
 							unit.y -= 2; 
 							(<Miner>unit).goalY -= 2;
-						}
+						}*/
 					}
 				}
 			}

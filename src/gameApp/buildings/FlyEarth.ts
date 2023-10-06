@@ -78,7 +78,7 @@ export class FlyEarth extends Building{
 		return new SimpleObject(this.x + 57 * FlyEarth.scaleSize, this.y + 187 * FlyEarth.scaleSize, 27 * FlyEarth.scaleSize, 10 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal2PositionBlocking(): SimpleObject{
-		return new SimpleObject(this.x + 145 * FlyEarth.scaleSize, this.y + 197 * FlyEarth.scaleSize, 31 * FlyEarth.scaleSize, 14 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 145 * FlyEarth.scaleSize, this.y + 200 * FlyEarth.scaleSize, 31 * FlyEarth.scaleSize, 14 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal3PositionBlocking(): SimpleObject{
 		return new SimpleObject(this.x + 260 * FlyEarth.scaleSize, this.y + 176 * FlyEarth.scaleSize, 23 * FlyEarth.scaleSize, 12 * FlyEarth.scaleSize, 0);
