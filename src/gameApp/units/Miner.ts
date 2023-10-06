@@ -10,6 +10,8 @@ import {Monster} from '../monsters/Monster';
 import {Buildings} from '../buildings/Buildings';
 import {Building} from '../buildings/Building';
 
+import {FlyEarth} from '../buildings/FlyEarth';
+
 import Animation from '../../models/Animation';
 import ShopItem from '../../models/ShopItem';
 
@@ -50,6 +52,7 @@ export class Miner extends Unit{
 		this.goalY = goalY;
 
         Miner.init(true); //reserve init
+		FlyEarth.loadSeparateCrystals(); //reserve init
 	}
 
 	get width(): number{
@@ -97,6 +100,26 @@ export class Miner extends Unit{
 			this._isFall = false;
 		}
 		
+	}
+
+	pushUpFromCrystals(isOnlyGoal: boolean = false){
+		var crystal1 = Buildings.flyEarth.crystal1PositionBlocking;
+		var crystal2 = Buildings.flyEarth.crystal2PositionBlocking;
+		var crystal3 = Buildings.flyEarth.crystal3PositionBlocking;
+		var crystal4 = Buildings.flyEarth.crystal4PositionBlocking;
+		if (Helper.isInsideEllipse(crystal1.centerX, crystal1.centerY, crystal1.size.width + this.width / 4, crystal1.size.height, this.centerX, this.goalY) || 
+			Helper.isInsideEllipse(crystal2.centerX, crystal2.centerY, crystal2.size.width + this.width / 4, crystal2.size.height, this.centerX, this.goalY) ||
+			Helper.isInsideEllipse(crystal3.centerX, crystal3.centerY, crystal3.size.width + this.width / 4, crystal3.size.height, this.centerX, this.goalY) ||
+			Helper.isInsideEllipse(crystal4.centerX, crystal4.centerY, crystal4.size.width + this.width / 4, crystal4.size.height, this.centerX, this.goalY)) 
+		{
+			if(isOnlyGoal){
+				this.goalY -= 3;
+			}
+			else{
+				this.y -= 2;
+				this.goalY -= 2;
+			}
+		}
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{

@@ -1429,8 +1429,16 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = true;
 
                 setTimeout(() => {
-                    const unit = new Miner(Buildings.flyEarth.centerX - 22, Buildings.flyEarth.y, Buildings.flyEarth.y + 140); 
-                    Units.add(unit);
+                    const miner1 = new Miner(Buildings.flyEarth.centerX - 22, Buildings.flyEarth.y, Buildings.flyEarth.y + 140); 
+                    miner1.loadedResourcesAfterBuild();
+                    miner1.pushUpFromCrystals();
+                    Units.all.push(miner1);
+
+                    //const miner2 = new Miner(Buildings.flyEarth.centerX - 105, Buildings.flyEarth.y, Buildings.flyEarth.y + 158); 
+                    const miner2 = new Miner(Buildings.flyEarth.centerX - 105, Buildings.flyEarth.y, Buildings.flyEarth.y + 174); 
+                    miner2.loadedResourcesAfterBuild();
+                    miner2.pushUpFromCrystals();
+                    Units.all.push(miner2);
                 }, 300);
             }
         },

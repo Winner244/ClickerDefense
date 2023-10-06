@@ -76,8 +76,9 @@ export class Units {
 			} while(miner && attemptsXMax > 0);
 		}
 
-		//TODO: нельзя на кристаллах появляться
+		//create
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
+		unit.pushUpFromCrystals(true);
 		Units.all.push(unit);
 	}
 
@@ -143,21 +144,7 @@ export class Units {
 
 					//выталкивание из кристаллов
 					if(unit.name == Miner.name && (<Miner>unit).goalY - unit.height == unit.y){
-						var goalY = (<Miner>unit).goalY;
-
-						var crystal1 = Buildings.flyEarth.crystal1PositionBlocking;
-						var crystal2 = Buildings.flyEarth.crystal2PositionBlocking;
-						var crystal3 = Buildings.flyEarth.crystal3PositionBlocking;
-						var crystal4 = Buildings.flyEarth.crystal4PositionBlocking;
-
-						if (Helper.isInsideEllipse(crystal1.centerX, crystal1.centerY, crystal1.size.width + unit.width / 4, crystal1.size.height, unit.centerX, goalY) || 
-							Helper.isInsideEllipse(crystal2.centerX, crystal2.centerY, crystal2.size.width + unit.width / 4, crystal2.size.height, unit.centerX, goalY) ||
-							Helper.isInsideEllipse(crystal3.centerX, crystal3.centerY, crystal3.size.width + unit.width / 4, crystal3.size.height, unit.centerX, goalY) ||
-							Helper.isInsideEllipse(crystal4.centerX, crystal4.centerY, crystal4.size.width + unit.width / 4, crystal4.size.height, unit.centerX, goalY)) 
-						{
-							unit.y -= 2; 
-							(<Miner>unit).goalY -= 2;
-						}
+						(<Miner>unit).pushUpFromCrystals();
 					}
 				}
 			}
