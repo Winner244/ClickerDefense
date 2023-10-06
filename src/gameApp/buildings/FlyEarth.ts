@@ -61,16 +61,16 @@ export class FlyEarth extends Building{
 
 	//позиция кристалов, если нижняя часть майнера внутри него - то нужно отрисовать кристалл поверх
 	public get crystal1PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 50 * FlyEarth.scaleSize, this.y + 160 * FlyEarth.scaleSize, 36 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 50 * FlyEarth.scaleSize, this.y + 160 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal2PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 139 * FlyEarth.scaleSize, this.y + 164 * FlyEarth.scaleSize, 41 * FlyEarth.scaleSize, 45 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 139 * FlyEarth.scaleSize, this.y + 165 * FlyEarth.scaleSize, 41 * FlyEarth.scaleSize, 46 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal3PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 257 * FlyEarth.scaleSize, this.y + 152 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 257 * FlyEarth.scaleSize, this.y + 153 * FlyEarth.scaleSize, 37 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 0);
 	}
 	public get crystal4PositionReDraw(): SimpleObject{
-		return new SimpleObject(this.x + 374 * FlyEarth.scaleSize, this.y + 154 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 0);
+		return new SimpleObject(this.x + 374 * FlyEarth.scaleSize, this.y + 155 * FlyEarth.scaleSize, 35 * FlyEarth.scaleSize, 36 * FlyEarth.scaleSize, 0);
 	}
 
 	//позиция кристаллов, где майнеры не должны находится и пробегать

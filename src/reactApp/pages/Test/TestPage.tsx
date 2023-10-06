@@ -31,6 +31,7 @@ import { Skelet } from '../../../gameApp/monsters/Skelet';
 import { Units } from '../../../gameApp/units/Units';
 import { Unit } from '../../../gameApp/units/Unit';
 import { Miner } from '../../../gameApp/units/Miner';
+import { Mouse } from '../../../gameApp/gamer/Mouse';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -1745,6 +1746,65 @@ class TestPage extends React.Component {
                     var miner8 = new Miner(Buildings.flyEarth.centerX + 75 + 10, y, y + Miner.imageHeight);
                     miner8.loadedResourcesAfterBuild();
                     Units.all.push(miner8);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - движение за кристаллы",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 15, y, y + Miner.imageHeight);
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 70 + 25;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y, y + Miner.imageHeight);
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80 + 25;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 174, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    var y = Buildings.flyEarth.centerY - 85 + 25;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
+                    miner4.loadedResourcesAfterBuild();
+                    Units.all.push(miner4);
+
+                    var interval = setInterval(() => {
+                        /*miner1.goalY--;
+                        miner2.goalY--;
+                        miner3.goalY--;
+                        miner4.goalY--;
+
+                        miner1.y--;
+                        miner2.y--;
+                        miner3.y--;
+                        miner4.y--;
+
+                        if(miner1.y < 320){
+                            clearInterval(interval);
+                        }
+                        */
+
+                        miner1.y = miner1.goalY = miner2.y = miner2.goalY = miner3.y = miner3.goalY = miner4.y = miner4.goalY = Mouse.y; 
+                        
+                    }, 10);
                 }, 300);
             }
         },
