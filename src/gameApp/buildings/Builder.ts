@@ -55,7 +55,8 @@ export class Builder {
 			this.selectedBuildingForBuild.x = Math.min(Math.max(this.buildingBorder, mouseX - this.selectedBuildingForBuild.width / 2), Draw.canvas.width - this.buildingBorder - this.selectedBuildingForBuild.width);
 			this.selectedBuildingForBuild.isLeftSide = mouseX < Draw.canvas.width / 2;
 
-			this._isAnotherBuilding = buildingsAll.filter(x => x.isLand).some(x => mouseX > x.x && mouseX < x.x + x.width);
+			const canterX = this.selectedBuildingForBuild.centerX;
+			this._isAnotherBuilding = buildingsAll.filter(b => b.isLand).some(b => canterX > b.x && canterX < b.x + b.width);
 			if(isClick && !this._isAnotherBuilding){
 				Gamer.coins -= this.selectedBuildingForBuild.price;
 				Labels.createCoinLabel(
