@@ -173,8 +173,8 @@ export class Units {
 			var prevMiner: Miner|null = null;
 
 			miners.forEach(unit => {
-				unit.draw(drawsDiffMs, isGameOver);
 				this.drawFlyEarthCrystals(drawsDiffMs, isGameOver, prevMiner, <Miner>unit);
+				unit.draw(drawsDiffMs, isGameOver);
 				prevMiner = <Miner>unit;
 			});
 			

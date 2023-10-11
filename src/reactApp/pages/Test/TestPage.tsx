@@ -1428,17 +1428,28 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
+                FlyEarth.loadSeparateCrystals();
+
                 setTimeout(() => {
-                    const miner1 = new Miner(Buildings.flyEarth.centerX - 22, Buildings.flyEarth.y, Buildings.flyEarth.y + 140); 
+                    const miner1 = new Miner(Buildings.flyEarth.centerX - 22, Buildings.flyEarth.y, Buildings.flyEarth.y + 143); 
                     miner1.loadedResourcesAfterBuild();
-                    miner1.pushUpFromCrystals();
+                    miner1.pushUpFromCrystals(true);
                     Units.all.push(miner1);
 
-                    //const miner2 = new Miner(Buildings.flyEarth.centerX - 105, Buildings.flyEarth.y, Buildings.flyEarth.y + 158); 
-                    const miner2 = new Miner(Buildings.flyEarth.centerX - 105, Buildings.flyEarth.y, Buildings.flyEarth.y + 174); 
+                    const miner11 = new Miner(Buildings.flyEarth.centerX - 22, Buildings.flyEarth.y, Buildings.flyEarth.y + 144); 
+                    miner11.loadedResourcesAfterBuild();
+                    miner11.pushUpFromCrystals(true);
+                    Units.all.push(miner11);
+
+                    const miner2 = new Miner(Buildings.flyEarth.centerX - 105, Buildings.flyEarth.y, Buildings.flyEarth.y + 160); 
                     miner2.loadedResourcesAfterBuild();
-                    miner2.pushUpFromCrystals();
+                    miner2.pushUpFromCrystals(true);
                     Units.all.push(miner2);
+
+                    const miner22 = new Miner(Buildings.flyEarth.centerX - 105, Buildings.flyEarth.y, Buildings.flyEarth.y + 161); 
+                    miner22.loadedResourcesAfterBuild();
+                    miner22.pushUpFromCrystals(true);
+                    Units.all.push(miner22);
                 }, 300);
             }
         },
