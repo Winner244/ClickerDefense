@@ -34,7 +34,7 @@ export class Miner extends Unit{
 	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
 
-	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.wait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS);
+	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.wait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
 	public goalY: number;
 
@@ -50,6 +50,7 @@ export class Miner extends Unit{
 		this.isLeftSide = false;
 
 		this.goalY = goalY;
+		this.shopItemName = Miner.shopItem.name;
 
         Miner.init(true); //reserve init
 		FlyEarth.loadSeparateCrystals(); //reserve init

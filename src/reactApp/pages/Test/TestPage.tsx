@@ -757,6 +757,27 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Башня - лимит покупки",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                for(var i = 0; i < Tower.shopItem.maxCount - 1; i++){
+                    var tower1 = new Tower(i * 80);
+                    tower1.loadedResourcesAfterBuild();
+                    Buildings.all.push(tower1);
+                }
+            }
+        },
+
+        {
             key: "Огонь - затухание",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -1455,7 +1476,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - Авто появление множественное",
+            key: "Золотодобытчики - Авто появление множественное + проверка на лимит покупки",
             code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -1467,7 +1488,7 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-                var countMax = 20;
+                var countMax = Miner.shopItem.maxCount - 1;
                 var count = 0;
                 var create = () => {
                     setTimeout(() => {

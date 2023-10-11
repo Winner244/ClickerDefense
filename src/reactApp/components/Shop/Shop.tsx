@@ -12,6 +12,9 @@ import './Shop.scss';
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {Gamer} from '../../../gameApp/gamer/Gamer';
 
+import {Buildings} from '../../../gameApp/buildings/Buildings';
+import {Units} from '../../../gameApp/units/Units';
+
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
@@ -102,9 +105,28 @@ export class Shop extends React.Component<Props, {}> {
   }
 
   onClickBuyItem(item: ShopItem){
+    if(this.isDisabledButtonBuy(item)){
+      return;
+    }
+
     Shop.playSoundSelect();
     Shop.hide();
     Game.buyThing(item);
+  }
+
+  isDisabledButtonBuy(item: ShopItem): boolean{
+    let isDisabled = item.price > Gamer.coins;
+
+    if(!isDisabled){
+      if(item.category == ShopCategoryEnum.BUILDINGS){
+        isDisabled = Buildings.all.filter(x => x.shopItemName == item.name).length >= item.maxCount;
+      }
+      else if(item.category == ShopCategoryEnum.UNITS){
+        isDisabled = Units.all.filter(x => x.shopItemName == item.name).length >= item.maxCount;
+      }
+    }
+
+    return isDisabled;
   }
 
   render() {
@@ -152,10 +174,8 @@ export class Shop extends React.Component<Props, {}> {
                               </div>
                               <div className="shop__item-title">{item.name}</div>
                               <button 
-                                className={"shop__item-button " + (item.price > Gamer.coins ? 'shop__item-button--disabled' : '')} 
-                                onClick={() => item.price > Gamer.coins
-                                  ? () => {} 
-                                  : this.onClickBuyItem(item)}
+                                className={"shop__item-button " + (this.isDisabledButtonBuy(item) ? 'shop__item-button--disabled' : '')} 
+                                onClick={() => this.onClickBuyItem(item)}
                               >
                                 Купить {item.price}
                                 <img className='nodrag' src={CoinImage}/>

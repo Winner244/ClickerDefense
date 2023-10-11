@@ -63,7 +63,7 @@ export class Tower extends Building{
 	static readonly imageArrow: HTMLImageElement = new Image();
 	static readonly initArrowSpeed: number = 500; 
 
-	static readonly shopItem: ShopItem = new ShopItem('Сторожевая башня', Tower.image, 50, 'Стреляет по монстрам в радиусе действия.', ShopCategoryEnum.BUILDINGS);
+	static readonly shopItem: ShopItem = new ShopItem('Сторожевая башня', Tower.image, 50, 'Стреляет по монстрам в радиусе действия.', ShopCategoryEnum.BUILDINGS, 20);
 
 	//поля свойства экземпляра
 	bowmans: number = 1; //кол-во лучников
@@ -111,6 +111,7 @@ export class Tower extends Building{
 
 		this.maxImpulse = 5;
 		this.impulseForceDecreasing = 5;
+		this.shopItemName = Tower.shopItem.name;
 
 		Tower.init(true); //reserve
 	}

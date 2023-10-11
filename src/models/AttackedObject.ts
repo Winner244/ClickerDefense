@@ -19,6 +19,7 @@ export class AttackedObject {
 	readonly id: string;
 	
 	name: string;
+	shopItemName: string|null; //нужно для связи с Shop логикой
 
 	image: HTMLImageElement;
 	filteredImages: { [Key: string]: OffscreenCanvas };
@@ -83,6 +84,8 @@ export class AttackedObject {
 		this.impulseForceDecreasing = 1;
 
 		this._impulse = 0;
+
+		this.shopItemName = null;
 	}
 
 	get height(): number {

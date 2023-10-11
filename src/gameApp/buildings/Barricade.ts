@@ -30,7 +30,7 @@ export class Barricade extends Building{
 
 	static readonly improvementIronShield: number = 1; //кол-во добавляемой брони для железной версии
 
-	static readonly shopItem: ShopItem = new ShopItem('Баррикада', Barricade.image, 25, 'Колючая и непроходимая. Сдерживает монстров и возвращает часть полученного урона, обратно, монстрам.', ShopCategoryEnum.BUILDINGS);
+	static readonly shopItem: ShopItem = new ShopItem('Баррикада', Barricade.image, 25, 'Колючая и непроходимая. Сдерживает монстров и возвращает часть полученного урона, обратно, монстрам.', ShopCategoryEnum.BUILDINGS, 20);
 
 	constructor(x: number) {
 		super(x, 
@@ -46,6 +46,7 @@ export class Barricade extends Building{
 			
 		this.maxImpulse = 2;
 		this.impulseForceDecreasing = 5;
+		this.shopItemName = Barricade.shopItem.name;
 
 		Barricade.init(true); //reserve
 	}
