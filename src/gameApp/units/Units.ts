@@ -27,7 +27,7 @@ export class Units {
 		//AudioSystem.load(DeathSound);
 	}
 
-	static addMiner(){
+	static addMiner(): Miner {
 		const flyEarth = Buildings.flyEarth;
 		const miners = Units.all.filter(x => x.name == Miner.name).map(x => <Miner>x);
 		const xMin = Buildings.flyEarth.x;
@@ -80,6 +80,7 @@ export class Units {
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
 		unit.pushUpFromCrystals(true);
 		Units.all.push(unit);
+		return unit;
 	}
 
 	static add(unit: Unit){

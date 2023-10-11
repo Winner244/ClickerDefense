@@ -47,6 +47,7 @@ import GrassImage from '../../assets/img/grass1.png';
 
 import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
 import GameOverSound from '../../assets/sounds/gameOver.mp3'; 
+import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
 
 
 
@@ -432,13 +433,19 @@ export class Game {
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 		else if(shopItem.category == ShopCategoryEnum.UNITS){
+			let newUnit: Unit|null = null;
+
 			if(Miner.shopItem == shopItem){
-				Units.addMiner();
 				FlyEarth.loadSeparateCrystals();
+				newUnit = Units.addMiner();
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
 			}
+
+			Gamer.coins -= shopItem.price;
+			Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
+			AudioSystem.play(newUnit.x, CoinGetSoundUrl, 0.15);
 		}
 		else{
 			throw `unexpected shopItem category = '${shopItem.category}'`;

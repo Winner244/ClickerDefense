@@ -58,8 +58,8 @@ export class Shop extends React.Component<Props, {}> {
     return App.Store.getState().shop?.isOpen || false;
   }
 
-  private static playSoundSelect(){
-		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
+  private static playSoundSelect(value: number = 0.1){
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, value);
   }
 
   onKey(event: KeyboardEvent){
@@ -109,7 +109,9 @@ export class Shop extends React.Component<Props, {}> {
       return;
     }
 
-    Shop.playSoundSelect();
+    if(item.category != ShopCategoryEnum.UNITS){
+      Shop.playSoundSelect(0.001);
+    }
     Shop.hide();
     Game.buyThing(item);
   }

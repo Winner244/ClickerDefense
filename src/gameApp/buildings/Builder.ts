@@ -12,6 +12,7 @@ import Animation from '../../models/Animation';
 import SmokeImage from '../../assets/img/smoke.png'; 
 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
+import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
 
 /** Режим строительства - единичный статичный класс */
 export class Builder {
@@ -68,7 +69,8 @@ export class Builder {
 				buildingsAll.push(this.selectedBuildingForBuild);
 				this._isDrawSmoke = true;
 				this.smokeAnimation.restart();
-				AudioSystem.play(mouseX, BuildSoundUrl, 0.15);
+				AudioSystem.play(canterX, BuildSoundUrl, 0.15);
+				AudioSystem.play(canterX, CoinGetSoundUrl, 0.15);
 				loadResourcesAfterBuild(this.selectedBuildingForBuild);
 				return;
 			}
