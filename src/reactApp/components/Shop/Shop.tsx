@@ -109,11 +109,16 @@ export class Shop extends React.Component<Props, {}> {
       return;
     }
 
-    if(item.category != ShopCategoryEnum.UNITS){
-      Shop.playSoundSelect(0.001);
+    Shop.playSoundSelect(0.001);
+    
+    if(item.category == ShopCategoryEnum.UNITS){
+      setTimeout(() =>  Game.buyThing(item), 200);
     }
+    else{
+      Game.buyThing(item);
+    }
+
     Shop.hide();
-    Game.buyThing(item);
   }
 
   isDisabledButtonBuy(item: ShopItem): boolean{

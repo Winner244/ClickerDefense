@@ -1,5 +1,7 @@
 import {Helper} from "../helpers/Helper";
 
+import Animation from '../../models/Animation';
+
 import {SimpleObject} from "../../models/SimpleObject";
 
 import {Building} from "../buildings/Building";
@@ -11,18 +13,22 @@ import {Miner} from "./Miner";
 
 import {Unit} from "./Unit";
 
+import CreatingImage from '../../assets/img/units/creating.png'; 
 
 /** Система управления всеми юнитами - единичный статичный класс */
 export class Units {
 	static all: Unit[] = []; //все созданные и пока ещё живые юниты
+	static creatings: SimpleObject[] = []; //анимации появления юнитов 
 	static deaths: SimpleObject[] = []; //анимации гибели юнитов 
 
+	static readonly creatingAnimation: Animation = new Animation(6, 600); //анимация появления юнита
 	
 	static init(){
 		Units.all = [];
 	}
 
 	static loadResources(){
+		this.creatingAnimation.image.src = CreatingImage;
 		//this.deathAnimation.image.src = DeathImage;
 		//AudioSystem.load(DeathSound);
 	}
@@ -79,12 +85,13 @@ export class Units {
 		//create
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
 		unit.pushUpFromCrystals(true);
-		Units.all.push(unit);
+		this.add(unit);
 		return unit;
 	}
 
 	static add(unit: Unit){
 		Units.all.push(unit);
+		this.creatings.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.creatingAnimation.durationMs));
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
@@ -117,6 +124,18 @@ export class Units {
 	}
 
 	static logic(drawsDiffMs: number, isWaveStarted: boolean, isGameOver: boolean, buildings: Building[], monsters: Monster[], bottomShiftBorder: number){
+
+		//логика анимации появления юнитов
+		if(this.creatings.length){
+			for(let i = 0; i < this.creatings.length; i++){
+				this.creatings[i].leftTimeMs -= drawsDiffMs;
+				if(this.creatings[i].leftTimeMs <= 0){
+					this.creatings.splice(i, 1);
+					i--;
+				}
+			}
+		}
+
 		//логика анимации гибели юнита
 		if(this.deaths.length){
 			for(let i = 0; i < this.deaths.length; i++){
@@ -157,6 +176,13 @@ export class Units {
 	}
 
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
+		//появление юнитов
+		this.creatings.forEach(x => {
+			let newWidth = (this.creatingAnimation.image.width / this.creatingAnimation.frames) * (x.size.height / (this.creatingAnimation.image.height));
+			this.creatingAnimation.leftTimeMs = x.leftTimeMs;
+			this.creatingAnimation.draw(drawsDiffMs, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height, false);
+		});
+
 		//гибель юнитов
 		this.deaths.forEach(explosion => {
 			//let newHeight = this.deathAnimation.image.height * (explosion.size.width / (this.deathAnimation.image.width / this.deathAnimation.frames));

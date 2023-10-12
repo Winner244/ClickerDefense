@@ -125,6 +125,7 @@ export class Game {
 
 	static loadResourcesAfterEndOfWave(endedWave: number){
 		if (endedWave == 0){ //first wave
+			Units.loadResources();
 			Tower.init(true);
 			Barricade.init(true);
 			Builder.init(true);
@@ -154,7 +155,6 @@ export class Game {
 			Barricade.loadResourcesAfterBuild();
 		}
 
-		Units.loadResources();
 		Unit.loadUpgradeResources();
 		Buildings.loadResources();
 		Building.loadUpgradeResources();
@@ -175,7 +175,7 @@ export class Game {
 		}
 
 		if(!Game.lastDrawTime){
-			Game.lastDrawTime = millisecondsFromStart - 100;
+			Game.lastDrawTime = millisecondsFromStart - 10;
 		}
 
 		let drawsDiffMs = millisecondsFromStart - Game.lastDrawTime; //сколько времени прошло с прошлой прорисовки
