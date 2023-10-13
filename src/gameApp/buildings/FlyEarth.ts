@@ -35,7 +35,7 @@ import ExplosionSound from '../../assets/sounds/buildings/explosion_building.mp3
 export class FlyEarth extends Building{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	static readonly image: HTMLImageElement = new Image();
-	static readonly explosionAnimation: Animation = new Animation(8, 800); //анимация взрыва 
+	static readonly explosionAnimation: Animation = new Animation(8, 1800); //анимация взрыва 
 
 	private static readonly frames: number = 4;
 	private static readonly animationDuration: number = 700;
@@ -152,7 +152,7 @@ export class FlyEarth extends Building{
 		for (let i = 0, y = 0; y < imgData.height; y += 2){
 			for (let x = 0; x < imgData.width; x += 2) {
 				i = x * 4 + y * imgData.width * 4;
-				if(imgData.data[i + 3] == 255){
+				if(imgData.data[i + 3] == 255 && Math.random() > 0.5){
 					const xIn = Math.round(this.x + x);
 					const yIn = Math.round(this.y + y);
 					const dx = (xIn - this.centerX) / 10 * Math.random();
@@ -164,7 +164,7 @@ export class FlyEarth extends Building{
 	}
 
 	startExplosion(){
-		AudioSystem.play(this.centerX, ExplosionSound, 0.5, 1, false);
+		AudioSystem.play(this.centerX, ExplosionSound, 0.5, 0.5, false);
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void {
@@ -181,12 +181,12 @@ export class FlyEarth extends Building{
 
 	drawExplosion(drawsDiffMs: number): void {
 		if(FlyEarth.explosionAnimation.leftTimeMs > 0){
-			FlyEarth.explosionAnimation.draw(drawsDiffMs, false, this.x - this.width, this.y - this.height, this.width * 3, this.height * 3);
+			FlyEarth.explosionAnimation.draw(drawsDiffMs, false, this.x - this.width * 0.25, this.y - this.height * 0.25, this.width * 1.5, this.height * 1.5);
 		}
 
 		this._explosionParticles = this._explosionParticles.filter(p => {
-			p.location.x += p.dx;
-			p.location.y += p.dy;
+			p.location.x += p.dx / 7;
+			p.location.y += p.dy / 7;
 			//p.dy += 0.1
 			Draw.ctx.fillStyle = `rgb(${p.red}, ${p.green}, ${p.blue})`;
 			Draw.ctx.fillRect(p.location.x, p.location.y, 3, 3);
@@ -200,7 +200,7 @@ export class FlyEarth extends Building{
 
 			return p.location.x > 0 && p.location.x < Draw.canvas.width &&
 				p.location.y > 0 && p.location.y < Draw.canvas.height && 
-				Math.random() > 0.05;
+				Math.random() > 0.001;
 		});
 	}
 
