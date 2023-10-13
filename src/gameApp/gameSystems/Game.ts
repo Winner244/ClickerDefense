@@ -349,7 +349,12 @@ export class Game {
 		}
 		else{
 			if(Buildings.flyEarth.y > -Buildings.flyEarth.height){
-				Buildings.flyEarth.y -= 230 * drawsDiffMs / 1000;
+				var delta = 230 * drawsDiffMs / 1000;
+				Buildings.flyEarth.y -= delta;
+				Units.all.filter(x => x.name == Miner.name).forEach(x => {
+					x.y -= delta;
+					(<Miner>x).goalY -= delta;
+				});
 			}
 		}
 
