@@ -147,25 +147,23 @@ export class Units {
 			}
 		}
 
-		if(!isGameOver){
-			for(let i = 0; i < this.all.length; i++)
-			{
-				let unit = this.all[i];
+		for(let i = 0; i < this.all.length; i++)
+		{
+			let unit = this.all[i];
 
-				if(unit.health <= 0){ //проверка здоровья
-					unit.destroy();
-					//this.deaths.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.deathAnimation.durationMs));
-					this.all.splice(i, 1);
-					i--;
-					//AudioSystem.play(unit.centerX, DeathSound, 0.1, 2, false, true);
-				}
-				else{
-					unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
+			if(unit.health <= 0){ //проверка здоровья
+				unit.destroy();
+				//this.deaths.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.deathAnimation.durationMs));
+				this.all.splice(i, 1);
+				i--;
+				//AudioSystem.play(unit.centerX, DeathSound, 0.1, 2, false, true);
+			}
+			else if(!isGameOver){
+				unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
 
-					//выталкивание из кристаллов
-					if(unit.name == Miner.name && (<Miner>unit).goalY - unit.height == unit.y){
-						(<Miner>unit).pushUpFromCrystals();
-					}
+				//выталкивание из кристаллов
+				if(unit.name == Miner.name && (<Miner>unit).goalY - unit.height == unit.y){
+					(<Miner>unit).pushUpFromCrystals();
 				}
 			}
 		}

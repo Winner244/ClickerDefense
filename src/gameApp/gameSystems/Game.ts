@@ -341,11 +341,13 @@ export class Game {
 		Game.lastDrawTime = millisecondsFromStart;
 	}
 		
+	//Game Over
 	private static gameOverLogic(drawsDiffMs: number) : void{
 		Cursor.setCursor(Cursor.default);
 
 		if(Buildings.flyEarth.health <= 0){
 			//logic in Buildings.flyEarth.drawExplosion
+			Units.all.filter(x => x.name == Miner.name).forEach(x => x.health = 0);
 		}
 		else{
 			if(Buildings.flyEarth.y > -Buildings.flyEarth.height){

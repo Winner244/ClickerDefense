@@ -1395,7 +1395,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Game Over - bottom - with miners",
+            key: "Game Over - bottom + miners",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1482,6 +1482,79 @@ class TestPage extends React.Component {
                     new WaveData(Boar.name, 351, 25, 1)
                 ]]
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+
+                setTimeout(() => Buildings.flyEarth.health-=20, 300);
+                setTimeout(() => Buildings.flyEarth.health-=20, 500);
+                setTimeout(() => Buildings.flyEarth.health-=20, 700);
+                setTimeout(() => Buildings.flyEarth.health-=10, 900);
+                setTimeout(() => Buildings.flyEarth.health-=10, 1200);
+                setTimeout(() => Buildings.flyEarth.health-=10, 1400);
+                setTimeout(() => Buildings.flyEarth.health-=10, 1500);
+                setTimeout(() => Buildings.flyEarth.health-=100, 1800);
+            }
+        },
+
+        {
+            key: "Game Over - top + miners",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                    Waves.waveCurrent = 0;
+                    Waves.all =[[ 
+                    new WaveData(Zombie.name, 301, 70, 0),
+                    new WaveData(Boar.name, 351, 25, 1)
+                ]]
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX - 20, y, y + Miner.imageHeight);
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 100, y, y + Miner.imageHeight);
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 180, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    var y = Buildings.flyEarth.centerY - 85;
+                    var miner4 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
+                    miner4.loadedResourcesAfterBuild();
+                    Units.all.push(miner4);
+
+                    
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner5 = new Miner(Buildings.flyEarth.centerX - 20 + 10, y, y + Miner.imageHeight);
+                    miner5.loadedResourcesAfterBuild();
+                    Units.all.push(miner5);
+
+
+                    var y = Buildings.flyEarth.centerY - 70 + 25;
+                    var miner6 = new Miner(Buildings.flyEarth.centerX - 100 + 10, y, y + Miner.imageHeight);
+                    miner6.loadedResourcesAfterBuild();
+                    Units.all.push(miner6);
+
+
+                    var y = Buildings.flyEarth.centerY - 80 + 25;
+                    var miner7 = new Miner(Buildings.flyEarth.centerX - 180 + 10, y, y + Miner.imageHeight);
+                    miner7.loadedResourcesAfterBuild();
+                    Units.all.push(miner7);
+
+
+                    var y = Buildings.flyEarth.centerY - 85 + 25;
+                    var miner8 = new Miner(Buildings.flyEarth.centerX + 75 + 10, y, y + Miner.imageHeight);
+                    miner8.loadedResourcesAfterBuild();
+                    Units.all.push(miner8);
+                }, 300);
 
                 setTimeout(() => Buildings.flyEarth.health-=20, 300);
                 setTimeout(() => Buildings.flyEarth.health-=20, 500);
