@@ -184,7 +184,7 @@ export class Unit extends AttackedObject {
 		return false;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean): void{
+	draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}

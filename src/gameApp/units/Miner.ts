@@ -2,7 +2,6 @@ import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 import {Draw} from '../gameSystems/Draw';
-
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {Monster} from '../monsters/Monster';
@@ -13,15 +12,20 @@ import {Building} from '../buildings/Building';
 import {FlyEarth} from '../buildings/FlyEarth';
 
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 import ShopItem from '../../models/ShopItem';
 
 import {Helper} from '../helpers/Helper';
 
 import {Unit} from './Unit';
 
+
 import MinerFallImage from '../../assets/img/units/miner/fall.png'; 
 import MinerFallEndImage from '../../assets/img/units/miner/fallEnd.png'; 
-import MinerWait1Image from '../../assets/img/units/miner/wait1.png'; 
+import MinerActiveWaitImage from '../../assets/img/units/miner/activeWait.png'; 
+import MinerDiggingImage from '../../assets/img/units/miner/digging.png'; 
+import MinerStartActiveWaitImage from '../../assets/img/units/miner/startActiveWait.png'; 
+import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.png'; 
 
 //import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 
@@ -30,21 +34,31 @@ import MinerWait1Image from '../../assets/img/units/miner/wait1.png';
 export class Miner extends Unit{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
-	private static readonly wait1Image: HTMLImageElement = new Image();
+	private static readonly passiveWait1Image: HTMLImageElement = new Image();
 	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
+	private static readonly startActiveWaitImage: HTMLImageElement = new Image(); 
+	private static readonly activeWaitImage: HTMLImageElement = new Image(); 
+	private static readonly diggingImage: HTMLImageElement = new Image(); 
 
-	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.wait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
+	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
 	public goalY: number;
 
 	private readonly _fallEndAnimation: Animation;
 	private _isFall: boolean;
 
+	private readonly _startActiveWaitAnimation: Animation;
+	private readonly _activeWaitAnimation: AnimationInfinite;
+	private readonly _diggingAnimation: AnimationInfinite;
+
 	constructor(x: number, y: number, goalY: number) {
-		super(x, y, 3, Miner.wait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
+		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
 
 		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
+		this._startActiveWaitAnimation = new Animation(5, 5 * 75, Miner.startActiveWaitImage);
+		this._activeWaitAnimation = new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage);
+		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 
 		this._isFall = false;
 		this.isLeftSide = false;
@@ -73,14 +87,17 @@ export class Miner extends Unit{
 	}
 
 	static initForShop(): void{
-		Miner.wait1Image.src = MinerWait1Image;
+		Miner.passiveWait1Image.src = MinerPassiveWait1Image;
 	}
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources && Miner.imageHandler.isEmpty){
-			Miner.imageHandler.new(Miner.wait1Image).src = MinerWait1Image;
+			Miner.imageHandler.new(Miner.passiveWait1Image).src = MinerPassiveWait1Image;
 			Miner.imageHandler.new(Miner.fallImage).src = MinerFallImage;
 			Miner.imageHandler.new(Miner.fallEndImage).src = MinerFallEndImage;
+			Miner.imageHandler.new(Miner.startActiveWaitImage).src = MinerStartActiveWaitImage;
+			Miner.imageHandler.new(Miner.activeWaitImage).src = MinerActiveWaitImage;
+			Miner.imageHandler.new(Miner.diggingImage).src = MinerDiggingImage;
 		}
 	}
 
@@ -135,7 +152,7 @@ export class Miner extends Unit{
 	}
 
 
-	draw(drawsDiffMs: number, isGameOver: boolean): void{
+	draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -146,8 +163,19 @@ export class Miner extends Unit{
 		else if(this._fallEndAnimation.leftTimeMs > 0){
 			this._fallEndAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
 		}
+		else if(isWaveStarted && waveDelayStartLeftTimeMs > 0) {
+			if(this._startActiveWaitAnimation.leftTimeMs > 0){
+				this._startActiveWaitAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+			}
+			else{
+				this._activeWaitAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+			}
+		}
+		else if(isWaveStarted){
+			this._diggingAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+		}
 		else{
-			super.draw(drawsDiffMs, isGameOver);
+			super.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs);
 		}
 	}
 

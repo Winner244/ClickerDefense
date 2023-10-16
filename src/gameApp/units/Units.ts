@@ -173,7 +173,7 @@ export class Units {
 		Units.all.forEach(unit => unit.modifiers = []);
 	}
 
-	static draw(drawsDiffMs: number, isGameOver: boolean): void{
+	static draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
 		//появление юнитов
 		this.creatings.forEach(x => {
 			let newWidth = (this.creatingAnimation.image.width / this.creatingAnimation.frames) * (x.size.height / (this.creatingAnimation.image.height));
@@ -199,7 +199,7 @@ export class Units {
 
 			miners.forEach(unit => {
 				this.drawFlyEarthCrystals(drawsDiffMs, isGameOver, prevMiner, <Miner>unit);
-				unit.draw(drawsDiffMs, isGameOver);
+				unit.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs);
 				prevMiner = <Miner>unit;
 			});
 			
@@ -209,7 +209,7 @@ export class Units {
 		//отрисовка остальных юнитов
 		Units.all
 			.filter(x => x.name != Miner.name)
-			.forEach(unit => unit.draw(drawsDiffMs, isGameOver));
+			.forEach(unit => unit.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs));
 	}
 
 	static drawFlyEarthCrystals(drawsDiffMs: number, isGameOver: boolean, prevMiner: Miner|null, nextMiner: Miner|null = null){
