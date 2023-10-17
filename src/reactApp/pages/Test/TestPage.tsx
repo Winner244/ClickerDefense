@@ -2042,6 +2042,22 @@ class TestPage extends React.Component {
                 }, 300);
             }
         },
+
+        {
+            key: "Золотодобытчики - добыча",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    Units.addMiner();
+                }, 300);
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){

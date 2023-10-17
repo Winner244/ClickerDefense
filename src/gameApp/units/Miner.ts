@@ -19,6 +19,7 @@ import {Helper} from '../helpers/Helper';
 
 import {Unit} from './Unit';
 
+import {Coins} from '../coins/Coins';
 
 import MinerFallImage from '../../assets/img/units/miner/fall.png'; 
 import MinerFallEndImage from '../../assets/img/units/miner/fallEnd.png'; 
@@ -51,6 +52,8 @@ export class Miner extends Unit{
 	private readonly _startActiveWaitAnimation: Animation;
 	private readonly _activeWaitAnimation: AnimationInfinite;
 	private readonly _diggingAnimation: AnimationInfinite;
+	private _isDiging: boolean; //Копает сейчас?
+	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
 
 	constructor(x: number, y: number, goalY: number) {
 		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
@@ -61,6 +64,8 @@ export class Miner extends Unit{
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 
 		this._isFall = false;
+		this._isDiging = true;
+		this._wasPickHit = false;
 		this.isLeftSide = false;
 
 		this.goalY = goalY;
@@ -118,6 +123,24 @@ export class Miner extends Unit{
 			this._isFall = false;
 		}
 		
+		if(isWaveStarted){
+			if(this._isDiging){
+				console.log('this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs', this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs);
+				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
+					if(!this._wasPickHit){
+						Coins.create(this.x + this.width - this.width / 3, this.y + this.height);
+						FlyEarth.playSoundPick(this.x + this.width, 0.001);
+						this._wasPickHit = true;
+					}
+				}
+				else{
+					this._wasPickHit = false;
+				}
+			}
+			else{
+	
+			}
+		}
 	}
 
 	pushUpFromCrystals(isOnlyGoal: boolean = false){
@@ -172,7 +195,12 @@ export class Miner extends Unit{
 			}
 		}
 		else if(isWaveStarted){
-			this._diggingAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+			if(this._isDiging){
+				this._diggingAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+			}
+			else{
+
+			}
 		}
 		else{
 			super.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs);

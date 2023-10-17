@@ -187,13 +187,13 @@ export class Tower extends Building{
 		this._isDisplayDynamitRadius = false;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean)
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarting: boolean)
 	{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarted);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarting);
 
 		if(this._rechargeLeftTimeMs > 0){ //перезарядка
 			this._rechargeLeftTimeMs -= drawsDiffMs;
@@ -230,7 +230,7 @@ export class Tower extends Building{
 			}
 		}
 
-		if(isWaveStarted && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
+		if(isWaveStarting && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
 			this._isDisplayRadius = false;
 			this._isDisplayDynamitRadius = false;
 		}

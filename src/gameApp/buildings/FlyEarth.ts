@@ -111,14 +111,14 @@ export class FlyEarth extends Building{
 		AudioSystem.load(ExplosionSound);
 	}
 
-	private static playSoundPick(x: number){
+	public static playSoundPick(x: number, volume: number = 0.05){
 		const listOfSounds = [
 			PickSoundUrl1,
 			PickSoundUrl2,
 			PickSoundUrl3,
 			PickSoundUrl4
 		];
-		AudioSystem.playRandomV(x, listOfSounds, 0.05);
+		AudioSystem.playRandomV(x, listOfSounds, volume);
 		AudioSystem.playRandomTone(x, 0.02, 5000, 10000);
 	}
 

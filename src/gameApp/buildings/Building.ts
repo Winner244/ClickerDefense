@@ -170,7 +170,7 @@ export class Building extends AttackedObject{
 		return false;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarting: boolean){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
