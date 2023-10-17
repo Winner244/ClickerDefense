@@ -128,9 +128,14 @@ export class Miner extends Unit{
 				console.log('this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs', this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs);
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
 					if(!this._wasPickHit){
-						Coins.create(this.x + this.width - this.width / 3, this.y + this.height);
-						FlyEarth.playSoundPick(this.x + this.width, 0.001);
-						this._wasPickHit = true;
+						let flyEarth = buildings.find(x => x.name == FlyEarth.name);
+						if(flyEarth){
+							let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
+							let coinY = flyEarth.y + flyEarth.height / 2;
+							Coins.create(coinX, Math.max(coinY, this.y + this.height));
+							FlyEarth.playSoundPick(this.x + this.width, 0.001);
+							this._wasPickHit = true;
+						}
 					}
 				}
 				else{
