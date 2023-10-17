@@ -125,7 +125,6 @@ export class Miner extends Unit{
 		
 		if(isWaveStarted){
 			if(this._isDiging){
-				console.log('this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs', this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs);
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
 					if(!this._wasPickHit){
 						let flyEarth = buildings.find(x => x.name == FlyEarth.name);
@@ -143,7 +142,9 @@ export class Miner extends Unit{
 				}
 			}
 			else{
-	
+				//TODO: убегать или обороняться от нападения летучих мышей
+
+				//TODO: если угроза миновала - this._isDiging = true;
 			}
 		}
 	}
@@ -175,6 +176,7 @@ export class Miner extends Unit{
 			//AudioSystem.playRandom(this.centerX, 
 			//	[SoundAttacked1], 
 			//	[0.05], false, 1, true);
+			this._isDiging = false;
 		}
 		return damage;
 	}
