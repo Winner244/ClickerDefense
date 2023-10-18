@@ -190,7 +190,7 @@ export class AudioSystem{
 		}
 
 		sourceTone.playbackRate = speed;
-		sourceTone.volume.value = (gainNode.gain.value - 1) * 20;
+		sourceTone.volume.value = (gainNode.gain.value - 1) * 20; //The volume of the output in decibels.
 		sourceTone.toDestination();
 		sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 
 		return sourceTone;
