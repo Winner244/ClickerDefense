@@ -62,6 +62,7 @@ export class Miner extends Unit{
 		this._startActiveWaitAnimation = new Animation(5, 5 * 75, Miner.startActiveWaitImage);
 		this._activeWaitAnimation = new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage);
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
+		this._diggingAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
 
 		this._isFall = false;
 		this._isDiging = true;
