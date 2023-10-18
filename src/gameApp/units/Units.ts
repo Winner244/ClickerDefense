@@ -1,5 +1,7 @@
 import {Helper} from "../helpers/Helper";
 
+import {AudioSystem} from "../gameSystems/AudioSystem";
+
 import Animation from '../../models/Animation';
 
 import {SimpleObject} from "../../models/SimpleObject";
@@ -15,6 +17,8 @@ import {Unit} from "./Unit";
 
 import CreatingImage from '../../assets/img/units/creating.png'; 
 
+import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
+
 /** Система управления всеми юнитами - единичный статичный класс */
 export class Units {
 	static all: Unit[] = []; //все созданные и пока ещё живые юниты
@@ -28,6 +32,7 @@ export class Units {
 	}
 
 	static loadResources(){
+		AudioSystem.load(CreatingSound);
 		this.creatingAnimation.image.src = CreatingImage;
 		//this.deathAnimation.image.src = DeathImage;
 		//AudioSystem.load(DeathSound);
@@ -92,6 +97,7 @@ export class Units {
 	static add(unit: Unit){
 		Units.all.push(unit);
 		this.creatings.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.creatingAnimation.durationMs));
+		AudioSystem.play(unit.centerX, CreatingSound, 0.1, 1, true);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
