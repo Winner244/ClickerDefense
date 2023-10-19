@@ -153,7 +153,7 @@ export class Skelet extends Monster{
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
 		var damage = super.applyDamage(damage, x, y, attackingObject);
 		if(damage > 0){
-			AudioSystem.playRandomV(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5], 0.5, false, 1, true);
+			AudioSystem.playRandomV(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5], -10, false, 1, true);
 		}
 		return damage;
 	}

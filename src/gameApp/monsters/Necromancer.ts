@@ -545,7 +545,7 @@ export class Necromancer extends Monster{
 			//this._attackLeftTimeMs = 350;
 			AudioSystem.playRandomV(this.centerX, 
 				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5], 
-				0.1, false, 1, true);
+				-18, false, 1, true);
 	
 			//отмена спец способности
 			if(this._isSpecialAbilityAcidRainCallStarted || this._isSpecialAbilitySkeletesCallStarted){

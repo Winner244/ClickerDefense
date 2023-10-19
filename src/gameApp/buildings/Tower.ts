@@ -346,7 +346,7 @@ export class Tower extends Building{
 				}
 			})
 		
-		AudioSystem.playRandomV(centerX, [explosionDynamitSound, explosionDynamit2Sound], 0.1, false, 1, true);
+		AudioSystem.playRandomV(centerX, [explosionDynamitSound, explosionDynamit2Sound], -18, false, 1, true);
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, isBuildingMode: boolean = false, isAnotherBuildingHereInBuildingMode: boolean = false): void{

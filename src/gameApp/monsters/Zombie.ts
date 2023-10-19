@@ -97,7 +97,7 @@ export class Zombie extends Monster{
 	playSound(): void {
 		AudioSystem.playRandom(this.centerX, 
 			[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 
-			[0.1, 0.1, 0.1, 0.1, 0.1, 0.05, 0.2, 0.05, 0.07, 0.08], false, 1, true);
+			[-18, -18, -18, -18, -18, -19, -16, -19, -18.6, -18.4], false, 1, true);
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
@@ -105,7 +105,7 @@ export class Zombie extends Monster{
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, 
 				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10, SoundAttacked11, SoundAttacked12], 
-				[0.05, 0.05, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08, 0.08], false, 1, true);
+				[-19, -19, -18.4, -18.4, -18.4, -18.4, -18.4, -18.4, -18.4, -18.4, -18.4, -18.4], false, 1, true);
 		}
 		return damage;
 	}

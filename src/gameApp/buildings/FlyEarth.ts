@@ -111,7 +111,7 @@ export class FlyEarth extends Building{
 		AudioSystem.load(ExplosionSound);
 	}
 
-	public static playSoundPick(x: number, volume: number = 0.05){
+	public static playSoundPick(x: number, volume: number = -19){
 		const listOfSounds = [
 			PickSoundUrl1,
 			PickSoundUrl2,

@@ -111,15 +111,12 @@ export class AudioSystem{
 		}
 
 		//volume
-		var gainNode = this._context.createGain()
 		var volumeSettings = isMusic 
 			? AudioSystem.musicVolume 
 			: AudioSystem.soundVolume;
-		gainNode.gain.value = volume * volumeSettings;
-		gainNode.connect(this._context.destination)
 
 		return this._load(pathToAudioFile)
-			.then(buffer => AudioSystem._play(x, buffer, gainNode, speed, isUseBiquadFilterRandom, delayStartingSeconds, offsetStartingSeconds))
+			.then(buffer => AudioSystem._play(x, buffer, volume * (1 + 1 - volumeSettings), speed, isUseBiquadFilterRandom, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
 				if(!source){
 					return null;
@@ -157,7 +154,7 @@ export class AudioSystem{
 	private static _play(
 		x: number, 
 		buffer: AudioBuffer, 
-		gainNode: GainNode, 
+		volume: number, 
 		speed: number, 
 		isUseBiquadFilterRandom = false, 
 		delayStartingSeconds: number = 0, 
@@ -190,7 +187,7 @@ export class AudioSystem{
 		}
 
 		sourceTone.playbackRate = speed;
-		sourceTone.volume.value = (gainNode.gain.value - 1) * 20; //The volume of the output in decibels.
+		sourceTone.volume.value = volume; //changing The volume of the output in decibels.
 		sourceTone.toDestination();
 		sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 
 		return sourceTone;

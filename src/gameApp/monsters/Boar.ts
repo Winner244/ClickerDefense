@@ -197,7 +197,7 @@ export class Boar extends Monster{
 
 	playSound(): void {
 		AudioSystem.playRandomV(this.centerX, 
-			[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], 0.1, false, 1, true);
+			[Sound1, Sound2, Sound3, Sound4, Sound5, Sound6, Sound7, Sound8, Sound9, Sound10], -18, false, 1, true);
 	}
 
 	onClicked(damage: number, x: number|null = null, y: number|null = null): void{
@@ -212,7 +212,7 @@ export class Boar extends Monster{
 	
 			AudioSystem.playRandomV(this.centerX, 
 				[SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4, SoundAttacked5, SoundAttacked6, SoundAttacked7, SoundAttacked8, SoundAttacked9, SoundAttacked10], 
-				0.2, false, 1, true);
+				-16, false, 1, true);
 		}
 		return damage;
 	}

@@ -42,7 +42,7 @@ export class MusicSystem {
 
 		const nextMusic = this.peaceTimeList[0];
 
-		AudioSystem.playMusic(nextMusic, 0.1, delayStartingSeconds)
+		AudioSystem.playMusic(nextMusic, -18, delayStartingSeconds)
 			.then(sourse => {
 				if(!this._isStopperd && sourse){
 					this._startedMusic = sourse;

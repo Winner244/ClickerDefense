@@ -133,7 +133,7 @@ export class Miner extends Unit{
 							let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
 							let coinY = flyEarth.y + flyEarth.height / 2;
 							Coins.create(coinX, Math.max(coinY, this.y + this.height));
-							FlyEarth.playSoundPick(this.x + this.width, 0.001);
+							FlyEarth.playSoundPick(this.x + this.width, -30);
 							this._wasPickHit = true;
 						}
 					}
@@ -176,7 +176,7 @@ export class Miner extends Unit{
 		if(damage > 0){
 			//AudioSystem.playRandom(this.centerX, 
 			//	[SoundAttacked1], 
-			//	[0.05], false, 1, true);
+			//	[-19], false, 1, true);
 			this._isDiging = false;
 		}
 		return damage;

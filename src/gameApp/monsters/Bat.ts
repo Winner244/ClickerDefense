@@ -125,17 +125,17 @@ export class Bat extends Monster{
 
 	playSound(): void{
 		if(Monsters.all.filter(x => x instanceof Bat).length > 4){
-			AudioSystem.playRandom(this.centerX, [SoundMany1, SoundMany2, SoundMany3], [0.02, 0.02, 0.02], false, 1, true);
+			AudioSystem.playRandom(this.centerX, [SoundMany1, SoundMany2, SoundMany3], [-16, -16, -16], false, 1, true);
 		}
 		else{
-			AudioSystem.playRandom(this.centerX, [Sound1, Sound2], [0.06, 0.06], false, 1, true);
+			AudioSystem.playRandom(this.centerX, [Sound1, Sound2], [-18.8, -18.8], false, 1, true);
 		}
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
 		var damage = super.applyDamage(damage, x, y, attackingObject);
 		if(damage > 0){
-			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [0.09, 0.4, 0.3, 0.3], false, 1, true);
+			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3, SoundAttacked4], [-18.2, -12, -14, -14], false, 1, true);
 		}
 		return damage;
 	}
