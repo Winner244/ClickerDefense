@@ -67,7 +67,7 @@ export class Miner extends Unit{
 		this._isFall = false;
 		this._isDiging = true;
 		this._wasPickHit = false;
-		this.isLeftSide = false;
+		this.isLeftSide = x < Buildings.flyEarth.centerX;
 
 		this.goalY = goalY;
 		this.shopItemName = Miner.shopItem.name;

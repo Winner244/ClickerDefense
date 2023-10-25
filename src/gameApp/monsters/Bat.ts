@@ -38,6 +38,8 @@ import SoundAttacked4 from '../../assets/sounds/monsters/bat/attacked4.mp3';
 export class Bat extends Monster{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
+	public isSelectMinerToTest: boolean; //Для тестирования атаки на майнера
+
 	private static readonly images: HTMLImageElement[] = []; //разные окраски монстра
 	private static readonly imageFrames = 6; 
 
@@ -71,6 +73,7 @@ export class Bat extends Monster{
 			Bat.imageHandler,
 			3000); //avrTimeSoundWaitMs
 
+		this.isSelectMinerToTest = false;
 		this._zigzagLength = 0;
 		this._isZigzagToTop = !!Helper.getRandom(0, 1);
 	}
@@ -91,7 +94,7 @@ export class Bat extends Monster{
 		if(this._goal){
 			//напасть на майнера, если он есть на той же половине карты
 			const miners = units.filter(x => x.name == Miner.name && x.isLeftSide == this.isLeftSide);
-			if(this._goal.name == FlyEarth.name && miners.length && Helper.getRandom(0, 100) == 1){ 
+			if(this._goal.name == FlyEarth.name && miners.length && (Helper.getRandom(0, 100) == 1 || this.isSelectMinerToTest)){ 
 				this._goal = miners[0];
 			}
 

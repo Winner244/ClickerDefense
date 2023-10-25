@@ -142,7 +142,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 500;
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Waves.all[0].push(new WaveData(Zombie.name, 1, 30, 0));
+                Waves.all[0] = [new WaveData(Zombie.name, 1, 30, 0)];
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -2055,6 +2055,48 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     Units.addMiner();
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - конец волны",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Gamer.coins = 500;
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = true;
+                Waves.all[0] = [new WaveData(Zombie.name, 1, 30, 0)];
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    Units.addMiner();
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - гибель от летучей мыши",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    var bat = new Bat(650, 280, true, 1);
+                    bat.isSelectMinerToTest = true;
+                    Monsters.all.push(bat);
                 }, 300);
             }
         },
