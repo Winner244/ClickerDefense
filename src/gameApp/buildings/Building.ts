@@ -131,6 +131,13 @@ export class Building extends AttackedObject{
 		this._impulsePharos = value;
 		this._impulse = value <= 1 ? 0 : value;
 	}
+	public get impulse(): number{
+		if(this._impulse <= 1){
+			return 0;
+		}
+
+		return this._impulse;
+	}
 
 	set isDisplayedUpgradeWindow(value: boolean){
 		this._isDisplayedUpgradeWindow = value;
