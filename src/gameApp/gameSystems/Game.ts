@@ -317,6 +317,9 @@ export class Game {
 		Coins.draw();
 
 		Units.draw(drawsDiffMs, Game.isGameOver, Waves.isStarted, Waves.delayStartLeftTimeMs);
+		Units.drawHealth();
+		Units.drawRepairingAnumation();
+		Units.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 	
 		Monsters.draw(drawsDiffMs, Game.isGameOver);
 		Monsters.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
