@@ -103,9 +103,6 @@ export class Bat extends Monster{
 					if(miners.length && (Helper.getRandom(0, 100) == 1 || this.isSelectMinerToTest)){ 
 						this._goal = miners[0];
 					}
-				} //разворот
-				else if(this._goal.name == Miner.name && this.isLeftSide == this._goal.isLeftSide && this.isLeftSide != (<Miner>this._goal).isRunRight){
-					this.isLeftSide = (<Miner>this._goal).isRunRight;
 				}
 	
 				this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
@@ -120,7 +117,12 @@ export class Bat extends Monster{
 				}
 				
 			}
-			else{
+			else{ 
+				 //разворот при преследовании майнера
+				if(this._goal.name == Miner.name && this.isLeftSide != this._goal.isLeftSide && this.isLeftSide != (<Miner>this._goal).isRunRight && this.centerX > this._goal.x && this.x < this._goal.x + this._goal.width){
+					this.isLeftSide = !this.isLeftSide;
+				}
+
 				if(this.y < this._goal.y + this._goal.reduceHover){
 					this.y++;
 				}

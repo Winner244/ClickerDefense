@@ -207,7 +207,25 @@ RoadMap:
 		> добавить тест с несколькими майнерами и несколькими летучими мышами с разных сторон
 		
 		> добавить тест на уничожение летучей мышки через некоторое время - майнер должен остановиться и продолжить копать в новом месте
-			
+		> проверить как будет отреагировать башня на летучую мышь с другой стороны прилетевшую
+		> проверить на быстром miner - как он будет успевать убегать от мышки и начинать копать
+
+
+	bat слева, miner справа, bat летит к miner 
+		bat.isLeftSide != miner.isLeftSide
+	bat пересекает середину 
+		bat.isLeftSide == true and != miner.isLeftSide
+		bat.x < miner.x 
+	bat догнал майнера 
+		bat.x > miner.X    
+	miner убегает на левую сторону 
+		bat.x > miner.x     bat.x > miner.x + miner.width  меняем bat.isLeftSide
+	bat пересёк середину 
+		bat.isLeftSide !=  miner.isLeftSide
+		bat.x > miner.x + miner.width 
+	bat догнал miner 
+		bat.x < miner.x + miner.width  and bat.x > miner.x
+		
 	> прокачка навыков
 		> самооборона
 			> анимация махания киркой для атаки по летучим мышам если на него напали

@@ -141,7 +141,7 @@ export class Miner extends Unit{
 			if(this._isDiging){ //добывание монеток
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
 					if(!this._wasPickHit){
-						let flyEarth = buildings.find(x => x.name == FlyEarth.name);
+						let flyEarth = Buildings.flyEarth;
 						if(flyEarth){ //создание монетки
 							let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
 							let coinY = flyEarth.y + flyEarth.height / 2;
@@ -163,7 +163,7 @@ export class Miner extends Unit{
 					if(this.isRunRight){
 						this.x += speed;
 
-						const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageWidth - 10;
+						const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - this.width - 10;
 						if(this.x > xMax){
 							this.isRunRight = !this.isRunRight;
 						}
@@ -174,6 +174,21 @@ export class Miner extends Unit{
 						const xMin = Buildings.flyEarth.x;
 						if(this.x < xMin){
 							this.isRunRight = !this.isRunRight;
+						}
+					}
+
+					
+					let flyEarth = Buildings.flyEarth;
+					if(flyEarth){
+						this.y += (Math.random() - 0.5);
+
+						var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32 - this.height;
+						var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32 - this.height;
+						if(this.y > yMax){
+							this.y = yMax;
+						}
+						else if(this.y < yMin){
+							this.y = yMin;
 						}
 					}
 					this.isLeftSide = this.x < Buildings.flyEarth.centerX;
