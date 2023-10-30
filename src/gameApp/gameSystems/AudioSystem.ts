@@ -97,7 +97,7 @@ export class AudioSystem{
 	public static play(
 		x: number, 
 		pathToAudioFile: string, 
-		volume: number = 1,
+		volume: number = 0,
 		speed: number = 1, 
 		isUseBiquadFilterRandom = false, 
 		isUseAutoPauseAndResume: boolean = false, 

@@ -295,7 +295,7 @@ export class Building extends AttackedObject{
 		super.drawHealthBase(this.x + 15, this.y - 10, this.width - 30);
 	}
 
-	drawRepairingAnumation(): void{
+	drawRepairingAnimation(): void{
 		if(this._isDisplayRepairAnimation){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
 			Draw.ctx.rotate((this._repairAnimationAngle - 45) * Math.PI / 180);

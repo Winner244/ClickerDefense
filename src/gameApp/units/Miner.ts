@@ -85,7 +85,7 @@ export class Miner extends Unit{
 		this._isFall = false;
 		this._isDiging = true;
 		this._wasPickHit = false;
-		this.isLeftSide = x < Buildings.flyEarth.centerX;
+		this.isLeftSide = false;
 		this.isRunRight = true;
 
 		this.goalY = goalY;
@@ -134,7 +134,15 @@ export class Miner extends Unit{
 			return;
 		}
 
-		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarted);
+
+		if(this.health <= 0){
+			if(this.endingAnimation.leftTimeMs <= 0){
+				//TODO: ADD logic of ending
+			}
+			return;
+		}
+
 		
 		//gravitations
 		if(this.y + this.height < this.goalY){
@@ -255,7 +263,15 @@ export class Miner extends Unit{
 			return;
 		}
 
-		if(this._isFall){
+		if(this.health <= 0){
+			if(this.endingAnimation.leftTimeMs > 0){
+				this.endingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, false);
+			}
+			else{
+				//TODO: draw pick
+			}
+		}
+		else if(this._isFall){
 			Draw.ctx.drawImage(Miner.fallImage, this.x, this.y, this.width, this.height);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){

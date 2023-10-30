@@ -141,8 +141,8 @@ export class Buildings{
 		Buildings.all.forEach(building => building.drawHealth());
 	}
 
-	static drawRepairingAnumation(): void{
-		Buildings.all.forEach(building => building.drawRepairingAnumation());
+	static drawRepairingAnimation(): void{
+		Buildings.all.forEach(building => building.drawRepairingAnimation());
 	}
 
 	static drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean): void{

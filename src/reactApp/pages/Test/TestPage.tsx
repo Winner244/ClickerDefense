@@ -2165,6 +2165,33 @@ class TestPage extends React.Component {
                 }, 300);
             }
         },
+
+        {
+            key: "Золотодобытчики - гибель",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = true;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                Units.loadResources();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    setTimeout(() => {
+                        miner3.health = 0;
+                    }, 1000);
+                }, 300);
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){

@@ -99,7 +99,7 @@ export class Bat extends Monster{
 			if(!this._isAttack){
 				//нападение на майнера
 				if(this._goal.name == FlyEarth.name){
-					const miners = units.filter(x => x.name == Miner.name);
+					const miners = units.filter(x => x.name == Miner.name && x.health > 0);
 					if(miners.length && (Helper.getRandom(0, 100) == 1 || this.isSelectMinerToTest)){ 
 						this._goal = miners[0];
 					}
@@ -119,7 +119,7 @@ export class Bat extends Monster{
 			}
 			else{ 
 				 //разворот при преследовании майнера
-				if(this._goal.name == Miner.name && this.isLeftSide != this._goal.isLeftSide && this.isLeftSide != (<Miner>this._goal).isRunRight && this.centerX > this._goal.x && this.x < this._goal.x + this._goal.width){
+				if(this._goal.name == Miner.name && this.isLeftSide != (<Miner>this._goal).isRunRight && this.centerX > this._goal.x && this.x < this._goal.x + this._goal.width){
 					this.isLeftSide = !this.isLeftSide;
 				}
 

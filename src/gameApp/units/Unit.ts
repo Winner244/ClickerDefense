@@ -1,10 +1,14 @@
 import {Draw} from '../gameSystems/Draw';
 
+import {AudioSystem} from '../gameSystems/AudioSystem';
+
 import {ImageHandler} from '../../gameApp/ImageHandler';
 import {AttackedObject} from '../../models/AttackedObject';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
+
+import Animation from '../../models/Animation';
 
 import {Labels} from '../labels/Labels';
 
@@ -16,6 +20,10 @@ import {Building} from '../buildings/Building';
 import UpgradeAnimation from '../../assets/img/buildings/upgrade.png';
 import HealthIcon from '../../assets/img/icons/health.png';
 import ShieldIcon from '../../assets/img/icons/shield.png';
+
+import CreatingImage from '../../assets/img/units/creating.png'; 
+
+import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
 
 
 /** Базовый класс для всех Юнитов пользователя */
@@ -41,6 +49,8 @@ export class Unit extends AttackedObject {
 	healingPricePerHealth: number; //сколько стоит 1 хп вылечить
 
 	speed: number; //скорость передвижения (пикселей в секунду)
+
+	readonly endingAnimation: Animation = new Animation(6, 600); //анимация появления юнита
 
 	//технические поля экземпляра
 	protected _isDisplayHealingAnimation: boolean; //отображается ли сейчас анимация лечения?
@@ -80,6 +90,9 @@ export class Unit extends AttackedObject {
 		this.infoItems = [];
 
 		this.improvements = [];
+
+		this.endingAnimation.image.src = CreatingImage;
+		AudioSystem.load(CreatingSound);
 	}
 
 	
@@ -126,15 +139,15 @@ export class Unit extends AttackedObject {
 
 	mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isMouseIn: boolean, isBuilderActive: boolean): boolean {
 		if(isWaveEnded && isMouseIn && !isBuilderActive){
-			let isDisplayRepairButton =  this.isSupportHealing && this.health < this.healthMax;
-			if(isDisplayRepairButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
+			let isDisplayHealingButton =  this.isSupportHealing && this.health < this.healthMax;
+			if(isDisplayHealingButton || this.isSupportUpgrade && !this.isDisplayedUpgradeWindow){
 				/*if(!UnitsButtons.isEnterMouse){
 					let x = (this.x + this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
 					let y = (this.y + this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
 					let width = (this.width - 2 * this.reduceHover) * Draw.canvas.clientWidth / Draw.canvas.width;
 					let height = (this.height - 2 * this.reduceHover) * Draw.canvas.clientHeight / Draw.canvas.height;
 					let healingPrice = this.getHealingPrice();
-					UnitsButtons.show(x, y, width, height, isDisplayRepairButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, healingPrice, this);
+					UnitsButtons.show(x, y, width, height, isDisplayHealingButton, this.isSupportUpgrade && !this.isDisplayedUpgradeWindow, healingPrice, this);
 				}*/
 			}
 		}
@@ -145,6 +158,12 @@ export class Unit extends AttackedObject {
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
+		}
+
+		if(this.health <= 0){
+			if(this.endingAnimation.leftTimeMs == this.endingAnimation.durationMs){
+				AudioSystem.play(this.centerX, CreatingSound);
+			}
 		}
 
 		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
@@ -169,13 +188,13 @@ export class Unit extends AttackedObject {
 		return Math.ceil((this.healthMax - this.health) * this.healingPricePerHealth);
 	}
 
-	isCanBeRepaired() : boolean {
+	isCanBeHealing() : boolean {
 		return Gamer.coins >= this.getHealingPrice();
 	}
 
 	healing(): boolean{
 		let healingPrice = this.getHealingPrice();
-		if(this.isCanBeRepaired()){
+		if(this.isCanBeHealing()){
 			Gamer.coins -= healingPrice;
 			this.health = this.healthMax;
 			//AudioSystem.play(this.centerX, HealingSoundUrl, 0.4, 1, false, true);
@@ -190,6 +209,13 @@ export class Unit extends AttackedObject {
 
 	draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
 		if(!this.imageHandler.isImagesCompleted){
+			return;
+		}
+
+		if(this.health <= 0){
+			if(this.endingAnimation.leftTimeMs > 0){
+				this.endingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, true);
+			}
 			return;
 		}
 
@@ -216,7 +242,7 @@ export class Unit extends AttackedObject {
 		super.drawHealthBase(this.x + 15, this.y - 10, this.width - 30);
 	}
 
-	drawRepairingAnumation(): void{
+	drawHealingingAnimation(): void{
 		if(this._isDisplayHealingAnimation){
 			//Draw.ctx.setTransform(1, 0, 0, 1, this.x + 50, this.y + this.height / 2 + 50 / 2); 
 			//Draw.ctx.drawImage(Building.healingImage, -25, -50, 50, 50);

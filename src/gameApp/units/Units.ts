@@ -157,14 +157,7 @@ export class Units {
 		{
 			let unit = this.all[i];
 
-			if(unit.health <= 0){ //проверка здоровья
-				unit.destroy();
-				//this.deaths.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.deathAnimation.durationMs));
-				this.all.splice(i, 1);
-				i--;
-				//AudioSystem.play(unit.centerX, DeathSound, 0.1, 2, false, true);
-			}
-			else if(!isGameOver){
+			if(!isGameOver){
 				unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
 
 				//выталкивание из кристаллов
@@ -249,8 +242,8 @@ export class Units {
 		Units.all.forEach(unit => unit.drawHealth());
 	}
 
-	static drawRepairingAnumation(): void{
-		Units.all.forEach(unit => unit.drawRepairingAnumation());
+	static drawHealingingAnimation(): void{
+		Units.all.forEach(unit => unit.drawHealingingAnimation());
 	}
 
 	static drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean): void{

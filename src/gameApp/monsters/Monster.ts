@@ -122,7 +122,7 @@ export class Monster extends AttackedObject{
 			//моно сделать для левой и правой стороны по списку, которые обновляются при перемещении юнита - там будут юниты и здания ближайшие к монстрам, что бы им не искать цель, 
 			//а просто брать первого из списка + при уничтожении здания будет проще
 			let goal: AttackedObject[] = [];
-			goal = goal.concat(buildings).concat(units).filter(x => x.isLand == this.isLand);
+			goal = goal.concat(buildings).concat(units).filter(x => x.isLand == this.isLand && x.health > 0);
 			goal = sortBy(goal, [x => this.isLeftSide ? x.x : x.x + x.width]);
 			this._goal = this.isLeftSide ? goal[0] : goal[goal.length - 1];
 

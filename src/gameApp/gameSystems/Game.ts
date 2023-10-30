@@ -201,6 +201,17 @@ export class Game {
 				AudioSystem.play(-1, GameOverSound, 0.5);
 
 				if(Buildings.flyEarth.health <= 0){
+					//delete all miners from flyEarch
+					for(let i = 0; i < Units.all.length; i++)
+					{
+						let unit = Units.all[i];
+						if(unit.name == Miner.name){
+							unit.destroy();
+							Units.all.splice(i, 1);
+							i--;
+						}
+					}
+
 					Buildings.flyEarth.startExplosion();
 				}
 			}
@@ -309,7 +320,7 @@ export class Game {
 	
 		Buildings.draw(drawsDiffMs, Game.isGameOver);
 		Buildings.drawHealth();
-		Buildings.drawRepairingAnumation();
+		Buildings.drawRepairingAnimation();
 		Buildings.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 
 		Builder.draw(drawsDiffMs, Game.isGameOver);
@@ -318,7 +329,7 @@ export class Game {
 
 		Units.draw(drawsDiffMs, Game.isGameOver, Waves.isStarted, Waves.delayStartLeftTimeMs);
 		Units.drawHealth();
-		Units.drawRepairingAnumation();
+		Units.drawHealingingAnimation();
 		Units.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 	
 		Monsters.draw(drawsDiffMs, Game.isGameOver);
