@@ -33,6 +33,10 @@ import MinerRunImage from '../../assets/img/units/miner/run.png';
 
 //import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 
+import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
+import SoundAttacked2 from '../../assets/sounds/units/miner/attacked2.mp3'; 
+import SoundAttacked3 from '../../assets/sounds/units/miner/attacked3.mp3'; 
+
 
 /** Шахтёр - тип юнитов пользователя */
 export class Miner extends Unit{
@@ -60,6 +64,9 @@ export class Miner extends Unit{
 	private _isDiging: boolean; //Копает сейчас?
 	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
 
+	public static readonly timeStopRunning: number = 2000; //(в миллисекундах) спустя это время от последнего получения урона майнер остановиться и продолжит копать 
+	private timeStopRunningLeft: number; //(в миллисекундах) сколько времени осталось что бы остановиться?
+
 	public isRunRight: boolean; //майнер бежит вправо от опасности?
 
 
@@ -79,10 +86,11 @@ export class Miner extends Unit{
 		this._isDiging = true;
 		this._wasPickHit = false;
 		this.isLeftSide = x < Buildings.flyEarth.centerX;
-		this.isRunRight = this.isLeftSide;
+		this.isRunRight = true;
 
 		this.goalY = goalY;
 		this.shopItemName = Miner.shopItem.name;
+		this.timeStopRunningLeft = 0;
 
         Miner.init(true); //reserve init
 		FlyEarth.loadSeparateCrystals(); //reserve init
@@ -156,46 +164,53 @@ export class Miner extends Unit{
 				}
 			}
 			else{ //убегать от нападения летучих мышей
-					let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-					let speed = this.speed * (drawsDiffMs / 1000);
-					speed += speed * speedMultiplier;
-		
-					if(this.isRunRight){
-						this.x += speed;
+				this.timeStopRunningLeft -= drawsDiffMs;
+				if(this.timeStopRunningLeft <= 0){ //давно никто не атаковал майнера
+					this._isDiging = true;
+					return;
+				}
+			
+				//убегаем
+				let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+				let speed = this.speed * (drawsDiffMs / 1000);
+				speed += speed * speedMultiplier;
+	
+				if(this.isRunRight){
+					this.x += speed;
 
-						const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - this.width - 10;
-						if(this.x > xMax){
-							this.isRunRight = !this.isRunRight;
-						}
+					const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - this.width - 10;
+					if(this.x > xMax){
+						this.isRunRight = !this.isRunRight;
 					}
-					else{
-						this.x -= speed;
-						
-						const xMin = Buildings.flyEarth.x;
-						if(this.x < xMin){
-							this.isRunRight = !this.isRunRight;
-						}
-					}
-
+				}
+				else{
+					this.x -= speed;
 					
-					let flyEarth = Buildings.flyEarth;
-					if(flyEarth){
-						this.y += (Math.random() - 0.5);
-
-						var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32 - this.height;
-						var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32 - this.height;
-						if(this.y > yMax){
-							this.y = yMax;
-						}
-						else if(this.y < yMin){
-							this.y = yMin;
-						}
+					const xMin = Buildings.flyEarth.x;
+					if(this.x < xMin){
+						this.isRunRight = !this.isRunRight;
 					}
-					this.isLeftSide = this.x < Buildings.flyEarth.centerX;
-					
-					this.pushUpFromCrystals();
+				}
+				this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 
-				//TODO: если угроза миновала - this._isDiging = true;
+				
+				//рандомное перемещение по y
+				let flyEarth = Buildings.flyEarth;
+				if(flyEarth){
+					this.y += (Math.random() - 0.5);
+
+					var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32 - this.height;
+					var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32 - this.height;
+					if(this.y > yMax){
+						this.y = yMax;
+					}
+					else if(this.y < yMin){
+						this.y = yMin;
+					}
+				}
+				
+				//минуя кристаллы
+				this.pushUpFromCrystals();
 			}
 		}
 	}
@@ -224,10 +239,12 @@ export class Miner extends Unit{
 	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
-			//AudioSystem.playRandom(this.centerX, 
-			//	[SoundAttacked1], 
-			//	[-19], false, 1, true);
+			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
+			if(this._isDiging){ //убегаем от урона
+				this.isRunRight = (x || 0) < this.centerX;
+			}
 			this._isDiging = false;
+			this.timeStopRunningLeft = Miner.timeStopRunning;
 		}
 		return damage;
 	}
@@ -253,10 +270,6 @@ export class Miner extends Unit{
 			}
 		}
 		else if(isWaveStarted){
-			if(this._isDiging){
-				this._diggingAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
-			}
-			else{
 				let isInvert = !this.isRunRight;
 				let invertSign = isInvert ? -1 : 1;
 		
@@ -265,12 +278,16 @@ export class Miner extends Unit{
 					Draw.ctx.scale(-1, 1);
 				}
 		
-				this._runAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+				if(this._isDiging){
+					this._diggingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+				}
+				else{
+					this._runAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+				}
 		
 				if(isInvert){
 					Draw.ctx.restore();
 				}
-			}
 		}
 		else{
 			super.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs);

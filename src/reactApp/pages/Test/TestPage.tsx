@@ -2106,6 +2106,39 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Золотодобытчики - нападение летучей мыши - спасён",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = true;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    setTimeout(() => {
+                        var bat = new Bat(650, 280, true, 1);
+                        bat.isSelectMinerToTest = true;
+                        Monsters.all.push(bat);
+
+
+                        setTimeout(() => {
+                            bat.applyDamage(1000);
+                        }, 3000);
+                    }, 3000);
+                }, 300);
+            }
+        },
+
+        {
             key: "Золотодобытчики - гибель от летучей мыши - с другой стороны",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
