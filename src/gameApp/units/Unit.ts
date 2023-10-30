@@ -40,6 +40,8 @@ export class Unit extends AttackedObject {
 
 	healingPricePerHealth: number; //сколько стоит 1 хп вылечить
 
+	speed: number; //скорость передвижения (пикселей в секунду)
+
 	//технические поля экземпляра
 	protected _isDisplayHealingAnimation: boolean; //отображается ли сейчас анимация лечения?
 	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации починки (миллисекунды)
@@ -54,6 +56,7 @@ export class Unit extends AttackedObject {
 		frames: number, 
 		animationDurationMs: number,
 		price: number, 
+		speed: number,
 		isLand: boolean = true, 
 		reduceHover: number = 0,
 		isSupportHealing: boolean = true,
@@ -65,6 +68,7 @@ export class Unit extends AttackedObject {
 
 		this.isSupportHealing = isSupportHealing;
 		this.isSupportUpgrade = isSupportUpgrade;
+		this.speed = speed;
 
 		this._isDisplayHealingAnimation = false;
 		this._healingAnimationLeftTimeMs = 0;

@@ -4,6 +4,8 @@ import {AudioSystem} from '../gameSystems/AudioSystem';
 import {Draw} from '../gameSystems/Draw';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
+import {Modifier} from '../modifiers/Modifier';
+
 import {Monster} from '../monsters/Monster';
 
 import {Buildings} from '../buildings/Buildings';
@@ -27,6 +29,7 @@ import MinerActiveWaitImage from '../../assets/img/units/miner/activeWait.png';
 import MinerDiggingImage from '../../assets/img/units/miner/digging.png'; 
 import MinerStartActiveWaitImage from '../../assets/img/units/miner/startActiveWait.png'; 
 import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.png'; 
+import MinerRunImage from '../../assets/img/units/miner/run.png'; 
 
 //import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 
@@ -41,6 +44,7 @@ export class Miner extends Unit{
 	private static readonly startActiveWaitImage: HTMLImageElement = new Image(); 
 	private static readonly activeWaitImage: HTMLImageElement = new Image(); 
 	private static readonly diggingImage: HTMLImageElement = new Image(); 
+	private static readonly runImage: HTMLImageElement = new Image(); 
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
@@ -52,22 +56,30 @@ export class Miner extends Unit{
 	private readonly _startActiveWaitAnimation: Animation;
 	private readonly _activeWaitAnimation: AnimationInfinite;
 	private readonly _diggingAnimation: AnimationInfinite;
+	private readonly _runAnimation: AnimationInfinite;
 	private _isDiging: boolean; //Копает сейчас?
 	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
 
+	public isRunRight: boolean; //майнер бежит вправо от опасности?
+
+
+
+
 	constructor(x: number, y: number, goalY: number) {
-		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, false); 
+		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, false); 
 
 		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
 		this._startActiveWaitAnimation = new Animation(5, 5 * 75, Miner.startActiveWaitImage);
 		this._activeWaitAnimation = new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage);
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 		this._diggingAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
+		this._runAnimation = new AnimationInfinite(5, 5 * 100, Miner.runImage);
 
 		this._isFall = false;
 		this._isDiging = true;
 		this._wasPickHit = false;
 		this.isLeftSide = x < Buildings.flyEarth.centerX;
+		this.isRunRight = this.isLeftSide;
 
 		this.goalY = goalY;
 		this.shopItemName = Miner.shopItem.name;
@@ -104,6 +116,7 @@ export class Miner extends Unit{
 			Miner.imageHandler.new(Miner.startActiveWaitImage).src = MinerStartActiveWaitImage;
 			Miner.imageHandler.new(Miner.activeWaitImage).src = MinerActiveWaitImage;
 			Miner.imageHandler.new(Miner.diggingImage).src = MinerDiggingImage;
+			Miner.imageHandler.new(Miner.runImage).src = MinerRunImage;
 		}
 	}
 
@@ -125,11 +138,11 @@ export class Miner extends Unit{
 		}
 		
 		if(isWaveStarted){
-			if(this._isDiging){
+			if(this._isDiging){ //добывание монеток
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
 					if(!this._wasPickHit){
 						let flyEarth = buildings.find(x => x.name == FlyEarth.name);
-						if(flyEarth){
+						if(flyEarth){ //создание монетки
 							let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
 							let coinY = flyEarth.y + flyEarth.height / 2;
 							Coins.create(coinX, Math.max(coinY, this.y + this.height));
@@ -142,8 +155,30 @@ export class Miner extends Unit{
 					this._wasPickHit = false;
 				}
 			}
-			else{
-				//TODO: убегать или обороняться от нападения летучих мышей
+			else{ //убегать от нападения летучих мышей
+					let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+					let speed = this.speed * (drawsDiffMs / 1000);
+					speed += speed * speedMultiplier;
+		
+					if(this.isRunRight){
+						this.x += speed;
+
+						const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - Miner.imageWidth - 10;
+						if(this.x > xMax){
+							this.isRunRight = !this.isRunRight;
+						}
+					}
+					else{
+						this.x -= speed;
+						
+						const xMin = Buildings.flyEarth.x;
+						if(this.x < xMin){
+							this.isRunRight = !this.isRunRight;
+						}
+					}
+					this.isLeftSide = this.x < Buildings.flyEarth.centerX;
+					
+					this.pushUpFromCrystals();
 
 				//TODO: если угроза миновала - this._isDiging = true;
 			}
@@ -207,7 +242,19 @@ export class Miner extends Unit{
 				this._diggingAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
 			}
 			else{
-
+				let isInvert = !this.isRunRight;
+				let invertSign = isInvert ? -1 : 1;
+		
+				if(isInvert){
+					Draw.ctx.save();
+					Draw.ctx.scale(-1, 1);
+				}
+		
+				this._runAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
+		
+				if(isInvert){
+					Draw.ctx.restore();
+				}
 			}
 		}
 		else{

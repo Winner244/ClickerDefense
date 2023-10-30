@@ -2096,9 +2096,39 @@ class TestPage extends React.Component {
                     Units.all.push(miner3);
 
 
-                    var bat = new Bat(650, 280, true, 1);
-                    bat.isSelectMinerToTest = true;
-                    Monsters.all.push(bat);
+                    setTimeout(() => {
+                        var bat = new Bat(650, 280, true, 1);
+                        bat.isSelectMinerToTest = true;
+                        Monsters.all.push(bat);
+                    }, 3000);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - гибель от летучей мыши - с другой стороны",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
+                Waves.isStarted = true;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+
+
+                    setTimeout(() => {
+                        var bat = new Bat(650, 280, true, 1);
+                        bat.isSelectMinerToTest = true;
+                        Monsters.all.push(bat);
+                    }, 3000);
                 }, 300);
             }
         },

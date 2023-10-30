@@ -92,17 +92,22 @@ export class Bat extends Monster{
 		super.logic(drawsDiffMs, buildings, monsters, units, bottomBorder, waveLevel);
 
 		if(this._goal){
-			//напасть на майнера, если он есть на той же половине карты
-			const miners = units.filter(x => x.name == Miner.name && x.isLeftSide == this.isLeftSide);
-			if(this._goal.name == FlyEarth.name && miners.length && (Helper.getRandom(0, 100) == 1 || this.isSelectMinerToTest)){ 
-				this._goal = miners[0];
-			}
-
 			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 			let speed = this.speed * (drawsDiffMs / 1000);
 			speed += speed * speedMultiplier;
 
 			if(!this._isAttack){
+				//нападение на майнера
+				if(this._goal.name == FlyEarth.name){
+					const miners = units.filter(x => x.name == Miner.name);
+					if(miners.length && (Helper.getRandom(0, 100) == 1 || this.isSelectMinerToTest)){ 
+						this._goal = miners[0];
+					}
+				} //разворот
+				else if(this._goal.name == Miner.name && this.isLeftSide == this._goal.isLeftSide && this.isLeftSide != (<Miner>this._goal).isRunRight){
+					this.isLeftSide = (<Miner>this._goal).isRunRight;
+				}
+	
 				this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 	
 				//Зигзагообразное перемещение
