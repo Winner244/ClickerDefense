@@ -225,7 +225,6 @@ export class Units {
 		}
 
 		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom){
-			console.log('drawCrystal3');
 			Buildings.flyEarth.drawCrystal3(drawsDiffMs, isGameOver);
 		}
 
