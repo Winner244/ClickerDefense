@@ -23,7 +23,6 @@ import CreatingSound from '../../assets/sounds/units/creating.mp3';
 export class Units {
 	static all: Unit[] = []; //все созданные и пока ещё живые юниты
 	static creatings: SimpleObject[] = []; //анимации появления юнитов 
-	static deaths: SimpleObject[] = []; //анимации гибели юнитов 
 
 	static readonly creatingAnimation: Animation = new Animation(6, 600); //анимация появления юнита
 	
@@ -34,8 +33,6 @@ export class Units {
 	static loadResources(){
 		AudioSystem.load(CreatingSound);
 		this.creatingAnimation.image.src = CreatingImage;
-		//this.deathAnimation.image.src = DeathImage;
-		//AudioSystem.load(DeathSound);
 	}
 
 	static addMiner(): Miner {
@@ -142,17 +139,6 @@ export class Units {
 			}
 		}
 
-		//логика анимации гибели юнита
-		if(this.deaths.length){
-			for(let i = 0; i < this.deaths.length; i++){
-				this.deaths[i].leftTimeMs -= drawsDiffMs;
-				if(this.deaths[i].leftTimeMs <= 0){
-					this.deaths.splice(i, 1);
-					i--;
-				}
-			}
-		}
-
 		for(let i = 0; i < this.all.length; i++)
 		{
 			let unit = this.all[i];
@@ -173,13 +159,6 @@ export class Units {
 			let newWidth = (this.creatingAnimation.image.width / this.creatingAnimation.frames) * (x.size.height / (this.creatingAnimation.image.height));
 			this.creatingAnimation.leftTimeMs = x.leftTimeMs;
 			this.creatingAnimation.draw(drawsDiffMs, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height, false);
-		});
-
-		//гибель юнитов
-		this.deaths.forEach(explosion => {
-			//let newHeight = this.deathAnimation.image.height * (explosion.size.width / (this.deathAnimation.image.width / this.deathAnimation.frames));
-			//this.deathAnimation.leftTimeMs = explosion.leftTimeMs;
-			//this.deathAnimation.draw(drawsDiffMs, false, explosion.location.x, explosion.location.y + explosion.size.height - newHeight, explosion.size.width, newHeight);
 		});
 
 		//отдельная отрисовка золотодобытчиков на летающей земле
