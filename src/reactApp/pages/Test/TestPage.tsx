@@ -2151,6 +2151,18 @@ class TestPage extends React.Component {
                 FlyEarth.loadSeparateCrystals();
 
                 setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 90 + 25;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX + 15, y, y + Miner.imageHeight);
+                    miner1.loadedResourcesAfterBuild();
+                    Units.all.push(miner1);
+
+
+                    var y = Buildings.flyEarth.centerY - 110 + 25;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX + 25, y, y + Miner.imageHeight);
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
+
                     var y = Buildings.flyEarth.centerY - 80;
                     var miner3 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
