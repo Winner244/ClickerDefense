@@ -47,6 +47,7 @@ export class Bat extends Monster{
 	private _zigzagLength: number;
 	private _isZigzagToTop: boolean;
 	private static readonly zigzagThreshold: number = 20;
+	private static readonly initialSpeed: number = 200;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
 		Bat.init(true);
@@ -69,7 +70,7 @@ export class Bat extends Monster{
 			1,    //health
 			0.1,  //damage
 			200,  //time attack wait
-			200,  //speed
+			Bat.initialSpeed,  //speed
 			Bat.imageHandler,
 			3000); //avrTimeSoundWaitMs
 
@@ -129,6 +130,19 @@ export class Bat extends Monster{
 				else if(this.y > this._goal.y + this._goal.height - this._goal.reduceHover){
 					this.y--;
 				}
+			}
+		}
+	}
+
+	attack(damage: number): void{
+		super.attack(damage);
+
+		if(this._goal?.name == Miner.name){
+			if(this._goal.health > 0){
+				this.speed = Bat.initialSpeed / 2;
+			}
+			else{
+				this.speed = Bat.initialSpeed;
 			}
 		}
 	}

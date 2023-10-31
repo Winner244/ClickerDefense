@@ -2082,6 +2082,7 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 80;
                     var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
+                    //miner3.speed *= 2;
                     Units.all.push(miner3);
 
 
@@ -2139,6 +2140,7 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 90 + 25;
                     var miner1 = new Miner(Buildings.flyEarth.centerX + 15, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
+                    //miner1.speed *= 2;
                     Units.all.push(miner1);
 
 
@@ -2152,6 +2154,10 @@ class TestPage extends React.Component {
                     var miner3 = new Miner(Buildings.flyEarth.centerX + 75, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
+
+                    //var tower1 = new Tower(1100);
+                    //tower1.loadedResourcesAfterBuild();
+                    //Buildings.all.push(tower1);
 
 
                     setTimeout(() => {

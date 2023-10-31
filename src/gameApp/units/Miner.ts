@@ -69,7 +69,7 @@ export class Miner extends Unit{
 	private _isDiging: boolean; //Копает сейчас?
 	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
 
-	public static readonly timeStopRunning: number = 2000; //(в миллисекундах) спустя это время от последнего получения урона майнер остановиться и продолжит копать 
+	public static readonly timeStopRunning: number = 1000; //(в миллисекундах) спустя это время от последнего получения урона майнер остановиться и продолжит копать 
 	private timeStopRunningLeft: number; //(в миллисекундах) сколько времени осталось что бы остановиться?
 
 	public isRunRight: boolean; //майнер бежит вправо от опасности?
