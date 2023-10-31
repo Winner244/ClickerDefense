@@ -79,6 +79,7 @@ export class Miner extends Unit{
 	private static readonly pickRotateForce: number = 22; //сила вращения кирки в воздухе (градусы в секундах)
 	private pickRotate: number; //угол вращения кирки в воздухе
 
+	public isTurnOnPushUpFromCrystals: boolean; //включена лоигка выталкивания майнеров с кристаллов?
 
 
 	constructor(x: number, y: number, goalY: number) {
@@ -103,6 +104,8 @@ export class Miner extends Unit{
 		this.isDisplayEndPickInAir = false;
 		this.isDisplayEndPickInEarch = false;
 		this.pickRotate = 0;
+
+		this.isTurnOnPushUpFromCrystals = false;
 
         Miner.init(true); //reserve init
 		FlyEarth.loadSeparateCrystals(); //reserve init
@@ -160,13 +163,21 @@ export class Miner extends Unit{
 		if(this.y + this.height < this.goalY){
 			this.y += 1.5;
 			this._isFall = true;
+			this.isTurnOnPushUpFromCrystals = false;
 		}
 		else{
 			this._isFall = false;
+
+			if(this.isTurnOnPushUpFromCrystals){
+				//выталкивание из кристаллов
+				this.isTurnOnPushUpFromCrystals = !this.pushUpFromCrystals();
+			}
 		}
 
 		//start ending
 		if(this.health <= 0){
+			this.isTurnOnPushUpFromCrystals = false;
+
 			if(this.endingAnimation.leftTimeMs < 100){
 				if(!this.isDisplayEndPickInAir){
 					this.isDisplayEndPickInAir = true;
@@ -205,9 +216,11 @@ export class Miner extends Unit{
 				}
 			}
 			else{ //убегать от нападения летучих мышей
+				this.isTurnOnPushUpFromCrystals = false;
 				this.timeStopRunningLeft -= drawsDiffMs;
 				if(this.timeStopRunningLeft <= 0){ //давно никто не атаковал майнера
 					this._isDiging = true;
+					this.isTurnOnPushUpFromCrystals = true;
 					return;
 				}
 			
@@ -250,14 +263,12 @@ export class Miner extends Unit{
 					}
 					this.goalY = this.y + this.height;
 				}
-				
-				//минуя кристаллы
-				this.pushUpFromCrystals();
 			}
 		}
 	}
 
-	pushUpFromCrystals(isOnlyGoal: boolean = false){
+	pushUpFromCrystals(isOnlyGoal: boolean = false): boolean{
+		let isOk = true;
 		var crystal1 = Buildings.flyEarth.crystal1PositionBlocking;
 		var crystal2 = Buildings.flyEarth.crystal2PositionBlocking;
 		var crystal3 = Buildings.flyEarth.crystal3PositionBlocking;
@@ -271,11 +282,14 @@ export class Miner extends Unit{
 					this.goalY = crystal.location.y;
 				}
 				else{
-					this.y -= (crystal.location.y - this.goalY);
+					this.y -= (this.goalY - crystal.location.y);
 					this.goalY = crystal.location.y;
 				}
+				isOk = false;
 			}
 		});
+
+		return isOk;
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{
@@ -315,7 +329,6 @@ export class Miner extends Unit{
 			}
 		}
 		else if(this._isFall){
-			console.log('draw fall');
 			Draw.ctx.drawImage(Miner.fallImage, this.x, this.y, this.width, this.height);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){

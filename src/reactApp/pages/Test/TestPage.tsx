@@ -2007,6 +2007,11 @@ class TestPage extends React.Component {
                         miner2.x = mouseX - 100
                         miner3.x = mouseX - 174
                         miner4.x = mouseX + 75; 
+
+                        miner1.isTurnOnPushUpFromCrystals = true;
+                        miner2.isTurnOnPushUpFromCrystals = true;
+                        miner3.isTurnOnPushUpFromCrystals = true;
+                        miner4.isTurnOnPushUpFromCrystals = true;
                     }, 10);
                 }, 300);
             }
@@ -2038,29 +2043,15 @@ class TestPage extends React.Component {
                         miner1.goalY = mouseY + 2; 
                         
                         miner1.x = mouseX - miner1.width / 2;
+
+                        miner1.isTurnOnPushUpFromCrystals = true;
                     }, 300);
                 }, 300);
             }
         },
 
         {
-            key: "Золотодобытчики - добыча",
-            code: () => {
-                App.Store.dispatch(MenuStore.actionCreators.startGame());
-                Game.startNew();
-                Menu.displayShopButton();
-                Menu.displayNewWaveButton();
-
-                FlyEarth.loadSeparateCrystals();
-
-                setTimeout(() => {
-                    Units.addMiner();
-                }, 300);
-            }
-        },
-
-        {
-            key: "Золотодобытчики - конец волны",
+            key: "Золотодобытчики - добыча и конец волны",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();

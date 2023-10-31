@@ -159,11 +159,6 @@ export class Units {
 
 			if(!isGameOver){
 				unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
-
-				//выталкивание из кристаллов
-				if(unit.name == Miner.name && (<Miner>unit).goalY - unit.height == unit.y){
-					(<Miner>unit).pushUpFromCrystals();
-				}
 			}
 		}
 	}
@@ -230,6 +225,7 @@ export class Units {
 		}
 
 		if((!nextMiner || nextMiner.goalY > crystal3YBottom) && prevMiner.goalY < crystal3YBottom){
+			console.log('drawCrystal3');
 			Buildings.flyEarth.drawCrystal3(drawsDiffMs, isGameOver);
 		}
 
