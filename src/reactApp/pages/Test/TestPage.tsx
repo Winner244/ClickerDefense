@@ -2075,8 +2075,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Menu.displayShopButton();
-                Menu.displayNewWaveButton();
 
                 FlyEarth.loadSeparateCrystals();
 
@@ -2103,8 +2101,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Menu.displayShopButton();
-                Menu.displayNewWaveButton();
 
                 FlyEarth.loadSeparateCrystals();
 
@@ -2136,8 +2132,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Menu.displayShopButton();
-                Menu.displayNewWaveButton();
 
                 FlyEarth.loadSeparateCrystals();
 
@@ -2176,8 +2170,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = true;
-                Menu.displayShopButton();
-                Menu.displayNewWaveButton();
                 Units.loadResources();
 
                 FlyEarth.loadSeparateCrystals();

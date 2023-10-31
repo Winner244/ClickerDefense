@@ -27,9 +27,21 @@ export class AttackedObject {
 
 	initialHealthMax: number; //изначальный максимум хп
 	healthMax: number; //максимум хп
-	health: number;
 	defense: number = 0; //защита (уменьшает урон)
 	
+	get health(): number{
+		return this._health;
+	}
+	set health(value: number){
+		if(value < this._health){
+			this.applyDamage(this._health - value);
+		}
+		else{
+			this._health = value;
+		}
+	}
+	private _health: number;
+
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание) isRightMoving?
 	isLand: boolean; //наземное? (иначе - воздушное)
 
@@ -61,7 +73,7 @@ export class AttackedObject {
 			: null;
 		this.image = image;
 
-		this.initialHealthMax = this.healthMax = this.health = healthMax; //максимум хп
+		this.initialHealthMax = this.healthMax = this._health = healthMax; //максимум хп
 
 		this.isLeftSide = isLeftSide; // с левой стороны движется?
 		this.isLand = isLand; //наземный?
@@ -168,7 +180,7 @@ export class AttackedObject {
 			return 0;
 		}
 		
-		this.health -= realDamage;
+		this._health -= realDamage;
 		Labels.createDamageLabel(x || this.centerX, y || this.centerY, '-' + realDamage.toFixed(1), 3000);
 		return realDamage;
 	}

@@ -16,6 +16,7 @@ import {FlyEarth} from '../buildings/FlyEarth';
 import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import ShopItem from '../../models/ShopItem';
+import {Point} from '../../models/Point';
 
 import {Helper} from '../helpers/Helper';
 
@@ -181,23 +182,12 @@ export class Miner extends Unit{
 		}
 
 		//start ending
-		if(this.health <= 0){
-			this.isTurnOnPushUpFromCrystals = false;
-
-			if(this.endingAnimation.leftTimeMs < 100){
-				if(!this.isDisplayEndPickInAir){
-					this.isDisplayEndPickInAir = true;
-					this._impulseY = Miner.impulsePick;
-					this.goalY += this.height / 3.5;
-				}
-				else {
-					this.pickRotate += Miner.pickRotateForce / drawsDiffMs;
-					if(this._impulseY < 10 && this.y + this.height >= this.goalY){
-						this._impulseY = 0;
-						this.isDisplayEndPickInAir = false;
-						this.isDisplayEndPickInEarch = true;
-					}
-				}
+		if (this.health <= 0) {
+			this.pickRotate += Miner.pickRotateForce / drawsDiffMs;
+			if(this._impulseY < 10 && this.y + this.height >= this.goalY){
+				this._impulseY = 0;
+				this.isDisplayEndPickInAir = false;
+				this.isDisplayEndPickInEarch = true;
 			}
 			return;
 		}
@@ -307,6 +297,14 @@ export class Miner extends Unit{
 			}
 			this._isDiging = false;
 			this.timeStopRunningLeft = Miner.timeStopRunning;
+
+			if(this.health <= 0){
+				this.endingAnimation.location = new Point(this.x, this.y);
+				this.isTurnOnPushUpFromCrystals = false;
+				this.isDisplayEndPickInAir = true;
+				this._impulseY = Miner.impulsePick;
+				this.goalY += this.height / 3.5;
+			}
 		}
 		return damage;
 	}
@@ -319,19 +317,18 @@ export class Miner extends Unit{
 
 		if(this.health <= 0){
 			if(this.endingAnimation.leftTimeMs > 0){
-				this.endingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, false);
+				this.endingAnimation.draw(drawsDiffMs, isGameOver);
+			}
+
+			if(this.isDisplayEndPickInAir){
+				Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
+				Draw.ctx.rotate(this.pickRotate * Math.PI / 180);
+				Draw.ctx.drawImage(Miner.pickImage, -this.width / 2, -this.height / 2, this.width, this.height);
+				Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+				Draw.ctx.rotate(0);
 			}
 			else{
-				if(this.isDisplayEndPickInAir){
-					Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
-					Draw.ctx.rotate(this.pickRotate * Math.PI / 180);
-					Draw.ctx.drawImage(Miner.pickImage, -this.width / 2, -this.height / 2, this.width, this.height);
-					Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-					Draw.ctx.rotate(0);
-				}
-				else{
-					Draw.ctx.drawImage(Miner.pickInEarchImage, this.x, this.y, this.width, this.height);
-				}
+				Draw.ctx.drawImage(Miner.pickInEarchImage, this.x, this.y, this.width, this.height);
 			}
 		}
 		else if(this._isFall){

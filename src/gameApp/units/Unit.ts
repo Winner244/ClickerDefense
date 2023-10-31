@@ -9,6 +9,7 @@ import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
 
 import Animation from '../../models/Animation';
+import {AnimatedObject} from '../../models/AnimatedObject';
 
 import {Labels} from '../labels/Labels';
 
@@ -57,8 +58,8 @@ export class Unit extends AttackedObject {
 
 	speed: number; //скорость передвижения (пикселей в секунду)
 
-	readonly endingAnimation: Animation = new Animation(6, 600); //анимация появления юнита
-
+	readonly endingAnimation: AnimatedObject; //анимация появления юнита
+	
 	//технические поля экземпляра
 	protected _isDisplayHealingAnimation: boolean; //отображается ли сейчас анимация лечения?
 	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации починки (миллисекунды)
@@ -98,7 +99,8 @@ export class Unit extends AttackedObject {
 
 		this.improvements = [];
 
-		this.endingAnimation.image.src = CreatingImage;
+		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита
+		this.endingAnimation.animation.image.src = CreatingImage;
 		AudioSystem.load(CreatingSound);
 		AudioSystem.load(End1Sound);
 		AudioSystem.load(End2Sound);
@@ -175,7 +177,7 @@ export class Unit extends AttackedObject {
 		}
 
 		if(this.health <= 0){
-			if(this.endingAnimation.leftTimeMs == this.endingAnimation.durationMs){
+			if(this.endingAnimation.animation.leftTimeMs == this.endingAnimation.animation.durationMs){
 				AudioSystem.play(this.centerX, CreatingSound);
 				AudioSystem.playRandomV(this.centerX, [End1Sound, End2Sound, End3Sound, End4Sound, End5Sound, End6Sound, End7Sound], 0);
 			}
@@ -224,8 +226,8 @@ export class Unit extends AttackedObject {
 		}
 
 		if(this.health <= 0){
-			if(this.endingAnimation.leftTimeMs > 0){
-				this.endingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, true);
+			if(this.endingAnimation.animation.leftTimeMs > 0){
+				this.endingAnimation.draw(drawsDiffMs, isGameOver);
 			}
 			return;
 		}
