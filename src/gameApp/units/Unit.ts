@@ -24,6 +24,13 @@ import ShieldIcon from '../../assets/img/icons/shield.png';
 import CreatingImage from '../../assets/img/units/creating.png'; 
 
 import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
+import End1Sound from '../../assets/sounds/units/end1.mp3'; 
+import End2Sound from '../../assets/sounds/units/end2.mp3'; 
+import End3Sound from '../../assets/sounds/units/end3.mp3'; 
+import End4Sound from '../../assets/sounds/units/end4.mp3'; 
+import End5Sound from '../../assets/sounds/units/end5.mp3'; 
+import End6Sound from '../../assets/sounds/units/end6.mp3';
+import End7Sound from '../../assets/sounds/units/end7.mp3';
 
 
 /** Базовый класс для всех Юнитов пользователя */
@@ -93,6 +100,13 @@ export class Unit extends AttackedObject {
 
 		this.endingAnimation.image.src = CreatingImage;
 		AudioSystem.load(CreatingSound);
+		AudioSystem.load(End1Sound);
+		AudioSystem.load(End2Sound);
+		AudioSystem.load(End3Sound);
+		AudioSystem.load(End4Sound);
+		AudioSystem.load(End5Sound);
+		AudioSystem.load(End6Sound);
+		AudioSystem.load(End7Sound);
 	}
 
 	
@@ -163,6 +177,7 @@ export class Unit extends AttackedObject {
 		if(this.health <= 0){
 			if(this.endingAnimation.leftTimeMs == this.endingAnimation.durationMs){
 				AudioSystem.play(this.centerX, CreatingSound);
+				AudioSystem.playRandomV(this.centerX, [End1Sound, End2Sound, End3Sound, End4Sound, End5Sound, End6Sound, End7Sound], 0);
 			}
 		}
 
