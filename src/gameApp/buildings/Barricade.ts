@@ -75,6 +75,7 @@ export class Barricade extends Building{
 		this.damageMirrorPercentage = Barricade.damageIronMirrorPercentage;
 		this.image = new Image();
 		this.image.src = BarricadeIronImage;
+		this.filteredImages = {};
 	}
 
 	get centerY(){
