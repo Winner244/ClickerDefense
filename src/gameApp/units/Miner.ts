@@ -76,8 +76,8 @@ export class Miner extends Unit{
 	private isDisplayEndPickInAir: boolean; //отображать пику крутящуюся в воздухе?
 	private isDisplayEndPickInEarch: boolean; //отображать пику воткнутую в землю?
 
-	private static readonly impulsePick: number = 40; //импульс придаваемый кирке после гибели майнера
-	private static readonly pickRotateForce: number = 28; //сила вращения кирки в воздухе (градусы в секундах)
+	private static readonly impulsePick: number = 34; //импульс придаваемый кирке после гибели майнера
+	private static readonly pickRotateForce: number = 31; //сила вращения кирки в воздухе (градусы в секундах)
 	private pickRotate: number; //угол вращения кирки в воздухе
 
 	public isTurnOnPushUpFromCrystals: boolean; //включена лоигка выталкивания майнеров с кристаллов?
@@ -162,7 +162,12 @@ export class Miner extends Unit{
 
 		//gravitations
 		if(this.y + this.height < this.goalY){
-			this.y += 1.5;
+			if(this.isDisplayEndPickInAir){
+				this.y += 15 / drawsDiffMs / (this._impulseY / 10);
+			}
+			else{
+				this.y += 15 / drawsDiffMs;
+			}
 			this._isFall = true;
 			this.isTurnOnPushUpFromCrystals = false;
 		}

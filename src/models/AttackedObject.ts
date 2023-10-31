@@ -147,7 +147,7 @@ export class AttackedObject {
 		}
 		
 		if(this._impulseY > 1){
-			this._impulseY -= drawsDiffMs / 1000 * (this._impulseY * this.impulseForceDecreasing);
+			this._impulseY -= drawsDiffMs / 1000 * (Math.max(this._impulseY, 1) * this.impulseForceDecreasing);
 			this.y -= this._impulseY / drawsDiffMs;
 		}
 
