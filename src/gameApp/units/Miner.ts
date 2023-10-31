@@ -248,6 +248,7 @@ export class Miner extends Unit{
 					else if(this.y < yMin){
 						this.y = yMin;
 					}
+					this.goalY = this.y + this.height;
 				}
 				
 				//минуя кристаллы
@@ -314,6 +315,7 @@ export class Miner extends Unit{
 			}
 		}
 		else if(this._isFall){
+			console.log('draw fall');
 			Draw.ctx.drawImage(Miner.fallImage, this.x, this.y, this.width, this.height);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){
