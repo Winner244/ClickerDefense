@@ -31,7 +31,8 @@ import MinerStartActiveWaitImage from '../../assets/img/units/miner/startActiveW
 import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.png'; 
 import MinerRunImage from '../../assets/img/units/miner/run.png'; 
 
-//import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
+import PickImage from '../../assets/img/units/miner/pick.png'; 
+import PickInEarchImage from '../../assets/img/units/miner/pickInEarch.png'; 
 
 import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/units/miner/attacked2.mp3'; 
@@ -49,6 +50,9 @@ export class Miner extends Unit{
 	private static readonly activeWaitImage: HTMLImageElement = new Image(); 
 	private static readonly diggingImage: HTMLImageElement = new Image(); 
 	private static readonly runImage: HTMLImageElement = new Image(); 
+
+	private static readonly pickImage: HTMLImageElement = new Image(); 
+	private static readonly pickInEarchImage: HTMLImageElement = new Image(); 
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
@@ -69,6 +73,11 @@ export class Miner extends Unit{
 
 	public isRunRight: boolean; //майнер бежит вправо от опасности?
 
+	private isDisplayEndPickInAir: boolean; //отображать пику крутящуюся в воздухе?
+	private isDisplayEndPickInEarch: boolean; //отображать пику воткнутую в землю?
+
+	private static readonly pickRotateForce: number = 20; //сила вращения кирки в воздухе (градусы в секундах)
+	private pickRotate: number; //угол вращения кирки в воздухе
 
 
 
@@ -91,6 +100,9 @@ export class Miner extends Unit{
 		this.goalY = goalY;
 		this.shopItemName = Miner.shopItem.name;
 		this.timeStopRunningLeft = 0;
+		this.isDisplayEndPickInAir = false;
+		this.isDisplayEndPickInEarch = false;
+		this.pickRotate = 0;
 
         Miner.init(true); //reserve init
 		FlyEarth.loadSeparateCrystals(); //reserve init
@@ -125,6 +137,8 @@ export class Miner extends Unit{
 			Miner.imageHandler.new(Miner.activeWaitImage).src = MinerActiveWaitImage;
 			Miner.imageHandler.new(Miner.diggingImage).src = MinerDiggingImage;
 			Miner.imageHandler.new(Miner.runImage).src = MinerRunImage;
+			Miner.imageHandler.new(Miner.pickImage).src = PickImage;
+			Miner.imageHandler.new(Miner.pickInEarchImage).src = PickInEarchImage;
 		}
 	}
 
@@ -135,24 +149,43 @@ export class Miner extends Unit{
 		}
 
 		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarted);
+		
 
-		if(this.health <= 0){
-			if(this.endingAnimation.leftTimeMs <= 0){
-				//TODO: ADD logic of ending
-			}
+		//end 
+		if(this.isDisplayEndPickInEarch){
 			return;
 		}
 
-		
 		//gravitations
 		if(this.y + this.height < this.goalY){
-			this.y+=1.5;
+			this.y += 1.5;
 			this._isFall = true;
 		}
 		else{
 			this._isFall = false;
 		}
+
+		//start ending
+		if(this.health <= 0){
+			if(this.endingAnimation.leftTimeMs < 100){
+				if(!this.isDisplayEndPickInAir){
+					this.isDisplayEndPickInAir = true;
+					this._impulseY = 50;
+					this.goalY += this.height / 3.5;
+				}
+				else {
+					this.pickRotate += Miner.pickRotateForce / drawsDiffMs;
+					if(this._impulseY < 10 && this.y + this.height >= this.goalY){
+						this._impulseY = 0;
+						this.isDisplayEndPickInAir = false;
+						this.isDisplayEndPickInEarch = true;
+					}
+				}
+			}
+			return;
+		}
 		
+
 		if(isWaveStarted){
 			if(this._isDiging){ //добывание монеток
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
@@ -268,7 +301,16 @@ export class Miner extends Unit{
 				this.endingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, false);
 			}
 			else{
-				//TODO: draw pick
+				if(this.isDisplayEndPickInAir){
+					Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
+					Draw.ctx.rotate(this.pickRotate * Math.PI / 180);
+					Draw.ctx.drawImage(Miner.pickImage, -this.width / 2, -this.height / 2, this.width, this.height);
+					Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+					Draw.ctx.rotate(0);
+				}
+				else{
+					Draw.ctx.drawImage(Miner.pickInEarchImage, this.x, this.y, this.width, this.height);
+				}
 			}
 		}
 		else if(this._isFall){

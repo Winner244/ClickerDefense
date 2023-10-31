@@ -119,7 +119,7 @@ export class Building extends AttackedObject{
 	}
 
 
-	public set impulse(value: number){
+	public set impulseX(value: number){
 		if(value > this.maxImpulse){
 			value = this.maxImpulse;
 		}
@@ -129,14 +129,14 @@ export class Building extends AttackedObject{
 
 		this._impulsePharosSign = value < 0 ? true : false;
 		this._impulsePharos = value;
-		this._impulse = value <= 1 ? 0 : value;
+		this._impulseX = value <= 1 ? 0 : value;
 	}
-	public get impulse(): number{
-		if(this._impulse <= 1){
+	public get impulseX(): number{
+		if(this._impulseX <= 1){
 			return 0;
 		}
 
-		return this._impulse;
+		return this._impulseX;
 	}
 
 	set isDisplayedUpgradeWindow(value: boolean){
@@ -184,17 +184,17 @@ export class Building extends AttackedObject{
 
 		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
 		
-		if(this._impulse > 1){
-			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulse * this._impulsePharosForceDecreasing);
+		if(this._impulseX > 1){
+			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulseX * this._impulsePharosForceDecreasing);
 
-			if(this._impulsePharos < -this._impulse){
+			if(this._impulsePharos < -this._impulseX){
 				this._impulsePharosSign = !this._impulsePharosSign;
-				this._impulsePharos = -this._impulse;
+				this._impulsePharos = -this._impulseX;
 			}
 
-			if(this._impulsePharos > this._impulse){
+			if(this._impulsePharos > this._impulseX){
 				this._impulsePharosSign = !this._impulsePharosSign;
-				this._impulsePharos = this._impulse;
+				this._impulsePharos = this._impulseX;
 			}
 		}
 
@@ -264,7 +264,7 @@ export class Building extends AttackedObject{
 			Building.upgradeAnimation.draw(drawsDiffMs, isGameOver, x - this.width / 10, y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
 		}
 
-		if(this.impulse > 0){
+		if(this.impulseX > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
 			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
 			x = -this.width / 2;
@@ -281,7 +281,7 @@ export class Building extends AttackedObject{
 
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
 
-		if(this.impulse > 0){
+		if(this.impulseX > 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
 		}

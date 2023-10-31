@@ -182,10 +182,6 @@ export class Unit extends AttackedObject {
 		}
 
 		super.logicBase(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
-		
-		if(this._impulse > 1){
-			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
-		}
 
 		if(this._isDisplayHealingAnimation){
 			this._healingAnimationLeftTimeMs -= drawsDiffMs;

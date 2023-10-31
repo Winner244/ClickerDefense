@@ -46,7 +46,8 @@ export class AttackedObject {
 	impulseForceDecreasing: number; //сила уменьшения импульса
 	
 	//технические поля экземпляра
-	protected _impulse: number; //импульс от сверх ударов и сотрясений
+	protected _impulseX: number; //импульс от сверх ударов и сотрясений
+	protected _impulseY: number; //импульс от сверх ударов и сотрясений по оси Y
 
 
 	constructor(x: number, y: number, healthMax: number, scaleSize: number, image: HTMLImageElement, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string, imageHandler: ImageHandler,
@@ -83,7 +84,8 @@ export class AttackedObject {
 		this.maxImpulse = 0; //отключён по умолчанию
 		this.impulseForceDecreasing = 1;
 
-		this._impulse = 0;
+		this._impulseX = 0;
+		this._impulseY = 0;
 
 		this.shopItemName = null;
 	}
@@ -117,7 +119,7 @@ export class AttackedObject {
 		return this.y + this.height / 2;
 	}
 
-	public set impulse(value: number){
+	public set impulseX(value: number){
 		if(value > this.maxImpulse){
 			value = this.maxImpulse;
 		}
@@ -125,14 +127,14 @@ export class AttackedObject {
 			value = this.maxImpulse * -1;
 		}
 
-		this._impulse = Math.abs(value);
+		this._impulseX = Math.abs(value);
 	}
-	public get impulse(): number{
-		if(this._impulse <= 1){
+	public get impulseX(): number{
+		if(this._impulseX <= 1){
 			return 0;
 		}
 
-		return this._impulse;
+		return this._impulseX;
 	}
 	
 	logicBase(drawsDiffMs: number, buildings: AttackedObject[], monsters: AttackedObject[], units: AttackedObject[], bottomBorder: number): void{
@@ -140,8 +142,13 @@ export class AttackedObject {
 			return;
 		}
 
-		if(this._impulse > 1){
-			this._impulse -= drawsDiffMs / 1000 * (this._impulse * this.impulseForceDecreasing);
+		if(this._impulseX > 1){
+			this._impulseX -= drawsDiffMs / 1000 * (this._impulseX * this.impulseForceDecreasing);
+		}
+		
+		if(this._impulseY > 1){
+			this._impulseY -= drawsDiffMs / 1000 * (this._impulseY * this.impulseForceDecreasing);
+			this.y -= this._impulseY / drawsDiffMs;
 		}
 
 		this.modifiers.forEach(modifier => modifier.logic(this, drawsDiffMs));

@@ -161,7 +161,7 @@ export class Boar extends Monster{
 			}
 			else if(this._isAttack && this._goal) {
 				super.attack(this.specialAbilityDamage); //наносим урон от спец способности
-				this._goal.impulse += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
+				this._goal.impulseX += (this.isLeftSide ? 1 : -1) * this.specialAbilityDamage; //добавляем импульс постройке от удара
 				this.stopSpecialAbility();
 				this._isActivatedSpecialDamage = true;
 				this.specialAbilityDamageParticlesAnimation.restart();
