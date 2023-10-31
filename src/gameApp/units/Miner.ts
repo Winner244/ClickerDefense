@@ -76,7 +76,7 @@ export class Miner extends Unit{
 	private isDisplayEndPickInAir: boolean; //отображать пику крутящуюся в воздухе?
 	private isDisplayEndPickInEarch: boolean; //отображать пику воткнутую в землю?
 
-	private static readonly pickRotateForce: number = 20; //сила вращения кирки в воздухе (градусы в секундах)
+	private static readonly pickRotateForce: number = 22; //сила вращения кирки в воздухе (градусы в секундах)
 	private pickRotate: number; //угол вращения кирки в воздухе
 
 
