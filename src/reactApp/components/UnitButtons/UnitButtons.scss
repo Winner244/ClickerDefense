@@ -30,24 +30,41 @@
             cursor: pointer;
         }
 
+        &--healing{
+            &:hover{
+                padding-top: 9px;
+                padding-bottom: 1px;
+    
+                .unit-buttons__button-healing-coin{
+                    display: block;
+                }
+            }
+
+        }
+
+        &-healing-coin{
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 1px;
+            font-size: 50%;
+            width: 50%;
+            text-wrap: nowrap;
+            text-align: center;
+            right: 1px;
+            width: 100%;
+
+            .unit-buttons__button--disabled:hover &{
+                color: #f01313 !important;
+            }
+        }
+
         &-image{
             width: 100%;
 
             &--coin{
                 width: 35%;
                 margin-left: 1px;
-            }
-        }
-
-        &-healing-coin{
-            position: absolute;
-            top: 60%;
-            right: 0px;
-            font-size: 50%;
-            width: 50%;
-
-            .building-buttons__button--disabled:hover &{
-                color: #f01313 !important;
             }
         }
 

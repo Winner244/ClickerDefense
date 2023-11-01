@@ -45,6 +45,7 @@
             right: 0px;
             font-size: 50%;
             width: 50%;
+            text-wrap: nowrap;
 
             .building-buttons__button--disabled:hover &{
                 color: #f01313 !important;
