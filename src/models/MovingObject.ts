@@ -12,4 +12,10 @@ export class MovingObject extends SimpleObject{
 		this.dy = dy;
 		this.rotate = rotate;
 	}
+
+	public logic(drawsDiffMs: number){
+		this.location.x += this.dx * (drawsDiffMs / 1000);
+		this.location.y += this.dy * (drawsDiffMs / 1000);
+		this.leftTimeMs -= drawsDiffMs;
+	}
 }

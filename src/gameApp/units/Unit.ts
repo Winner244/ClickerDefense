@@ -11,14 +11,18 @@ import {UnitButtons} from '../../reactApp/components/UnitButtons/UnitButtons';
 import Animation from '../../models/Animation';
 import {AnimatedObject} from '../../models/AnimatedObject';
 
+import {MovingObject} from '../../models/MovingObject';
+
+import {Helper} from '../helpers/Helper';
+
 import {Coins} from '../coins/Coins';
 
 import {Monster} from '../monsters/Monster';
 import {Building} from '../buildings/Building';
 
-import HealingImage from '../../assets/img/buildings/upgrade.png';
 
 import CreatingImage from '../../assets/img/units/creating.png'; 
+import HeartImage from '../../assets/img/icons/health.png'; 
 
 import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
 import End1Sound from '../../assets/sounds/units/end1.mp3'; 
@@ -32,7 +36,17 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 
 /** Базовый класс для всех Юнитов пользователя */
 export class Unit extends UpgradebleObject {
-	readonly healingAnimation: Animation = new Animation(1, 1800); //продолжительность анимации лечения (миллисекунды)
+	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
+	static readonly healingAnimationDurationMs: number = 1800; //продолжительность анимации лечения (миллисекунды)
+	static readonly creatingNewHeartsPeriodMs: number = 50; //период создания новых сердечек (миллисекунды)
+	static readonly heartDurationMs: number = 550; //продолжительность жизни сердечек
+	static readonly heartDy: number = -10; //скорость подъёма сердечек (пикселей в секунду)
+
+	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации лечения (миллисекунды)
+	protected _heartNewDurationMsLeft: number; //сколько осталось до создания нового сердечка (миллисекунды)
+	protected _hearts: MovingObject[]; //сердца для анимации лечения
+
+	public isRunRight: boolean; //юнит бежит вправо?
 
 	//поля свойства экземпляра
 	speed: number; //скорость передвижения (пикселей в секунду)
@@ -57,11 +71,14 @@ export class Unit extends UpgradebleObject {
 		super(x, y, true, isLand, name, 1, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
 
 		this.speed = speed;
-
-		this.healingAnimation.image.src = HealingImage;
+		this.isRunRight = true;
 
 		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита
 		this.endingAnimation.animation.image.src = CreatingImage;
+
+		this._healingAnimationLeftTimeMs = 0;
+		this._heartNewDurationMsLeft = 0;
+		this._hearts = [];
 
 		AudioSystem.load(CreatingSound);
 		AudioSystem.load(End1Sound);
@@ -75,16 +92,39 @@ export class Unit extends UpgradebleObject {
 
 	
 	static loadHealingResources(): void{
-		//TODO: Unit.healingImage.src = HealingImage;
+		Unit.heartImage.src = HeartImage;
 		//TODO: AudioSystem.load(HealingSoundUrl);
+	}
+
+	displayRecoveryAnimationLogic(drawsDiffMs: number){
+		if(this._hearts.length){
+			this._hearts.forEach(x => x.logic(drawsDiffMs));
+			this._hearts = this._hearts.filter(x => x.leftTimeMs > 0);
+		}
+
+		if(this._healingAnimationLeftTimeMs > 0){
+			this._healingAnimationLeftTimeMs -= drawsDiffMs;
+
+			this._heartNewDurationMsLeft -= drawsDiffMs;
+			if(this._heartNewDurationMsLeft <= 0){
+				let left = this.isRunRight ? this.width / 20 : this.width / 4;
+				let right = this.isRunRight ? this.width / 4 : this.width / 20;
+
+				let x = Helper.getRandom(this.x + left, this.x + this.width - right);
+				let y = Helper.getRandom(this.y + this.height / 10, this.y + this.height - this.height / 10);
+				this._hearts.push(new MovingObject(x, y, 0, 0, Unit.heartDurationMs, 0, Unit.heartDy, 0));
+				this._heartNewDurationMsLeft = Unit.creatingNewHeartsPeriodMs;
+			}
+		}
 	}
 
 	recovery(): boolean{
 		let result = super.recovery();
 		if(result){
+			this.health = this.healthMax;
 			//TODO: AudioSystem.play(this.centerX, HealingSoundUrl, 0, 1, false, true);
 			Coins.playSoundGet(this.centerX, 0);
-			this.healingAnimation.restart();
+			this._healingAnimationLeftTimeMs = Unit.healingAnimationDurationMs;
 		}
 
 		return result;
@@ -154,8 +194,10 @@ export class Unit extends UpgradebleObject {
 
 
 	drawHealingingAnimation(drawsDiffMs: number): void{
-		if(this._isDisplayRecoveryAnimation){
-			//this.healingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, false);
-		}
+		this._hearts.forEach(heart => {
+			Draw.ctx.globalAlpha = heart.leftTimeMs / Unit.heartDurationMs;
+			Draw.ctx.drawImage(Unit.heartImage, heart.location.x, heart.location.y);
+			Draw.ctx.globalAlpha = 1;
+		});
 	}
 }

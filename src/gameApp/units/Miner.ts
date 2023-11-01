@@ -72,8 +72,6 @@ export class Miner extends Unit{
 	public static readonly timeStopRunning: number = 1000; //(в миллисекундах) спустя это время от последнего получения урона майнер остановиться и продолжит копать 
 	private timeStopRunningLeft: number; //(в миллисекундах) сколько времени осталось что бы остановиться?
 
-	public isRunRight: boolean; //майнер бежит вправо от опасности?
-
 	private isDisplayEndPickInAir: boolean; //отображать пику крутящуюся в воздухе?
 	private isDisplayEndPickInEarch: boolean; //отображать пику воткнутую в землю?
 
