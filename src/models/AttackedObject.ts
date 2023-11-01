@@ -40,7 +40,7 @@ export class AttackedObject {
 			this._health = value;
 		}
 	}
-	private _health: number;
+	protected _health: number;
 
 	isLeftSide: boolean; // с левой стороны ? (если это не центральное здание) isRightMoving?
 	isLand: boolean; //наземное? (иначе - воздушное)

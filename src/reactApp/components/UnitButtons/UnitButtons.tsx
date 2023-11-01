@@ -16,7 +16,7 @@ import { Unit } from '../../../gameApp/units/Unit';
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 
 import CoinImage from '../../../assets/img/coin.png';
-import HammerImage from '../../../assets/img/buttons/hammer.png';
+import HealingImage from '../../../assets/img/buttons/healingIcon2.png';
 import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
@@ -150,7 +150,7 @@ export class UnitButtons extends React.Component<Props, IState> {
                   className={'unit-buttons__button ' + (isCanBeHealing ? "" : "unit-buttons__button--disabled")}
                   onClick={() => this.onClickHealing()}
                 >
-                <img className='unit-buttons__button-image nodrag' src={HammerImage}/>
+                <img className='unit-buttons__button-image nodrag' src={HealingImage}/>
                 <span className='unit-buttons__button-healing-coin'>
                   {this.props.healingingCost}
                   <img className='unit-buttons__button-image--coin nodrag' src={CoinImage}/>

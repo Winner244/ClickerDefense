@@ -140,11 +140,10 @@ class TestPage extends React.Component {
                     Units.all.push(miner3);
                     miner3.health -= miner3.health / 2;
 
-                    var y = Buildings.flyEarth.centerY - 80;
-                    var miner2 = new Miner(Buildings.flyEarth.centerX - 55, y, y + Miner.imageHeight);
+                    var y = Buildings.flyEarth.centerY - 50;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 55, y, y + Miner.imageHeight, 1);
                     miner2.loadedResourcesAfterBuild();
                     Units.all.push(miner2);
-                    miner2.health = 0;
                 }, 300);
             }
         },

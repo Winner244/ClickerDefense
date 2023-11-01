@@ -155,7 +155,7 @@ export class Unit extends UpgradebleObject {
 
 	drawHealingingAnimation(drawsDiffMs: number): void{
 		if(this._isDisplayRecoveryAnimation){
-			this.healingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, false);
+			//this.healingAnimation.draw(drawsDiffMs, false, this.x, this.y, this.width, this.height, false);
 		}
 	}
 }

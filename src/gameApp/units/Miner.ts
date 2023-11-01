@@ -84,7 +84,7 @@ export class Miner extends Unit{
 	public isTurnOnPushUpFromCrystals: boolean; //включена лоигка выталкивания майнеров с кристаллов?
 
 
-	constructor(x: number, y: number, goalY: number) {
+	constructor(x: number, y: number, goalY: number, test: number = 0) {
 		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, false, 0, true, true); 
 
 		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
@@ -111,6 +111,12 @@ export class Miner extends Unit{
 
         Miner.init(true); //reserve init
 		FlyEarth.loadSeparateCrystals(); //reserve init
+
+		if(test == 1){
+			this._health = 0;
+			this.isDisplayEndPickInEarch = true;
+			this.endingAnimation.animation.leftTimeMs = 0;
+		}
 	}
 
 	get width(): number{
@@ -147,6 +153,16 @@ export class Miner extends Unit{
 		}
 	}
 
+	recovery(): boolean{
+		let oldHealth = this._health;
+		let result = super.recovery();
+		if(result && oldHealth <= 0 && this._health > 0){
+			this.y -= this.height / 3.5;
+			this.goalY -= this.height / 3.5;
+		}
+
+		return result;
+	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
 		if(!this.imageHandler.isImagesCompleted){
