@@ -149,7 +149,7 @@ export class AttackedObject {
 		return this._impulseX;
 	}
 	
-	logicBase(drawsDiffMs: number, buildings: AttackedObject[], monsters: AttackedObject[], units: AttackedObject[], bottomBorder: number): void{
+	logicBase(drawsDiffMs: number): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}

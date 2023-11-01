@@ -85,7 +85,7 @@ export class Miner extends Unit{
 
 
 	constructor(x: number, y: number, goalY: number) {
-		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, false); 
+		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, false, 0, true, true); 
 
 		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
 		this._startActiveWaitAnimation = new Animation(5, 5 * 75, Miner.startActiveWaitImage);

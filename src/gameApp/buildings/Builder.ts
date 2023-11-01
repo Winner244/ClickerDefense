@@ -9,10 +9,11 @@ import {Gamer} from '../gamer/Gamer';
 
 import Animation from '../../models/Animation';
 
+import {Coins} from '../coins/Coins';
+
 import SmokeImage from '../../assets/img/smoke.png'; 
 
 import BuildSoundUrl from '../../assets/sounds/buildings/placing.mp3'; 
-import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
 
 /** Режим строительства - единичный статичный класс */
 export class Builder {
@@ -70,7 +71,7 @@ export class Builder {
 				this._isDrawSmoke = true;
 				this.smokeAnimation.restart();
 				AudioSystem.play(canterX, BuildSoundUrl, 0.15);
-				AudioSystem.play(canterX, CoinGetSoundUrl, 0.15);
+				Coins.playSoundGet(canterX, 0.15);
 				loadResourcesAfterBuild(this.selectedBuildingForBuild);
 				return;
 			}

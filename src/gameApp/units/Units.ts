@@ -216,8 +216,8 @@ export class Units {
 		Units.all.forEach(unit => unit.drawHealth());
 	}
 
-	static drawHealingingAnimation(): void{
-		Units.all.forEach(unit => unit.drawHealingingAnimation());
+	static drawHealingingAnimation(drawsDiffMs: number): void{
+		Units.all.forEach(unit => unit.drawHealingingAnimation(drawsDiffMs));
 	}
 
 	static drawModifiersAhead(drawsDiffMs: number, isGameOver: boolean): void{

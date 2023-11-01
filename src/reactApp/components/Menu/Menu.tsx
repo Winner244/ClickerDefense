@@ -8,6 +8,7 @@ import {App} from '../../App';
 import {Shop} from '../Shop/Shop';
 import {Upgrade} from '../Upgrade/Upgrade';
 import {BuildingButtons} from '../BuildingButtons/BuildingButtons';
+import {UnitButtons} from "../UnitButtons/UnitButtons";
 
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {Keypad} from '../../../gameApp/gamer/Keypad';
@@ -165,6 +166,7 @@ export class Menu extends React.Component<Props, IState> {
     Menu.playSoundSelect();
     Upgrade.hide();
     BuildingButtons.hide();
+    UnitButtons.hide();
     Shop.show();
   }
 

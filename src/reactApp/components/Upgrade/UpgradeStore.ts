@@ -1,14 +1,14 @@
-import { Reducer } from 'redux';
-import { Building } from '../../../gameApp/buildings/Building';
+import {Reducer} from 'redux';
+import {UpgradebleObject} from '../../../models/UpgradebleObject';
 
 // STATE
 export interface UpgradeState {
 	isOpen: boolean;
-	selectedBuilding: Building | null;
+	selectedObject: UpgradebleObject | null;
 }
 
 // ACTIONS
-interface OpenAction { type: 'UPGRADE__OPEN', building: Building }
+interface OpenAction { type: 'UPGRADE__OPEN', selectedObject: UpgradebleObject }
 interface CloseAction { type: 'UPGRADE__CLOSE' }
 
 type KnownAction = CloseAction | OpenAction
@@ -16,18 +16,18 @@ type KnownAction = CloseAction | OpenAction
 // ACTION CREATORS
 //for TypeScript
 export interface UpgradeAction {
-    open: (building: Building) => OpenAction;
+    open: (selectedObject: UpgradebleObject) => OpenAction;
     close: () => CloseAction;
 }
 export const actionCreators = {
-    open: (building: Building) => <OpenAction>{ type: 'UPGRADE__OPEN', building: building},
+    open: (selectedObject: UpgradebleObject) => <OpenAction>{ type: 'UPGRADE__OPEN', selectedObject: selectedObject},
     close: () => <CloseAction>{ type: 'UPGRADE__CLOSE' },
 };
 
 function getDefaultState(): UpgradeState{
     return {
         isOpen: false,
-        selectedBuilding: null,
+        selectedObject: null,
     };
 }
 
@@ -35,7 +35,7 @@ function getDefaultState(): UpgradeState{
 export const reducer: Reducer<UpgradeState> = (state: UpgradeState | undefined, action: KnownAction) => {
     switch (action.type) {
         case 'UPGRADE__OPEN':
-            return Object.assign({}, getDefaultState(), { isOpen: true, selectedBuilding: action.building });
+            return Object.assign({}, getDefaultState(), { isOpen: true, selectedObject: action.selectedObject });
         case 'UPGRADE__CLOSE':
             return getDefaultState();
         default:

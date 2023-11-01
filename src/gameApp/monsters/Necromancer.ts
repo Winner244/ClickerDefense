@@ -284,7 +284,7 @@ export class Necromancer extends Monster{
 				this.modifiers = this.modifiers.filter(x => x.name != FireModifier.name);
 			}
 
-			super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
+			super.logicBase(drawsDiffMs);
 			return; //игнорируем базовую логику движения и атаки
 		}
 
@@ -303,7 +303,7 @@ export class Necromancer extends Monster{
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 			}
 
-			super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
+			super.logicBase(drawsDiffMs);
 			return; //игнорируем базовую логику движения и атаки
 		}
 
@@ -316,7 +316,7 @@ export class Necromancer extends Monster{
 				this.defenseCreatingAnimation.restart();
 			}
 			else{
-				super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
+				super.logicBase(drawsDiffMs);
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}
@@ -332,7 +332,7 @@ export class Necromancer extends Monster{
 				this._shieldSound = null;
 			}
 
-			super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
+			super.logicBase(drawsDiffMs);
 			return; //игнорируем базовую логику движения и атаки
 		}
 
@@ -344,7 +344,7 @@ export class Necromancer extends Monster{
 			{
 				this.attackLogic(drawsDiffMs, monsters, bottomBorder, waveLevel);
 				this.animation?.restart();
-				super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
+				super.logicBase(drawsDiffMs);
 				return; //игнорируем базовую логику движения и атаки
 			}
 		}

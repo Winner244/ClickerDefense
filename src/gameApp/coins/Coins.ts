@@ -29,8 +29,8 @@ export class Coins{
 		Coins.all.splice(i, 1);
 	}
 
-	private static playSoundGet(x: number){
-		AudioSystem.play(x, CoinGetSoundUrl, 0.7);
+	public static playSoundGet(x: number, volume: number = 0){
+		AudioSystem.play(x, CoinGetSoundUrl, volume);
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean): boolean{

@@ -38,6 +38,7 @@ import {Menu} from '../../reactApp/components/Menu/Menu';
 import {Shop} from '../../reactApp/components/Shop/Shop';
 import {Upgrade} from '../../reactApp/components/Upgrade/Upgrade';
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
+import {UnitButtons} from '../../reactApp/components/UnitButtons/UnitButtons';
 
 import ShopItem from '../../models/ShopItem';
 
@@ -47,7 +48,6 @@ import GrassImage from '../../assets/img/grass1.png';
 
 import SwordEmptySound from '../../assets/sounds/gamer/sword_empty.mp3'; 
 import GameOverSound from '../../assets/sounds/gameOver.mp3'; 
-import CoinGetSoundUrl from '../../assets/sounds/coins/coinGet.mp3'; 
 
 
 
@@ -281,6 +281,10 @@ export class Game {
 			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
 		}
 
+		if(!isSetCursor){
+			isSetCursor = Units.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
+		}
+
 		if(Cursor.cursorWaitLeftTimeMs > 0){
 			Cursor.cursorWaitLeftTimeMs -= drawsDiffMs;
 		}
@@ -320,7 +324,6 @@ export class Game {
 	
 		Buildings.draw(drawsDiffMs, Game.isGameOver);
 		Buildings.drawHealth();
-		Buildings.drawRepairingAnimation();
 		Buildings.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 
 		Builder.draw(drawsDiffMs, Game.isGameOver);
@@ -329,8 +332,10 @@ export class Game {
 
 		Units.draw(drawsDiffMs, Game.isGameOver, Waves.isStarted, Waves.delayStartLeftTimeMs);
 		Units.drawHealth();
-		Units.drawHealingingAnimation();
 		Units.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
+
+		Buildings.drawRepairingAnimation();
+		Units.drawHealingingAnimation(drawsDiffMs);
 	
 		Monsters.draw(drawsDiffMs, Game.isGameOver);
 		Monsters.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
@@ -407,6 +412,7 @@ export class Game {
 		Menu.show();
 		Game.drawAll(0, 0, true);
 		BuildingButtons.hide();
+		UnitButtons.hide();
 		AudioSystem.pauseSounds();
 	}
 
@@ -427,6 +433,7 @@ export class Game {
 		Mouse.isClick = false;
 		Game.isBlockMouseLogic = false;
 		BuildingButtons.hide();
+		UnitButtons.hide();
 	}
 
 	/** Начать новую волну */
@@ -468,7 +475,7 @@ export class Game {
 
 			Gamer.coins -= shopItem.price;
 			Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
-			AudioSystem.play(newUnit.x, CoinGetSoundUrl, 0.15);
+			Coins.playSoundGet(newUnit.x, 0.15);
 		}
 		else{
 			throw `unexpected shopItem category = '${shopItem.category}'`;

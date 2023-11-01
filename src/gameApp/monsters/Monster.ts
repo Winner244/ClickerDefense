@@ -131,7 +131,7 @@ export class Monster extends AttackedObject{
 			}
 		}
 
-		super.logicBase(drawsDiffMs, buildings, units, monsters, bottomBorder);
+		super.logicBase(drawsDiffMs);
 
 		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 		let speed = this.speed * (drawsDiffMs / 1000);

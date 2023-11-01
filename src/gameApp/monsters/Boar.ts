@@ -156,7 +156,7 @@ export class Boar extends Monster{
 		if(this._isActivatedSpecialAbility) {
 			if(this._specialAbilityActivationLeftTimeMs > 0) {
 				this._specialAbilityActivationLeftTimeMs -= drawsDiffMs;
-				super.logicBase(drawsDiffMs, buildings, monsters, units, bottomBorder);
+				super.logicBase(drawsDiffMs);
 				return; //игнорируем базовую логику движения и атаки
 			}
 			else if(this._isAttack && this._goal) {

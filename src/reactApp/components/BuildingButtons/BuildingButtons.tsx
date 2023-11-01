@@ -102,7 +102,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
 
   onClickRepair(){
     if(this.props.building){
-      let isRepaired = this.props.building.repair();
+      let isRepaired = this.props.building.recovery();
       if(isRepaired){
         this.setState({ isDisplayRepairButton: false });
         BuildingButtons.hide();
@@ -140,7 +140,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
       height: 0.35 * this.props.width
     }
 
-    let isCanBeRepaired = this.props.building && this.props.building.isCanBeRepaired();
+    let isCanBeRepaired = this.props.building && this.props.building.isCanBeRecovered();
 
     return (
       <div className="building-buttons noselect" style={mainStyles}>

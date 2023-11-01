@@ -107,7 +107,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = false;
-                Gamer.coins = 12;
+                Gamer.coins = 12+13;
                 Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
