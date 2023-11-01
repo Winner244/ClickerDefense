@@ -15,6 +15,8 @@ import {Miner} from "./Miner";
 
 import {Unit} from "./Unit";
 
+import {UnitButtons} from "../../reactApp/components/UnitButtons/UnitButtons";
+
 import CreatingImage from '../../assets/img/units/creating.png'; 
 
 import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
@@ -120,7 +122,7 @@ export class Units {
 		}
 
 		if(!isAnyMouseIn){
-			//UnitsButtons.isEnterMouse = false;
+			UnitButtons.isEnterMouse = false;
 		}
 
 		return isProcessed;
