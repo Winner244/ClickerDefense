@@ -115,6 +115,9 @@ export class Miner extends Unit{
 			this.isDisplayEndPickInEarch = true;
 			this.endingAnimation.animation.leftTimeMs = 0;
 		}
+		else if(test == 2){
+			this._health -= this._health / 2;
+		}
 	}
 
 	get width(): number{

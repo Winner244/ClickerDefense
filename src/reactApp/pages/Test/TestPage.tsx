@@ -108,6 +108,7 @@ class TestPage extends React.Component {
                 Waves.delayEndLeftTimeMs = Waves.delayStartLeftTimeMs = 0;
                 Waves.isStarted = false;
                 Gamer.coins = 12+13;
+                //Gamer.coins = 5555;
                 Buildings.all.forEach(x => x.health-= 40);
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -135,10 +136,9 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX + 25, y, y + Miner.imageHeight);
+                    var miner3 = new Miner(Buildings.flyEarth.centerX + 25, y, y + Miner.imageHeight, 2);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
-                    miner3.health -= miner3.health / 2;
 
                     var y = Buildings.flyEarth.centerY - 50;
                     var miner2 = new Miner(Buildings.flyEarth.centerX - 55, y, y + Miner.imageHeight, 1);

@@ -37,7 +37,7 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 /** Базовый класс для всех Юнитов пользователя */
 export class Unit extends UpgradebleObject {
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
-	static readonly healingAnimationDurationMs: number = 1800; //продолжительность анимации лечения (миллисекунды)
+	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)
 	static readonly creatingNewHeartsPeriodMs: number = 50; //период создания новых сердечек (миллисекунды)
 	static readonly heartDurationMs: number = 550; //продолжительность жизни сердечек
 	static readonly heartDy: number = -10; //скорость подъёма сердечек (пикселей в секунду)
@@ -93,7 +93,6 @@ export class Unit extends UpgradebleObject {
 	
 	static loadHealingResources(): void{
 		Unit.heartImage.src = HeartImage;
-		//TODO: AudioSystem.load(HealingSoundUrl);
 	}
 
 	displayRecoveryAnimationLogic(drawsDiffMs: number){
@@ -114,6 +113,7 @@ export class Unit extends UpgradebleObject {
 				let y = Helper.getRandom(this.y + this.height / 10, this.y + this.height - this.height / 10);
 				this._hearts.push(new MovingObject(x, y, 0, 0, Unit.heartDurationMs, 0, Unit.heartDy, 0));
 				this._heartNewDurationMsLeft = Unit.creatingNewHeartsPeriodMs;
+				AudioSystem.playRandomTone(x, 0.2, 7000, 8000);
 			}
 		}
 	}
@@ -121,8 +121,6 @@ export class Unit extends UpgradebleObject {
 	recovery(): boolean{
 		let result = super.recovery();
 		if(result){
-			this.health = this.healthMax;
-			//TODO: AudioSystem.play(this.centerX, HealingSoundUrl, 0, 1, false, true);
 			Coins.playSoundGet(this.centerX, 0);
 			this._healingAnimationLeftTimeMs = Unit.healingAnimationDurationMs;
 		}
