@@ -46,6 +46,7 @@ import SoundAttacked3 from '../../assets/sounds/units/miner/attacked3.mp3';
 export class Miner extends Unit{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
+	private static readonly scaleSize: number = 0.75;
 	private static readonly passiveWait1Image: HTMLImageElement = new Image();
 	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
@@ -59,10 +60,7 @@ export class Miner extends Unit{
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
-	public goalY: number;
-
 	private readonly _fallEndAnimation: Animation;
-	private _isFall: boolean;
 
 	private readonly _startActiveWaitAnimation: Animation;
 	private readonly _activeWaitAnimation: AnimationInfinite;
@@ -74,20 +72,13 @@ export class Miner extends Unit{
 	public static readonly timeStopRunning: number = 1000; //(в миллисекундах) спустя это время от последнего получения урона майнер остановиться и продолжит копать 
 	private timeStopRunningLeft: number; //(в миллисекундах) сколько времени осталось что бы остановиться?
 
-	private isDisplayEndPickInAir: boolean; //отображать пику крутящуюся в воздухе?
-	private isDisplayEndPickInEarch: boolean; //отображать пику воткнутую в землю?
-
-	private static readonly impulsePick: number = 34; //импульс придаваемый кирке после гибели майнера
-	private static readonly pickRotateForce: number = 31; //сила вращения кирки в воздухе (градусы в секундах)
-	private pickRotate: number; //угол вращения кирки в воздухе
-
 	public isTurnOnPushUpFromCrystals: boolean; //включена лоигка выталкивания майнеров с кристаллов?
 
-	private _brightnessOfPickInEarch: number = 0; //фильтр для плавного мигания кирки в земле в мирное время (между волнами)
+	private _brightnessOfPickInEarch: number = 0.5; //фильтр для плавного мигания кирки в земле в мирное время (между волнами)
 	private _isIncreaseBrightnessOfPickInEarch: boolean = true; //увеличивать сейчас фильтр?
 
 	constructor(x: number, y: number, goalY: number, test: number = 0) {
-		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, false, 0, true, true); 
+		super(x, y, 3, Miner.passiveWait1Image, Miner.pickImage, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, Miner.scaleSize, false, 0, true, true); 
 
 		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
 		this._startActiveWaitAnimation = new Animation(5, 5 * 75, Miner.startActiveWaitImage);
@@ -96,18 +87,14 @@ export class Miner extends Unit{
 		this._diggingAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
 		this._runAnimation = new AnimationInfinite(5, 5 * 100, Miner.runImage);
 
-		this._isFall = false;
 		this._isDiging = true;
 		this._wasPickHit = false;
-		this.isLeftSide = false;
+		this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 		this.isRunRight = true;
 
 		this.goalY = goalY;
 		this.shopItemName = Miner.shopItem.name;
 		this.timeStopRunningLeft = 0;
-		this.isDisplayEndPickInAir = false;
-		this.isDisplayEndPickInEarch = false;
-		this.pickRotate = 0;
 
 		this.isTurnOnPushUpFromCrystals = false;
 
@@ -116,7 +103,7 @@ export class Miner extends Unit{
 
 		if(test == 1){
 			this._health = 0;
-			this.isDisplayEndPickInEarch = true;
+			this._isDisplayWeaponInEarch = true;
 			this.endingAnimation.animation.leftTimeMs = 0;
 		}
 		else if(test == 2){
@@ -124,20 +111,12 @@ export class Miner extends Unit{
 		}
 	}
 
-	get width(): number{
-		return Miner.imageWidth;
-	}
-
-	get height(): number{
-		return Miner.imageHeight;
-	}
-
 	public static get imageWidth() : number{
-		return 75;
+		return Miner.passiveWait1Image.width * Miner.scaleSize;
 	}
 
 	public static get imageHeight() : number{
-		return 77;
+		return Miner.passiveWait1Image.height * Miner.scaleSize;
 	}
 
 	static initForShop(): void{
@@ -158,17 +137,6 @@ export class Miner extends Unit{
 		}
 	}
 
-	recovery(): boolean{
-		let oldHealth = this._health;
-		let result = super.recovery();
-		if(result && oldHealth <= 0 && this._health > 0){
-			this.y -= this.height / 3.5;
-			this.goalY -= this.height / 3.5;
-		}
-
-		return result;
-	}
-
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
@@ -178,43 +146,23 @@ export class Miner extends Unit{
 		
 
 		//end 
-		if(this.isDisplayEndPickInEarch){
+		if(this._isDisplayWeaponInEarch){
 			return;
 		}
 
 		//gravitations
 		if(this.y + this.height < this.goalY){
-			if(this.isDisplayEndPickInAir){
-				this.y += 15 / drawsDiffMs / (this._impulseY / 10);
-			}
-			else{
-				this.y += 15 / drawsDiffMs;
-			}
-			this._isFall = true;
 			this.isTurnOnPushUpFromCrystals = false;
 		}
 		else{
-			this._isFall = false;
-
+			//выталкивание из кристаллов
 			if(this.isTurnOnPushUpFromCrystals){
-				//выталкивание из кристаллов
 				this.isTurnOnPushUpFromCrystals = !this.pushUpFromCrystals();
 			}
 		}
-
-		//start ending
-		if (this.health <= 0) {
-			this.pickRotate += Miner.pickRotateForce / drawsDiffMs;
-			if(this._impulseY < 10 && this.y + this.height >= this.goalY){
-				this._impulseY = 0;
-				this.isDisplayEndPickInAir = false;
-				this.isDisplayEndPickInEarch = true;
-			}
-			return;
-		}
 		
-
-		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+		//игра пошла
+		if(this.health > 0 && WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
 			if(this._isDiging){ //добывание монеток
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
 					if(!this._wasPickHit){
@@ -320,11 +268,7 @@ export class Miner extends Unit{
 			this.timeStopRunningLeft = Miner.timeStopRunning;
 
 			if(this.health <= 0){
-				this.endingAnimation.location = new Point(this.x, this.y);
 				this.isTurnOnPushUpFromCrystals = false;
-				this.isDisplayEndPickInAir = true;
-				this._impulseY = Miner.impulsePick;
-				this.goalY += this.height / 3.5;
 			}
 		}
 		return damage;
@@ -337,9 +281,9 @@ export class Miner extends Unit{
 		}
 
 		if(this.health <= 0){
-			if(this.isDisplayEndPickInAir){
+			if(this._isDisplayWeaponInAir){
 				Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
-				Draw.ctx.rotate(this.pickRotate * Math.PI / 180);
+				Draw.ctx.rotate(this._weaponRotateInAir * Math.PI / 180);
 				Draw.ctx.drawImage(Miner.pickImage, -this.width / 2, -this.height / 2, this.width, this.height);
 				Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 				Draw.ctx.rotate(0);
@@ -358,6 +302,11 @@ export class Miner extends Unit{
 				}
 
 				super.drawObject(drawsDiffMs, Miner.pickInEarchImage, isGameOver, 1, this.x, this.y, filter);
+
+				//искры/звёздочки для привлечения внимания
+				if(!WawesState.isWaveStarted){
+					//TODO: добавить систему как с сердечками - рандомное появление в области с рандомным dx, dy от центра
+				}
 			}
 		}
 

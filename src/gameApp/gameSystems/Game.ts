@@ -376,7 +376,7 @@ export class Game {
 				Units.all.forEach(x => {
 					if(x instanceof Miner){
 						x.y -= delta;
-						(<Miner>x).goalY -= delta;
+						x.goalY -= delta;
 					}
 				});
 			}

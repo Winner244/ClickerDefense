@@ -12,6 +12,7 @@ import Animation from '../../models/Animation';
 import {AnimatedObject} from '../../models/AnimatedObject';
 
 import {MovingObject} from '../../models/MovingObject';
+import {Point} from '../../models/Point';
 
 import {Helper} from '../helpers/Helper';
 
@@ -19,7 +20,6 @@ import {Coins} from '../coins/Coins';
 
 import {Monster} from '../monsters/Monster';
 import {Building} from '../buildings/Building';
-
 
 import CreatingImage from '../../assets/img/units/creating.png'; 
 import HeartImage from '../../assets/img/icons/health.png'; 
@@ -42,11 +42,20 @@ export class Unit extends UpgradebleObject {
 	static readonly heartDurationMs: number = 550; //продолжительность жизни сердечек
 	static readonly heartDy: number = -10; //скорость подъёма сердечек (пикселей в секунду)
 
+	protected imageWeapon: HTMLImageElement; //изображение оружия
+	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
+	protected _isDisplayWeaponInEarch: boolean; //отображать оружие воткнутую в землю?
+	protected _weaponRotateInAir: number; //угол вращения оружие в воздухе
+	protected static readonly impulseWeapon: number = 34; //импульс придаваемый оружию после гибели юнита
+	protected static readonly weaponRotateForce: number = 31; //сила вращения оружия в воздухе (градусы в секундах)
+
 	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации лечения (миллисекунды)
 	protected _heartNewDurationMsLeft: number; //сколько осталось до создания нового сердечка (миллисекунды)
 	protected _hearts: MovingObject[]; //сердца для анимации лечения
 
 	public isRunRight: boolean; //юнит бежит вправо?
+	protected _isFall: boolean; //юнит падает?
+	public goalY: number; //y куда юнит должен приземлиться (это либо место на летающей земле, либо bottomShiftBorder)
 
 	//поля свойства экземпляра
 	speed: number; //скорость передвижения (пикселей в секунду)
@@ -57,24 +66,35 @@ export class Unit extends UpgradebleObject {
 	constructor(x: number, y: number, 
 		healthMax: number, 
 		image: HTMLImageElement, 
+		imageWeapon: HTMLImageElement, 
 		name: string, 
 		imageHandler: ImageHandler,
 		frames: number, 
 		animationDurationMs: number,
 		price: number, 
 		speed: number,
+		scaleSize: number,
 		isLand: boolean = true, 
 		reduceHover: number = 0,
 		isSupportHealing: boolean = true,
 		isSupportUpgrade: boolean = true)
 	{
-		super(x, y, true, isLand, name, 1, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
+		super(x, y, true, isLand, name, scaleSize, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
+
+		this.imageWeapon = imageWeapon;
 
 		this.speed = speed;
 		this.isRunRight = true;
 
 		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита
 		this.endingAnimation.animation.image.src = CreatingImage;
+
+		this._isFall = false;
+		this.goalY = 0;
+
+		this._isDisplayWeaponInAir = false;
+		this._isDisplayWeaponInEarch = false;
+		this._weaponRotateInAir = 0;
 
 		this._healingAnimationLeftTimeMs = 0;
 		this._heartNewDurationMsLeft = 0;
@@ -119,10 +139,17 @@ export class Unit extends UpgradebleObject {
 	}
 
 	recovery(): boolean{
+		let oldHealth = this._health;
 		let result = super.recovery();
 		if(result){
 			Coins.playSoundGet(this.centerX, 0);
 			this._healingAnimationLeftTimeMs = Unit.healingAnimationDurationMs;
+
+			if(this.goalY != 0 && oldHealth <= 0 && this._health > 0){
+				this.y -= this.height / 3.5;
+				this.goalY -= this.height / 3.5;
+			}
+	
 		}
 
 		return result;
@@ -145,7 +172,29 @@ export class Unit extends UpgradebleObject {
 			return;
 		}
 
-		if(this.health <= 0){
+		//gravitations
+		if(this.y + this.height < (this.goalY || bottomShiftBorder)){
+			if(this._isDisplayWeaponInAir){
+				this.y += 15 / drawsDiffMs / (this._impulseY / 10);
+			}
+			else{
+				this.y += 15 / drawsDiffMs;
+			}
+			this._isFall = true;
+		}
+		else{
+			this._isFall = false;
+		}
+
+		//start ending
+		if (this.health <= 0) {
+			this._weaponRotateInAir += Unit.weaponRotateForce / drawsDiffMs;
+			if(this._impulseY < 10 && this.y + this.height >= this.goalY){
+				this._impulseY = 0;
+				this._isDisplayWeaponInAir = false;
+				this._isDisplayWeaponInEarch = true;
+			}
+
 			if(this.endingAnimation.animation.leftTimeMs == this.endingAnimation.animation.durationMs){
 				AudioSystem.play(this.centerX, CreatingSound);
 				AudioSystem.playRandomV(this.centerX, [End1Sound, End2Sound, End3Sound, End4Sound, End5Sound, End6Sound, End7Sound], 0);
@@ -157,6 +206,22 @@ export class Unit extends UpgradebleObject {
 		if(this.y + this.height > Draw.canvas.height){
 			this.y = Draw.canvas.height - this.height;
 		}
+	}
+
+	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{
+		var damage = super.applyDamage(damage, x, y);
+		if(damage > 0){
+			if(this.health <= 0){
+				this.endingAnimation.location = new Point(this.x, this.y);
+				this._isDisplayWeaponInAir = true;
+				this._impulseY = Unit.impulseWeapon;
+
+				if(this.goalY != 0){
+					this.goalY += this.height / 3.5;
+				}
+			}
+		}
+		return damage;
 	}
 
 	get isInvertDraw(): boolean{
