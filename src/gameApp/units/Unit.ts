@@ -153,6 +153,8 @@ export class Unit extends UpgradebleObject {
 	}
 
 	displayRecoveryAnimationLogic(drawsDiffMs: number){
+		super.displayRecoveryAnimationLogic(drawsDiffMs);
+
 		if(this._hearts.length){
 			this._hearts.forEach(x => x.logic(drawsDiffMs));
 			this._hearts = this._hearts.filter(x => x.leftTimeMs > 0);
@@ -173,6 +175,9 @@ export class Unit extends UpgradebleObject {
 				AudioSystem.playRandomTone(x, 0.2, 7000, 8000);
 			}
 		}
+		else if(!this._hearts.length && this._isDisplayRecoveryAnimation){
+			this._isDisplayRecoveryAnimation = false;
+		}
 	}
 
 	recovery(): boolean{
@@ -187,6 +192,7 @@ export class Unit extends UpgradebleObject {
 				this.goalY -= this.height / 3.5;
 			}
 	
+			this._isDisplayWeaponInEarch = false;
 		}
 
 		return result;
