@@ -266,6 +266,7 @@ export class AttackedObject {
 					if(context){
 						context.filter = filter;
 						context.drawImage(imageOrAnimation, 0, 0, this.width, this.height);
+						Draw.ctx.drawImage(this.filteredImages[imageName][filter], invertSign * x, y, invertSign * this.width, this.height);
 					}
 					else{
 						console.error('offscreen context to fileting image is empty!');

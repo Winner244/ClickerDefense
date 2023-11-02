@@ -83,6 +83,8 @@ export class Miner extends Unit{
 
 	public isTurnOnPushUpFromCrystals: boolean; //включена лоигка выталкивания майнеров с кристаллов?
 
+	private _brightnessOfPickInEarch: number = 0; //фильтр для плавного мигания кирки в земле в мирное время (между волнами)
+	private _isIncreaseBrightnessOfPickInEarch: boolean = true; //увеличивать сейчас фильтр?
 
 	constructor(x: number, y: number, goalY: number, test: number = 0) {
 		super(x, y, 3, Miner.passiveWait1Image, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, false, 0, true, true); 
@@ -345,9 +347,14 @@ export class Miner extends Unit{
 			else{
 				let filter = '';
 				if(!WawesState.isWaveStarted){
-					let brightness = Helper.getRandom(10, 25) / 10;
-					//filter = 'brightness(' + brightness + ')';
-					//console.log('ttt', brightness, filter);
+					this._brightnessOfPickInEarch += (this._isIncreaseBrightnessOfPickInEarch ? 1 : -1) * 0.01;
+					if(this._brightnessOfPickInEarch > 2){
+						this._isIncreaseBrightnessOfPickInEarch = false;
+					}
+					else if(this._brightnessOfPickInEarch <= 0.5){
+						this._isIncreaseBrightnessOfPickInEarch = true;
+					}
+					filter = 'brightness(' + this._brightnessOfPickInEarch + ')';
 				}
 
 				super.drawObject(drawsDiffMs, Miner.pickInEarchImage, isGameOver, 1, this.x, this.y, filter);
