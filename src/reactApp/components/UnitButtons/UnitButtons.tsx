@@ -15,6 +15,8 @@ import { Unit } from '../../../gameApp/units/Unit';
 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 
+import { BuildingButtons } from '../BuildingButtons/BuildingButtons';
+
 import CoinImage from '../../../assets/img/coin.png';
 import HealingImage from '../../../assets/img/buttons/healingIcon.png';
 import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
@@ -106,6 +108,7 @@ export class UnitButtons extends React.Component<Props, IState> {
       if(isHealed){
         this.setState({ isDisplayHealingingButton: false });
         UnitButtons.hide();
+        BuildingButtons.hide();
         //update unit info in Upgrade window
         if(Upgrade.isOpened()){
           Upgrade.hide();

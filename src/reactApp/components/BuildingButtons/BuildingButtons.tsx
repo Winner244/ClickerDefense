@@ -15,6 +15,8 @@ import { Building } from '../../../gameApp/buildings/Building';
 
 import { AudioSystem } from '../../../gameApp/gameSystems/AudioSystem';
 
+import { UnitButtons } from '../UnitButtons/UnitButtons';
+
 import CoinImage from '../../../assets/img/coin.png';
 import HammerImage from '../../../assets/img/buttons/hammer.png';
 import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
@@ -106,6 +108,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
       if(isRepaired){
         this.setState({ isDisplayRepairButton: false });
         BuildingButtons.hide();
+        UnitButtons.hide();
         //update building info in Upgrade window
         if(Upgrade.isOpened()){
           Upgrade.hide();
@@ -141,7 +144,6 @@ export class BuildingButtons extends React.Component<Props, IState> {
     }
 
     let isCanBeRepaired = this.props.building && this.props.building.isCanBeRecovered();
-
     return (
       <div className="building-buttons noselect" style={mainStyles}>
         <div className='building-buttons__wrapper' style={wrapperStyles} id='building-buttons__wrapper'>
