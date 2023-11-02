@@ -7,6 +7,7 @@ import {MovingObject} from '../../models/MovingObject';
 import {WaveData} from '../../models/WaveData';
 
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 import AnimationRandom from '../../models/AnimationRandom';
 
 import {Modifier} from '../modifiers/Modifier';
@@ -611,7 +612,7 @@ export class Necromancer extends Monster{
 		super.draw(drawsDiffMs, isGameOver);
 	}
 
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number){
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number){
 		
 		if (this._isDebufStarted){
 			const newWidth = this.debufAnimation.image.width / this.debufAnimation.frames * this.scaleSize;
@@ -652,7 +653,7 @@ export class Necromancer extends Monster{
 			this.specialAbilityCallSkeletesAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x + (invertSign < 0 ? 27 * this.scaleSize : 0), this.y - 17 * this.scaleSize, invertSign * newWidth, newHeight);
 		}
 		else{
-			super.drawObject(drawsDiffMs, isGameOver, invertSign);
+			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign);
 		}
 	}
 

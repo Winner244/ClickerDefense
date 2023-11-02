@@ -17,19 +17,17 @@ import {Necromancer} from '../monsters/Necromancer';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
+import {WawesState} from './WawesState';
+
 import StartNewWaveSound from '../../assets/sounds/startWave.mp3'; 
 
 import MonsterImage from '../../assets/img/monster.png'; 
-
 
 /** Система управления волнами монстров - единичный статичный экземпляр */
 export class Waves{
 	static readonly iconCountKilledMonsters = new Image(); //иконка для интерфейса
 	static readonly monsterSizeDifferentScalePercentage = 20; //(в процентах) разница в размерах создаваемых монстров одного типа.
 
-	static isStarted: boolean = false; //Волна запущена?
-
-	static delayStartLeftTimeMs: number = 0; //сколько ещё осталось задержки (миллисекунды)
 	static readonly delayStartTimeMs: number = 3000; //задержка перед началом волны (миллисекунды) - что бы показать надпись "Волна N"
 
 	static delayEndLeftTimeMs: number = 0; //сколько ещё осталось задержки 
@@ -90,8 +88,8 @@ export class Waves{
 
 	static startNewWave(){
 		this.waveCurrent++;
-		this.delayStartLeftTimeMs = this.delayStartTimeMs;
-		this.isStarted = true;
+		WawesState.delayStartLeftTimeMs = this.delayStartTimeMs;
+		WawesState.isWaveStarted = true;
 		this.waveTimeMs = 0;
 		this.delayEndLeftTimeMs = 0;
 
@@ -115,12 +113,12 @@ export class Waves{
 			return;
 		}
 
-		if(!this.isStarted){
+		if(!WawesState.isWaveStarted){
 			return;
 		}
 
-		if(this.delayStartLeftTimeMs > 0){
-			this.delayStartLeftTimeMs -= drawsDiffMs;
+		if(WawesState.delayStartLeftTimeMs > 0){
+			WawesState.delayStartLeftTimeMs -= drawsDiffMs;
 			return;
 		}
 
@@ -129,7 +127,7 @@ export class Waves{
 		//end of wave
 		if(this.waveCountKilledMonsters >= this.waveCountMonsters && Monsters.all.length == 0){
 			Menu.displayShopButton();
-			this.isStarted = false;
+			WawesState.isWaveStarted = false;
 			this.delayEndLeftTimeMs = this.delayEndTimeMs;
 			if(Waves.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
@@ -172,14 +170,14 @@ export class Waves{
 	}
 
 	static draw(): void{
-		if(Waves.isStarted && Waves.delayStartLeftTimeMs > 0){
-			Draw.drawStartNewWave(Waves.waveCurrent + 1,  Waves.delayStartLeftTimeMs, Waves.delayStartTimeMs);
+		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0){
+			Draw.drawStartNewWave(Waves.waveCurrent + 1,  WawesState.delayStartLeftTimeMs, Waves.delayStartTimeMs);
 		}
 		else if(Waves.waveCountKilledMonsters >= Waves.waveCountMonsters && Waves.delayEndLeftTimeMs > 0 && Monsters.all.length == 0){
 			Draw.drawEndNewWave(Waves.delayEndLeftTimeMs, Waves.delayEndTimeMs);
 		}
 
-		if(Waves.isStarted){
+		if(WawesState.isWaveStarted){
 			Draw.drawWaveInterface(Waves.iconCountKilledMonsters, Waves.waveCountKilledMonsters, Waves.waveCountMonsters);
 		}
 	}

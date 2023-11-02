@@ -4,6 +4,7 @@ import {AnimationsSystem} from './AnimationsSystem';
 import {TestSystem} from './TestSystem';
 
 import {Waves} from './Waves';
+import {WawesState} from './WawesState';
 
 import {Labels} from '../labels/Labels';
 
@@ -223,13 +224,11 @@ export class Game {
 			Waves.logic(drawsDiffMs, Game.bottomShiftBorder);
 		}
 		
-		let isWaveStarted = Waves.isStarted && Waves.delayStartLeftTimeMs <= 0;
-
-		Buildings.logic(drawsDiffMs, Waves.isStarted, Game.isGameOver, Monsters.all, Units.all, Game.bottomShiftBorder);
+		Buildings.logic(drawsDiffMs, Game.isGameOver, Monsters.all, Units.all, Game.bottomShiftBorder);
 		
 		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Units.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
 
-		Units.logic(drawsDiffMs, isWaveStarted, Game.isGameOver, Buildings.all, Monsters.all, Game.bottomShiftBorder);
+		Units.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Game.bottomShiftBorder);
 		
 		Coins.logic(drawsDiffMs, Game.bottomShiftBorder);
 		
@@ -263,8 +262,8 @@ export class Game {
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 		let alpha = Draw.ctx.getImageData(x, y, 1, 1).data[3];
 		let isHoverFound = alpha > 200; //если какой-либо объект находится под курсором (минимум 179 - затемнение фона)
-		let isWaveStarted = Waves.isStarted && Waves.delayStartLeftTimeMs <= 0;
-		let isWaveEnded = !Waves.isStarted && Waves.delayEndLeftTimeMs <= 0;
+		let isWaveStarted = WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0;
+		let isWaveEnded = !WawesState.isWaveStarted && Waves.delayEndLeftTimeMs <= 0;
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick, Buildings.all, this.loadResourcesAfterBuild.bind(this));
 
@@ -330,7 +329,7 @@ export class Game {
 	
 		Coins.draw();
 
-		Units.draw(drawsDiffMs, Game.isGameOver, Waves.isStarted, Waves.delayStartLeftTimeMs);
+		Units.draw(drawsDiffMs, Game.isGameOver);
 		Units.drawHealth();
 		Units.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 
@@ -374,9 +373,11 @@ export class Game {
 			if(Buildings.flyEarth.y > -Buildings.flyEarth.height){
 				var delta = 230 * drawsDiffMs / 1000;
 				Buildings.flyEarth.y -= delta;
-				Units.all.filter(x => x.name == Miner.name).forEach(x => {
-					x.y -= delta;
-					(<Miner>x).goalY -= delta;
+				Units.all.forEach(x => {
+					if(x instanceof Miner){
+						x.y -= delta;
+						(<Miner>x).goalY -= delta;
+					}
 				});
 			}
 		}
@@ -463,7 +464,7 @@ export class Game {
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 		else if(shopItem.category == ShopCategoryEnum.UNITS){
-			let newUnit: Unit|null = null;
+			let newUnit: Unit|Miner|null = null;
 
 			if(Miner.shopItem == shopItem){
 				FlyEarth.loadSeparateCrystals();

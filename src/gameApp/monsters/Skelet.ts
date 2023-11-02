@@ -3,6 +3,7 @@ import {ImageHandler} from '../ImageHandler';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 
 import {Building} from '../buildings/Building';
 
@@ -159,12 +160,12 @@ export class Skelet extends Monster{
 	}
 
 	
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1){
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1){
 		if(this.isDisplayCreatingFromUndegroundAnimation){
 			this.creatingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
 		}
 		else{
-			super.drawObject(drawsDiffMs, isGameOver, invertSign);
+			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign);
 		}
 	}
 

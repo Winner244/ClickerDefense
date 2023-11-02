@@ -24,6 +24,8 @@ import {Unit} from './Unit';
 
 import {Coins} from '../coins/Coins';
 
+import {WawesState} from '../gameSystems/WawesState';
+
 import MinerFallImage from '../../assets/img/units/miner/fall.png'; 
 import MinerFallEndImage from '../../assets/img/units/miner/fallEnd.png'; 
 import MinerActiveWaitImage from '../../assets/img/units/miner/activeWait.png'; 
@@ -165,12 +167,12 @@ export class Miner extends Unit{
 		return result;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarted);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
 		
 
 		//end 
@@ -210,7 +212,7 @@ export class Miner extends Unit{
 		}
 		
 
-		if(isWaveStarted){
+		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
 			if(this._isDiging){ //добывание монеток
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > 500){
 					if(!this._wasPickHit){
@@ -327,16 +329,12 @@ export class Miner extends Unit{
 	}
 
 
-	draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
+	draw(drawsDiffMs: number, isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
 		if(this.health <= 0){
-			if(this.endingAnimation.leftTimeMs > 0){
-				this.endingAnimation.draw(drawsDiffMs, isGameOver);
-			}
-
 			if(this.isDisplayEndPickInAir){
 				Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 				Draw.ctx.rotate(this.pickRotate * Math.PI / 180);
@@ -345,45 +343,45 @@ export class Miner extends Unit{
 				Draw.ctx.rotate(0);
 			}
 			else{
-				Draw.ctx.drawImage(Miner.pickInEarchImage, this.x, this.y, this.width, this.height);
+				let filter = '';
+				if(!WawesState.isWaveStarted){
+					let brightness = Helper.getRandom(10, 25) / 10;
+					//filter = 'brightness(' + brightness + ')';
+					//console.log('ttt', brightness, filter);
+				}
+
+				super.drawObject(drawsDiffMs, Miner.pickInEarchImage, isGameOver, 1, this.x, this.y, filter);
 			}
 		}
-		else if(this._isFall){
-			Draw.ctx.drawImage(Miner.fallImage, this.x, this.y, this.width, this.height);
+
+		super.draw(drawsDiffMs, isGameOver);
+	}
+
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
+		if(this._isFall){
+			super.drawObject(drawsDiffMs, Miner.fallImage, isGameOver, invertSign, x, y, filter);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){
-			this._fallEndAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter);
 		}
-		else if(isWaveStarted && waveDelayStartLeftTimeMs > 0) {
+		else if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0) {
 			if(this._startActiveWaitAnimation.leftTimeMs > 0){
-				this._startActiveWaitAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+				super.drawObject(drawsDiffMs, this._startActiveWaitAnimation, isGameOver, invertSign, x, y, filter);
 			}
 			else{
-				this._activeWaitAnimation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.width, this.height);
+				super.drawObject(drawsDiffMs, this._activeWaitAnimation, isGameOver, invertSign, x, y, filter);
 			}
 		}
-		else if(isWaveStarted){
-				let isInvert = !this.isRunRight;
-				let invertSign = isInvert ? -1 : 1;
-		
-				if(isInvert){
-					Draw.ctx.save();
-					Draw.ctx.scale(-1, 1);
-				}
-		
-				if(this._isDiging){
-					this._diggingAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
-				}
-				else{
-					this._runAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.width, this.height);
-				}
-		
-				if(isInvert){
-					Draw.ctx.restore();
-				}
+		else if(WawesState.isWaveStarted){
+			if(this._isDiging){
+				super.drawObject(drawsDiffMs, this._diggingAnimation, isGameOver, invertSign, x, y, filter);
+			}
+			else{
+				super.drawObject(drawsDiffMs, this._runAnimation, isGameOver, invertSign, x, y, filter);
+			}
 		}
-		else{
-			super.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs);
+		else{ //passive waiting
+			super.drawObject(drawsDiffMs, this.image, isGameOver, invertSign, x, y, filter);
 		}
 	}
 

@@ -140,7 +140,7 @@ export class Unit extends UpgradebleObject {
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarted: boolean){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
@@ -159,22 +159,28 @@ export class Unit extends UpgradebleObject {
 		}
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
+	get isInvertDraw(): boolean{
+		return !this.isRunRight;
+	}
+
+	//draw метод - это система отрисовки всего что связано с юнитом
+	draw(drawsDiffMs: number, isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
+		let filter: string|null = null;
 		if(this.health <= 0){
 			if(this.endingAnimation.animation.leftTimeMs > 0){
 				this.endingAnimation.draw(drawsDiffMs, isGameOver);
 			}
+
 			return;
 		}
 
 		let x = this.x;
 		let y = this.y;
 
-		let filter: string|null = null;
 		if (this.isDisplayedUpgradeWindow) {
 			filter = 'brightness(1.3)';
 		}

@@ -8,6 +8,7 @@ import {ImageHandler} from '../ImageHandler';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import AnimationInfinite from '../../models/AnimationInfinite';
+import Animation from '../../models/Animation';
 
 import {Modifier} from "../modifiers/Modifier";
 
@@ -258,14 +259,14 @@ export class Monster extends AttackedObject{
 		this.drawHealth();
 	}
 
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1){
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1){
 		if(this._isAttack){
 			//атака
 			this.attackAnimation.draw(drawsDiffMs, isGameOver, invertSign * this.x, this.y, invertSign * this.attackWidth, this.attackHeight);
 		}
 		else{
 			//передвижение
-			super.drawObject(drawsDiffMs, isGameOver, invertSign);
+			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign);
 		}
 	}
 

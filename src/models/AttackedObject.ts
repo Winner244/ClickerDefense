@@ -12,6 +12,8 @@ import {Draw} from '../gameApp/gameSystems/Draw';
 
 import {ImageHandler} from '../gameApp/ImageHandler';
 
+import Animation from './Animation';
+
 
 /** атакуемый объект (Монстр или Строение) */
 export class AttackedObject {
@@ -22,7 +24,7 @@ export class AttackedObject {
 	shopItemName: string|null; //нужно для связи с Shop логикой
 
 	image: HTMLImageElement;
-	filteredImages: { [Key: string]: OffscreenCanvas };
+	filteredImages: { [Key: string]: { [Key: string]: OffscreenCanvas } };
 	animation: AnimationInfinite|null;
 
 	initialHealthMax: number; //изначальный максимум хп
@@ -208,6 +210,10 @@ export class AttackedObject {
 		}
 	}
 
+	get isInvertDraw(): boolean{
+		return  this.isLeftSide;
+	}
+
 	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null, filter: string|null = null){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
@@ -222,7 +228,7 @@ export class AttackedObject {
 
 		x = x ?? this.x;
 		y = y ?? this.y;
-		let isInvert = this.isLeftSide;
+		let isInvert = this.isInvertDraw;
 		let invertSign = isInvert ? -1 : 1;
 
 		if(isInvert){
@@ -230,7 +236,7 @@ export class AttackedObject {
 			Draw.ctx.scale(-1, 1);
 		}
 
-		this.drawObject(drawsDiffMs, isGameOver, invertSign, x, y, filter);
+		this.drawObject(drawsDiffMs, this.animation ?? this.image, isGameOver, invertSign, x, y, filter);
 
 		if(isInvert){
 			Draw.ctx.restore();
@@ -243,28 +249,23 @@ export class AttackedObject {
 		this.modifiers.forEach(modifier => modifier.drawAheadObjects(this, drawsDiffMs));
 	}
 
-	drawObject(drawsDiffMs: number, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
 		x = x ?? this.x;
 		y = y ?? this.y;
-		if(this.animation){
+		if(imageOrAnimation instanceof HTMLImageElement){
 			if(filter){
-				throw `filter for animation is not implemented yet! filter: '${filter}'.`;
-			}
-
-			this.animation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
-		}
-		else{
-			if(filter){
-				if(filter in this.filteredImages){
-					Draw.ctx.drawImage(this.filteredImages[filter], invertSign * x, y, invertSign * this.width, this.height);
+				let imageName = imageOrAnimation.src.split('/').pop() || '';
+				if(imageName in this.filteredImages && filter in this.filteredImages[imageName]){
+					Draw.ctx.drawImage(this.filteredImages[imageName][filter], invertSign * x, y, invertSign * this.width, this.height);
 				}
 				else {
 					//create filtered image
-					this.filteredImages[filter] = new OffscreenCanvas(this.width, this.height);
-					let context = this.filteredImages[filter].getContext('2d');
+					this.filteredImages[imageName] = this.filteredImages[imageName] || {};
+					this.filteredImages[imageName][filter] = new OffscreenCanvas(this.width, this.height);
+					let context = this.filteredImages[imageName][filter].getContext('2d');
 					if(context){
 						context.filter = filter;
-						context.drawImage(this.image, 0, 0, this.width, this.height);
+						context.drawImage(imageOrAnimation, 0, 0, this.width, this.height);
 					}
 					else{
 						console.error('offscreen context to fileting image is empty!');
@@ -272,8 +273,15 @@ export class AttackedObject {
 				}
 			}
 			else {
-				Draw.ctx.drawImage(this.image, invertSign * x, y, invertSign * this.width, this.height);
+				Draw.ctx.drawImage(imageOrAnimation, invertSign * x, y, invertSign * this.width, this.height);
 			}
+		}
+		else{
+			if(filter){
+				throw `filter for animation is not implemented yet! filter: '${filter}'.`;
+			}
+
+			imageOrAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
 		}
 	}
 

@@ -92,7 +92,7 @@ export class Buildings{
 		return isProcessed;
 	}
 
-	static logic(drawsDiffMs: number, isWaveStarting: boolean, isGameOver: boolean, monsters: Monster[], units: Unit[], bottomShiftBorder: number){
+	static logic(drawsDiffMs: number, isGameOver: boolean, monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		//логика анимации разрушения здания
 		if(this.explosions.length){
 			for(let i = 0; i < this.explosions.length; i++){
@@ -116,7 +116,7 @@ export class Buildings{
 					AudioSystem.play(building.centerX, ExplosionSound, 0.1, 2, false, true);
 				}
 				else{
-					building.logic(drawsDiffMs, this.all, monsters, units, bottomShiftBorder, isWaveStarting)
+					building.logic(drawsDiffMs, this.all, monsters, units, bottomShiftBorder)
 				}
 			}
 		}

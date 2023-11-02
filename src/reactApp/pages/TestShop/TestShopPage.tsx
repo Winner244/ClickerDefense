@@ -5,7 +5,7 @@ import {Shop} from '../../components/Shop/Shop';
 import {Menu} from '../../components/Menu/Menu';
 import * as MenuStore from '../../components/Menu/MenuStore';
 
-import {Waves} from '../../../gameApp/gameSystems/Waves';
+import {WawesState} from '../../../gameApp/gameSystems/WawesState';
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Gamer} from '../../../gameApp/gamer/Gamer';
 
@@ -13,7 +13,7 @@ class TestShopPage extends React.Component {
     componentDidMount(){
         App.Store.dispatch(MenuStore.actionCreators.startGame());
         Game.startNew();
-        Waves.isStarted = false;
+        WawesState.isWaveStarted = false;
         Menu.displayNewWaveButton();
         Menu.displayShopButton();
         Gamer.coins = 500;

@@ -27,6 +27,8 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {Helper} from '../helpers/Helper';
 
+import {WawesState} from '../gameSystems/WawesState';
+
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
 
@@ -187,13 +189,13 @@ export class Tower extends Building{
 		this._isDisplayDynamitRadius = false;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarting: boolean)
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number)
 	{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder, isWaveStarting);
+		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
 
 		if(this._rechargeLeftTimeMs > 0){ //перезарядка
 			this._rechargeLeftTimeMs -= drawsDiffMs;
@@ -230,7 +232,7 @@ export class Tower extends Building{
 			}
 		}
 
-		if(isWaveStarting && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
+		if(WawesState.isWaveStarted && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
 			this._isDisplayRadius = false;
 			this._isDisplayDynamitRadius = false;
 		}

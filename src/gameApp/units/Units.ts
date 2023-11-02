@@ -128,7 +128,7 @@ export class Units {
 		return isProcessed;
 	}
 
-	static logic(drawsDiffMs: number, isWaveStarted: boolean, isGameOver: boolean, buildings: Building[], monsters: Monster[], bottomShiftBorder: number){
+	static logic(drawsDiffMs: number, isGameOver: boolean, buildings: Building[], monsters: Monster[], bottomShiftBorder: number){
 
 		//логика анимации появления юнитов
 		if(this.creatings.length){
@@ -146,7 +146,7 @@ export class Units {
 			let unit = this.all[i];
 
 			if(!isGameOver){
-				unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder, isWaveStarted)
+				unit.logic(drawsDiffMs, buildings, monsters, this.all, bottomShiftBorder)
 			}
 		}
 	}
@@ -155,7 +155,7 @@ export class Units {
 		Units.all.forEach(unit => unit.modifiers = []);
 	}
 
-	static draw(drawsDiffMs: number, isGameOver: boolean, isWaveStarted: boolean, waveDelayStartLeftTimeMs: number): void{
+	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		//появление юнитов
 		this.creatings.forEach(x => {
 			let newWidth = (this.creatingAnimation.image.width / this.creatingAnimation.frames) * (x.size.height / (this.creatingAnimation.image.height));
@@ -174,7 +174,7 @@ export class Units {
 
 			miners.forEach(unit => {
 				this.drawFlyEarthCrystals(drawsDiffMs, isGameOver, prevMiner, <Miner>unit);
-				unit.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs);
+				unit.draw(drawsDiffMs, isGameOver);
 				prevMiner = <Miner>unit;
 			});
 			
@@ -184,7 +184,7 @@ export class Units {
 		//отрисовка остальных юнитов
 		Units.all
 			.filter(x => x.name != Miner.name)
-			.forEach(unit => unit.draw(drawsDiffMs, isGameOver, isWaveStarted, waveDelayStartLeftTimeMs));
+			.forEach(unit => unit.draw(drawsDiffMs, isGameOver));
 	}
 
 	static drawFlyEarthCrystals(drawsDiffMs: number, isGameOver: boolean, prevMiner: Miner|null, nextMiner: Miner|null = null){

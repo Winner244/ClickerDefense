@@ -87,7 +87,7 @@ export class Building extends UpgradebleObject{
 		return this._impulseX;
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number, isWaveStarting: boolean){
+	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
