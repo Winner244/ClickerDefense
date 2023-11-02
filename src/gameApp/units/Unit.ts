@@ -26,6 +26,7 @@ import {WawesState} from '../gameSystems/WawesState';
 
 import CreatingImage from '../../assets/img/units/creating.png'; 
 import HeartImage from '../../assets/img/icons/health.png'; 
+import StarImage from '../../assets/img/icons/star.png'; 
 
 import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
 import End1Sound from '../../assets/sounds/units/end1.mp3'; 
@@ -50,6 +51,17 @@ export class Unit extends UpgradebleObject {
 	static readonly creatingNewHeartsPeriodMs: number = 50; //период создания новых сердечек (миллисекунды)
 	static readonly heartDurationMs: number = 550; //продолжительность жизни сердечек
 	static readonly heartDy: number = -10; //скорость подъёма сердечек (пикселей в секунду)
+	protected _hearts: MovingObject[]; //сердца для анимации лечения
+	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации лечения (миллисекунды)
+	protected _heartNewDurationMsLeft: number; //сколько осталось до создания нового сердечка (миллисекунды)
+
+	static readonly starImage: HTMLImageElement = new Image(); //картинка для анимации звёздочек
+	static readonly creatingNewStarPeriodMs: number = 350; //период создания новых звёздочек (миллисекунды)
+	static readonly starDurationMs: number = 2000; //продолжительность жизни звездочки
+	static readonly starSpeed: number = 10; //скорость движения звёздочек (пикселей в секунду)
+	protected _stars: MovingObject[]; //звёздочик для привлечения внимания к оружию в земле (для воскрешения)
+	protected _starsNewDurationMsLeft: number; //сколько осталось до создания новой звёздочки (миллисекунды)
+
 
 	protected imageWeapon: HTMLImageElement; //изображение оружия
 	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
@@ -60,10 +72,6 @@ export class Unit extends UpgradebleObject {
 	protected static readonly weaponRotateForce: number = 31; //сила вращения оружия в воздухе (градусы в секундах)
 	protected _brightnessOfWeaponInEarch: number = 0.5; //фильтр для плавного мигания оружия в земле в мирное время (между волнами)
 	protected _isIncreaseBrightnessOfWeaponInEarch: boolean = true; //увеличивать сейчас фильтр мигания оружия в земле?
-
-	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации лечения (миллисекунды)
-	protected _heartNewDurationMsLeft: number; //сколько осталось до создания нового сердечка (миллисекунды)
-	protected _hearts: MovingObject[]; //сердца для анимации лечения
 
 	public isRunRight: boolean; //юнит бежит вправо?
 	protected _isFall: boolean; //юнит падает?
@@ -121,9 +129,12 @@ export class Unit extends UpgradebleObject {
 		this._weaponRotateInAir = 0;
 		this._rotateWeaponInEarch = rotateWeaponInEarch;
 
+		this._hearts = [];
 		this._healingAnimationLeftTimeMs = 0;
 		this._heartNewDurationMsLeft = 0;
-		this._hearts = [];
+
+		this._stars = [];
+		this._starsNewDurationMsLeft = 0;
 
 		AudioSystem.load(CreatingSound);
 		AudioSystem.load(End1Sound);
@@ -138,6 +149,7 @@ export class Unit extends UpgradebleObject {
 	
 	static loadHealingResources(): void{
 		Unit.heartImage.src = HeartImage;
+		Unit.starImage.src = StarImage;
 	}
 
 	displayRecoveryAnimationLogic(drawsDiffMs: number){
@@ -197,8 +209,26 @@ export class Unit extends UpgradebleObject {
 			return;
 		}
 
+		if(this._stars.length){
+			this._stars.forEach(x => x.logic(drawsDiffMs));
+			this._stars = this._stars.filter(x => x.leftTimeMs > 0);
+		}
+
 		//end 
 		if(this._isDisplayWeaponInEarch){
+
+			this._starsNewDurationMsLeft -= drawsDiffMs;
+			if(this._starsNewDurationMsLeft <= 0){
+				let x = Helper.getRandom(this.x + this.height / 5, this.x + this.width - this.height / 3);
+				let y = Helper.getRandom(this.y + this.height / 5, this.y + this.height - this.height / 3);
+
+				let dx = Unit.starSpeed * Math.sign(x - this.centerX);
+				let dy = Unit.starSpeed * Math.sign(y - this.centerY);
+
+				this._stars.push(new MovingObject(x, y, 15, 15, Unit.starDurationMs, dx, dy, 0));
+				this._starsNewDurationMsLeft = Unit.creatingNewStarPeriodMs;
+			}
+
 			return;
 		}
 
@@ -297,7 +327,11 @@ export class Unit extends UpgradebleObject {
 
 				//искры/звёздочки для привлечения внимания
 				if(!WawesState.isWaveStarted){
-					//TODO: добавить систему как с сердечками - рандомное появление в области с рандомным dx, dy от центра
+					this._stars.forEach(star => {
+						Draw.ctx.globalAlpha = star.leftTimeMs / Unit.starDurationMs;
+						Draw.ctx.drawImage(Unit.starImage, star.location.x, star.location.y, star.size.width, star.size.height);
+						Draw.ctx.globalAlpha = 1;
+					});
 				}
 			}
 			return;
