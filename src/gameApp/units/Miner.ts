@@ -58,14 +58,11 @@ export class Miner extends Unit{
 	private static readonly pickImage: HTMLImageElement = new Image(); 
 	private static readonly pickInEarchImage: HTMLImageElement = new Image(); 
 
+	private static readonly rotateWeaponInEarch: number = 172;
+
 	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
-	private readonly _fallEndAnimation: Animation;
-
-	private readonly _startActiveWaitAnimation: Animation;
-	private readonly _activeWaitAnimation: AnimationInfinite;
 	private readonly _diggingAnimation: AnimationInfinite;
-	private readonly _runAnimation: AnimationInfinite;
 	private _isDiging: boolean; //Копает сейчас?
 	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
 
@@ -74,18 +71,20 @@ export class Miner extends Unit{
 
 	public isTurnOnPushUpFromCrystals: boolean; //включена лоигка выталкивания майнеров с кристаллов?
 
-	private _brightnessOfPickInEarch: number = 0.5; //фильтр для плавного мигания кирки в земле в мирное время (между волнами)
-	private _isIncreaseBrightnessOfPickInEarch: boolean = true; //увеличивать сейчас фильтр?
-
 	constructor(x: number, y: number, goalY: number, test: number = 0) {
-		super(x, y, 3, Miner.passiveWait1Image, Miner.pickImage, Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, Miner.scaleSize, false, 0, true, true); 
+		super(x, y, 3, 
+			Miner.passiveWait1Image, 	//image
+			Miner.pickImage,   			//image weapon
+			Miner.fallImage,			//fall image
+			new Animation(31, 31 * 75, Miner.fallEndImage), 			//fall end animation
+			new Animation(5, 5 * 75, Miner.startActiveWaitImage), 		//startActiveWaitingAnimation
+			new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage), 	//activeWaitingAnimation
+			new AnimationInfinite(5, 5 * 100, Miner.runImage),  		//run animation
+			Miner.rotateWeaponInEarch, 
+			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, Miner.scaleSize, false, 0, true, true); 
 
-		this._fallEndAnimation = new Animation(31, 31 * 75, Miner.fallEndImage);
-		this._startActiveWaitAnimation = new Animation(5, 5 * 75, Miner.startActiveWaitImage);
-		this._activeWaitAnimation = new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage);
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 		this._diggingAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
-		this._runAnimation = new AnimationInfinite(5, 5 * 100, Miner.runImage);
 
 		this._isDiging = true;
 		this._wasPickHit = false;
@@ -274,71 +273,14 @@ export class Miner extends Unit{
 		return damage;
 	}
 
-
-	draw(drawsDiffMs: number, isGameOver: boolean): void{
-		if(!this.imageHandler.isImagesCompleted){
-			return;
-		}
-
-		if(this.health <= 0){
-			if(this._isDisplayWeaponInAir){
-				Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
-				Draw.ctx.rotate(this._weaponRotateInAir * Math.PI / 180);
-				Draw.ctx.drawImage(Miner.pickImage, -this.width / 2, -this.height / 2, this.width, this.height);
-				Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-				Draw.ctx.rotate(0);
-			}
-			else{
-				let filter = '';
-				if(!WawesState.isWaveStarted){
-					this._brightnessOfPickInEarch += (this._isIncreaseBrightnessOfPickInEarch ? 1 : -1) * 0.01;
-					if(this._brightnessOfPickInEarch > 2){
-						this._isIncreaseBrightnessOfPickInEarch = false;
-					}
-					else if(this._brightnessOfPickInEarch <= 0.5){
-						this._isIncreaseBrightnessOfPickInEarch = true;
-					}
-					filter = 'brightness(' + this._brightnessOfPickInEarch + ')';
-				}
-
-				super.drawObject(drawsDiffMs, Miner.pickInEarchImage, isGameOver, 1, this.x, this.y, filter);
-
-				//искры/звёздочки для привлечения внимания
-				if(!WawesState.isWaveStarted){
-					//TODO: добавить систему как с сердечками - рандомное появление в области с рандомным dx, dy от центра
-				}
-			}
-		}
-
-		super.draw(drawsDiffMs, isGameOver);
-	}
-
 	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
-		if(this._isFall){
-			super.drawObject(drawsDiffMs, Miner.fallImage, isGameOver, invertSign, x, y, filter);
+		if(WawesState.isWaveStarted){
+			imageOrAnimation = this._isDiging 
+				? this._diggingAnimation 
+				: this._runAnimation;
 		}
-		else if(this._fallEndAnimation.leftTimeMs > 0){
-			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter);
-		}
-		else if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0) {
-			if(this._startActiveWaitAnimation.leftTimeMs > 0){
-				super.drawObject(drawsDiffMs, this._startActiveWaitAnimation, isGameOver, invertSign, x, y, filter);
-			}
-			else{
-				super.drawObject(drawsDiffMs, this._activeWaitAnimation, isGameOver, invertSign, x, y, filter);
-			}
-		}
-		else if(WawesState.isWaveStarted){
-			if(this._isDiging){
-				super.drawObject(drawsDiffMs, this._diggingAnimation, isGameOver, invertSign, x, y, filter);
-			}
-			else{
-				super.drawObject(drawsDiffMs, this._runAnimation, isGameOver, invertSign, x, y, filter);
-			}
-		}
-		else{ //passive waiting
-			super.drawObject(drawsDiffMs, this.image, isGameOver, invertSign, x, y, filter);
-		}
+		
+		super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
 	}
 
 }

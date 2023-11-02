@@ -9,6 +9,7 @@ import {ImageHandler} from '../../gameApp/ImageHandler';
 import {UnitButtons} from '../../reactApp/components/UnitButtons/UnitButtons';
 
 import Animation from '../../models/Animation';
+import AnimationInfinite from '../../models/AnimationInfinite';
 import {AnimatedObject} from '../../models/AnimatedObject';
 
 import {MovingObject} from '../../models/MovingObject';
@@ -20,6 +21,8 @@ import {Coins} from '../coins/Coins';
 
 import {Monster} from '../monsters/Monster';
 import {Building} from '../buildings/Building';
+
+import {WawesState} from '../gameSystems/WawesState';
 
 import CreatingImage from '../../assets/img/units/creating.png'; 
 import HeartImage from '../../assets/img/icons/health.png'; 
@@ -36,6 +39,12 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 
 /** Базовый класс для всех Юнитов пользователя */
 export class Unit extends UpgradebleObject {
+	protected readonly _fallEndAnimation: Animation; //анимация приземления юнита 
+	protected readonly _fallImage: HTMLImageElement;
+	protected readonly _startActiveWaitingAnimation: Animation; //анимация начала ожидания волны
+	protected readonly _activeWaitingAnimation: AnimationInfinite; //анимация ожидания начала волны
+	protected readonly _runAnimation: AnimationInfinite; //анимация бега
+
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
 	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)
 	static readonly creatingNewHeartsPeriodMs: number = 50; //период создания новых сердечек (миллисекунды)
@@ -46,8 +55,11 @@ export class Unit extends UpgradebleObject {
 	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
 	protected _isDisplayWeaponInEarch: boolean; //отображать оружие воткнутую в землю?
 	protected _weaponRotateInAir: number; //угол вращения оружие в воздухе
+	protected _rotateWeaponInEarch: number; //угол вращения оружие в Земле
 	protected static readonly impulseWeapon: number = 34; //импульс придаваемый оружию после гибели юнита
 	protected static readonly weaponRotateForce: number = 31; //сила вращения оружия в воздухе (градусы в секундах)
+	protected _brightnessOfWeaponInEarch: number = 0.5; //фильтр для плавного мигания оружия в земле в мирное время (между волнами)
+	protected _isIncreaseBrightnessOfWeaponInEarch: boolean = true; //увеличивать сейчас фильтр мигания оружия в земле?
 
 	protected _healingAnimationLeftTimeMs: number; //оставшееся время отображения анимации лечения (миллисекунды)
 	protected _heartNewDurationMsLeft: number; //сколько осталось до создания нового сердечка (миллисекунды)
@@ -67,6 +79,12 @@ export class Unit extends UpgradebleObject {
 		healthMax: number, 
 		image: HTMLImageElement, 
 		imageWeapon: HTMLImageElement, 
+		fallImage: HTMLImageElement, 
+		fallEndAnimation: Animation,
+		startActiveWaitingAnimation: Animation,
+		activeWaitingAnimation: AnimationInfinite,
+		runAnimation: AnimationInfinite,
+		rotateWeaponInEarch: number,
 		name: string, 
 		imageHandler: ImageHandler,
 		frames: number, 
@@ -80,6 +98,12 @@ export class Unit extends UpgradebleObject {
 		isSupportUpgrade: boolean = true)
 	{
 		super(x, y, true, isLand, name, scaleSize, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
+
+		this._fallImage = fallImage;
+		this._fallEndAnimation = fallEndAnimation;
+		this._startActiveWaitingAnimation = startActiveWaitingAnimation;
+		this._activeWaitingAnimation = activeWaitingAnimation;
+		this._runAnimation = runAnimation;
 
 		this.imageWeapon = imageWeapon;
 
@@ -95,6 +119,7 @@ export class Unit extends UpgradebleObject {
 		this._isDisplayWeaponInAir = false;
 		this._isDisplayWeaponInEarch = false;
 		this._weaponRotateInAir = 0;
+		this._rotateWeaponInEarch = rotateWeaponInEarch;
 
 		this._healingAnimationLeftTimeMs = 0;
 		this._heartNewDurationMsLeft = 0;
@@ -172,6 +197,11 @@ export class Unit extends UpgradebleObject {
 			return;
 		}
 
+		//end 
+		if(this._isDisplayWeaponInEarch){
+			return;
+		}
+
 		//gravitations
 		if(this.y + this.height < (this.goalY || bottomShiftBorder)){
 			if(this._isDisplayWeaponInAir){
@@ -240,6 +270,31 @@ export class Unit extends UpgradebleObject {
 				this.endingAnimation.draw(drawsDiffMs, isGameOver);
 			}
 
+			if(!this._isDisplayWeaponInAir){
+				if(!WawesState.isWaveStarted){
+					this._brightnessOfWeaponInEarch += (this._isIncreaseBrightnessOfWeaponInEarch ? 1 : -1) * 0.01;
+					if(this._brightnessOfWeaponInEarch > 2){
+						this._isIncreaseBrightnessOfWeaponInEarch = false;
+					}
+					else if(this._brightnessOfWeaponInEarch <= 0.5){
+						this._isIncreaseBrightnessOfWeaponInEarch = true;
+					}
+					filter = 'brightness(' + this._brightnessOfWeaponInEarch + ')';
+				}
+			}
+
+			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
+			Draw.ctx.rotate((this._isDisplayWeaponInAir ? this._weaponRotateInAir : this._rotateWeaponInEarch) * Math.PI / 180);
+			super.drawObject(drawsDiffMs, this.imageWeapon, isGameOver, 1, -this.width / 2, -this.height / 2, filter);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+
+			if(!this._isDisplayWeaponInAir){
+				//искры/звёздочки для привлечения внимания
+				if(!WawesState.isWaveStarted){
+					//TODO: добавить систему как с сердечками - рандомное появление в области с рандомным dx, dy от центра
+				}
+			}
 			return;
 		}
 
@@ -251,6 +306,29 @@ export class Unit extends UpgradebleObject {
 		}
 
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
+	}
+
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
+		if(this._isFall){
+			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter);
+		}
+		else if(this._fallEndAnimation.leftTimeMs > 0){
+			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter);
+		}
+		else if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0) {
+			if(this._startActiveWaitingAnimation.leftTimeMs > 0){
+				super.drawObject(drawsDiffMs, this._startActiveWaitingAnimation, isGameOver, invertSign, x, y, filter);
+			}
+			else{
+				super.drawObject(drawsDiffMs, this._activeWaitingAnimation, isGameOver, invertSign, x, y, filter);
+			}
+		}
+		else if(WawesState.isWaveStarted){
+			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
+		}
+		else{ //passive waiting
+			super.drawObject(drawsDiffMs, this.image, isGameOver, invertSign, x, y, filter);
+		}
 	}
 
 	drawHealth(): void{
