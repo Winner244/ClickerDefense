@@ -35,7 +35,6 @@ import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.pn
 import MinerRunImage from '../../assets/img/units/miner/run.png'; 
 
 import PickImage from '../../assets/img/units/miner/pick.png'; 
-import PickInEarchImage from '../../assets/img/units/miner/pickInEarch.png'; 
 
 import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/units/miner/attacked2.mp3'; 
@@ -56,7 +55,6 @@ export class Miner extends Unit{
 	private static readonly runImage: HTMLImageElement = new Image(); 
 
 	private static readonly pickImage: HTMLImageElement = new Image(); 
-	private static readonly pickInEarchImage: HTMLImageElement = new Image(); 
 
 	private static readonly rotateWeaponInEarch: number = 172;
 
@@ -132,7 +130,6 @@ export class Miner extends Unit{
 			Miner.imageHandler.new(Miner.diggingImage).src = MinerDiggingImage;
 			Miner.imageHandler.new(Miner.runImage).src = MinerRunImage;
 			Miner.imageHandler.new(Miner.pickImage).src = PickImage;
-			Miner.imageHandler.new(Miner.pickInEarchImage).src = PickInEarchImage;
 		}
 	}
 
@@ -272,6 +269,17 @@ export class Miner extends Unit{
 		}
 		return damage;
 	}
+	
+	drawEarch(): void {
+		Draw.ctx.lineWidth = 1;
+		Draw.ctx.strokeStyle = '#833526';
+		Draw.ctx.beginPath(); 
+		for(let i = 0, w = 14; w > 0; w-=2, i++){
+			Draw.ctx.moveTo(this.centerX + i - 5, this.y + this.height - i - 20);
+			Draw.ctx.lineTo(this.centerX + i + w - 5, this.y + this.height - i - 20)
+		}
+		Draw.ctx.stroke(); 
+	}
 
 	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
 		if(WawesState.isWaveStarted){
@@ -279,7 +287,7 @@ export class Miner extends Unit{
 				? this._diggingAnimation 
 				: this._runAnimation;
 		}
-		
+
 		super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
 	}
 

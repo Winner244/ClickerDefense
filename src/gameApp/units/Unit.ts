@@ -258,6 +258,8 @@ export class Unit extends UpgradebleObject {
 		return !this.isRunRight;
 	}
 
+	drawEarch(){}
+
 	//draw метод - это система отрисовки всего что связано с юнитом
 	draw(drawsDiffMs: number, isGameOver: boolean): void{
 		if(!this.imageHandler.isImagesCompleted){
@@ -290,6 +292,9 @@ export class Unit extends UpgradebleObject {
 			Draw.ctx.rotate(0);
 
 			if(!this._isDisplayWeaponInAir){
+				//display earch
+				this.drawEarch();
+
 				//искры/звёздочки для привлечения внимания
 				if(!WawesState.isWaveStarted){
 					//TODO: добавить систему как с сердечками - рандомное появление в области с рандомным dx, dy от центра

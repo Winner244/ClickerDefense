@@ -1599,7 +1599,7 @@ class TestPage extends React.Component {
                     Game.buyThing(Miner.shopItem);
                 }, 300);
             }
-        },
+        },*/
 
         {
             key: "Золотодобытчики - Авто появление множественное + проверка на лимит покупки",
@@ -1628,7 +1628,7 @@ class TestPage extends React.Component {
                 }
                 create();
             }
-        },*/
+        },
 
         {
             key: "Золотодобытчик - Авто появление - на кристалле",
@@ -2119,7 +2119,7 @@ class TestPage extends React.Component {
             }
         },
 
-        /*{
+        {
             key: "Золотодобытчики - гибель",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -2142,7 +2142,7 @@ class TestPage extends React.Component {
                     }, 1000);
                 }, 300);
             }
-        },*/
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){
