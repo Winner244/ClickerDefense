@@ -79,7 +79,7 @@ export class Miner extends Unit{
 			new Animation(5, 5 * 75, Miner.startActiveWaitImage), 		//startActiveWaitingAnimation
 			new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage), 	//activeWaitingAnimation
 			new AnimationInfinite(5, 5 * 100, Miner.runImage),  		//run animation
-			new Animation(10, 10 * 150, Miner.joyImage),  				//joy animation
+			new Animation(17, 17 * 110, Miner.joyImage),  				//joy animation
 			Miner.rotateWeaponInEarch, 
 			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, Miner.scaleSize, false, 0, true, true); 
 
