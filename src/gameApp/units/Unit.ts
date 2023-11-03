@@ -45,6 +45,7 @@ export class Unit extends UpgradebleObject {
 	protected readonly _startActiveWaitingAnimation: Animation; //анимация начала ожидания волны
 	protected readonly _activeWaitingAnimation: AnimationInfinite; //анимация ожидания начала волны
 	protected readonly _runAnimation: AnimationInfinite; //анимация бега
+	protected readonly _joyAnimation: Animation; //анимация радости после завершения волны
 
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
 	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)
@@ -92,6 +93,7 @@ export class Unit extends UpgradebleObject {
 		startActiveWaitingAnimation: Animation,
 		activeWaitingAnimation: AnimationInfinite,
 		runAnimation: AnimationInfinite,
+		joyAnimation: Animation,
 		rotateWeaponInEarch: number,
 		name: string, 
 		imageHandler: ImageHandler,
@@ -112,6 +114,7 @@ export class Unit extends UpgradebleObject {
 		this._startActiveWaitingAnimation = startActiveWaitingAnimation;
 		this._activeWaitingAnimation = activeWaitingAnimation;
 		this._runAnimation = runAnimation;
+		this._joyAnimation = joyAnimation;
 
 		this.imageWeapon = imageWeapon;
 
@@ -370,6 +373,9 @@ export class Unit extends UpgradebleObject {
 		}
 		else if(WawesState.isWaveStarted){
 			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
+		}
+		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0){
+			super.drawObject(drawsDiffMs, this._joyAnimation, isGameOver, invertSign, x, y, filter);
 		}
 		else{ //passive waiting
 			super.drawObject(drawsDiffMs, this.image, isGameOver, invertSign, x, y, filter);

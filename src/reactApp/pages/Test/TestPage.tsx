@@ -30,7 +30,6 @@ import { Skelet } from '../../../gameApp/monsters/Skelet';
 import { Units } from '../../../gameApp/units/Units';
 import { Unit } from '../../../gameApp/units/Unit';
 import { Miner } from '../../../gameApp/units/Miner';
-import { Mouse } from '../../../gameApp/gamer/Mouse';
 
 import './TestPage.scss';
 
@@ -43,7 +42,7 @@ class TestPage extends React.Component {
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -70,7 +69,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 
                 var tower1 = new Tower(200);
                 tower1.loadedResourcesAfterBuild();
@@ -91,7 +90,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Gamer.coins = 50;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 setTimeout(() => {
                     var tower1 = new Tower(200);
                     tower1.loadedResourcesAfterBuild();
@@ -106,7 +105,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Gamer.coins = 12+13;
                 //Gamer.coins = 5555;
@@ -155,7 +154,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Gamer.coins = 500;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
                 Waves.all[0] = [new WaveData(Zombie.name, 1, 30, 0)];
 
@@ -185,7 +184,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
@@ -199,7 +198,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -220,7 +219,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -240,7 +239,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -265,7 +264,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -293,7 +292,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -320,7 +319,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -347,7 +346,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -372,7 +371,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         new WaveData(Skelet.name, 1, 60, 0)
@@ -388,7 +387,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         new WaveData(Skelet.name, 1, 60, 10)
@@ -411,7 +410,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var barricade1 = new Barricade(200);
                 barricade1.loadedResourcesAfterBuild();
@@ -428,7 +427,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var barricade1 = new Barricade(200);
                 barricade1.loadedResourcesAfterBuild();
@@ -453,7 +452,7 @@ class TestPage extends React.Component {
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
@@ -478,7 +477,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var zombie1 = new Zombie(650, 780, true, 1);
                 Monsters.all.push(zombie1);
@@ -503,7 +502,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var barricade1 = new Barricade(200);
                 barricade1.loadedResourcesAfterBuild();
@@ -523,7 +522,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -553,7 +552,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -583,7 +582,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -613,7 +612,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -643,7 +642,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 0;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 
                 Waves.all = [ //монстры на волнах
                 [ //1-я волна
@@ -679,7 +678,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 1;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(500);
                 tower1.loadedResourcesAfterBuild();
@@ -714,7 +713,7 @@ class TestPage extends React.Component {
                 Waves.all[3] = [ //3-я волна
                     new WaveData(Bat.name, 75, 90, 0)
                 ];
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 //WawesState.isWaveStarted = false;
 
 
@@ -750,7 +749,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 var tower1 = new Tower(Draw.canvas.width / 2 - 50);
                 tower1.loadedResourcesAfterBuild();
@@ -777,7 +776,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
@@ -798,7 +797,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 0;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 FireModifier.loadResources();
                 
@@ -840,7 +839,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Waves.waveCurrent = 2;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 FireModifier.loadResources();
                 
@@ -890,7 +889,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                 [ 
                     new WaveData(Bat.name, 30, 60, 0)
@@ -920,7 +919,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -940,7 +939,7 @@ class TestPage extends React.Component {
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                 [ 
                     new WaveData(Necromancer.name, 30, 15, 0)
@@ -953,7 +952,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -992,7 +991,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1013,7 +1012,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1038,7 +1037,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1087,7 +1086,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1124,7 +1123,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1157,7 +1156,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1185,7 +1184,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1212,7 +1211,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1241,7 +1240,7 @@ class TestPage extends React.Component {
                 Gamer.coins = 200;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -1274,7 +1273,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 1;
                 
                 var tower1 = new Tower(700);
@@ -1300,7 +1299,7 @@ class TestPage extends React.Component {
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 2;
 
                 var barricade1 = new Barricade(600);
@@ -1327,7 +1326,7 @@ class TestPage extends React.Component {
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 3;
 
                 var barricade1 = new Barricade(600);
@@ -1359,7 +1358,7 @@ class TestPage extends React.Component {
             code: () => { 
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.waveCurrent = 4;
                 Waves.all.push([ //4-ая волна
                     new WaveData(Zombie.name, 30, 75, 0),
@@ -1396,7 +1395,7 @@ class TestPage extends React.Component {
                     new WaveData(Zombie.name, 301, 70, 0),
                     new WaveData(Boar.name, 351, 25, 1)
                 ]]
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 
                 setTimeout(() => Buildings.flyEarthRope.health-=20, 300);
                 setTimeout(() => Buildings.flyEarthRope.health-=20, 500);
@@ -1419,7 +1418,7 @@ class TestPage extends React.Component {
                     new WaveData(Zombie.name, 301, 70, 0),
                     new WaveData(Boar.name, 351, 25, 1)
                 ]]
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
 
 
@@ -1496,7 +1495,7 @@ class TestPage extends React.Component {
                     new WaveData(Zombie.name, 301, 70, 0),
                     new WaveData(Boar.name, 351, 25, 1)
                 ]]
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
 
                 setTimeout(() => Buildings.flyEarth.health-=20, 300);
                 setTimeout(() => Buildings.flyEarth.health-=20, 500);
@@ -1519,7 +1518,7 @@ class TestPage extends React.Component {
                     new WaveData(Zombie.name, 301, 70, 0),
                     new WaveData(Boar.name, 351, 25, 1)
                 ]]
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 FlyEarth.loadSeparateCrystals();
 
                 setTimeout(() => {
@@ -1588,7 +1587,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
@@ -1607,7 +1606,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
@@ -1636,7 +1635,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
@@ -1674,7 +1673,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1707,7 +1706,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1741,7 +1740,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1774,7 +1773,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1813,7 +1812,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1852,7 +1851,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1915,7 +1914,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -1972,7 +1971,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -2006,7 +2005,7 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 Gamer.coins = 500;
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
                 Waves.all[0] = [new WaveData(Zombie.name, 1, 30, 0)];
 
@@ -2023,7 +2022,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
 
                 FlyEarth.loadSeparateCrystals();
@@ -2050,7 +2049,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
 
                 FlyEarth.loadSeparateCrystals();
@@ -2081,7 +2080,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
 
                 FlyEarth.loadSeparateCrystals();
@@ -2124,7 +2123,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
-                Waves.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
                 Units.loadResources();
 

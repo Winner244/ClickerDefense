@@ -16,7 +16,6 @@ import {FlyEarth} from '../buildings/FlyEarth';
 import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import ShopItem from '../../models/ShopItem';
-import {Point} from '../../models/Point';
 
 import {Helper} from '../helpers/Helper';
 
@@ -33,6 +32,7 @@ import MinerDiggingImage from '../../assets/img/units/miner/digging.png';
 import MinerStartActiveWaitImage from '../../assets/img/units/miner/startActiveWait.png'; 
 import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.png'; 
 import MinerRunImage from '../../assets/img/units/miner/run.png'; 
+import MinerJoyImage from '../../assets/img/units/miner/joy.png'; 
 
 import PickImage from '../../assets/img/units/miner/pick.png'; 
 
@@ -53,6 +53,7 @@ export class Miner extends Unit{
 	private static readonly activeWaitImage: HTMLImageElement = new Image(); 
 	private static readonly diggingImage: HTMLImageElement = new Image(); 
 	private static readonly runImage: HTMLImageElement = new Image(); 
+	private static readonly joyImage: HTMLImageElement = new Image(); 
 
 	private static readonly pickImage: HTMLImageElement = new Image(); 
 
@@ -78,6 +79,7 @@ export class Miner extends Unit{
 			new Animation(5, 5 * 75, Miner.startActiveWaitImage), 		//startActiveWaitingAnimation
 			new AnimationInfinite(4, 4 * 75, Miner.activeWaitImage), 	//activeWaitingAnimation
 			new AnimationInfinite(5, 5 * 100, Miner.runImage),  		//run animation
+			new Animation(10, 10 * 150, Miner.joyImage),  				//joy animation
 			Miner.rotateWeaponInEarch, 
 			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, 75, Miner.scaleSize, false, 0, true, true); 
 
@@ -129,6 +131,7 @@ export class Miner extends Unit{
 			Miner.imageHandler.new(Miner.activeWaitImage).src = MinerActiveWaitImage;
 			Miner.imageHandler.new(Miner.diggingImage).src = MinerDiggingImage;
 			Miner.imageHandler.new(Miner.runImage).src = MinerRunImage;
+			Miner.imageHandler.new(Miner.joyImage).src = MinerJoyImage;
 			Miner.imageHandler.new(Miner.pickImage).src = PickImage;
 		}
 	}

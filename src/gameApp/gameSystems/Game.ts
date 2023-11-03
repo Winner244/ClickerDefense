@@ -263,7 +263,7 @@ export class Game {
 		let alpha = Draw.ctx.getImageData(x, y, 1, 1).data[3];
 		let isHoverFound = alpha > 200; //если какой-либо объект находится под курсором (минимум 179 - затемнение фона)
 		let isWaveStarted = WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0;
-		let isWaveEnded = !WawesState.isWaveStarted && Waves.delayEndLeftTimeMs <= 0;
+		let isWaveEnded = !WawesState.isWaveStarted && WawesState.delayEndLeftTimeMs <= 0;
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick, Buildings.all, this.loadResourcesAfterBuild.bind(this));
 
