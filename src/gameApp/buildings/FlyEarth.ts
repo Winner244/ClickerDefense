@@ -217,3 +217,4 @@ export class FlyEarth extends Building{
 		FlyEarth.crystal4Image.draw(drawsDiffMs, isGameOver, this.crystal4PositionReDraw.location.x, this.crystal4PositionReDraw.location.y, this.crystal4PositionReDraw.size.width, this.crystal4PositionReDraw.size.height);
 	}
 }
+Object.defineProperty(FlyEarth, "name", { value: 'FlyEarth', writable: false }); //fix production minification class names

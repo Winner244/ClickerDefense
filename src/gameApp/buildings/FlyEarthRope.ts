@@ -28,3 +28,4 @@ export class FlyEarthRope extends Building{
 		super.drawHealthBase(this.x - 15, this.y - 10, 50);
 	}
 }
+Object.defineProperty(FlyEarthRope, "name", { value: 'FlyEarthRope', writable: false }); //fix production minification class names

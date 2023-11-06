@@ -97,3 +97,4 @@ export class FireModifier extends Modifier{
 			object.height * sizeScale);
 	}
 }
+Object.defineProperty(FireModifier, "name", { value: 'FireModifier', writable: false }); //fix production minification class names

@@ -304,3 +304,4 @@ export class Boar extends Monster{
 		}
 	}
 }
+Object.defineProperty(Boar, "name", { value: 'Boar', writable: false }); //fix production minification class names

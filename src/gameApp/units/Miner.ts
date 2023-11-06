@@ -295,3 +295,4 @@ export class Miner extends Unit{
 	}
 
 }
+Object.defineProperty(Miner, "name", { value: 'Miner', writable: false }); //fix production minification class names

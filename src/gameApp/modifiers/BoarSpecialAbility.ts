@@ -8,3 +8,4 @@ export class BoarSpecialAbility extends Modifier{
 		super(BoarSpecialAbility.name, 0, 0, 0, 1, 0, null);
 	}
 }
+Object.defineProperty(BoarSpecialAbility, "name", { value: 'BoarSpecialAbility', writable: false }); //fix production minification class names

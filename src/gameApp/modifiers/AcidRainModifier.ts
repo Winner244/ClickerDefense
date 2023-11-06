@@ -105,3 +105,4 @@ export class AcidRainModifier extends Modifier{
 		this.cloudAnimation.draw(drawsDiffMs, false, x, y, width, height);
 	}
 }
+Object.defineProperty(AcidRainModifier, "name", { value: 'AcidRainModifier', writable: false }); //fix production minification class names

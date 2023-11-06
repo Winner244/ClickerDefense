@@ -665,3 +665,4 @@ export class Necromancer extends Monster{
 		super.drawHealthBase(this.x + (this.isLeftSide ? -2 : 23), this.y + 2, this.width - 20);
 	}
 }
+Object.defineProperty(Necromancer, "name", { value: 'Necromancer', writable: false }); //fix production minification class names

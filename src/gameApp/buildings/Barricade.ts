@@ -99,3 +99,4 @@ export class Barricade extends Building{
 		return realDamage;
 	}
 }
+Object.defineProperty(Barricade, "name", { value: 'Barricade', writable: false }); //fix production minification class names

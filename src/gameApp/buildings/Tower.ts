@@ -407,3 +407,4 @@ export class Tower extends Building{
 		}
 	}
 }
+Object.defineProperty(Tower, "name", { value: 'Tower', writable: false }); //fix production minification class names

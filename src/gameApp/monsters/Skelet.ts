@@ -182,3 +182,4 @@ export class Skelet extends Monster{
 		}
 	}
 }
+Object.defineProperty(Skelet, "name", { value: 'Skelet', writable: false }); //fix production minification class names

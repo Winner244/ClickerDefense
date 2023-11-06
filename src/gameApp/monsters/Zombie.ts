@@ -111,3 +111,4 @@ export class Zombie extends Monster{
 	}
 
 }
+Object.defineProperty(Zombie, "name", { value: 'Zombie', writable: false }); //fix production minification class names

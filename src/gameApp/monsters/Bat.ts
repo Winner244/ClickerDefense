@@ -165,3 +165,4 @@ export class Bat extends Monster{
 	}
 
 }
+Object.defineProperty(Bat, "name", { value: 'Bat', writable: false }); //fix production minification class names
