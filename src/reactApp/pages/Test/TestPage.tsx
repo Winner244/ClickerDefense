@@ -308,7 +308,7 @@ class TestPage extends React.Component {
 
                 this.waitLoadingImage(Boar.imageHandler, () => {
                     var boar = new Boar(50, 780, true, 1, true);
-                    boar.health--;
+                    //boar.health--;
                     Monsters.all.push(boar);
                 });
             }
@@ -335,7 +335,7 @@ class TestPage extends React.Component {
 
                 this.waitLoadingImage(Boar.imageHandler, () => {
                     var boar2 = new Boar(1850, 780, false, 1, true);
-                    boar2.health--;
+                    //boar2.health--;
                     Monsters.all.push(boar2);
                 });
             }
