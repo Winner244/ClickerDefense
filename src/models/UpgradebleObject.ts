@@ -149,10 +149,13 @@ export class UpgradebleObject extends AttackedObject{
 	buttonsLogic(isDisplayRecoveryButton: boolean){}
 
 	drawBase(drawsDiffMs: number, isGameOver: boolean, x: number|null = null, y: number|null = null, filter: string|null = null){
+		x = x ?? this.x;
+		y = y ?? this.y;
+
 		if(this.isDisplayedUpgradeWindow){
 			UpgradebleObject.upgradeAnimation.draw(drawsDiffMs, isGameOver, this.x - this.width / 10, this.y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
 		}
 
-		super.drawBase(drawsDiffMs, isGameOver, this.x, this.y, filter);
+		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
 	}
 }
