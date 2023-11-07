@@ -101,7 +101,7 @@ export class Bat extends Monster{
 				//нападение на майнера
 				if(this._goal.name == FlyEarth.name){
 					const miners = units.filter(x => x.name == Miner.name && x.health > 0);
-					if(miners.length && (Helper.getRandom(0, 100) == 1 || this.isSelectMinerToTest)){ 
+					if(miners.length && (Math.random() < 0.001 || this.isSelectMinerToTest)){ 
 						this._goal = miners[0];
 					}
 				}

@@ -260,16 +260,19 @@ export class Miner extends Unit{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
-			if(this._isDiging){ //убегаем от урона
-				this.isRunRight = (x || 0) < this.centerX;
-			}
-			this._isDiging = false;
-			this.timeStopRunningLeft = Miner.timeStopRunning;
 
 			if(this.health <= 0){
 				this.isTurnOnPushUpFromCrystals = false;
 			}
 		}
+
+		//убегаем от урона - даже если его нету
+		if(this._isDiging){ 
+			this.isRunRight = (x || 0) < this.centerX;
+		}
+		this._isDiging = false;
+		this.timeStopRunningLeft = Miner.timeStopRunning;
+
 		return damage;
 	}
 	

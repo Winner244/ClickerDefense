@@ -186,6 +186,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
+                //Waves.waveCurrent = 2;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();

@@ -279,7 +279,8 @@ export class AttackedObject {
 		}
 		else{
 			if(filter){
-				throw `filter for animation is not implemented yet! filter: '${filter}'.`;
+				//throw `filter for animation is not implemented yet! filter: '${filter}'.`;
+				console.error(`filter for animation is not implemented yet! filter: '${filter}'.`);
 			}
 
 			imageOrAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
