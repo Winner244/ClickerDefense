@@ -50,7 +50,7 @@ export class Bat extends Monster{
 	private static readonly initialSpeed: number = 200;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
-		Bat.init(true);
+		Bat.init(true); //reserve init
 
 		let random = Helper.getRandom(1, Bat.images.length) - 1;
 		let selectedImage = Bat.images[random];

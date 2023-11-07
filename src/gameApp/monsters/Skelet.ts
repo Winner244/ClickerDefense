@@ -65,6 +65,8 @@ export class Skelet extends Monster{
 	isStartedSoundOfCreating: boolean; //началось ли воспроизведение звука появления скелета из под земли?
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number, forseSkinNumber: number|null = null) {
+		Skelet.init(true); //reserve init
+
 		let random = forseSkinNumber ?? Helper.getRandom(1, Skelet.images.length) - 1;
 		let selectedImage = Skelet.images[random];
 		let selectedAttackImage = Skelet.attackImages[random];
@@ -88,8 +90,6 @@ export class Skelet extends Monster{
 			150,    //speed
 			Skelet.imageHandler,
 			3000); //avrTimeSoundWaitMs
-
-			Skelet.init(true); //reserve init
 
 			this.isDisplayCreatingFromUndegroundAnimation = false;
 			this.isStartedSoundOfCreating = false;

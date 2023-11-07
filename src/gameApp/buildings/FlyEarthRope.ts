@@ -14,7 +14,9 @@ export class FlyEarthRope extends Building{
 			FlyEarthRope.image, 0, 0, 0, 
 			100, 0, false, false,
 			FlyEarthRope.imageHandler);
+			
 		this.maxImpulse = 0;
+
 		FlyEarthRope.init(true);
 	}
 

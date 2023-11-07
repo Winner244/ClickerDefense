@@ -54,6 +54,8 @@ export class Zombie extends Monster{
 	private static readonly attackImageFrames = 4;
 
 	constructor(x: number, y: number, isLeftSide: boolean, scaleSize: number) {
+		Zombie.init(true); //reserve init
+
 		let random = Helper.getRandom(1, Zombie.images.length) - 1;
 		let selectedImage = Zombie.images[random];
 		let selectedAttackImage = Zombie.attackImages[random];
@@ -76,8 +78,6 @@ export class Zombie extends Monster{
 			50,    //speed
 			Zombie.imageHandler,
 			3000); //avrTimeSoundWaitMs
-
-			Zombie.init(true); //reserve init
 	}
 
 	static init(isLoadResources: boolean = true): void{
