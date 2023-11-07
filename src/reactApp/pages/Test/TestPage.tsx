@@ -976,13 +976,13 @@ class TestPage extends React.Component {
 
                 for(var i = 0; i < 10; i++){
                     var monster = new Necromancer(0, 780, true, 1);
-                    monster.health--;
+                    //monster.health--;
                     Monsters.all.push(monster);
                 }
 
                 for(var i = 0; i < 10; i++){
                     var monster = new Necromancer(1780, 780, false, 1);
-                    monster.health--;
+                    //monster.health--;
                     Monsters.all.push(monster);
                 }
                 Buildings.all.forEach(x => x.healthMax = x.health = 400);

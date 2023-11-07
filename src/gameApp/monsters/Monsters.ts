@@ -78,7 +78,7 @@ export class Monsters{
 				if(isClick){
 					monster.onClicked(Gamer.cursorDamage, mouseX, mouseY - 10);
 					Cursor.setCursor(Cursor.swordRed);
-					AudioSystem.play(mouseX, SwordAttackSound, 0.15, 1, true);
+					AudioSystem.play(mouseX, SwordAttackSound, -2, 1, true);
 				}
 
 				return true;
@@ -107,7 +107,7 @@ export class Monsters{
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.height, this.explosionAnimation.durationMs));
-					AudioSystem.play(monster.centerX, ExplosionSound, 0.1, 1, true);
+					AudioSystem.play(monster.centerX, ExplosionSound, -3, 1, true);
 					AudioSystem.playRandomTone(monster.centerX, 0.001, 0, 200, AudioSystem.iirFilters.low);
 				}
 			}

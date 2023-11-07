@@ -280,6 +280,7 @@ export class Necromancer extends Monster{
 			}
 			else if(this.debufAnimation.leftTimeMs <= 0){ //end
 				this._isDebufStarted = false;
+				this._isDefenseEnding = false;
 			}
 			else if(this.debufAnimation.leftTimeMs <= this.debufAnimation.durationMs / 2){ //clear from modifiers
 				this.modifiers = this.modifiers.filter(x => x.name != FireModifier.name);
@@ -298,7 +299,7 @@ export class Necromancer extends Monster{
 				if(!defenseModifier){
 					this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
 				}
-				AudioSystem.play(this.centerX, ShieldSound, 0.2, 1, true, true, 0, 0, false, true).then(sourse => this._shieldSound = sourse);
+				AudioSystem.play(this.centerX, ShieldSound, -7, 1, true, true, 0, 0, false, true).then(sourse => this._shieldSound = sourse);
 			}
 			else if(this.defenseCreatingAnimation.leftTimeMs <= 200 && !defenseModifier){
 				this.addModifier(new Modifier(Necromancer.defenseModifierName, 0, -Necromancer.defensePercentage / 100, 0, 0, 0, Necromancer.defenseMinDurationMs));
@@ -381,7 +382,7 @@ export class Necromancer extends Monster{
 
 			if(!this._isSpecialAbilityAcidRainCreatedSoundPlayed && isNotBaseBuildings && isNotHaveAcidModifier && this._attackLeftTimeMs <= Necromancer.acidRainCallDurationMs - Necromancer.endCreatingAcidRainAfterStartCallMs + 100){
 				if(this._goal){
-					AudioSystem.play(this._goal.centerX, SoundCloudCreated, 0.5, 1, false, true);
+					AudioSystem.play(this._goal.centerX, SoundCloudCreated, -10, 1, false, true);
 				}
 				this._isSpecialAbilityAcidRainCreatedSoundPlayed = true;
 			}
@@ -479,7 +480,7 @@ export class Necromancer extends Monster{
 				this._attackLeftTimeMs = this.specialAbilityAcidRainCallAnimation.leftTimeMs;
 				this._isAttack = true; 
 				AcidRainModifier.loadResources();
-				AudioSystem.play(this.centerX, SoundCloudCall, 0.7, 1.3, false, true).then(sourse => this._acidRainCallSound = sourse);
+				AudioSystem.play(this.centerX, SoundCloudCall, 0, 1.3, false, true).then(sourse => this._acidRainCallSound = sourse);
 			}
 			else {
 				Skelet.init(true);
@@ -487,8 +488,8 @@ export class Necromancer extends Monster{
 				this.specialAbilityCallSkeletesAnimation.restart();
 				this._attackLeftTimeMs = this.specialAbilityCallSkeletesAnimation.leftTimeMs;
 				this._isAttack = true; 
-				AudioSystem.play(this.centerX, SkeletesCall1Sound, 0.2, 1, true, true, 0.4, 0, false, false);
-				AudioSystem.play(this.centerX, SkeletesCall2Sound, 0.2, 1, true, true, 0.5, 0, false, false);
+				AudioSystem.play(this.centerX, SkeletesCall1Sound, -3, 1, true, true, 0.4, 0, false, false);
+				AudioSystem.play(this.centerX, SkeletesCall2Sound, -3, 1, true, true, 0.5, 0, false, false);
 			}
 		}
 		else { //энергетический шар
@@ -509,7 +510,7 @@ export class Necromancer extends Monster{
 				this._isAattackStartingSoundStarted = false;
 			}
 			else if (this._attackLeftTimeMs < 700 && !this._isAattackStartingSoundStarted){
-				AudioSystem.play(this.centerX, AttackStartingSound, 0.2, 1, true, true);
+				AudioSystem.play(this.centerX, AttackStartingSound, -16, 1, true, true);
 				this._isAattackStartingSoundStarted = true;
 			}
 		}
@@ -533,8 +534,8 @@ export class Necromancer extends Monster{
 			let dy = (y1 - y2) / (distance / Necromancer.chargeSpeed);
 
 			this._charges.push(new MovingObject(x1, y1, Necromancer.chargeImage.width, Necromancer.chargeImage.height, 1000 * 20, dx, dy, rotate));
-			AudioSystem.play(this.centerX, Attack1Sound, 0.00001, 1, true);
-			AudioSystem.play(this.centerX, Attack2Sound, 0.00001, 1, true);
+			AudioSystem.play(this.centerX, Attack1Sound, -16, 1, true);
+			AudioSystem.play(this.centerX, Attack2Sound, -16, 1, true);
 
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
 		}

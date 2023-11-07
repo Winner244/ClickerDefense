@@ -101,7 +101,7 @@ export class Waves{
 		MusicSystem.stop();
 
 		if(this.waveCurrent > 0){
-			AudioSystem.play(-1, StartNewWaveSound, 0.2);
+			AudioSystem.play(-1, StartNewWaveSound, -5);
 		}
 	}
 

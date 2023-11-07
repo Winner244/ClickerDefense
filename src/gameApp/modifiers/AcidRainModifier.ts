@@ -56,7 +56,7 @@ export class AcidRainModifier extends Modifier{
 		//play rain sound
 		if(!this._isSoundRainStarted){
 			this._isSoundRainStarted = true;
-			AudioSystem.play(object.centerX, SoundRain, 1, 1, false, true).then(source => this._soundRain = source);
+			AudioSystem.play(object.centerX, SoundRain, 0, 1, false, true).then(source => this._soundRain = source);
 		}
 
 		//create blobs

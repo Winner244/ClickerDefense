@@ -164,7 +164,7 @@ export class FlyEarth extends Building{
 	}
 
 	startExplosion(){
-		AudioSystem.play(this.centerX, ExplosionSound, 0.5, 0.5, false);
+		AudioSystem.play(this.centerX, ExplosionSound, -1, 0.5, false);
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void {

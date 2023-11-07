@@ -199,7 +199,7 @@ export class Game {
 				Game.isGameOver = true;
 				Game.gaveOverTimeLeftMs = Game.gaveOverTimeMs;
 				AudioSystem.pauseSounds();
-				AudioSystem.play(-1, GameOverSound, 0.5);
+				AudioSystem.play(-1, GameOverSound, 0);
 
 				if(Buildings.flyEarth.health <= 0){
 					//delete all miners from flyEarch
@@ -293,7 +293,7 @@ export class Game {
 		}
 
 		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
-			AudioSystem.play(x, SwordEmptySound, 0.7, 1, true);
+			AudioSystem.play(x, SwordEmptySound, 0, 1, true);
 		}
 
 		Mouse.isClick = false;
@@ -476,7 +476,7 @@ export class Game {
 
 			Gamer.coins -= shopItem.price;
 			Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
-			Coins.playSoundGet(newUnit.x, 0.15);
+			Coins.playSoundGet(newUnit.x);
 		}
 		else{
 			throw `unexpected shopItem category = '${shopItem.category}'`;

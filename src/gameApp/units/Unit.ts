@@ -187,7 +187,7 @@ export class Unit extends UpgradebleObject {
 		let oldHealth = this._health;
 		let result = super.recovery();
 		if(result){
-			Coins.playSoundGet(this.centerX, 0);
+			Coins.playSoundGet(this.centerX);
 			this._healingAnimationLeftTimeMs = Unit.healingAnimationDurationMs;
 
 			if(this.goalY != 0 && oldHealth <= 0 && this._health > 0){

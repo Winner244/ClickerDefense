@@ -319,11 +319,11 @@ export class Tower extends Building{
 		this._isLastArrowWasFire = isFireArrow;
 		this._arrows.push(new Arrow(x1, y1, Tower.imageArrow.width, Tower.imageArrow.height, 1000 * 20, dx, dy, rotate, isFireArrow, isDynamitArrow));
 		if(isDynamitArrow){
-			AudioSystem.play(this.centerX, arrowDynamitStrikeSound, 0.1, this.arrowSpeed / Tower.initArrowSpeed, true);
+			AudioSystem.play(this.centerX, arrowDynamitStrikeSound, -17, this.arrowSpeed / Tower.initArrowSpeed, true);
 		}
-		AudioSystem.play(this.centerX, arrowStrikeSound, 1, this.arrowSpeed / Tower.initArrowSpeed, true);
+		AudioSystem.play(this.centerX, arrowStrikeSound, 0, this.arrowSpeed / Tower.initArrowSpeed, true);
 		if(isFireArrow){
-			AudioSystem.play(this.centerX, arrowFireStrikeSound, 0.1, this.arrowSpeed / Tower.initArrowSpeed, true);
+			AudioSystem.play(this.centerX, arrowFireStrikeSound, -15, this.arrowSpeed / Tower.initArrowSpeed, true);
 		}
 
 		if(this._rechargeLeftTimeMs <= 0){

@@ -140,8 +140,8 @@ export class Building extends UpgradebleObject{
 	recovery(): boolean{
 		let result = super.recovery();
 		if(result){
-			AudioSystem.play(this.centerX, RepairSoundUrl, 0.4, 1, false, true);
-			AudioSystem.play(this.centerX, RepairHammerSoundUrl, 0.2, 1, false, true);
+			AudioSystem.play(this.centerX, RepairSoundUrl, -5, 1, false, true);
+			AudioSystem.play(this.centerX, RepairHammerSoundUrl, -10, 1, false, true);
 			this._repairAnimationLeftTimeMs = Building.repairAnimationDurationMs;
 		}
 

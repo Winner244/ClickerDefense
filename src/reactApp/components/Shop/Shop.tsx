@@ -58,7 +58,7 @@ export class Shop extends React.Component<Props, {}> {
     return App.Store.getState().shop?.isOpen || false;
   }
 
-  private static playSoundSelect(value: number = 0.1){
+  private static playSoundSelect(value: number = -15){
 		AudioSystem.play(Mouse.x, SelectingSoundUrl, value);
   }
 
@@ -109,7 +109,7 @@ export class Shop extends React.Component<Props, {}> {
       return;
     }
 
-    Shop.playSoundSelect(0.001);
+    Shop.playSoundSelect();
     
     if(item.category == ShopCategoryEnum.UNITS){
       setTimeout(() =>  Game.buyThing(item), 200);

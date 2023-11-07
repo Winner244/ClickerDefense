@@ -78,7 +78,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, -15);
   }
 
   static isEnterMouse = false;

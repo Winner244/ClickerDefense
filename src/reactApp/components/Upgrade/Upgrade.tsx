@@ -78,7 +78,7 @@ export class Upgrade extends React.Component<Props, {}> {
   }
 
   private static playSoundSelect(){
-		AudioSystem.play(Mouse.x, SelectingSoundUrl, 0.1);
+		AudioSystem.play(Mouse.x, SelectingSoundUrl, -15);
   }
 
   static loadResources(){

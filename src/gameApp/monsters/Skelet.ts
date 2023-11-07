@@ -137,9 +137,9 @@ export class Skelet extends Monster{
 			else{
 				if(!this.isStartedSoundOfCreating){
 					this.isStartedSoundOfCreating = true;
-					AudioSystem.play(this.centerX, SkeletCreating1Sound, 0.1, 1, true, true, 0, 0, false, false);
-					AudioSystem.play(this.centerX, SkeletCreating2Sound, 0.2, 1, true, true, 0, 0, false, false);
-					AudioSystem.play(this.centerX, SkeletCreating3Sound, 0.7 + Math.random() / 2, 1, true, true, Math.random(), 0, false, false);
+					AudioSystem.play(this.centerX, SkeletCreating1Sound, -12, 1, true, true, 0, 0, false, false);
+					AudioSystem.play(this.centerX, SkeletCreating2Sound, -12, 1, true, true, 0, 0, false, false);
+					AudioSystem.play(this.centerX, SkeletCreating3Sound, -6, 1, true, true, Math.random(), 0, false, false);
 				}
 				return;
 			}

@@ -70,8 +70,8 @@ export class Builder {
 				buildingsAll.push(this.selectedBuildingForBuild);
 				this._isDrawSmoke = true;
 				this.smokeAnimation.restart();
-				AudioSystem.play(canterX, BuildSoundUrl, 0.15);
-				Coins.playSoundGet(canterX, 0.15);
+				AudioSystem.play(canterX, BuildSoundUrl, -10);
+				Coins.playSoundGet(canterX);
 				loadResourcesAfterBuild(this.selectedBuildingForBuild);
 				return;
 			}

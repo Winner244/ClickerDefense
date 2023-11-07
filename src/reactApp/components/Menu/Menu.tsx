@@ -76,7 +76,7 @@ export class Menu extends React.Component<Props, IState> {
   }
 
   private static playSoundSelect(){
-    AudioSystem.play(Keypad.isEnter ? -1 : Mouse.x, SelectingSoundUrl, 0.1);
+    AudioSystem.play(Keypad.isEnter ? -1 : Mouse.x, SelectingSoundUrl, -15);
   }
 
   componentWillUpdate(nextProps : Props, nextState : IState){
