@@ -77,10 +77,10 @@ export class Building extends UpgradebleObject{
 
 		this._impulsePharosSign = value < 0 ? true : false;
 		this._impulsePharos = value;
-		this._impulseX = value <= 1 ? 0 : value;
+		this._impulseX = value >= -1 && value <= 1 ? 0 : value;
 	}
 	public get impulseX(): number{
-		if(this._impulseX <= 1){
+		if(this._impulseX >= -1 && this._impulseX <= 1){
 			return 0;
 		}
 
@@ -94,7 +94,7 @@ export class Building extends UpgradebleObject{
 
 		super.logicBase(drawsDiffMs);
 		
-		if(this._impulseX > 1){
+		if(this._impulseX < -1 || this._impulseX > 1){
 			this._impulsePharos -= (this._impulsePharosSign ? -1 : 1) * drawsDiffMs / 1000 * (this._impulseX * this._impulsePharosForceDecreasing);
 
 			if(this._impulsePharos < -this._impulseX){
@@ -168,7 +168,7 @@ export class Building extends UpgradebleObject{
 		let x = this.x;
 		let y = this.y;
 
-		if(this.impulseX > 0){
+		if(this.impulseX != 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height); 
 			Draw.ctx.rotate(this._impulsePharos * Math.PI / 180);
 			x = -this.width / 2;
@@ -185,7 +185,7 @@ export class Building extends UpgradebleObject{
 
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
 
-		if(this.impulseX > 0){
+		if(this.impulseX != 0){
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
 		}

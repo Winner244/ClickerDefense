@@ -141,10 +141,10 @@ export class AttackedObject {
 			value = this.maxImpulse * -1;
 		}
 
-		this._impulseX = Math.abs(value);
+		this._impulseX = value <= 1 && value >= -1 ? 0 : value;
 	}
 	public get impulseX(): number{
-		if(this._impulseX <= 1){
+		if(this._impulseX >= -1 && this._impulseX <= 1){
 			return 0;
 		}
 
@@ -156,7 +156,7 @@ export class AttackedObject {
 			return;
 		}
 
-		if(this._impulseX > 1){
+		if(this._impulseX < -1 || this._impulseX > 1){
 			this._impulseX -= drawsDiffMs / 1000 * (this._impulseX * this.impulseForceDecreasing);
 		}
 		
