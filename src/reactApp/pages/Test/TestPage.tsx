@@ -251,12 +251,15 @@ class TestPage extends React.Component {
                     ]];
 
                 var boar = new Boar(50, 780, true, 1, true);
-                boar.health--;
                 Monsters.all.push(boar);
 
-                var boar2 = new Boar(1850, 780, false, 1, true);
-                boar2.health--;
-            // Monsters.all.push(boar2);
+                var boar2 = new Boar(1750, 780, false, 1, true);
+                Monsters.all.push(boar2);
+
+                setTimeout(() => {
+                    boar.health--;
+                    boar2.health--;
+                }, 4500);
             }
         },
 
@@ -359,7 +362,7 @@ class TestPage extends React.Component {
 
                 for(var i = 0; i < 10; i++){
                     var boar = new Boar(0, 780, true, 1, true);
-                    boar.health--;
+                    //boar.health--;
                     Monsters.all.push(boar);
                 }
 
