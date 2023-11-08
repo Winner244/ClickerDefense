@@ -275,8 +275,15 @@ export class Necromancer extends Monster{
 				this._isDebufStarted = true;
 				this._isDefenseCreatingStarted = false;
 				this._isDefenseInfinityStarted = false;
-				this._isDefenseEnding = true;
+				this._isDefenseEnding = false;
 				this.modifiers = this.modifiers.filter(x => x.name != Necromancer.defenseModifierName);
+
+				//если был щит - убираем звук
+				if(this._shieldSound){
+					this._shieldSound.autostart = false;
+					this._shieldSound.stop();
+					this._shieldSound = null;
+				}
 			}
 			else if(this.debufAnimation.leftTimeMs <= 0){ //end
 				this._isDebufStarted = false;
@@ -323,15 +330,17 @@ export class Necromancer extends Monster{
 			}
 		}
 
+		//звук щита не должен оставаться при любых случаев если он не активен
+		if(this._shieldSound){
+			this._shieldSound.autostart = false;
+			this._shieldSound.stop();
+			this._shieldSound = null;
+		}
+
 		//убираем щит
 		if(this._isDefenseEnding){
 			if(this.defenseCreatingAnimation.leftTimeMs <= 0){
 				this._isDefenseEnding = false;
-			}
-			if(this._shieldSound){
-				this._shieldSound.autostart = false;
-				this._shieldSound.stop();
-				this._shieldSound = null;
 			}
 
 			super.logicBase(drawsDiffMs);

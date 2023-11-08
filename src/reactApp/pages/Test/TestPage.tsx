@@ -1037,7 +1037,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Некромант - спес способность - вызов кислотного дождя",
+            key: "Некромант - спецспособность - вызов кислотного дождя",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1086,7 +1086,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Некромант - спес способность - вызов кислотного дождя - сбиваем огнём",
+            key: "Некромант - спецспособность - вызов кислотного дождя - сбиваем огнём",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1123,7 +1123,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Некромант - спес способность - вызов кислотного дождя - смена цели",
+            key: "Некромант - спецспособность - вызов кислотного дождя - смена цели",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1156,7 +1156,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Некромант - спес способность - вызов скелетов",
+            key: "Некромант - спецспособность - вызов скелетов",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1184,7 +1184,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Некромант - спес способность - рандом",
+            key: "Некромант - спецспособность - рандом",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
