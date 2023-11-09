@@ -258,7 +258,7 @@ export class Upgrade extends React.Component<Props, {}> {
                       return (<li className={"upgrade__parameter upgrade__parameter--hover-active upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
                         <div className="upgrade__parameter-name">
                           {infoItem.icon 
-                            ? <img className="upgrade__parameter-icon" src={infoItem.icon.src}/> 
+                            ? <img className="upgrade__parameter-icon" src={infoItem.icon.src} style={{width: infoItem.iconWidth + 'px'}}/> 
                             : null}
                             {infoItem.label}
                         </div>: 

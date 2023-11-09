@@ -82,14 +82,14 @@
 
 		&-name{
 			width: 55%;
+			display: flex;
+			flex-basis: auto;
+			justify-content: end;
+			align-items: center;
 		}
 
 		&-value-box{
 			width: 45%;
-		}
-
-		&-name{
-			text-align: right;
 		}
 
 		&-icon{

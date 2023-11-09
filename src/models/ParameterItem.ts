@@ -8,6 +8,7 @@ export default class ParameterItem{
 	readonly id: string; //guid
 	readonly label: string; //название характеристики
 	readonly icon: HTMLImageElement|null; //иконка характеристики 
+	readonly iconWidth: number; //ширина иконки
 	getValue: () => string|number; //функция получения значения
 
 	mouseIn: () => void; //наведении мышкой на параметр в UI
@@ -20,6 +21,7 @@ export default class ParameterItem{
 		label: string, 
 		getValue: () => string|number, 
 		iconSrc: string = '', 
+		iconWidth: number = 13,
 		priceToImprove: number|null = null, 
 		improve: () => void = () => {},
 		mouseIn: () => void = () => {},
@@ -37,6 +39,7 @@ export default class ParameterItem{
 			this.icon = null;
 		}
 		
+		this.iconWidth = iconWidth;
 		this.priceToImprove = priceToImprove;
 		this._improve = improve;
 

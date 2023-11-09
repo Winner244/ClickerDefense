@@ -2093,6 +2093,18 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 90 + 25;
                     var miner1 = new Miner(Buildings.flyEarth.centerX + 15, y, y + Miner.imageHeight);
                     miner1.loadedResourcesAfterBuild();
+                    /*miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();
+                    miner1.improveSpeed();*/
                     //miner1.speed *= 2;
                     Units.all.push(miner1);
 

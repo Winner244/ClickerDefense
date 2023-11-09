@@ -3,15 +3,25 @@ import {Draw} from "../gameApp/gameSystems/Draw";
 export default class AnimationInfinite{
 	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
 	readonly frames: number; //количество кадров на изображении
-	readonly durationMs: number; //время полной анимации в миллисекундах
 	displayedTimeMs: number; //сколько по времени уже отображается (миллисекунды)
+
+	private _durationMs: number; //время полной анимации в миллисекундах
+	public get durationMs(): number{
+		return this._durationMs;
+	}
+
+	readonly initialDurationMs: number; //время полной анимации в миллисекундах
 
 	constructor(frames: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
 		this.image = image || new Image();
 		this.frames = frames;
-		this.durationMs = durationMs;
+		this.initialDurationMs = this._durationMs = durationMs;
 		this.displayedTimeMs = 0;
+	}
+
+	changeDuration(newValue: number){
+		this._durationMs = newValue;
 	}
 
 	restart(){
