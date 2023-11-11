@@ -239,6 +239,18 @@ export class Upgrade extends React.Component<Props, {}> {
     if(!this.props.isOpen || !this.props.selectedObject){
       return null;
     }
+    
+    var improvements: Improvement[] = [];
+    improvements = improvements.concat(this.props.selectedObject?.improvements ?? []);
+
+    if(improvements.find(x => x.isRelatedToPrev)){
+      for(var i = 1; i < improvements.length; i++){
+        if(improvements[i].isRelatedToPrev && !improvements[i - 1].isImproved){
+          improvements.splice(i, 1);
+          i--;
+        }
+      }
+    }
 
     return (
       <div className="upgrade noselect" id="upgrade" ref={this.popup}>
@@ -301,7 +313,7 @@ export class Upgrade extends React.Component<Props, {}> {
                   </ul>
                 </div>
                 <div className="upgrade__improvement-items">
-                  {this.props.selectedObject?.improvements.map((improvement, i) => {
+                  {improvements.map((improvement, i) => {
                     let className = `upgrade__improvement-item upgrade__improvement--${improvement.id} `;
 
                     if(improvement.isImproved){
