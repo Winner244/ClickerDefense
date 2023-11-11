@@ -2017,6 +2017,8 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     Units.addMiner();
+                    var miner2 = Units.addMiner();
+                    miner2.improveToGoldPick();
                 }, 300);
             }
         },
@@ -2149,12 +2151,15 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 80;
                     var miner3 = new Miner(Buildings.flyEarth.centerX + 25, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
-                    //miner3.impoveToGoldPick();
                     Units.all.push(miner3);
 
 
+                    var miner2 = Units.addMiner();
+                    miner2.improveToGoldPick();
+
                     setTimeout(() => {
                         miner3.health = 0;
+                        miner2.health = 0;
                     }, 1000);
                 }, 300);
             }

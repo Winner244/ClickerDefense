@@ -45,7 +45,7 @@ import MinerActiveWaitGoldPickImage from '../../assets/img/units/miner/goldPick/
 import MinerDiggingGoldPickImage from '../../assets/img/units/miner/goldPick/digging.png'; 
 import MinerStartActiveWaitGoldPickImage from '../../assets/img/units/miner/goldPick/startActiveWait.png'; 
 import MinerPassiveWait1GoldPickImage from '../../assets/img/units/miner/goldPick/passiveWait1.png'; 
-import MinerRunGoldPickImage from '../../assets/img/units/miner/goldPick/jrun.png'; 
+import MinerRunGoldPickImage from '../../assets/img/units/miner/goldPick/run.png'; 
 import MinerJoyGoldPickImage from '../../assets/img/units/miner/goldPick/joy.png'; 
 
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -165,12 +165,12 @@ export class Miner extends Unit{
 
 		this.infoItems.splice(2, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 25, 10, () => this.improveSpeed()));
 
-		this.improvements.push(new Improvement('Золотая кирка', 100, PickGoldImage, () => this.impoveToGoldPick(), [
+		this.improvements.push(new Improvement('Золотая кирка', 100, PickGoldImage, () => this.improveToGoldPick(), [
 			new ImprovementParameterItem(`x2`, coinIcon)
 		]));
 	}
 
-	impoveToGoldPick(){
+	improveToGoldPick(){
 		this.imageWeapon.src = PickGoldImage;
 		this._countCoinsDiging = 2;
 		this._diggingWeaponAnimation.image.src = MinerDiggingGoldPickImage;
