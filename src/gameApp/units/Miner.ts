@@ -49,6 +49,8 @@ import MinerRunGoldPickImage from '../../assets/img/units/miner/goldPick/run.png
 import MinerJoyGoldPickImage from '../../assets/img/units/miner/goldPick/joy.png'; 
 
 import PickDiamondImage from '../../assets/img/units/miner/pickDiamond.png'; 
+import MinerDiggingDiamondPickImage from '../../assets/img/units/miner/diamonPick/digging.png'; 
+import MinerPassiveWait1DiamondPickImage from '../../assets/img/units/miner/diamonPick/passiveWait1.png'; 
 
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
@@ -193,8 +195,9 @@ export class Miner extends Unit{
 		this.imageWeapon = new Image();
 		this.imageWeapon.src = PickDiamondImage;
 		this._countCoinsDiging = 3;
-		/*this._diggingWeaponAnimation.image.src = MinerDiggingDiamondPickImage;
+		this._diggingWeaponAnimation.image.src = MinerDiggingDiamondPickImage;
 		this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1DiamondPickImage;
+		/*
 		this._fallEndWeaponAnimation.image.src = MinerFallEndDiamondPickImage;
 		this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitDiamondPickImage;
 		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitDiamondPickImage;
