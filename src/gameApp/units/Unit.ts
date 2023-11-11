@@ -40,12 +40,21 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 
 /** Базовый класс для всех Юнитов пользователя */
 export class Unit extends UpgradebleObject {
+	protected readonly _passiveWaitingAnimation: AnimationInfinite; //анимация ожидания в мирное время (между волнами)
 	protected readonly _fallEndAnimation: Animation; //анимация приземления юнита 
 	protected readonly _fallImage: HTMLImageElement;
 	protected readonly _startActiveWaitingAnimation: Animation; //анимация начала ожидания волны
 	protected readonly _activeWaitingAnimation: AnimationInfinite; //анимация ожидания начала волны
 	protected readonly _runAnimation: AnimationInfinite; //анимация бега
 	protected readonly _joyAnimation: Animation; //анимация радости после завершения волны
+
+	//to upgrade weapon
+	protected readonly _passiveWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания в мирное время (между волнами)
+	protected readonly _fallEndWeaponAnimation: Animation; //для апгрейда оружия - анимация приземления юнита 
+	protected readonly _startActiveWaitingWeaponAnimation: Animation; //для апгрейда оружия - анимация начала ожидания волны
+	protected readonly _activeWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания начала волны
+	protected readonly _runWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация бега
+	protected readonly _joyWeaponAnimation: Animation; //для апгрейда оружия - анимация радости после завершения волны
 
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
 	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)
@@ -88,6 +97,7 @@ export class Unit extends UpgradebleObject {
 		healthMax: number, 
 		image: HTMLImageElement, 
 		imageWeapon: HTMLImageElement, 
+		passiveWaitingAnimation: AnimationInfinite,
 		fallImage: HTMLImageElement, 
 		fallEndAnimation: Animation,
 		startActiveWaitingAnimation: Animation,
@@ -109,6 +119,7 @@ export class Unit extends UpgradebleObject {
 	{
 		super(x, y, true, isLand, name, scaleSize, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
 
+		this._passiveWaitingAnimation = passiveWaitingAnimation;
 		this._fallImage = fallImage;
 		this._fallEndAnimation = fallEndAnimation;
 		this._startActiveWaitingAnimation = startActiveWaitingAnimation;
@@ -116,6 +127,16 @@ export class Unit extends UpgradebleObject {
 		this._runAnimation = runAnimation;
 		this._joyAnimation = joyAnimation;
 
+
+		//to upgrade weapon
+		this._passiveWaitingWeaponAnimation = new AnimationInfinite(passiveWaitingAnimation.frames, passiveWaitingAnimation.durationMs);
+		this._fallEndWeaponAnimation = new Animation(fallEndAnimation.frames, fallEndAnimation.durationMs);
+		this._startActiveWaitingWeaponAnimation = new Animation(startActiveWaitingAnimation.frames, startActiveWaitingAnimation.durationMs);
+		this._activeWaitingWeaponAnimation = new AnimationInfinite(activeWaitingAnimation.frames, activeWaitingAnimation.durationMs); 
+		this._runWeaponAnimation = new AnimationInfinite(runAnimation.frames, runAnimation.durationMs);
+		this._joyWeaponAnimation = new Animation(joyAnimation.frames, joyAnimation.durationMs); 
+
+	
 		this.imageWeapon = imageWeapon;
 
 		this.speed = speed;
@@ -356,29 +377,44 @@ export class Unit extends UpgradebleObject {
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
 	}
 
+	
 	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
+		this.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimation, isGameOver, invertSign, x, y, filter);
+	}
+
+	drawObjects(drawsDiffMs: number, 
+		imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
+		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
+		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
+	{
 		if(this._isFall){
 			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){
 			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._fallEndWeaponAnimation, isGameOver, invertSign, x, y, filter);
 		}
 		else if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0) {
 			if(this._startActiveWaitingAnimation.leftTimeMs > 0){
 				super.drawObject(drawsDiffMs, this._startActiveWaitingAnimation, isGameOver, invertSign, x, y, filter);
+				super.drawObject(drawsDiffMs, this._startActiveWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter);
 			}
 			else{
 				super.drawObject(drawsDiffMs, this._activeWaitingAnimation, isGameOver, invertSign, x, y, filter);
+				super.drawObject(drawsDiffMs, this._activeWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter);
 			}
 		}
 		else if(WawesState.isWaveStarted){
 			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
 		}
 		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0){
 			super.drawObject(drawsDiffMs, this._joyAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._joyWeaponAnimation, isGameOver, invertSign, x, y, filter);
 		}
-		else{ //passive waiting
-			super.drawObject(drawsDiffMs, this.image, isGameOver, invertSign, x, y, filter);
+		else{ 
+			super.drawObject(drawsDiffMs, this._passiveWaitingAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._passiveWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter);
 		}
 	}
 

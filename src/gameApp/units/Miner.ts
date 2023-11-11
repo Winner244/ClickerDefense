@@ -26,7 +26,10 @@ import {Coins} from '../coins/Coins';
 import {WawesState} from '../gameSystems/WawesState';
 
 import ParameterItem from '../../models/ParameterItem';
+import Improvement from '../../models/Improvement';
+import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
+import PickImage from '../../assets/img/units/miner/pick.png'; 
 import MinerFallImage from '../../assets/img/units/miner/fall.png'; 
 import MinerFallEndImage from '../../assets/img/units/miner/fallEnd.png'; 
 import MinerActiveWaitImage from '../../assets/img/units/miner/activeWait.png'; 
@@ -36,9 +39,13 @@ import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.pn
 import MinerRunImage from '../../assets/img/units/miner/run.png'; 
 import MinerJoyImage from '../../assets/img/units/miner/joy.png'; 
 
-import PickImage from '../../assets/img/units/miner/pick.png'; 
+import PickGoldImage from '../../assets/img/units/miner/pickGold.png'; 
+import MinerActiveWaitGoldPickImage from '../../assets/img/units/miner/goldPick/activeWait.png'; 
+import MinerDiggingGoldPickImage from '../../assets/img/units/miner/goldPick/digging.png'; 
+import MinerPassiveWait1GoldPickImage from '../../assets/img/units/miner/goldPick/passiveWait1.png'; 
 
 import speedIcon from '../../assets/img/icons/speed.png';  
+import coinIcon from '../../assets/img/coin.png';  
 
 import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/units/miner/attacked2.mp3'; 
@@ -67,8 +74,10 @@ export class Miner extends Unit{
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
-	private readonly _diggingAnimation: AnimationInfinite;
+	private readonly _diggingAnimation: AnimationInfinite; //анимация добывания монеток
+	private readonly _diggingWeaponAnimation: AnimationInfinite; //для апгрейда кирки - анимация добывания монеток
 	private _isDiging: boolean; //Копает сейчас?
+	private _countCoinsDiging: number; //сколько монет за раз добывает?
 	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
 
 	public static readonly timeStopRunning: number = 1000; //(в миллисекундах) спустя это время от последнего получения урона майнер остановиться и продолжит копать 
@@ -80,6 +89,7 @@ export class Miner extends Unit{
 		super(x, y, 3, 
 			Miner.passiveWait1Image, 	//image
 			Miner.pickImage,   			//image weapon
+			new AnimationInfinite(1, 1 * 75, Miner.passiveWait1Image), 	//passive waiting
 			Miner.fallImage,			//fall image
 			new Animation(31, 31 * 75, Miner.fallEndImage), 			//fall end animation
 			new Animation(5, 5 * 75, Miner.startActiveWaitImage), 		//startActiveWaitingAnimation
@@ -88,9 +98,11 @@ export class Miner extends Unit{
 			new Animation(21, 21 * 110, Miner.joyImage),  				//joy animation
 			Miner.rotateWeaponInEarch, 
 			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, Miner.initialSpeed, Miner.scaleSize, false, 0, true, true); 
-
+		
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
+		this._diggingWeaponAnimation = new AnimationInfinite(this._diggingAnimation.frames, this._diggingAnimation.durationMs); //пока апгрейда нету
 		this._diggingAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
+		this._diggingWeaponAnimation.displayedTimeMs = this._diggingAnimation.displayedTimeMs;
 
 		this._isDiging = true;
 		this._wasPickHit = false;
@@ -102,6 +114,8 @@ export class Miner extends Unit{
 		this.timeStopRunningLeft = 0;
 
 		this.isTurnOnPushUpFromCrystals = false;
+
+		this._countCoinsDiging = 1;
 
         Miner.init(true); //reserve init
 		FlyEarth.loadSeparateCrystals(); //reserve init
@@ -146,12 +160,29 @@ export class Miner extends Unit{
 		super.loadedResourcesAfterBuild();
 
 		this.infoItems.splice(2, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 25, 10, () => this.improveSpeed()));
+
+		this.improvements.push(new Improvement('Золотая кирка', 100, PickGoldImage, () => this.impoveToGoldPick(), [
+			new ImprovementParameterItem(`x2`, coinIcon)
+		]));
+	}
+
+	impoveToGoldPick(){
+		this.imageWeapon.src = PickGoldImage;
+		this._countCoinsDiging = 2;
+		this._diggingWeaponAnimation.image.src = MinerDiggingGoldPickImage;
+		this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1GoldPickImage;
+		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
+		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
+		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
+		//this._runWeaponAnimation.image.src = MinerRunGoldPickImage;
+		//this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
 	}
 
 	improveSpeed(){
 		this.speed += 10;
 		var newDuration = Miner.initialSpeed / this.speed * this._diggingAnimation.initialDurationMs;
 		this._diggingAnimation.changeDuration(newDuration);
+		this._diggingWeaponAnimation.changeDuration(newDuration);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -185,10 +216,12 @@ export class Miner extends Unit{
 					if(!this._wasPickHit){
 						let flyEarth = Buildings.flyEarth;
 						if(flyEarth){ //создание монетки
-							let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
-							let coinY = flyEarth.y + flyEarth.height / 2;
-							Coins.create(coinX, Math.max(coinY, this.y + this.height));
-							FlyEarth.playSoundPick(this.x + this.width, -30);
+							for(var i = 0; i < this._countCoinsDiging; i++){
+								let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
+								let coinY = flyEarth.y + flyEarth.height / 2;
+								Coins.create(coinX, Math.max(coinY, this.y + this.height));
+								FlyEarth.playSoundPick(this.x + this.width, -30);
+							}
 							this._wasPickHit = true;
 						}
 					}
@@ -305,14 +338,21 @@ export class Miner extends Unit{
 		Draw.ctx.stroke(); 
 	}
 
-	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
+	drawObjects(drawsDiffMs: number, 
+		imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
+		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
+		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
+	{
 		if(WawesState.isWaveStarted){
 			imageOrAnimation = this._isDiging 
 				? this._diggingAnimation 
 				: this._runAnimation;
+			imageOrAnimationWeapon = this._isDiging 
+				? this._diggingWeaponAnimation 
+				: this._runWeaponAnimation;
 		}
 
-		super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
+		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
 	}
 
 }
