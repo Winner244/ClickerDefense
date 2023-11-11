@@ -43,7 +43,9 @@ import PickGoldImage from '../../assets/img/units/miner/pickGold.png';
 import MinerFallEndGoldPickImage from '../../assets/img/units/miner/goldPick/fallEnd.png'; 
 import MinerActiveWaitGoldPickImage from '../../assets/img/units/miner/goldPick/activeWait.png'; 
 import MinerDiggingGoldPickImage from '../../assets/img/units/miner/goldPick/digging.png'; 
+import MinerStartActiveWaitGoldPickImage from '../../assets/img/units/miner/goldPick/startActiveWait.png'; 
 import MinerPassiveWait1GoldPickImage from '../../assets/img/units/miner/goldPick/passiveWait1.png'; 
+import MinerRunGoldPickImage from '../../assets/img/units/miner/goldPick/jrun.png'; 
 import MinerJoyGoldPickImage from '../../assets/img/units/miner/goldPick/joy.png'; 
 
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -174,9 +176,9 @@ export class Miner extends Unit{
 		this._diggingWeaponAnimation.image.src = MinerDiggingGoldPickImage;
 		this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1GoldPickImage;
 		this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
-		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
+		this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
 		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
-		//this._runWeaponAnimation.image.src = MinerRunGoldPickImage;
+		this._runWeaponAnimation.image.src = MinerRunGoldPickImage;
 		this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
 	}
 
