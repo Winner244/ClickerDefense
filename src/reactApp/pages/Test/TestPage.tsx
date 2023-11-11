@@ -2159,9 +2159,13 @@ class TestPage extends React.Component {
                     var miner2 = Units.addMiner();
                     miner2.improveToGoldPick();
 
+                    var miner1 = Units.addMiner();
+                    miner1.improveToDiamondPick();
+
                     setTimeout(() => {
                         miner3.health = 0;
                         miner2.health = 0;
+                        miner1.health = 0;
                     }, 1000);
                 }, 300);
             }

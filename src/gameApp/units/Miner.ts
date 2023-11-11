@@ -48,6 +48,8 @@ import MinerPassiveWait1GoldPickImage from '../../assets/img/units/miner/goldPic
 import MinerRunGoldPickImage from '../../assets/img/units/miner/goldPick/run.png'; 
 import MinerJoyGoldPickImage from '../../assets/img/units/miner/goldPick/joy.png'; 
 
+import PickDiamondImage from '../../assets/img/units/miner/pickDiamond.png'; 
+
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
 
@@ -168,6 +170,10 @@ export class Miner extends Unit{
 		this.improvements.push(new Improvement('Золотая кирка', 100, PickGoldImage, () => this.improveToGoldPick(), [
 			new ImprovementParameterItem(`x2`, coinIcon)
 		]));
+
+		this.improvements.push(new Improvement('Алмазная кирка', 100, PickDiamondImage, () => this.improveToDiamondPick(), [
+			new ImprovementParameterItem(`x3`, coinIcon)
+		], true));
 	}
 
 	improveToGoldPick(){
@@ -181,6 +187,19 @@ export class Miner extends Unit{
 		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
 		this._runWeaponAnimation.image.src = MinerRunGoldPickImage;
 		this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
+	}
+
+	improveToDiamondPick(){
+		this.imageWeapon = new Image();
+		this.imageWeapon.src = PickDiamondImage;
+		this._countCoinsDiging = 3;
+		/*this._diggingWeaponAnimation.image.src = MinerDiggingDiamondPickImage;
+		this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1DiamondPickImage;
+		this._fallEndWeaponAnimation.image.src = MinerFallEndDiamondPickImage;
+		this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitDiamondPickImage;
+		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitDiamondPickImage;
+		this._runWeaponAnimation.image.src = MinerRunDiamondPickImage;
+		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;*/
 	}
 
 	improveSpeed(){

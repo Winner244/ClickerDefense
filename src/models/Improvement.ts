@@ -11,6 +11,7 @@ export default class Improvement{
 	readonly label: string; //название улучшения/апгрейда
 	readonly image: HTMLImageElement|null; //картинка 
 	readonly infoItems: ImprovementParameterItem[]; //отображает улучшаемые характеристики и значение улучшения (+50%, +1, ...)
+	readonly isRelatedToPrev: boolean; //показывать ли это улучшение после выполненого предыдущего? (цепочка улучшений)
 
 	priceToImprove: number; //цена
 
@@ -22,7 +23,8 @@ export default class Improvement{
 		priceToImprove: number, 
 		imageSrc: string = '', 
 		improve: () => void = () => {},
-		infoItems: ImprovementParameterItem[] = [])
+		infoItems: ImprovementParameterItem[] = [],
+		isRelatedToPrev: boolean = false)
 	{
 		this.id = Helper.generateUid();
 		this.label = label;
@@ -39,6 +41,7 @@ export default class Improvement{
 		this.infoItems = infoItems;
 		this._improve = improve;
 		this.isImproved = false;
+		this.isRelatedToPrev = isRelatedToPrev;
 
 	}
 
