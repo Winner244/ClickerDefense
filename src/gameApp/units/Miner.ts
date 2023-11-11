@@ -171,6 +171,7 @@ export class Miner extends Unit{
 	}
 
 	improveToGoldPick(){
+		this.imageWeapon = new Image();
 		this.imageWeapon.src = PickGoldImage;
 		this._countCoinsDiging = 2;
 		this._diggingWeaponAnimation.image.src = MinerDiggingGoldPickImage;

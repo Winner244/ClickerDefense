@@ -2144,6 +2144,8 @@ class TestPage extends React.Component {
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
                 Units.loadResources();
+                Waves.all[0] = [new WaveData(Zombie.name, 1, 30, 0)];
+                Gamer.coins = 100;
 
                 FlyEarth.loadSeparateCrystals();
 
