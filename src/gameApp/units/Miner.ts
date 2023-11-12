@@ -55,6 +55,7 @@ import MinerPassiveWait1DiamondPickImage from '../../assets/img/units/miner/diam
 import MinerStartActiveWaitDiamondPickImage from '../../assets/img/units/miner/diamonPick/startActiveWait.png'; 
 import MinerActiveWaitDiamondPickImage from '../../assets/img/units/miner/diamonPick/activeWait.png'; 
 import MinerRunDiamondPickImage from '../../assets/img/units/miner/diamonPick/run.png'; 
+import MinerJoyDiamondPickImage from '../../assets/img/units/miner/diamonPick/joy.png'; 
 
 
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -206,8 +207,7 @@ export class Miner extends Unit{
 		this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitDiamondPickImage;
 		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitDiamondPickImage;
 		this._runWeaponAnimation.image.src = MinerRunDiamondPickImage;
-		/*
-		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;*/
+		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;
 	}
 
 	improveSpeed(){
@@ -215,6 +215,18 @@ export class Miner extends Unit{
 		var newDuration = Miner.initialSpeed / this.speed * this._diggingAnimation.initialDurationMs;
 		this._diggingAnimation.changeDuration(newDuration);
 		this._diggingWeaponAnimation.changeDuration(newDuration);
+	}
+
+	recovery(): boolean{
+		let oldHealth = this._health;
+		let result = super.recovery();
+		if(result && oldHealth <= 0){
+			this._isDiging = true;
+			this.isLeftSide = this.x < Buildings.flyEarth.centerX;
+			this.isRunRight = true;
+		}
+
+		return result;
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
