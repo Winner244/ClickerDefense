@@ -88,6 +88,7 @@ export class Unit extends UpgradebleObject {
 	public goalY: number; //y куда юнит должен приземлиться (это либо место на летающей земле, либо bottomShiftBorder)
 
 	//поля свойства экземпляра
+	damage: number; //урон (в секунду)
 	speed: number; //скорость передвижения (пикселей в секунду)
 
 	readonly endingAnimation: AnimatedObject; //анимация появления юнита
@@ -111,6 +112,7 @@ export class Unit extends UpgradebleObject {
 		animationDurationMs: number,
 		price: number, 
 		speed: number,
+		damage: number,
 		scaleSize: number,
 		isLand: boolean = true, 
 		reduceHover: number = 0,
@@ -140,6 +142,7 @@ export class Unit extends UpgradebleObject {
 		this.imageWeapon = imageWeapon;
 
 		this.speed = speed;
+		this.damage = damage;
 		this.isRunRight = true;
 
 		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита

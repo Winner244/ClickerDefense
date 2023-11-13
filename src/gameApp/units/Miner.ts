@@ -58,6 +58,8 @@ import MinerRunDiamondPickImage from '../../assets/img/units/miner/diamonPick/ru
 import MinerJoyDiamondPickImage from '../../assets/img/units/miner/diamonPick/joy.png'; 
 
 
+import swordIcon from '../../assets/img/icons/sword.png';  
+import shieldAndSwordsIcon from '../../assets/img/icons/shieldAndSwords.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
 
@@ -111,7 +113,7 @@ export class Miner extends Unit{
 			new AnimationInfinite(5, 5 * 100, Miner.runImage),  		//run animation
 			new Animation(21, 21 * 110, Miner.joyImage),  				//joy animation
 			Miner.rotateWeaponInEarch, 
-			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, Miner.initialSpeed, Miner.scaleSize, false, 0, true, true); 
+			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, Miner.initialSpeed, 0, Miner.scaleSize, false, 0, true, true); 
 		
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 		this._diggingWeaponAnimation = new AnimationInfinite(this._diggingAnimation.frames, this._diggingAnimation.durationMs); //пока апгрейда нету
@@ -173,13 +175,17 @@ export class Miner extends Unit{
 	loadedResourcesAfterBuild(){
 		super.loadedResourcesAfterBuild();
 
-		this.infoItems.splice(2, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 25, 10, () => this.improveSpeed()));
+		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, Miner.shopItem.price * 0.2, () => this.improveSpeed()));
 
-		this.improvements.push(new Improvement('Золотая кирка', 100, PickGoldImage, () => this.improveToGoldPick(), [
+		this.improvements.push(new Improvement('Самооборона', Miner.shopItem.price * 2, shieldAndSwordsIcon, () => this.improveToSelfDefense(), [
+			new ImprovementParameterItem(`+`, swordIcon)
+		]));
+
+		this.improvements.push(new Improvement('Золотая кирка', Miner.shopItem.price * 0.8, PickGoldImage, () => this.improveToGoldPick(), [
 			new ImprovementParameterItem(`x2`, coinIcon)
 		]));
 
-		this.improvements.push(new Improvement('Алмазная кирка', 100, PickDiamondImage, () => this.improveToDiamondPick(), [
+		this.improvements.push(new Improvement('Алмазная кирка', Miner.shopItem.price * 0.8, PickDiamondImage, () => this.improveToDiamondPick(), [
 			new ImprovementParameterItem(`x3`, coinIcon)
 		], true));
 	}
@@ -208,6 +214,11 @@ export class Miner extends Unit{
 		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitDiamondPickImage;
 		this._runWeaponAnimation.image.src = MinerRunDiamondPickImage;
 		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;
+	}
+
+	improveToSelfDefense(){
+		this.damage = 0.1;
+		this.infoItems.splice(2, 0, new ParameterItem('Урон', () => this.damage, swordIcon, 13, Miner.shopItem.price, () => this.damage += 0.1));
 	}
 
 	improveSpeed(){
@@ -273,6 +284,9 @@ export class Miner extends Unit{
 				else{
 					this._wasPickHit = false;
 				}
+			}
+			else if(this.damage > 0){ //самооборона
+				//TODO
 			}
 			else{ //убегать от нападения летучих мышей
 				this.isTurnOnPushUpFromCrystals = false;
@@ -390,10 +404,14 @@ export class Miner extends Unit{
 		if(WawesState.isWaveStarted){
 			imageOrAnimation = this._isDiging 
 				? this._diggingAnimation 
-				: this._runAnimation;
+				: this.damage > 0
+					? //TODO
+					: this._runAnimation;
 			imageOrAnimationWeapon = this._isDiging 
 				? this._diggingWeaponAnimation 
-				: this._runWeaponAnimation;
+				: this.damage > 0
+					? //TODO
+					: this._runWeaponAnimation;
 		}
 
 		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
