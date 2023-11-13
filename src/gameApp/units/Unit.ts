@@ -1,5 +1,6 @@
 import {Draw} from '../gameSystems/Draw';
 
+import {AttackedObject} from '../../models/AttackedObject';
 import {UpgradebleObject} from '../../models/UpgradebleObject';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
@@ -73,6 +74,10 @@ export class Unit extends UpgradebleObject {
 	protected _starsNewDurationMsLeft: number; //сколько осталось до создания новой звёздочки (миллисекунды)
 
 
+	protected readonly attackTimeWaitingMs: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
+	protected _attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
+	protected _goal: AttackedObject|null; //цель (здание или юнит) для атаки
+
 	protected imageWeapon: HTMLImageElement; //изображение оружия
 	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
 	protected _isDisplayWeaponInEarch: boolean; //отображать оружие воткнутую в землю?
@@ -113,6 +118,7 @@ export class Unit extends UpgradebleObject {
 		price: number, 
 		speed: number,
 		damage: number,
+		attackTimeWaitingMs: number,
 		scaleSize: number,
 		isLand: boolean = true, 
 		reduceHover: number = 0,
@@ -143,6 +149,8 @@ export class Unit extends UpgradebleObject {
 
 		this.speed = speed;
 		this.damage = damage;
+		this.attackTimeWaitingMs = attackTimeWaitingMs;
+		this._attackLeftTimeMs = 0;
 		this.isRunRight = true;
 
 		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита

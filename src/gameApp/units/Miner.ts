@@ -17,6 +17,8 @@ import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import ShopItem from '../../models/ShopItem';
 
+import {AttackedObject} from '../../models/AttackedObject';
+
 import {Helper} from '../helpers/Helper';
 
 import {Unit} from './Unit';
@@ -113,7 +115,17 @@ export class Miner extends Unit{
 			new AnimationInfinite(5, 5 * 100, Miner.runImage),  		//run animation
 			new Animation(21, 21 * 110, Miner.joyImage),  				//joy animation
 			Miner.rotateWeaponInEarch, 
-			Miner.name, Miner.imageHandler, 0, 0, Miner.shopItem.price, Miner.initialSpeed, 0, Miner.scaleSize, false, 0, true, true); 
+			Miner.name, 
+			Miner.imageHandler, 0, 0, 
+			Miner.shopItem.price, 
+			Miner.initialSpeed, 
+			0, //damage
+			500, //attackTimeWaitingMs
+			Miner.scaleSize, 
+			false, //isLand
+			0, //reduceHover
+			true, //isSupportHealing
+			true); //isSupportUpgrade
 		
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 		this._diggingWeaponAnimation = new AnimationInfinite(this._diggingAnimation.frames, this._diggingAnimation.durationMs); //пока апгрейда нету
@@ -286,7 +298,14 @@ export class Miner extends Unit{
 				}
 			}
 			else if(this.damage > 0){ //самооборона
-				//TODO
+				this._attackLeftTimeMs -= drawsDiffMs;
+
+				//атака
+				if(this._attackLeftTimeMs <= 0){
+					let damageMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.damageOutMultiplier);
+					let damage = this.damage + this.damage * damageMultiplier;
+					this.attack(damage);
+				}
 			}
 			else{ //убегать от нападения летучих мышей
 				this.isTurnOnPushUpFromCrystals = false;
@@ -340,6 +359,13 @@ export class Miner extends Unit{
 		}
 	}
 
+	attack(damage: number): void{
+		if(damage > 0 && this._goal != null){
+			this._goal.applyDamage(damage, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //наносит урон
+			this._attackLeftTimeMs = this.attackTimeWaitingMs;
+		}
+	}
+
 	pushUpFromCrystals(isOnlyGoal: boolean = false): boolean{
 		let isOk = true;
 		var crystal1 = Buildings.flyEarth.crystal1PositionBlocking;
@@ -365,7 +391,7 @@ export class Miner extends Unit{
 		return isOk;
 	}
 
-	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{
+	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
@@ -375,9 +401,15 @@ export class Miner extends Unit{
 			}
 		}
 
-		//убегаем от урона - даже если его нету
 		if(this._isDiging){ 
-			this.isRunRight = (x || 0) < this.centerX;
+			if(this.damage > 0){ //самооборона
+				this.isRunRight = (x || 0) > this.centerX;
+				this._goal = attackingObject;
+				this._attackLeftTimeMs = this.attackTimeWaitingMs;
+			}
+			else{ //убегаем от урона - даже если его нету
+				this.isRunRight = (x || 0) < this.centerX;
+			}
 		}
 		this._isDiging = false;
 		this.timeStopRunningLeft = Miner.timeStopRunning;
