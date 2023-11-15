@@ -40,6 +40,8 @@ import MinerStartActiveWaitImage from '../../assets/img/units/miner/startActiveW
 import MinerPassiveWait1Image from '../../assets/img/units/miner/passiveWait1.png'; 
 import MinerRunImage from '../../assets/img/units/miner/run.png'; 
 import MinerJoyImage from '../../assets/img/units/miner/joy.png'; 
+import MinerAttackImage from '../../assets/img/units/miner/attack.png'; 
+
 
 import PickGoldImage from '../../assets/img/units/miner/pickGold.png'; 
 import MinerFallEndGoldPickImage from '../../assets/img/units/miner/goldPick/fallEnd.png'; 
@@ -83,6 +85,7 @@ export class Miner extends Unit{
 	private static readonly diggingImage: HTMLImageElement = new Image(); 
 	private static readonly runImage: HTMLImageElement = new Image(); 
 	private static readonly joyImage: HTMLImageElement = new Image(); 
+	private static readonly attackImage: HTMLImageElement = new Image(); 
 
 	private static readonly pickImage: HTMLImageElement = new Image(); 
 
@@ -107,6 +110,7 @@ export class Miner extends Unit{
 		super(x, y, 3, 
 			Miner.passiveWait1Image, 	//image
 			Miner.pickImage,   			//image weapon
+			new AnimationInfinite(4, 4 * 75, Miner.attackImage), 	//attack 
 			new AnimationInfinite(1, 1 * 75, Miner.passiveWait1Image), 	//passive waiting
 			Miner.fallImage,			//fall image
 			new Animation(31, 31 * 75, Miner.fallEndImage), 			//fall end animation
@@ -181,6 +185,7 @@ export class Miner extends Unit{
 			Miner.imageHandler.new(Miner.runImage).src = MinerRunImage;
 			Miner.imageHandler.new(Miner.joyImage).src = MinerJoyImage;
 			Miner.imageHandler.new(Miner.pickImage).src = PickImage;
+			Miner.imageHandler.new(Miner.attackImage).src = MinerAttackImage;
 		}
 	}
 
@@ -437,12 +442,12 @@ export class Miner extends Unit{
 			imageOrAnimation = this._isDiging 
 				? this._diggingAnimation 
 				: this.damage > 0
-					? //TODO
+					? this._attackAnimation
 					: this._runAnimation;
 			imageOrAnimationWeapon = this._isDiging 
 				? this._diggingWeaponAnimation 
 				: this.damage > 0
-					? //TODO
+					? this._attackWeaponAnimation
 					: this._runWeaponAnimation;
 		}
 

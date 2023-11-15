@@ -48,6 +48,7 @@ export class Unit extends UpgradebleObject {
 	protected readonly _activeWaitingAnimation: AnimationInfinite; //анимация ожидания начала волны
 	protected readonly _runAnimation: AnimationInfinite; //анимация бега
 	protected readonly _joyAnimation: Animation; //анимация радости после завершения волны
+	protected readonly _attackAnimation: AnimationInfinite; //анимация атаки
 
 	//to upgrade weapon
 	protected readonly _passiveWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания в мирное время (между волнами)
@@ -56,6 +57,7 @@ export class Unit extends UpgradebleObject {
 	protected readonly _activeWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания начала волны
 	protected readonly _runWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация бега
 	protected readonly _joyWeaponAnimation: Animation; //для апгрейда оружия - анимация радости после завершения волны
+	protected readonly _attackWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация атаки
 
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
 	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)
@@ -102,7 +104,8 @@ export class Unit extends UpgradebleObject {
 	constructor(x: number, y: number, 
 		healthMax: number, 
 		image: HTMLImageElement, 
-		imageWeapon: HTMLImageElement, 
+		imageWeapon: HTMLImageElement,
+		attackAnimation: AnimationInfinite,
 		passiveWaitingAnimation: AnimationInfinite,
 		fallImage: HTMLImageElement, 
 		fallEndAnimation: Animation,
@@ -127,6 +130,7 @@ export class Unit extends UpgradebleObject {
 	{
 		super(x, y, true, isLand, name, scaleSize, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
 
+		this._attackAnimation = attackAnimation;
 		this._passiveWaitingAnimation = passiveWaitingAnimation;
 		this._fallImage = fallImage;
 		this._fallEndAnimation = fallEndAnimation;
@@ -137,6 +141,7 @@ export class Unit extends UpgradebleObject {
 
 
 		//to upgrade weapon
+		this._attackWeaponAnimation = new AnimationInfinite(attackAnimation.frames, attackAnimation.durationMs);
 		this._passiveWaitingWeaponAnimation = new AnimationInfinite(passiveWaitingAnimation.frames, passiveWaitingAnimation.durationMs);
 		this._fallEndWeaponAnimation = new Animation(fallEndAnimation.frames, fallEndAnimation.durationMs);
 		this._startActiveWaitingWeaponAnimation = new Animation(startActiveWaitingAnimation.frames, startActiveWaitingAnimation.durationMs);
@@ -144,6 +149,7 @@ export class Unit extends UpgradebleObject {
 		this._runWeaponAnimation = new AnimationInfinite(runAnimation.frames, runAnimation.durationMs);
 		this._joyWeaponAnimation = new Animation(joyAnimation.frames, joyAnimation.durationMs); 
 
+		this._goal = null;
 	
 		this.imageWeapon = imageWeapon;
 

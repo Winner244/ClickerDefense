@@ -2108,6 +2108,7 @@ class TestPage extends React.Component {
                     miner1.improveSpeed();
                     miner1.improveSpeed();*/
                     //miner1.speed *= 2;
+                    miner1.improveToSelfDefense();
                     Units.all.push(miner1);
 
 
