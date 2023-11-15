@@ -368,6 +368,11 @@ export class Miner extends Unit{
 		if(damage > 0 && this._goal != null){
 			this._goal.applyDamage(damage, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //наносит урон
 			this._attackLeftTimeMs = this.attackTimeWaitingMs;
+			if(this._goal.health <= 0){
+				this._goal = null;
+				this._isDiging = true;
+				//this.isRunRight = true;
+			}
 		}
 	}
 
