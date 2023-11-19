@@ -186,7 +186,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
-                //Waves.waveCurrent = 2;
+                Waves.waveCurrent = 2;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -2030,6 +2030,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = true;
+                Waves.all[Waves.waveCurrent] = [new WaveData(Zombie.name, 1, 30, 0)];
 
                 FlyEarth.loadSeparateCrystals();
 
@@ -2047,7 +2048,70 @@ class TestPage extends React.Component {
                         var bat = new Bat(650, 280, true, 1);
                         bat.isSelectMinerToTest = true;
                         Monsters.all.push(bat);
+                        //miner3.improvements.find(x => x.label == 'Урон')?.improve();
                     }, 3000);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - самооборона от 2х летучих мышей",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.isWaveStarted = true;
+                Waves.all[Waves.waveCurrent] = [new WaveData(Zombie.name, 1, 30, 0)];
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    miner3.improveToGoldPick();
+                    miner3.improveToDiamondPick();
+                    miner3.improveToSelfDefense();
+                    miner3.defense = 0.08;
+                    Units.all.push(miner3);
+
+
+                    setTimeout(() => {
+                        var bat = new Bat(650, 280, true, 1);
+                        bat.isSelectMinerToTest = true;
+                        Monsters.all.push(bat);
+
+                        
+                        var bat2 = new Bat(1450, 280, false, 1);
+                        bat2.isSelectMinerToTest = true;
+                        Monsters.all.push(bat2);
+                    }, 3000);
+                }, 300);
+            }
+        },
+
+        {
+            key: "Золотодобытчики - самооборона от летучей мыши +",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.isWaveStarted = false;
+                Waves.waveCurrent = 1;
+                Waves.all[Waves.waveCurrent + 1] = [new WaveData(Bat.name, 35, 63, 2)];
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
                 }, 300);
             }
         },

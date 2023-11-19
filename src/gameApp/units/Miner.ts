@@ -126,7 +126,7 @@ export class Miner extends Unit{
 			Miner.shopItem.price, 
 			Miner.initialSpeed, 
 			0, //damage
-			500, //attackTimeWaitingMs
+			200, //attackTimeWaitingMs
 			Miner.scaleSize, 
 			false, //isLand
 			0, //reduceHover
@@ -239,7 +239,7 @@ export class Miner extends Unit{
 
 	improveToSelfDefense(){
 		this.damage = 0.1;
-		this.infoItems.splice(2, 0, new ParameterItem('Урон', () => this.damage, swordIcon, 13, Miner.shopItem.price, () => this.damage += 0.1));
+		this.infoItems.splice(2, 0, new ParameterItem('Урон', () => this.damage.toFixed(1), swordIcon, 13, Miner.shopItem.price, () => this.damage += 0.1));
 	}
 
 	improveSpeed(){
@@ -415,16 +415,20 @@ export class Miner extends Unit{
 			}
 		}
 
-		if(this._isDiging){ 
-			if(this.damage > 0){ //самооборона
+
+		if(this.damage > 0){ //самооборона
+			if(!this._goal || this._isDiging){
 				this.isRunRight = (x || 0) > this.centerX;
 				this._goal = attackingObject;
 				this._attackLeftTimeMs = this.attackTimeWaitingMs;
 			}
-			else{ //убегаем от урона - даже если его нету
+		}
+		else{ //убегаем от урона - даже если его нету
+			if(this._isDiging){
 				this.isRunRight = (x || 0) < this.centerX;
 			}
 		}
+
 		this._isDiging = false;
 		this.timeStopRunningLeft = Miner.timeStopRunning;
 
