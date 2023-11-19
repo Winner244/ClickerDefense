@@ -2023,8 +2023,8 @@ class TestPage extends React.Component {
             }
         },
 
-        /*{
-            key: "Золотодобытчики - гибель от летучей мыши",
+        {
+            key: "Золотодобытчики - самооборона от летучей мыши",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2037,7 +2037,9 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 80;
                     var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
-                    //miner3.speed *= 2;
+                    miner3.improveToGoldPick();
+                    miner3.improveToDiamondPick();
+                    miner3.improveToSelfDefense();
                     Units.all.push(miner3);
 
 
@@ -2048,7 +2050,7 @@ class TestPage extends React.Component {
                     }, 3000);
                 }, 300);
             }
-        },*/
+        },
 
         {
             key: "Золотодобытчики - нападение летучей мыши - спасён",
@@ -2108,7 +2110,6 @@ class TestPage extends React.Component {
                     miner1.improveSpeed();
                     miner1.improveSpeed();*/
                     //miner1.speed *= 2;
-                    miner1.improveToSelfDefense();
                     Units.all.push(miner1);
 
 

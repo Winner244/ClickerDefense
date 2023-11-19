@@ -61,7 +61,7 @@ import MinerStartActiveWaitDiamondPickImage from '../../assets/img/units/miner/d
 import MinerActiveWaitDiamondPickImage from '../../assets/img/units/miner/diamonPick/activeWait.png'; 
 import MinerRunDiamondPickImage from '../../assets/img/units/miner/diamonPick/run.png'; 
 import MinerJoyDiamondPickImage from '../../assets/img/units/miner/diamonPick/joy.png'; 
-//import MinerAttackDiamondPickImage from '../../assets/img/units/miner/diamonPick/attack.png'; 
+import MinerAttackDiamondPickImage from '../../assets/img/units/miner/diamonPick/attack.png'; 
 
 
 import swordIcon from '../../assets/img/icons/sword.png';  
@@ -234,7 +234,7 @@ export class Miner extends Unit{
 		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitDiamondPickImage;
 		this._runWeaponAnimation.image.src = MinerRunDiamondPickImage;
 		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;
-		//this._attackWeaponAnimation.image.src = MinerAttackDiamondPickImage;
+		this._attackWeaponAnimation.image.src = MinerAttackDiamondPickImage;
 	}
 
 	improveToSelfDefense(){
