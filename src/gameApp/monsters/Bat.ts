@@ -116,13 +116,13 @@ export class Bat extends Monster{
 					this._zigzagLength = 0;
 					this._isZigzagToTop = !this._isZigzagToTop;
 				}
-				
+
 			}
 			else{ 
-				 //разворот при преследовании майнера
-				if(this._goal.name == Miner.name && this.isLeftSide != (<Miner>this._goal).isRunRight && this.centerX > this._goal.x && this.x < this._goal.x + this._goal.width){
-					this.isLeftSide = !this.isLeftSide;
-				}
+				//разворот при преследовании майнера
+			    if(this._goal.name == Miner.name && this.isLeftSide != (<Miner>this._goal).isRunRight && this.centerX > this._goal.x && this.x < this._goal.x + this._goal.width){
+				    this.isLeftSide = (<Miner>this._goal).isRunRight;
+			    }
 
 				if(this.y < this._goal.y + this._goal.reduceHover){
 					this.y++;

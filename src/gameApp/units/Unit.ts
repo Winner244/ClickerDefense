@@ -96,7 +96,8 @@ export class Unit extends UpgradebleObject {
 
 	//поля свойства экземпляра
 	damage: number; //урон (в секунду)
-	speed: number; //скорость передвижения (пикселей в секунду)
+	speed: number; //скорость передвижения/атаки/добычи монеток (пикселей в секунду - для передвижения)
+	protected readonly initialSpeed: number; //изначальная скорость (пикселей в секунду)
 
 	readonly endingAnimation: AnimatedObject; //анимация появления юнита
 
@@ -153,7 +154,7 @@ export class Unit extends UpgradebleObject {
 	
 		this.imageWeapon = imageWeapon;
 
-		this.speed = speed;
+		this.initialSpeed = this.speed = speed;
 		this.damage = damage;
 		this.attackTimeWaitingMs = attackTimeWaitingMs;
 		this._attackLeftTimeMs = 0;

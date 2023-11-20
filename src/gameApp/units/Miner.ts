@@ -126,7 +126,7 @@ export class Miner extends Unit{
 			Miner.shopItem.price, 
 			Miner.initialSpeed, 
 			0, //damage
-			200, //attackTimeWaitingMs
+			2 * 75, //attackTimeWaitingMs
 			Miner.scaleSize, 
 			false, //isLand
 			0, //reduceHover
@@ -244,9 +244,14 @@ export class Miner extends Unit{
 
 	improveSpeed(){
 		this.speed += 10;
-		var newDuration = Miner.initialSpeed / this.speed * this._diggingAnimation.initialDurationMs;
-		this._diggingAnimation.changeDuration(newDuration);
-		this._diggingWeaponAnimation.changeDuration(newDuration);
+
+		var newDurationDigging = Miner.initialSpeed / this.speed * this._diggingAnimation.initialDurationMs;
+		this._diggingAnimation.changeDuration(newDurationDigging);
+		this._diggingWeaponAnimation.changeDuration(newDurationDigging);
+
+		var newDurationAttack = Miner.initialSpeed / this.speed * this._attackAnimation.initialDurationMs;
+		this._attackAnimation.changeDuration(newDurationAttack);
+		this._attackWeaponAnimation.changeDuration(newDurationAttack);
 	}
 
 	recovery(): boolean{
@@ -370,8 +375,8 @@ export class Miner extends Unit{
 
 	attack(damage: number): void{
 		if(damage > 0 && this._goal != null){
-			this._goal.applyDamage(damage, this.isLeftSide ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //наносит урон
-			this._attackLeftTimeMs = this.attackTimeWaitingMs;
+			this._goal.applyDamage(damage, this.isRunRight ? this.x + this.width - 10 : this.x - 12, this.y + this.height / 2, this); //наносит урон
+			this._attackLeftTimeMs = this.attackTimeWaitingMs * (this.initialSpeed / this.speed);
 			if(this._goal.health <= 0){
 				this._goal = null;
 				this._isDiging = true;
@@ -420,7 +425,7 @@ export class Miner extends Unit{
 			if(!this._goal || this._isDiging){
 				this.isRunRight = (x || 0) > this.centerX;
 				this._goal = attackingObject;
-				this._attackLeftTimeMs = this.attackTimeWaitingMs;
+				this._attackLeftTimeMs = this.attackTimeWaitingMs * (this.initialSpeed / this.speed);
 			}
 		}
 		else{ //убегаем от урона - даже если его нету
