@@ -2091,7 +2091,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - самооборона от летучей мыши +",
+            key: "Золотодобытчики - магазин + летучие мыши",
             code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

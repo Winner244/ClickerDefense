@@ -64,8 +64,13 @@ import MinerJoyDiamondPickImage from '../../assets/img/units/miner/diamonPick/jo
 import MinerAttackDiamondPickImage from '../../assets/img/units/miner/diamonPick/attack.png'; 
 
 
+import WoodArmorImage from '../../assets/img/units/miner/woodArmor.png'; 
+import MinerPassiveWait1WoodArmorImage from '../../assets/img/units/miner/woodArmor/passiveWait1.png'; 
+import MinerActiveWaitWoodArmorImage from '../../assets/img/units/miner/woodArmor/activeWait.png'; 
+
 import swordIcon from '../../assets/img/icons/sword.png';  
 import shieldAndSwordsIcon from '../../assets/img/icons/shieldAndSwords.png';  
+import shieldIcon from '../../assets/img/icons/shield.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
 
@@ -99,6 +104,7 @@ export class Miner extends Unit{
 
 	private readonly _diggingAnimation: AnimationInfinite; //анимация добывания монеток
 	private readonly _diggingWeaponAnimation: AnimationInfinite; //для апгрейда кирки - анимация добывания монеток
+	private readonly _diggingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация добывания монеток
 	private _isDiging: boolean; //Копает сейчас?
 	private _countCoinsDiging: number; //сколько монет за раз добывает?
 	private _wasPickHit: boolean; //Удар уже состоялся по земле при копании за текущий цикл анимации digging ?
@@ -135,8 +141,10 @@ export class Miner extends Unit{
 		
 		this._diggingAnimation = new AnimationInfinite(9, 9 * 75, Miner.diggingImage);
 		this._diggingWeaponAnimation = new AnimationInfinite(this._diggingAnimation.frames, this._diggingAnimation.durationMs); //пока апгрейда нету
-		this._diggingAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
-		this._diggingWeaponAnimation.displayedTimeMs = this._diggingAnimation.displayedTimeMs;
+		this._diggingArmorAnimation = new AnimationInfinite(this._diggingAnimation.frames, this._diggingAnimation.durationMs); //пока апгрейда нету
+		this._diggingAnimation.displayedTimeMs = 
+		this._diggingWeaponAnimation.displayedTimeMs = 
+		this._diggingArmorAnimation.displayedTimeMs = Helper.getRandom(0, this._diggingAnimation.durationMs); //random starting animation
 
 		this._isDiging = true;
 		this._wasPickHit = false;
@@ -200,6 +208,10 @@ export class Miner extends Unit{
 			new ImprovementParameterItem(`+`, swordIcon)
 		]));
 
+		this.improvements.push(new Improvement('Деревянная броня', Miner.shopItem.price * 2, WoodArmorImage, () => this.improveToWoodArmor(), [
+			new ImprovementParameterItem(`+`, shieldIcon)
+		]));
+
 		this.improvements.push(new Improvement('Золотая кирка', Miner.shopItem.price * 0.8, PickGoldImage, () => this.improveToGoldPick(), [
 			new ImprovementParameterItem(`x2`, coinIcon)
 		]));
@@ -235,6 +247,18 @@ export class Miner extends Unit{
 		this._runWeaponAnimation.image.src = MinerRunDiamondPickImage;
 		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;
 		this._attackWeaponAnimation.image.src = MinerAttackDiamondPickImage;
+	}
+
+	improveToWoodArmor(){
+		this.defense += 0.8;
+		//this._diggingArmorAnimation.image.src = MinerDiggingWoodArmorImage;
+		this._passiveWaitingArmorAnimation.image.src = MinerPassiveWait1WoodArmorImage;
+		//this._fallEndArmorAnimation.image.src = MinerFallEndWoodArmorImage;
+		//this._startActiveWaitingArmorAnimation.image.src = MinerStartActiveWaitWoodArmorImage;
+		this._activeWaitingArmorAnimation.image.src = MinerActiveWaitWoodArmorImage;
+		//this._runArmorAnimation.image.src = MinerRunWoodArmorImage;
+		//this._joyArmorAnimation.image.src = MinerJoyWoodArmorImage;
+		//this._attackArmorAnimation.image.src = MinerAttackWoodArmorImage;
 	}
 
 	improveToSelfDefense(){
@@ -457,6 +481,7 @@ export class Miner extends Unit{
 
 	drawObjects(drawsDiffMs: number, 
 		imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
+		imageOrAnimationArmor: AnimationInfinite|Animation|HTMLImageElement, 
 		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
 		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
 	{
@@ -466,6 +491,13 @@ export class Miner extends Unit{
 				: this.damage > 0
 					? this._attackAnimation
 					: this._runAnimation;
+
+			imageOrAnimationArmor = this._isDiging 
+				? this._diggingArmorAnimation 
+				: this.damage > 0
+					? this._attackArmorAnimation
+					: this._runArmorAnimation;
+					
 			imageOrAnimationWeapon = this._isDiging 
 				? this._diggingWeaponAnimation 
 				: this.damage > 0
@@ -473,7 +505,7 @@ export class Miner extends Unit{
 					: this._runWeaponAnimation;
 		}
 
-		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
+		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
 	}
 
 }
