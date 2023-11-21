@@ -70,7 +70,7 @@ import MinerActiveWaitWoodArmorImage from '../../assets/img/units/miner/woodArmo
 
 import swordIcon from '../../assets/img/icons/sword.png';  
 import shieldAndSwordsIcon from '../../assets/img/icons/shieldAndSwords.png';  
-import shieldIcon from '../../assets/img/icons/shield.png';  
+import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
 
