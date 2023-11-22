@@ -65,8 +65,14 @@ import MinerAttackDiamondPickImage from '../../assets/img/units/miner/diamonPick
 
 
 import WoodArmorImage from '../../assets/img/units/miner/woodArmor.png'; 
+//import MinerFallEndWoodArmorImage from '../../assets/img/units/miner/woodArmor/fallEnd.png'; 
+import MinerDiggingWoodArmorImage from '../../assets/img/units/miner/woodArmor/digging.png'; 
 import MinerPassiveWait1WoodArmorImage from '../../assets/img/units/miner/woodArmor/passiveWait1.png'; 
+//import MinerStartActiveWaitWoodArmorImage from '../../assets/img/units/miner/woodArmor/startActiveWait.png'; 
 import MinerActiveWaitWoodArmorImage from '../../assets/img/units/miner/woodArmor/activeWait.png'; 
+//import MinerRunWoodArmorImage from '../../assets/img/units/miner/woodArmor/run.png'; 
+//import MinerJoyWoodArmorImage from '../../assets/img/units/miner/woodArmor/joy.png'; 
+//import MinerAttackWoodArmorImage from '../../assets/img/units/miner/woodArmor/attack.png'; 
 
 import swordIcon from '../../assets/img/icons/sword.png';  
 import shieldAndSwordsIcon from '../../assets/img/icons/shieldAndSwords.png';  
@@ -251,7 +257,7 @@ export class Miner extends Unit{
 
 	improveToWoodArmor(){
 		this.defense += 0.8;
-		//this._diggingArmorAnimation.image.src = MinerDiggingWoodArmorImage;
+		this._diggingArmorAnimation.image.src = MinerDiggingWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = MinerPassiveWait1WoodArmorImage;
 		//this._fallEndArmorAnimation.image.src = MinerFallEndWoodArmorImage;
 		//this._startActiveWaitingArmorAnimation.image.src = MinerStartActiveWaitWoodArmorImage;
