@@ -208,6 +208,7 @@ export class Miner extends Unit{
 	loadedResourcesAfterBuild(){
 		super.loadedResourcesAfterBuild();
 
+		this.infoItems = this.infoItems.filter(x => x.label != 'Защита');
 		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, Miner.shopItem.price * 0.2, () => this.improveSpeed()));
 
 		this.improvements.push(new Improvement('Самооборона', Miner.shopItem.price * 2, shieldAndSwordsIcon, () => this.improveToSelfDefense(), [
@@ -256,7 +257,7 @@ export class Miner extends Unit{
 	}
 
 	improveToWoodArmor(){
-		this.defense += 0.8;
+		this.defense += 0.1;
 		this._diggingArmorAnimation.image.src = MinerDiggingWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = MinerPassiveWait1WoodArmorImage;
 		//this._fallEndArmorAnimation.image.src = MinerFallEndWoodArmorImage;
