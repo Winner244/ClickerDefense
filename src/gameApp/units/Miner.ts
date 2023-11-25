@@ -292,6 +292,9 @@ export class Miner extends Unit{
 			this._isDiging = true;
 			this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 			this.isRunRight = true;
+			this._fallEndAnimation.leftTimeMs = 
+			this._fallEndWeaponAnimation.leftTimeMs = 
+			this._fallEndArmorAnimation.leftTimeMs = this._fallEndAnimation.durationMs;
 		}
 
 		return result;
