@@ -31,6 +31,7 @@ import CoinImage from '../../../assets/img/coin.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import ImproveSoundUrl from '../../../assets/sounds/buildings/placing.mp3'; 
+import { Unit } from '../../../gameApp/units/Unit';
 
 
 interface Prop {
@@ -164,6 +165,9 @@ export class Upgrade extends React.Component<Props, {}> {
       AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
       if(this.props.selectedObject && this.props.selectedObject instanceof Building){
         Builder.upgradeBuilding(this.props.selectedObject);
+      }
+      else if(this.props.selectedObject && this.props.selectedObject instanceof Unit){
+        Unit.upgradeUnit(this.props.selectedObject);
       }
     }
   }

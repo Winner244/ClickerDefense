@@ -29,6 +29,8 @@ import CreatingImage from '../../assets/img/units/creating.png';
 import HeartImage from '../../assets/img/icons/health.png'; 
 import StarImage from '../../assets/img/icons/star.png'; 
 
+import SmokeImage from '../../assets/img/smoke.png'; 
+
 import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
 import End1Sound from '../../assets/sounds/units/end1.mp3'; 
 import End2Sound from '../../assets/sounds/units/end2.mp3'; 
@@ -110,6 +112,7 @@ export class Unit extends UpgradebleObject {
 
 	readonly endingAnimation: AnimatedObject; //анимация появления юнита
 
+	static readonly smokeAnimation: Animation = new Animation(10, 1000);  
 
 	constructor(x: number, y: number, 
 		healthMax: number, 
@@ -211,6 +214,11 @@ export class Unit extends UpgradebleObject {
 	static loadHealingResources(): void{
 		Unit.heartImage.src = HeartImage;
 		Unit.starImage.src = StarImage;
+		Unit.smokeAnimation.image.src = SmokeImage;
+	}
+
+	static upgradeUnit(unit: Unit){
+		this.smokeAnimation.restart();
 	}
 
 	displayRecoveryAnimationLogic(drawsDiffMs: number){
@@ -417,6 +425,14 @@ export class Unit extends UpgradebleObject {
 	
 	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
 		this.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimation, imageOrAnimation, isGameOver, invertSign, x, y, filter);
+
+		if(Unit.smokeAnimation.leftTimeMs > 0){
+			let smokeWidth = this.width * 2;
+			let newHeight = Unit.smokeAnimation.image.height * (smokeWidth / (Unit.smokeAnimation.image.width / Unit.smokeAnimation.frames));
+			const x = this.x - this.width / 2;
+			const y = this.y + this.height - newHeight;
+			Unit.smokeAnimation.draw(drawsDiffMs, isGameOver, x, y, smokeWidth, newHeight);
+		}
 	}
 
 	drawObjects(drawsDiffMs: number, 
