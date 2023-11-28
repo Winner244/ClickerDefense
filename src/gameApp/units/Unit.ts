@@ -215,6 +215,7 @@ export class Unit extends UpgradebleObject {
 		Unit.heartImage.src = HeartImage;
 		Unit.starImage.src = StarImage;
 		Unit.smokeAnimation.image.src = SmokeImage;
+		Unit.smokeAnimation.leftTimeMs = 0;
 	}
 
 	static upgradeUnit(unit: Unit){
