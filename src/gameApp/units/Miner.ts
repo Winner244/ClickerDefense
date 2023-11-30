@@ -32,6 +32,7 @@ import Improvement from '../../models/Improvement';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
 import PickImage from '../../assets/img/units/miner/pick.png'; 
+import MinerShopImage from '../../assets/img/units/miner/shopImage.png'
 import MinerFallImage from '../../assets/img/units/miner/fall.png'; 
 import MinerFallEndImage from '../../assets/img/units/miner/fallEnd.png'; 
 import MinerActiveWaitImage from '../../assets/img/units/miner/activeWait.png'; 
@@ -90,6 +91,7 @@ export class Miner extends Unit{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	
 	private static readonly scaleSize: number = 0.75;
+	private static readonly shopImage: HTMLImageElement = new Image();
 	private static readonly passiveWait1Image: HTMLImageElement = new Image();
 	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
@@ -106,7 +108,7 @@ export class Miner extends Unit{
 
 	private static readonly initialSpeed: number = 75;
 
-	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.passiveWait1Image, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
+	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.shopImage, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
 	private readonly _diggingAnimation: AnimationInfinite; //анимация добывания монеток
 	private readonly _diggingWeaponAnimation: AnimationInfinite; //для апгрейда кирки - анимация добывания монеток
@@ -122,10 +124,10 @@ export class Miner extends Unit{
 
 	constructor(x: number, y: number, goalY: number, test: number = 0) {
 		super(x, y, 3, 
-			Miner.passiveWait1Image, 	//image
+			Miner.shopImage, 	//image
 			Miner.pickImage,   			//image weapon
 			new AnimationInfinite(4, 4 * 75, Miner.attackImage), 	//attack 
-			new AnimationInfinite(1, 1 * 75, Miner.passiveWait1Image), 	//passive waiting
+			new AnimationInfinite(7, 7 * 300, Miner.passiveWait1Image), 	//passive waiting
 			Miner.fallImage,			//fall image
 			new Animation(31, 31 * 75, Miner.fallEndImage), 			//fall end animation
 			new Animation(5, 5 * 75, Miner.startActiveWaitImage), 		//startActiveWaitingAnimation
@@ -179,19 +181,20 @@ export class Miner extends Unit{
 	}
 
 	public static get imageWidth() : number{
-		return Miner.passiveWait1Image.width * Miner.scaleSize;
+		return Miner.shopImage.width * Miner.scaleSize;
 	}
 
 	public static get imageHeight() : number{
-		return Miner.passiveWait1Image.height * Miner.scaleSize;
+		return Miner.shopImage.height * Miner.scaleSize;
 	}
 
 	static initForShop(): void{
-		Miner.passiveWait1Image.src = MinerPassiveWait1Image;
+		Miner.shopImage.src = MinerShopImage;
 	}
 
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources && Miner.imageHandler.isEmpty){
+			Miner.imageHandler.new(Miner.shopImage).src = MinerShopImage;
 			Miner.imageHandler.new(Miner.passiveWait1Image).src = MinerPassiveWait1Image;
 			Miner.imageHandler.new(Miner.fallImage).src = MinerFallImage;
 			Miner.imageHandler.new(Miner.fallEndImage).src = MinerFallEndImage;
