@@ -1,22 +1,15 @@
 import {Draw} from "../gameApp/gameSystems/Draw";
+import AnimationBase from "./AnimationBase";
 
-export default class AnimationInfinite{
-	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
-	readonly frames: number; //количество кадров на изображении
+export default class AnimationInfinite extends AnimationBase{
 	displayedTimeMs: number; //сколько по времени уже отображается (миллисекунды)
-
-	private _durationMs: number; //время полной анимации в миллисекундах
-	public get durationMs(): number{
-		return this._durationMs;
-	}
 
 	readonly initialDurationMs: number; //время полной анимации в миллисекундах
 
-	constructor(frames: number, durationMs: number, image: HTMLImageElement|null = null)
+	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
-		this.image = image || new Image();
-		this.frames = frames;
-		this.initialDurationMs = this._durationMs = durationMs;
+		super(framesCount, durationMs, image);
+		this.initialDurationMs = durationMs;
 		this.displayedTimeMs = 0;
 	}
 
@@ -28,7 +21,7 @@ export default class AnimationInfinite{
 		this.displayedTimeMs = 0;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null){
+	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null, filter: string|null = null){
 		this.displayedTimeMs += drawsDiffMs;
 		
 		if(!this.image.complete){
@@ -37,7 +30,7 @@ export default class AnimationInfinite{
 		}
 
 		let frame = isGameOver ? 0 : Math.floor(this.displayedTimeMs % this.durationMs / (this.durationMs / this.frames));
-		Draw.ctx.drawImage(this.image, 
+		Draw.ctx.drawImage(this.getImage(filter), 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y
 			this.image.width / this.frames, //crop by width

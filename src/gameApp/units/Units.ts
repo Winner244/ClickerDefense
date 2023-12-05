@@ -161,7 +161,7 @@ export class Units {
 		this.creatings.forEach(x => {
 			let newWidth = (this.creatingAnimation.image.width / this.creatingAnimation.frames) * (x.size.height / (this.creatingAnimation.image.height));
 			this.creatingAnimation.leftTimeMs = x.leftTimeMs;
-			this.creatingAnimation.draw(drawsDiffMs, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height, false);
+			this.creatingAnimation.draw(drawsDiffMs, false, x.location.x - (newWidth - x.size.width) / 2, x.location.y, newWidth, x.size.height);
 		});
 
 		//отдельная отрисовка золотодобытчиков на летающей земле

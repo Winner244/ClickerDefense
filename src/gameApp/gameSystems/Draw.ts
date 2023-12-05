@@ -3,6 +3,8 @@ export class Draw{
 	static canvas: HTMLCanvasElement;
 	static ctx: CanvasRenderingContext2D;
 
+	private static filteredImages: { [Key: string]: { [Key: string]: OffscreenCanvas } } = {};
+
 	static init(element: HTMLCanvasElement): void{
 		this.canvas = element;
 		this.ctx = element.getContext('2d') || new CanvasRenderingContext2D();
@@ -115,5 +117,30 @@ export class Draw{
 
 		Draw.ctx.fillStyle = `rgba(255,0,0,${alpha})`; //red
 		Draw.ctx.fillText(text, Draw.canvas.width / 2 - 242, 201);
+	}
+
+	
+	public static getFilteredImage(filter: string|null = null, image: HTMLImageElement, width: number, height: number): HTMLImageElement|OffscreenCanvas{
+		if(!filter || !image.complete || !image.src){
+			return image;
+		}
+
+		let imageName = image.src.split('/').pop() || '';
+		if(imageName in Draw.filteredImages && filter in Draw.filteredImages[imageName]){
+			return Draw.filteredImages[imageName][filter];
+		}
+
+		//create filtered image
+		Draw.filteredImages[imageName] = Draw.filteredImages[imageName] || {};
+		Draw.filteredImages[imageName][filter] = new OffscreenCanvas(width, height);
+		let context = Draw.filteredImages[imageName][filter].getContext('2d');
+		if(!context){
+			console.error('offscreen context to fileting image is empty!');
+			return image;
+		}
+		
+		context.filter = filter;
+		context.drawImage(image, 0, 0, width, height);
+		return Draw.filteredImages[imageName][filter];
 	}
 }

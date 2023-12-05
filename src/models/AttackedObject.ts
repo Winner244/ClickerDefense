@@ -24,7 +24,6 @@ export class AttackedObject {
 	shopItemName: string|null; //нужно для связи с Shop логикой
 
 	image: HTMLImageElement;
-	filteredImages: { [Key: string]: { [Key: string]: OffscreenCanvas } };
 	animation: AnimationInfinite|null;
 
 	initialHealthMax: number; //изначальный максимум хп
@@ -90,8 +89,6 @@ export class AttackedObject {
 		this.name = name;
 
 		this.imageHandler = imageHandler;
-
-		this.filteredImages = {};
 
 		this.modifiers = [];
 
@@ -253,37 +250,11 @@ export class AttackedObject {
 		x = x ?? this.x;
 		y = y ?? this.y;
 		if(imageOrAnimation instanceof HTMLImageElement){
-			if(filter){
-				let imageName = imageOrAnimation.src.split('/').pop() || '';
-				if(imageName in this.filteredImages && filter in this.filteredImages[imageName]){
-					Draw.ctx.drawImage(this.filteredImages[imageName][filter], invertSign * x, y, invertSign * this.width, this.height);
-				}
-				else {
-					//create filtered image
-					this.filteredImages[imageName] = this.filteredImages[imageName] || {};
-					this.filteredImages[imageName][filter] = new OffscreenCanvas(this.width, this.height);
-					let context = this.filteredImages[imageName][filter].getContext('2d');
-					if(context){
-						context.filter = filter;
-						context.drawImage(imageOrAnimation, 0, 0, this.width, this.height);
-						Draw.ctx.drawImage(this.filteredImages[imageName][filter], invertSign * x, y, invertSign * this.width, this.height);
-					}
-					else{
-						console.error('offscreen context to fileting image is empty!');
-					}
-				}
-			}
-			else {
-				Draw.ctx.drawImage(imageOrAnimation, invertSign * x, y, invertSign * this.width, this.height);
-			}
+			let image = Draw.getFilteredImage(filter, imageOrAnimation, this.width, this.height);
+			Draw.ctx.drawImage(image, invertSign * x, y, invertSign * this.width, this.height);
 		}
 		else{
-			if(filter){
-				//throw `filter for animation is not implemented yet! filter: '${filter}'.`;
-				console.error(`filter for animation is not implemented yet! filter: '${filter}'.`);
-			}
-
-			imageOrAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height);
+			imageOrAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height, filter);
 		}
 	}
 

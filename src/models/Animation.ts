@@ -1,9 +1,7 @@
 import {Draw} from "../gameApp/gameSystems/Draw";
+import AnimationBase from "./AnimationBase";
 
-export default class Animation{
-	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
-	readonly frames: number; //количество кадров в изображении
-	readonly durationMs: number; //время полной анимации в миллисекундах
+export default class Animation extends AnimationBase {
 	leftTimeMs: number; //оставшееся время анимации (миллисекунды)
 
 	private lastFrame: number = 0; //кадр из прошлой прорисовки
@@ -15,9 +13,7 @@ export default class Animation{
 	 */
 	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
-		this.image = image || new Image();
-		this.frames = framesCount;
-		this.durationMs = durationMs;
+		super(framesCount, durationMs, image);
 		this.leftTimeMs = durationMs;
 	}
 
@@ -25,7 +21,7 @@ export default class Animation{
 		this.leftTimeMs = this.durationMs;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, isInvert: boolean = false){
+	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, filter: string|null = null, isInvert: boolean = false){
 		if(!this.image.complete){
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
 			return;
@@ -50,7 +46,7 @@ export default class Animation{
 
 		this.lastFrame = frame;
 
-		Draw.ctx.drawImage(this.image, 
+		Draw.ctx.drawImage(this.getImage(filter), 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y
 			this.image.width / this.frames, //crop by width

@@ -1,20 +1,16 @@
 import {Draw} from "../gameApp/gameSystems/Draw";
+import AnimationBase from "./AnimationBase";
 
 import {Helper} from "../gameApp/helpers/Helper";
 
-export default class AnimationRandom{
-	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
-	readonly frames: number; //количество кадров на изображении
-	readonly durationMs: number; //время полной анимации в миллисекундах
+export default class AnimationRandom extends AnimationBase{
 	displayedTimeMs: number; //сколько по времени уже отображается (миллисекунды)
 	currentFrame: number; //текущий фрейм
 	keyFrame: number; //ключ фрейма - нужен для фиксации времени, когда фрейм не надо менять
 
-	constructor(frames: number, durationMs: number, image: HTMLImageElement|null = null)
+	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
-		this.image = image || new Image();
-		this.frames = frames;
-		this.durationMs = durationMs;
+		super(framesCount, durationMs, image);
 		this.displayedTimeMs = 0;
 		this.currentFrame = 0;
 		this.keyFrame = 0;
@@ -24,7 +20,7 @@ export default class AnimationRandom{
 		this.displayedTimeMs = 0;
 	}
 
-	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null){
+	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null, filter: string|null = null){
 		if(!this.image.complete){
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
 			return;
@@ -45,7 +41,7 @@ export default class AnimationRandom{
 			}
 		}
 
-		Draw.ctx.drawImage(this.image, 
+		Draw.ctx.drawImage(this.getImage(filter), 
 			this.image.width / this.frames * this.currentFrame, //crop from x
 			0, //crop from y
 			this.image.width / this.frames, //crop by width
