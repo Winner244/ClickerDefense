@@ -24,6 +24,7 @@ import {Monsters} from '../monsters/Monsters';
 import {Units} from '../units/Units';
 import {Unit} from '../units/Unit';
 import {Miner} from '../units/Miner';
+import {Collector} from '../units/Collector';
 
 import {Builder} from '../buildings/Builder';
 import {Building} from '../buildings/Building';
@@ -131,6 +132,7 @@ export class Game {
 			Barricade.init(true);
 			Builder.init(true);
 			Miner.initForShop();
+			Collector.initForShop();
 		}
 		else{
 			if(Buildings.all.find(x => x.health < x.healthMax)){
@@ -464,11 +466,15 @@ export class Game {
 			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
 		}
 		else if(shopItem.category == ShopCategoryEnum.UNITS){
-			let newUnit: Unit|Miner|null = null;
+			let newUnit: Unit|null = null;
 
 			if(Miner.shopItem == shopItem){
 				FlyEarth.loadSeparateCrystals();
 				newUnit = Units.addMiner();
+			}
+			else if(Collector.shopItem == shopItem){
+				newUnit = new Collector(Helper.getRandom(Buildings.flyEarth.x, Buildings.flyEarth.x + Buildings.flyEarth.width), Draw.canvas.height - this.bottomShiftBorder - Collector.imageHeight - 75);
+				Units.add(newUnit);
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;

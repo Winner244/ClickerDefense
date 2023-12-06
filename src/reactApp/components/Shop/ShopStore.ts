@@ -5,6 +5,7 @@ import ShopItem from '../../../models/ShopItem';
 import { Barricade } from '../../../gameApp/buildings/Barricade';
 import { Tower } from '../../../gameApp/buildings/Tower';
 import { Miner } from '../../../gameApp/units/Miner';
+import { Collector } from '../../../gameApp/units/Collector';
 
 // STATE
 export interface ShopState {
@@ -66,7 +67,8 @@ function getDefaultOpenState(): ShopState{
                 Tower.shopItem
             ],
             [ShopCategoryEnum.UNITS]: [
-                Miner.shopItem
+                Miner.shopItem,
+                Collector.shopItem
             ]
         }
     };

@@ -22,6 +22,10 @@ export default class Animation extends AnimationBase {
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, filter: string|null = null, isInvert: boolean = false){
+		if(!this._durationMs){
+			return;
+		}
+		
 		if(!this.image.complete){
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
 			return;

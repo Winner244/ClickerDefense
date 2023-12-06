@@ -21,6 +21,10 @@ export default class AnimationRandom extends AnimationBase{
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null, filter: string|null = null){
+		if(!this._durationMs){
+			return;
+		}
+		
 		if(!this.image.complete){
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
 			return;

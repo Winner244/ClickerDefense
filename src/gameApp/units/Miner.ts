@@ -282,10 +282,12 @@ export class Miner extends Unit{
 		var newDurationDigging = Miner.initialSpeed / this.speed * this._diggingAnimation.initialDurationMs;
 		this._diggingAnimation.changeDuration(newDurationDigging);
 		this._diggingWeaponAnimation.changeDuration(newDurationDigging);
+		this._diggingArmorAnimation.changeDuration(newDurationDigging);
 
 		var newDurationAttack = Miner.initialSpeed / this.speed * this._attackAnimation.initialDurationMs;
 		this._attackAnimation.changeDuration(newDurationAttack);
 		this._attackWeaponAnimation.changeDuration(newDurationAttack);
+		this._attackArmorAnimation.changeDuration(newDurationAttack);
 	}
 
 	recovery(): boolean{
@@ -294,10 +296,6 @@ export class Miner extends Unit{
 		if(result && oldHealth <= 0){
 			this._isDiging = true;
 			this.isLeftSide = this.x < Buildings.flyEarth.centerX;
-			this.isRunRight = true;
-			this._fallEndAnimation.leftTimeMs = 
-			this._fallEndWeaponAnimation.leftTimeMs = 
-			this._fallEndArmorAnimation.leftTimeMs = this._fallEndAnimation.durationMs;
 		}
 
 		return result;
@@ -481,7 +479,7 @@ export class Miner extends Unit{
 		return damage;
 	}
 	
-	drawEarch(): void {
+	drawEarchForWeaponInEarch(): void {
 		Draw.ctx.lineWidth = 1;
 		Draw.ctx.strokeStyle = '#833526';
 		Draw.ctx.beginPath(); 

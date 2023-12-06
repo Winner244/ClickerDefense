@@ -103,7 +103,7 @@ export class Unit extends UpgradebleObject {
 
 	public isRunRight: boolean; //юнит бежит вправо?
 	protected _isFall: boolean; //юнит падает?
-	public goalY: number; //y куда юнит должен приземлиться (это либо место на летающей земле, либо bottomShiftBorder)
+	public goalY: number; //куда юнит должен приземлиться по оси Y (это либо место на летающей земле, либо bottomShiftBorder если goalY не указан)
 
 	//поля свойства экземпляра
 	damage: number; //урон (в секунду)
@@ -118,7 +118,7 @@ export class Unit extends UpgradebleObject {
 		healthMax: number, 
 		image: HTMLImageElement, 
 		imageWeapon: HTMLImageElement,
-		attackAnimation: AnimationInfinite,
+		attackAnimation: AnimationInfinite|null,
 		passiveWaitingAnimation: AnimationInfinite,
 		fallImage: HTMLImageElement, 
 		fallEndAnimation: Animation,
@@ -143,7 +143,7 @@ export class Unit extends UpgradebleObject {
 	{
 		super(x, y, true, isLand, name, scaleSize, image, frames, animationDurationMs, reduceHover, healthMax, price, isSupportHealing, isSupportUpgrade, imageHandler);
 
-		this._attackAnimation = attackAnimation;
+		this._attackAnimation = attackAnimation ?? new AnimationInfinite(0, 0);
 		this._passiveWaitingAnimation = passiveWaitingAnimation;
 		this._fallImage = fallImage;
 		this._fallEndAnimation = fallEndAnimation;
@@ -154,7 +154,7 @@ export class Unit extends UpgradebleObject {
 
 
 		//to upgrade weapon
-		this._attackWeaponAnimation = new AnimationInfinite(attackAnimation.frames, attackAnimation.durationMs);
+		this._attackWeaponAnimation = new AnimationInfinite(this._attackAnimation.frames, this._attackAnimation.durationMs);
 		this._passiveWaitingWeaponAnimation = new AnimationInfinite(passiveWaitingAnimation.frames, passiveWaitingAnimation.durationMs);
 		this._fallEndWeaponAnimation = new Animation(fallEndAnimation.frames, fallEndAnimation.durationMs);
 		this._startActiveWaitingWeaponAnimation = new Animation(startActiveWaitingAnimation.frames, startActiveWaitingAnimation.durationMs);
@@ -163,7 +163,7 @@ export class Unit extends UpgradebleObject {
 		this._joyWeaponAnimation = new Animation(joyAnimation.frames, joyAnimation.durationMs); 
 
 		//to upgrade armor
-		this._attackArmorAnimation = new AnimationInfinite(attackAnimation.frames, attackAnimation.durationMs);
+		this._attackArmorAnimation = new AnimationInfinite(this._attackAnimation.frames, this._attackAnimation.durationMs);
 		this._passiveWaitingArmorAnimation = new AnimationInfinite(passiveWaitingAnimation.frames, passiveWaitingAnimation.durationMs);
 		this._fallEndArmorAnimation = new Animation(fallEndAnimation.frames, fallEndAnimation.durationMs);
 		this._startActiveWaitingArmorAnimation = new Animation(startActiveWaitingAnimation.frames, startActiveWaitingAnimation.durationMs);
@@ -260,6 +260,13 @@ export class Unit extends UpgradebleObject {
 			if(this.goalY != 0 && oldHealth <= 0 && this._health > 0){
 				this.y -= this.height / 3.5;
 				this.goalY -= this.height / 3.5;
+			}
+
+			if(oldHealth <= 0){
+				this.isRunRight = true;
+				this._fallEndAnimation.leftTimeMs = 
+				this._fallEndWeaponAnimation.leftTimeMs = 
+				this._fallEndArmorAnimation.leftTimeMs = this._fallEndAnimation.durationMs;
 			}
 	
 			this._isDisplayWeaponInEarch = false;
@@ -364,7 +371,7 @@ export class Unit extends UpgradebleObject {
 		return !this.isRunRight;
 	}
 
-	drawEarch(){}
+	drawEarchForWeaponInEarch(){}
 
 	//draw метод - это система отрисовки всего что связано с юнитом
 	draw(drawsDiffMs: number, isGameOver: boolean): void{
@@ -399,7 +406,7 @@ export class Unit extends UpgradebleObject {
 
 			if(!this._isDisplayWeaponInAir){
 				//display earch
-				this.drawEarch();
+				this.drawEarchForWeaponInEarch();
 
 				//искры/звёздочки для привлечения внимания
 				if(!WawesState.isWaveStarted){
