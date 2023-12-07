@@ -473,7 +473,9 @@ export class Game {
 				newUnit = Units.addMiner();
 			}
 			else if(Collector.shopItem == shopItem){
-				newUnit = new Collector(Helper.getRandom(Buildings.flyEarth.x, Buildings.flyEarth.x + Buildings.flyEarth.width), Draw.canvas.height - this.bottomShiftBorder - Collector.imageHeight - 75);
+				var x = Helper.getRandom(Buildings.flyEarth.x, Buildings.flyEarth.x + Buildings.flyEarth.width);
+				var y = Draw.canvas.height - this.bottomShiftBorder - Collector.imageHeight - 75;
+				newUnit = new Collector(x, y);
 				Units.add(newUnit);
 			}
 			else{

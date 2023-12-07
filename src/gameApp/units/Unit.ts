@@ -316,7 +316,7 @@ export class Unit extends UpgradebleObject {
 		}
 
 		//gravitations
-		if(this.y + this.height < (this.goalY || bottomShiftBorder)){
+		if(this.y + this.height < (this.goalY || Draw.canvas.height - bottomShiftBorder)){
 			if(this._isDisplayWeaponInAir){
 				this.y += 15 / drawsDiffMs / (this._impulseY / 10);
 			}
