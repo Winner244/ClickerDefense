@@ -33,14 +33,14 @@ import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
 //TODO: import PickImage from '../../assets/img/units/collector/pick.png'; 
 import CollectorShopImage from '../../assets/img/units/collector/shopImage.png'
-/*//TODO: 
-import CollectorFallImage from '../../assets/img/units/collector/fall.png'; 
+//TODO: 
+/*import CollectorFallImage from '../../assets/img/units/collector/fall.png'; 
 import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'; 
 import CollectorActiveWaitImage from '../../assets/img/units/collector/activeWait.png'; 
 import CollectorDiggingImage from '../../assets/img/units/collector/digging.png'; 
-import CollectorStartActiveWaitImage from '../../assets/img/units/collector/startActiveWait.png'; 
-import CollectorPassiveWait1Image from '../../assets/img/units/collector/passiveWait1.png'; 
-import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
+import CollectorStartActiveWaitImage from '../../assets/img/units/collector/startActiveWait.png'; */
+import CollectorPassiveWaitingImage from '../../assets/img/units/collector/passiveWaiting.png'; 
+/*import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
 import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
 
 import WoodArmorImage from '../../assets/img/units/collector/woodArmor.png'; 
@@ -66,7 +66,7 @@ export class Collector extends Unit{
 	
 	private static readonly scaleSize: number = 0.75;
 	private static readonly shopImage: HTMLImageElement = new Image();
-	//TODO: private static readonly passiveWait1Image: HTMLImageElement = new Image();
+	private static readonly passiveWaitingImage: HTMLImageElement = new Image();
 	//TODO: private static readonly fallImage: HTMLImageElement = new Image();
 	//TODO: private static readonly fallEndImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly startActiveWaitImage: HTMLImageElement = new Image(); 
@@ -91,16 +91,16 @@ export class Collector extends Unit{
 	constructor(x: number, y: number) {
 		super(x, y, 3, 
 			Collector.shopImage, 	//image
-			Collector.shopImage, 									//TODO: Collector.pickImage,   			//image weapon
+			Collector.shopImage, 											//TODO: Collector.pickImage,   			//image weapon
 			null,	//attack 
-			new AnimationInfinite(1, 1000, Collector.shopImage), 	//TODO: new AnimationInfinite(7, 7 * 300, Collector.passiveWait1Image), 	//passive waiting
-			Collector.shopImage, 									//TODO: Collector.fallImage,			//fall image
-			new Animation(1, 1000, Collector.shopImage), 			//TODO: new Animation(31, 31 * 75, Collector.fallEndImage), 			//fall end animation
-			new Animation(1, 1000, Collector.shopImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
-			new AnimationInfinite(1, 1000, Collector.shopImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
-			new AnimationInfinite(1, 1000, Collector.shopImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
-			new Animation(1, 1000, Collector.shopImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
-			0, 														//TODO: Collector.rotateWeaponInEarch, 
+			new AnimationInfinite(1, 1000, Collector.passiveWaitingImage), 	//passive waiting
+			Collector.passiveWaitingImage, 									//TODO: Collector.fallImage,			//fall image
+			new Animation(1, 1000, Collector.passiveWaitingImage), 			//TODO: new Animation(31, 31 * 75, Collector.fallEndImage), 			//fall end animation
+			new Animation(1, 1000, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
+			new AnimationInfinite(1, 1000, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
+			new AnimationInfinite(1, 1000, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
+			new Animation(1, 1000, Collector.passiveWaitingImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
+			0, 															    //TODO: Collector.rotateWeaponInEarch, 
 			Collector.name, 
 			Collector.imageHandler, 0, 0, 
 			Collector.shopItem.price, 
@@ -141,7 +141,7 @@ export class Collector extends Unit{
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources && Collector.imageHandler.isEmpty){
 			Collector.imageHandler.new(Collector.shopImage).src = CollectorShopImage;
-			//TODO: Collector.imageHandler.new(Collector.passiveWait1Image).src = CollectorPassiveWait1Image;
+			Collector.imageHandler.new(Collector.passiveWaitingImage).src = CollectorPassiveWaitingImage;
 			//TODO: Collector.imageHandler.new(Collector.fallImage).src = CollectorFallImage;
 			//TODO: Collector.imageHandler.new(Collector.fallEndImage).src = CollectorFallEndImage;
 			//TODO: Collector.imageHandler.new(Collector.startActiveWaitImage).src = CollectorStartActiveWaitImage;
