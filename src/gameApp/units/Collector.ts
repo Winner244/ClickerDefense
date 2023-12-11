@@ -93,13 +93,13 @@ export class Collector extends Unit{
 			Collector.shopImage, 	//image
 			Collector.shopImage, 											//TODO: Collector.pickImage,   			//image weapon
 			null,	//attack 
-			new AnimationInfinite(1, 1000, Collector.passiveWaitingImage), 	//passive waiting
+			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//passive waiting
 			Collector.fallImage,			//fall image
-			new Animation(1, 1000, Collector.passiveWaitingImage), 			//TODO: new Animation(31, 31 * 75, Collector.fallEndImage), 			//fall end animation
-			new Animation(1, 1000, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
-			new AnimationInfinite(1, 1000, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
-			new AnimationInfinite(1, 1000, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
-			new Animation(1, 1000, Collector.passiveWaitingImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
+			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(31, 31 * 75, Collector.fallEndImage), 			//fall end animation
+			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
+			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
+			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
+			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
 			0, 															    //TODO: Collector.rotateWeaponInEarch, 
 			Collector.name, 
 			Collector.imageHandler, 0, 0, 
