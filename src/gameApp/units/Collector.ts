@@ -33,10 +33,9 @@ import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
 //TODO: import PickImage from '../../assets/img/units/collector/pick.png'; 
 import CollectorShopImage from '../../assets/img/units/collector/shopImage.png'
-//TODO: 
 import CollectorFallImage from '../../assets/img/units/collector/fall.png'; 
-/*import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'; 
-import CollectorActiveWaitImage from '../../assets/img/units/collector/activeWait.png'; 
+import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'; 
+/*import CollectorActiveWaitImage from '../../assets/img/units/collector/activeWait.png'; 
 import CollectorDiggingImage from '../../assets/img/units/collector/digging.png'; 
 import CollectorStartActiveWaitImage from '../../assets/img/units/collector/startActiveWait.png'; */
 import CollectorPassiveWaitingImage from '../../assets/img/units/collector/passiveWaiting.png'; 
@@ -68,7 +67,7 @@ export class Collector extends Unit{
 	private static readonly shopImage: HTMLImageElement = new Image();
 	private static readonly passiveWaitingImage: HTMLImageElement = new Image();
 	private static readonly fallImage: HTMLImageElement = new Image();
-	//TODO: private static readonly fallEndImage: HTMLImageElement = new Image(); 
+	private static readonly fallEndImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly startActiveWaitImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly activeWaitImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly collectImage: HTMLImageElement = new Image(); 
@@ -94,8 +93,8 @@ export class Collector extends Unit{
 			Collector.shopImage, 											//TODO: Collector.pickImage,   			//image weapon
 			null,	//attack 
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//passive waiting
-			Collector.fallImage,			//fall image
-			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(31, 31 * 75, Collector.fallEndImage), 			//fall end animation
+			Collector.fallImage,												//fall image
+			new Animation(8, 8 * 80, Collector.fallEndImage), 					//fall end animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
@@ -143,7 +142,7 @@ export class Collector extends Unit{
 			Collector.imageHandler.new(Collector.shopImage).src = CollectorShopImage;
 			Collector.imageHandler.new(Collector.passiveWaitingImage).src = CollectorPassiveWaitingImage;
 			Collector.imageHandler.new(Collector.fallImage).src = CollectorFallImage;
-			//TODO: Collector.imageHandler.new(Collector.fallEndImage).src = CollectorFallEndImage;
+			Collector.imageHandler.new(Collector.fallEndImage).src = CollectorFallEndImage;
 			//TODO: Collector.imageHandler.new(Collector.startActiveWaitImage).src = CollectorStartActiveWaitImage;
 			//TODO: Collector.imageHandler.new(Collector.activeWaitImage).src = CollectorActiveWaitImage;
 			//TODO: Collector.imageHandler.new(Collector.diggingImage).src = CollectorDiggingImage;
