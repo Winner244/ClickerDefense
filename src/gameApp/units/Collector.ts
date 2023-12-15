@@ -94,7 +94,7 @@ export class Collector extends Unit{
 			null,	//attack 
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//passive waiting
 			Collector.fallImage,												//fall image
-			new Animation(8, 8 * 80, Collector.fallEndImage), 					//fall end animation
+			new Animation(18, 18 * 80, Collector.fallEndImage), 				//fall end animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
