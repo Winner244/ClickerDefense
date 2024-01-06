@@ -244,11 +244,26 @@ export class Collector extends Unit{
 
 					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
 					if (coins.length){ 
-						//TODO: монетку не должен загораживать монстр
-						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+						//монетку не должен загораживать монстр
+						var leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
+						var rightMonsters = sortBy(monsters.filter(x => x.isLand && !x.isLeftSide), x => x.centerX);
+
+						if(leftMonsters.length){
+							var closerMonsterLeft = leftMonsters[leftMonsters.length - 1];
+							coins = coins.filter(x => x.x > closerMonsterLeft.x + closerMonsterLeft.width);
+						}
+
+						if(rightMonsters.length){
+							var closerMonsterRight = rightMonsters[0];
+							coins = coins.filter(x => x.x < closerMonsterRight.x);
+						}
+
+						if(coins.length){
+							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+						}
 					}
 					else if(monsters.length) { //следим за монстрами - пора ли убегать? 
-						var closerMonster = monsters.find(x => Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
+						var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
 						if (closerMonster){
 							this._isCollecting = false;
 							this.isRunRight = closerMonster.isLeftSide;
@@ -281,7 +296,7 @@ export class Collector extends Unit{
 				}
 
 				//рядом больше нет монстров
-				var closerMonster = monsters.find(x => Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
+				var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
 				if (!closerMonster){
 					this._isCollecting = true;
 				}
