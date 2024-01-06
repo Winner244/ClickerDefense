@@ -35,9 +35,7 @@ import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 import CollectorShopImage from '../../assets/img/units/collector/shopImage.png'
 import CollectorFallImage from '../../assets/img/units/collector/fall.png'; 
 import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'; 
-/*import CollectorActiveWaitImage from '../../assets/img/units/collector/activeWait.png'; 
-import CollectorDiggingImage from '../../assets/img/units/collector/digging.png'; 
-import CollectorStartActiveWaitImage from '../../assets/img/units/collector/startActiveWait.png'; */
+import CollectorCollectImage from '../../assets/img/units/collector/collect.png'; 
 import CollectorPassiveWaitingImage from '../../assets/img/units/collector/passiveWaiting.png'; 
 import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
 /*import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
@@ -46,8 +44,6 @@ import WoodArmorImage from '../../assets/img/units/collector/woodArmor.png';
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
 import CollectorDiggingWoodArmorImage from '../../assets/img/units/collector/woodArmor/digging.png'; 
 import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWait1.png'; 
-import CollectorStartActiveWaitWoodArmorImage from '../../assets/img/units/collector/woodArmor/startActiveWait.png'; 
-import CollectorActiveWaitWoodArmorImage from '../../assets/img/units/collector/woodArmor/activeWait.png'; 
 import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
 */
@@ -68,22 +64,18 @@ export class Collector extends Unit{
 	private static readonly passiveWaitingImage: HTMLImageElement = new Image();
 	private static readonly fallImage: HTMLImageElement = new Image();
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
-	//TODO: private static readonly startActiveWaitImage: HTMLImageElement = new Image(); 
-	//TODO: private static readonly activeWaitImage: HTMLImageElement = new Image(); 
-	//TODO: private static readonly collectImage: HTMLImageElement = new Image(); 
+	private static readonly collectImage: HTMLImageElement = new Image(); 
 	private static readonly runImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly joyImage: HTMLImageElement = new Image(); 
 
-	//TODO: private static readonly pickImage: HTMLImageElement = new Image(); 
-
-	//TODO: private static readonly rotateWeaponInEarch: number = 172;
+	//TODO: private static readonly pickImage: HTMLImageElement = new Image();
 
 	private static readonly initialSpeed: number = 75;
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 50, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
 
-	//TODO: private readonly _collectingAnimation: AnimationInfinite; //анимация собирания монеток
-	//TODO: private readonly _collectingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация собирания монеток
+	private readonly _collectingAnimation: AnimationInfinite; //анимация собирания монеток
+	private readonly _collectingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -95,11 +87,11 @@ export class Collector extends Unit{
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//passive waiting
 			Collector.fallImage,												//fall image
 			new Animation(18, 18 * 80, Collector.fallEndImage), 				//fall end animation
-			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
-			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
+			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//startActiveWaitingAnimation
+			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//activeWaitingAnimation
 			new AnimationInfinite(5, 5 * 100, Collector.runImage),  		    //run animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
-			0, 															    //TODO: Collector.rotateWeaponInEarch, 
+			0, 		//rotateWeaponInEarch
 			Collector.name, 
 			Collector.imageHandler, 0, 0, 
 			Collector.shopItem.price, 
@@ -112,8 +104,8 @@ export class Collector extends Unit{
 			true, //isSupportHealing
 			true); //isSupportUpgrade
 		
-		//this._collectingAnimation = new AnimationInfinite(9, 9 * 75, Collector.collectImage);
-		//this._collectingArmorAnimation = new AnimationInfinite(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
+		this._collectingAnimation = new AnimationInfinite(9, 9 * 75, Collector.collectImage);
+		this._collectingArmorAnimation = new AnimationInfinite(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 
 		this._isCollecting = true;
 		this._wasCollected = false;
@@ -143,9 +135,7 @@ export class Collector extends Unit{
 			Collector.imageHandler.new(Collector.passiveWaitingImage).src = CollectorPassiveWaitingImage;
 			Collector.imageHandler.new(Collector.fallImage).src = CollectorFallImage;
 			Collector.imageHandler.new(Collector.fallEndImage).src = CollectorFallEndImage;
-			//TODO: Collector.imageHandler.new(Collector.startActiveWaitImage).src = CollectorStartActiveWaitImage;
-			//TODO: Collector.imageHandler.new(Collector.activeWaitImage).src = CollectorActiveWaitImage;
-			//TODO: Collector.imageHandler.new(Collector.diggingImage).src = CollectorDiggingImage;
+			Collector.imageHandler.new(Collector.collectImage).src = CollectorCollectImage;
 			Collector.imageHandler.new(Collector.runImage).src = CollectorRunImage;
 			//TODO: Collector.imageHandler.new(Collector.joyImage).src = CollectorJoyImage;
 			//TODO: Collector.imageHandler.new(Collector.pickImage).src = PickImage;
@@ -177,9 +167,9 @@ export class Collector extends Unit{
 	improveSpeed(){
 		this.speed += 10;
 
-		//TODO:var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
-		//TODO:this._collectingAnimation.changeDuration(newDurationDigging);
-		//TODO:this._collectingArmorAnimation.changeDuration(newDurationDigging);
+		var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
+		this._collectingAnimation.changeDuration(newDurationDigging);
+		this._collectingArmorAnimation.changeDuration(newDurationDigging);
 	}
 
 	recovery(): boolean{
@@ -261,7 +251,6 @@ export class Collector extends Unit{
 		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
 		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
 	{
-		/*TODO:
 		if(WawesState.isWaveStarted){
 			imageOrAnimation = this._isCollecting 
 				? this._collectingAnimation 
@@ -270,7 +259,7 @@ export class Collector extends Unit{
 			imageOrAnimationArmor = this._isCollecting 
 				? this._collectingArmorAnimation 
 				: this._runArmorAnimation;
-		}*/
+		}
 
 		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
 	}
