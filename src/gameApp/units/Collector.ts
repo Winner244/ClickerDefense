@@ -39,8 +39,8 @@ import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'
 import CollectorDiggingImage from '../../assets/img/units/collector/digging.png'; 
 import CollectorStartActiveWaitImage from '../../assets/img/units/collector/startActiveWait.png'; */
 import CollectorPassiveWaitingImage from '../../assets/img/units/collector/passiveWaiting.png'; 
-/*import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
-import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
+import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
+/*import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
 
 import WoodArmorImage from '../../assets/img/units/collector/woodArmor.png'; 
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
@@ -71,7 +71,7 @@ export class Collector extends Unit{
 	//TODO: private static readonly startActiveWaitImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly activeWaitImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly collectImage: HTMLImageElement = new Image(); 
-	//TODO: private static readonly runImage: HTMLImageElement = new Image(); 
+	private static readonly runImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly joyImage: HTMLImageElement = new Image(); 
 
 	//TODO: private static readonly pickImage: HTMLImageElement = new Image(); 
@@ -97,7 +97,7 @@ export class Collector extends Unit{
 			new Animation(18, 18 * 80, Collector.fallEndImage), 				//fall end animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(5, 5 * 75, Collector.startActiveWaitImage), 		//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(4, 4 * 75, Collector.activeWaitImage), 	//activeWaitingAnimation
-			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new AnimationInfinite(5, 5 * 100, Collector.runImage),  		//run animation
+			new AnimationInfinite(5, 5 * 100, Collector.runImage),  		    //run animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
 			0, 															    //TODO: Collector.rotateWeaponInEarch, 
 			Collector.name, 
@@ -146,7 +146,7 @@ export class Collector extends Unit{
 			//TODO: Collector.imageHandler.new(Collector.startActiveWaitImage).src = CollectorStartActiveWaitImage;
 			//TODO: Collector.imageHandler.new(Collector.activeWaitImage).src = CollectorActiveWaitImage;
 			//TODO: Collector.imageHandler.new(Collector.diggingImage).src = CollectorDiggingImage;
-			//TODO: Collector.imageHandler.new(Collector.runImage).src = CollectorRunImage;
+			Collector.imageHandler.new(Collector.runImage).src = CollectorRunImage;
 			//TODO: Collector.imageHandler.new(Collector.joyImage).src = CollectorJoyImage;
 			//TODO: Collector.imageHandler.new(Collector.pickImage).src = PickImage;
 		}
