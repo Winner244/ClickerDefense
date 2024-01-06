@@ -31,6 +31,8 @@ import StarImage from '../../assets/img/icons/star.png';
 
 import SmokeImage from '../../assets/img/smoke.png'; 
 
+import {Modifier} from '../modifiers/Modifier';
+
 import CreatingSound from '../../assets/sounds/units/creating.mp3'; 
 import End1Sound from '../../assets/sounds/units/end1.mp3'; 
 import End2Sound from '../../assets/sounds/units/end2.mp3'; 
@@ -89,7 +91,7 @@ export class Unit extends UpgradebleObject {
 
 	protected readonly attackTimeWaitingMs: number; //частота атаки (выражается во времени ожидания после атаки в миллисекундах)
 	protected _attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
-	protected _goal: AttackedObject|null; //цель (здание или юнит) для атаки
+	protected _goal: AttackedObject|null; //цель (монстр) для атаки
 
 	protected imageWeapon: HTMLImageElement; //изображение оружия
 	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
@@ -105,6 +107,8 @@ export class Unit extends UpgradebleObject {
 	protected _isFall: boolean; //юнит падает?
 	public goalY: number; //куда юнит должен приземлиться по оси Y (это либо место на летающей земле, либо bottomShiftBorder если goalY не указан)
 
+	protected _isAttack: boolean; //атакует?
+
 	//поля свойства экземпляра
 	damage: number; //урон (в секунду)
 	speed: number; //скорость передвижения/атаки/добычи монеток (пикселей в секунду - для передвижения)
@@ -113,6 +117,7 @@ export class Unit extends UpgradebleObject {
 	readonly endingAnimation: AnimatedObject; //анимация появления юнита
 
 	static readonly smokeAnimation: Animation = new Animation(10, 1000);  
+
 
 	constructor(x: number, y: number, 
 		healthMax: number, 
@@ -187,6 +192,8 @@ export class Unit extends UpgradebleObject {
 
 		this._isFall = false;
 		this.goalY = 0;
+
+		this._isAttack = false;
 
 		this._isDisplayWeaponInAir = false;
 		this._isDisplayWeaponInEarch = false;
@@ -287,6 +294,62 @@ export class Unit extends UpgradebleObject {
 		}
 	}
 
+
+	logicMoving(drawsDiffMs: number, speed: number){
+		if(this._goal && this.health > 0){
+			if(this._goal.isLeftSide) //если монстр идёт с левой стороны
+			{
+				let condition = this.isLand 
+					? this.x > this._goal.x + this._goal.width - this.width / 5
+					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+	
+				if (condition) { //ещё не дошёл
+					this.x -= speed;
+	
+					if(!this.isLand){
+						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+					}
+					this._isAttack = false;
+				}
+				else //дошёл
+				{
+					if(this.isLand){
+						this.x = this._goal.x + this._goal.width - this.width / 5;
+					}
+					if(!this._isAttack){
+						this._attackAnimation.restart();
+					}
+					this._isAttack = true; //атакует
+				}
+			}
+			else 
+			{
+				let condition = this.isLand 
+					? this.x + this.width < this._goal.x + this.width / 5
+					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+	
+				if (condition) { //ещё не дошёл
+					this.x += speed;
+	
+					if(!this.isLand){
+						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+					}
+					this._isAttack = false;
+				}
+				else //дошёл
+				{
+					if(this.isLand){
+						this.x = this._goal.x - this.width + this.width / 5;
+					}
+					if(!this._isAttack){
+						this._attackAnimation.restart();
+					}
+					this._isAttack = true; //атакует
+				}
+			}
+		}
+	}
+
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
@@ -314,6 +377,13 @@ export class Unit extends UpgradebleObject {
 
 			return;
 		}
+
+		//логика передвижения
+		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+		let speed = this.speed * (drawsDiffMs / 1000);
+		speed += speed * speedMultiplier;
+		this.logicMoving(drawsDiffMs, speed);
+
 
 		//gravitations
 		if(this.y + this.height < (this.goalY || Draw.canvas.height - bottomShiftBorder)){

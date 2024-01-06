@@ -8,6 +8,10 @@ export default class AnimationBase{
 	public get durationMs(): number{
 		return this._durationMs;
 	}
+	
+	changeDuration(newValue: number){
+		this._durationMs = newValue;
+	}
 
 	/**
 	 * @param framesCount - количество фреймов в изображении image

@@ -77,8 +77,9 @@ export class Collector extends Unit{
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 50, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
 
-	private readonly _collectingAnimation: AnimationInfinite; //анимация собирания монеток
-	private readonly _collectingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация собирания монеток
+	private readonly _collectingAnimation: Animation; //анимация собирания монеток
+	private static readonly _collectingAnimationDurationMs: number = 9 * 75; //продолжительность анимации собирания монеток
+	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -110,8 +111,8 @@ export class Collector extends Unit{
 			true, //isSupportHealing
 			true); //isSupportUpgrade
 		
-		this._collectingAnimation = new AnimationInfinite(9, 9 * 75, Collector.collectImage);
-		this._collectingArmorAnimation = new AnimationInfinite(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
+		this._collectingAnimation = new Animation(9, Collector._collectingAnimationDurationMs, Collector.collectImage);
+		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 
 		this._isCollecting = true;
 		this._wasCollected = false;
@@ -174,7 +175,7 @@ export class Collector extends Unit{
 	improveSpeed(){
 		this.speed += 10;
 
-		var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
+		var newDurationDigging = Collector.initialSpeed / this.speed * Collector._collectingAnimationDurationMs;
 		this._collectingAnimation.changeDuration(newDurationDigging);
 		this._collectingArmorAnimation.changeDuration(newDurationDigging);
 	}
@@ -188,6 +189,36 @@ export class Collector extends Unit{
 		}
 
 		return result;
+	}
+
+
+	logicMoving(drawsDiffMs: number, speed: number){
+		if(this._goalCoin && this._isCollecting && this._collectingAnimation.leftTimeMs <= 0 && this.health > 0){
+			if(this._goalCoin.centerX < this.centerX) //если монетка слева
+			{
+				let condition = this.x > this._goalCoin.centerX - this.width / 5;
+				if (condition) { //ещё не дошёл
+					this.x -= speed;
+				}
+				else //дошёл
+				{
+					this.x = this._goalCoin.centerX - this.width / 5;
+					this._collectingAnimation.restart();
+				}
+			}
+			else 
+			{
+				let condition = this.x + this.width < this._goalCoin.centerX + this.width / 5;
+				if (condition) { //ещё не дошёл
+					this.x += speed;
+				}
+				else //дошёл
+				{
+					this.x = this._goalCoin.centerX + this.width / 5;
+					this._collectingAnimation.restart();
+				}
+			}
+		}
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -207,21 +238,30 @@ export class Collector extends Unit{
 		if(this.health > 0 && WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
 			if(this._isCollecting){ //собирание монеток
 
-				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
-				if (coins.length){ //если где то лежат монетки
-					//ищем ближайшую монетку
-					if(!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0){
+				//если нет монетки - ищем ближайшую монетку
+				if(!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0){
+					this._collectingAnimation.leftTimeMs = 0;
+
+					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
+					if (coins.length){ 
+						//TODO: монетку не должен загораживать монстр
 						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
 					}
+					else if(monsters.length) { //следим за монстрами - пора ли убегать? 
+						var closerMonster = monsters.find(x => Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
+						if (closerMonster){
+							this._isCollecting = false;
+							this.isRunRight = closerMonster.isLeftSide;
+						}
+					}
 				}
-				else if(monsters.length) { //следим за монстрами - пора ли убегать?
 
-				}
-
-				if(this._collectingAnimation.displayedTimeMs % this._collectingAnimation.durationMs > this._collectingAnimation.durationMs * 0.75){
-					if(!this._wasCollected){
-						//TODO: var i = Coins.all.indexOf(this._goalCoin);
-						//Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
+				//сбор монетки
+				if(this._collectingAnimation.leftTimeMs > 0 && this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
+					if(!this._wasCollected && this._goalCoin){
+						var i = Coins.all.indexOf(this._goalCoin);
+						Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
+						this._wasCollected = true;
 					}
 				}
 				else{
@@ -229,19 +269,23 @@ export class Collector extends Unit{
 				}
 			}
 			else{ //убегать от нападения 
-				//убегаем
 				let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 				let speed = this.speed * (drawsDiffMs / 1000);
 				speed += speed * speedMultiplier;
 	
-				//TODO: logic
-
 				if(this.isRunRight){
 					this.x += speed;
 				}
 				else{
 					this.x -= speed;
 				}
+
+				//рядом больше нет монстров
+				var closerMonster = monsters.find(x => Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
+				if (!closerMonster){
+					this._isCollecting = true;
+				}
+
 				this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 			}
 		}
@@ -260,6 +304,7 @@ export class Collector extends Unit{
 		if(this._isCollecting){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
+			this._collectingAnimation.leftTimeMs = 0;
 		}
 
 		return damage;
@@ -273,13 +318,17 @@ export class Collector extends Unit{
 		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
 	{
 		if(WawesState.isWaveStarted){
-			imageOrAnimation = this._isCollecting 
+			imageOrAnimation = this._isCollecting && this._collectingAnimation.leftTimeMs > 0
 				? this._collectingAnimation 
-				: this._runAnimation;
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
+					? this._runAnimation
+					: this._passiveWaitingAnimation;
 
-			imageOrAnimationArmor = this._isCollecting 
+			imageOrAnimationArmor = this._isCollecting && this._collectingArmorAnimation.leftTimeMs > 0
 				? this._collectingArmorAnimation 
-				: this._runArmorAnimation;
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
+					? this._runArmorAnimation
+					: this._passiveWaitingArmorAnimation;
 		}
 
 		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
