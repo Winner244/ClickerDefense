@@ -85,27 +85,21 @@ export class Bat extends Monster{
 		}
 	}
 
-	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]): void{
-		if(!this.imageHandler.isImagesCompleted){
-			return;
+	selectGoal(buildings: Building[], monsters: Monster[], units: Unit[]){
+		super.selectGoal(buildings, monsters, units);
+		
+		if(this.isSelectMinerToTest && this._goal?.name != Miner.name){
+			const miners = units.filter(x => x.name == Miner.name && x.health > 0);
+			if (miners.length){ 
+				this._goal = miners[0];
+			}
 		}
+	}
 
-		super.logic(drawsDiffMs, buildings, monsters, units, bottomBorder, waveLevel);
-
+	logicMoving(drawsDiffMs: number, speed: number){
 		if(this._goal){
-			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-			let speed = this.speed * (drawsDiffMs / 1000);
-			speed += speed * speedMultiplier;
 
 			if(!this._isAttack){
-				//нападение на майнера
-				if(this._goal.name == FlyEarth.name){
-					const miners = units.filter(x => x.name == Miner.name && x.health > 0);
-					if(miners.length && (Math.random() < 0.001 || this.isSelectMinerToTest)){ 
-						this._goal = miners[0];
-					}
-				}
-	
 				this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 	
 				//Зигзагообразное перемещение

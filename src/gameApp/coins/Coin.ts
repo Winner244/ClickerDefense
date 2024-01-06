@@ -15,6 +15,13 @@ export class Coin {
 	impulseY: number;
 	lifeTimeLeftMs: number; //осталось времени жизни (миллисекунды)
 
+	get centerX(): number {
+		return this.x + Coin.image.width / 2;
+	}
+	get centerY(): number {
+		return this.y + Coin.image.height / 2;
+	}
+
 	static init(isLoadResources: boolean = true){
 		if(isLoadResources){
 			Coin.image.src = CoinImage;
@@ -36,6 +43,9 @@ export class Coin {
 				this.impulseY += 0.02;
 			else
 				this.impulseY += 0.01;
+		}
+		else{
+			this.impulseY = 0;
 		}
 
 		//перемещение

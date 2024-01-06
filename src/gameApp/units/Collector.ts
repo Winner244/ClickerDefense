@@ -23,6 +23,7 @@ import {Helper} from '../helpers/Helper';
 
 import {Unit} from './Unit';
 
+import {Coin} from '../coins/Coin';
 import {Coins} from '../coins/Coins';
 
 import {WawesState} from '../gameSystems/WawesState';
@@ -30,6 +31,8 @@ import {WawesState} from '../gameSystems/WawesState';
 import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
 import ImprovementParameterItem from '../../models/ImprovementParameterItem';
+
+import sortBy from 'lodash/sortBy';
 
 //TODO: import PickImage from '../../assets/img/units/collector/pick.png'; 
 import CollectorShopImage from '../../assets/img/units/collector/shopImage.png'
@@ -79,6 +82,9 @@ export class Collector extends Unit{
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
+	protected _goalCoin: Coin|null; //цель-монетка для сбора
+
+
 	constructor(x: number, y: number) {
 		super(x, y, 3, 
 			Collector.shopImage, 	//image
@@ -111,6 +117,7 @@ export class Collector extends Unit{
 		this._wasCollected = false;
 		this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 		this.isRunRight = true;
+		this._goalCoin = null;
 
 		this.shopItemName = Collector.shopItem.name;
 
@@ -199,13 +206,27 @@ export class Collector extends Unit{
 		//игра пошла
 		if(this.health > 0 && WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
 			if(this._isCollecting){ //собирание монеток
-				/*if(this._collectingAnimation.displayedTimeMs % this._collectingAnimation.durationMs > this._collectingAnimation.durationMs * 0.75){
+
+				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
+				if (coins.length){ //если где то лежат монетки
+					//ищем ближайшую монетку
+					if(!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0){
+						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+					}
+				}
+				else if(monsters.length) { //следим за монстрами - пора ли убегать?
+
+				}
+
+				if(this._collectingAnimation.displayedTimeMs % this._collectingAnimation.durationMs > this._collectingAnimation.durationMs * 0.75){
 					if(!this._wasCollected){
+						//TODO: var i = Coins.all.indexOf(this._goalCoin);
+						//Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
 					}
 				}
 				else{
 					this._wasCollected = false;
-				}*/
+				}
 			}
 			else{ //убегать от нападения 
 				//убегаем

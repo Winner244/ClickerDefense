@@ -14,8 +14,12 @@ import {Modifier} from "../modifiers/Modifier";
 
 import {Helper} from "../helpers/Helper";
 
+import {FlyEarth} from '../buildings/FlyEarth';
 import {Building} from '../buildings/Building';
+
 import {Unit} from '../units/Unit';
+import {Miner} from '../units/Miner';
+
 
 import Hit1Sound from '../../assets/sounds/monsters/hit1.mp3'; 
 import Hit2Sound from '../../assets/sounds/monsters/hit2.mp3'; 
@@ -112,82 +116,96 @@ export class Monster extends AttackedObject{
 		AudioSystem.load(Hit11Sound);
 	}
 
+	selectGoal(buildings: Building[], monsters: Monster[], units: Unit[]): void{
+		if(this._goal == null || this._goal.health <= 0 || this.isLand && units.filter(x => x.isLand).length){
+			let goals: AttackedObject[] = [];
+			goals = goals.concat(buildings).concat(units).filter(x => x.isLand == this.isLand && x.health > 0);
+			goals = sortBy(goals, x => this.isLeftSide ? x.x : x.x + x.width);
+			this._goal = this.isLeftSide ? goals[0] : goals[goals.length - 1];
+		} 
+
+		//для летающих - меняем цель на майнера рандомно
+		if(!this.isLand && this._goal?.name == FlyEarth.name && !this._isAttack){
+			const miners = units.filter(x => x.name == Miner.name && x.health > 0);
+			if(miners.length && (Math.random() < 0.001)){ 
+				this._goal = miners[0];
+			}
+		}
+	}
+
+	logicMoving(drawsDiffMs: number, speed: number){
+		if(this._goal){
+			if(this.isLeftSide) //если монстр идёт с левой стороны
+			{
+				let condition = this.isLand 
+					? this.x + this.width < this._goal.x + this.width / 5
+					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+	
+				if (condition) { //ещё не дошёл
+					this.x += speed;
+	
+					if(!this.isLand){
+						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+					}
+					this._isAttack = false;
+				}
+				else //дошёл
+				{
+					if(this.isLand){
+						this.x = this._goal.x - this.width + this.width / 5;
+					}
+					if(!this._isAttack){
+						this.attackAnimation.restart();
+					}
+					this._isAttack = true; //атакует
+				}
+			}
+			else 
+			{
+				let condition = this.isLand 
+					? this.x > this._goal.x + this._goal.width - this.width / 5
+					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+	
+				if (condition) { //ещё не дошёл
+					this.x -= speed;
+	
+					if(!this.isLand){
+						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+					}
+					this._isAttack = false;
+				}
+				else //дошёл
+				{
+					if(this.isLand){
+						this.x = this._goal.x + this._goal.width - this.width / 5;
+					}
+					if(!this._isAttack){
+						this.attackAnimation.restart();
+					}
+					this._isAttack = true; //атакует
+				}
+			}
+		}
+	}
+
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomBorder: number, waveLevel: WaveData[]): void{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
 
-		//логика передвижения
-		if(this._goal == null || this._goal.health <= 0){
-			//TODO: process units, but if it is unit, need to check sometimes - maybe it has moved further than some building, OR vice versa got closer than the some building
-			//моно сделать для левой и правой стороны по списку, которые обновляются при перемещении юнита - там будут юниты и здания ближайшие к монстрам, что бы им не искать цель, 
-			//а просто брать первого из списка + при уничтожении здания будет проще
-			let goal: AttackedObject[] = [];
-			goal = goal.concat(buildings).concat(units).filter(x => x.isLand == this.isLand && x.health > 0);
-			goal = sortBy(goal, [x => this.isLeftSide ? x.x : x.x + x.width]);
-			this._goal = this.isLeftSide ? goal[0] : goal[goal.length - 1];
-
-			if(this._goal == null){
-				return;
-			}
+		//логика выбора цели
+		this.selectGoal(buildings, monsters, units);
+		if(this._goal == null){
+			return;
 		}
 
 		super.logicBase(drawsDiffMs);
 
+		//логика передвижения
 		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
 		let speed = this.speed * (drawsDiffMs / 1000);
 		speed += speed * speedMultiplier;
-
-		if(this.isLeftSide) //если монстр идёт с левой стороны
-		{
-			let condition = this.isLand 
-				? this.x + this.width < this._goal.x + this.width / 5
-				: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
-
-			if (condition) { //ещё не дошёл
-				this.x += speed;
-
-				if(!this.isLand){
-					//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
-				}
-				this._isAttack = false;
-			}
-			else //дошёл
-			{
-				if(this.isLand){
-					this.x = this._goal.x - this.width + this.width / 5;
-				}
-				if(!this._isAttack){
-					this.attackAnimation.restart();
-				}
-				this._isAttack = true; //атакует
-			}
-		}
-		else 
-		{
-			let condition = this.isLand 
-				? this.x > this._goal.x + this._goal.width - this.width / 5
-				: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
-
-			if (condition) { //ещё не дошёл
-				this.x -= speed;
-
-				if(!this.isLand){
-					//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
-				}
-				this._isAttack = false;
-			}
-			else //дошёл
-			{
-				if(this.isLand){
-					this.x = this._goal.x + this._goal.width - this.width / 5;
-				}
-				if(!this._isAttack){
-					this.attackAnimation.restart();
-				}
-				this._isAttack = true; //атакует
-			}
-		}
+		this.logicMoving(drawsDiffMs, speed);
 
 		//логика атаки
 		if(this._attackLeftTimeMs > 0)

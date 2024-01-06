@@ -26,7 +26,15 @@ export class Coins{
 	}
 
 	static delete(i: number): void{
+		Coins.all[i].lifeTimeLeftMs = 0;
 		Coins.all.splice(i, 1);
+	}
+
+	static collect(i: number, x: number, y: number): void{
+		Labels.createCoinLabel(x, y, '+1');
+		Coins.delete(i);
+		Gamer.coins++;
+		Coins.playSoundGet(x);
 	}
 
 	public static playSoundGet(x: number, volume: number = 0){
@@ -43,10 +51,7 @@ export class Coins{
 				Cursor.setCursor(Cursor.hand);
 
 				if(isClick){
-					Labels.createCoinLabel(mouseX - 10, mouseY - 10, '+1');
-					Coins.delete(i);
-					Gamer.coins++;
-					Coins.playSoundGet(mouseX);
+					Coins.collect(i, mouseX - 10, mouseY - 10);
 				}
 
 				return true;
