@@ -2248,7 +2248,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
-                Waves.waveCurrent = 0;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -2266,6 +2265,96 @@ class TestPage extends React.Component {
                 setTimeout(() => {
                     Game.buyThing(Collector.shopItem);
                 }, 1000);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - кабан в силе",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
+
+                this.waitLoadingImage(Boar.imageHandler, () => {
+                    var boar = new Boar(50, 780, true, 1, true);
+                    Monsters.all.push(boar);
+                });
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+                }, 300);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - кабан",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
+
+                this.waitLoadingImage(Boar.imageHandler, () => {
+                    var boar = new Boar(50, 780, true, 1, false);
+                    Monsters.all.push(boar);
+                });
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+                }, 300);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - зомби",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                this.waitLoadingImage(Zombie.imageHandler, () => {
+                    var zombie = new Zombie(250, 780, true, 1);
+                    Monsters.all.push(zombie);
+                });
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+                }, 300);
             }
         },
     ];

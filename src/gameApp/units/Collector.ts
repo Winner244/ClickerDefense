@@ -34,7 +34,7 @@ import ImprovementParameterItem from '../../models/ImprovementParameterItem';
 
 import sortBy from 'lodash/sortBy';
 
-//TODO: import PickImage from '../../assets/img/units/collector/pick.png'; 
+import WeaponImage from '../../assets/img/units/collector/cap.png'; 
 import CollectorShopImage from '../../assets/img/units/collector/shopImage.png'
 import CollectorFallImage from '../../assets/img/units/collector/fall.png'; 
 import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'; 
@@ -71,35 +71,37 @@ export class Collector extends Unit{
 	private static readonly runImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly joyImage: HTMLImageElement = new Image(); 
 
-	//TODO: private static readonly pickImage: HTMLImageElement = new Image();
+	private static readonly weaponImage: HTMLImageElement = new Image();
 
-	private static readonly initialSpeed: number = 75;
+	private static readonly initialSpeed: number = 30;
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 50, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
 
 	private readonly _collectingAnimation: Animation; //анимация собирания монеток
-	private static readonly _collectingAnimationDurationMs: number = 9 * 75; //продолжительность анимации собирания монеток
+	private static readonly _collectingAnimationDurationMs: number = 9 * 150; //продолжительность анимации собирания монеток
 	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
 	private readonly _collectingWeaponAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
+	private _isRunFromMonster: boolean; //бежит от монстра сейчас?
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
 	protected _goalCoin: Coin|null; //цель-монетка для сбора
 
 
 	constructor(x: number, y: number) {
-		super(x, y, 3, 
+		super(x, y, 
+			3, //health
 			Collector.shopImage, 	//image
-			Collector.shopImage, 											//TODO: Collector.pickImage,   			//image weapon
+			Collector.weaponImage, 	//image weapon
 			null,	//attack 
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//passive waiting
 			Collector.fallImage,												//fall image
 			new Animation(18, 18 * 80, Collector.fallEndImage), 				//fall end animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//activeWaitingAnimation
-			new AnimationInfinite(4, 4 * 100, Collector.runImage),  		    //run animation
+			new AnimationInfinite(4, 4 * 200, Collector.runImage),  		    //run animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
-			0, 		//rotateWeaponInEarch
+			0, //rotateWeaponInEarch
 			Collector.name, 
 			Collector.imageHandler, 
 			0, //frames
@@ -120,6 +122,7 @@ export class Collector extends Unit{
 
 		this._isCollecting = true;
 		this._wasCollected = false;
+		this._isRunFromMonster = false;
 		this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 		this.isRunRight = true;
 		this._goalCoin = null;
@@ -150,7 +153,7 @@ export class Collector extends Unit{
 			Collector.imageHandler.new(Collector.collectImage).src = CollectorCollectImage;
 			Collector.imageHandler.new(Collector.runImage).src = CollectorRunImage;
 			//TODO: Collector.imageHandler.new(Collector.joyImage).src = CollectorJoyImage;
-			//TODO: Collector.imageHandler.new(Collector.pickImage).src = PickImage;
+			Collector.imageHandler.new(Collector.weaponImage).src = WeaponImage;
 		}
 	}
 
@@ -233,6 +236,7 @@ export class Collector extends Unit{
 
 		//end 
 		if(this._isDisplayWeaponInEarch){
+			this.imageWeapon = Collector.weaponImage;
 			return;
 		}
 		
@@ -270,6 +274,7 @@ export class Collector extends Unit{
 						if (closerMonster){
 							this._isCollecting = false;
 							this.isRunRight = closerMonster.isLeftSide;
+							this._isRunFromMonster = true;
 						}
 					}
 				}
@@ -302,6 +307,7 @@ export class Collector extends Unit{
 				var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
 				if (!closerMonster){
 					this._isCollecting = true;
+					this._isRunFromMonster = false;
 				}
 
 				this.isLeftSide = this.x < Buildings.flyEarth.centerX;
@@ -316,6 +322,15 @@ export class Collector extends Unit{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
+
+			if(this.health <= 0){
+				if(damage >= this.healthMax){
+					this.imageWeapon = Collector.fallImage;
+				}
+				else{
+					this.imageWeapon = Collector.weaponImage;
+				}
+			}
 		}
 
 		//убегаем от урона - даже если его нету
@@ -338,19 +353,19 @@ export class Collector extends Unit{
 		if(WawesState.isWaveStarted){
 			imageOrAnimation = this._isCollecting && this._collectingAnimation.leftTimeMs > 0
 				? this._collectingAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || this._isRunFromMonster 
 					? this._runAnimation
 					: this._passiveWaitingAnimation;
 
 			imageOrAnimationArmor = this._isCollecting && this._collectingArmorAnimation.leftTimeMs > 0
 				? this._collectingArmorAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || this._isRunFromMonster
 					? this._runArmorAnimation
 					: this._passiveWaitingArmorAnimation;
 
 			imageOrAnimationWeapon = this._isCollecting && this._collectingWeaponAnimation.leftTimeMs > 0
 				? this._collectingWeaponAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || this._isRunFromMonster
 					? this._runWeaponAnimation
 					: this._passiveWaitingWeaponAnimation;
 		}
