@@ -31,7 +31,7 @@ export class Coin {
 	constructor(x: number, y: number){
 		this.x = x; 
 		this.y = y;
-		this.impulseY = 0;
+		this.impulseY = 0.1;
 		this.lifeTimeLeftMs = Coin.lifeTimeMs;
 	}
 
@@ -44,17 +44,19 @@ export class Coin {
 			else
 				this.impulseY += 0.01;
 		}
-		else{
-			this.impulseY = 0;
-		}
 
 		//перемещение
 		this.y += drawsDiffMs * this.impulseY;
 
 		//отскок от земли
 		if(this.y + Coin.image.height > Draw.canvas.height - bottomShiftBorder){
+			if(this.impulseY < 0.05){
+				this.impulseY = 0;
+			}
+			else{
+				this.impulseY = -this.impulseY * Helper.getRandom(1, 6) / 10;
+			}
 			this.y = Draw.canvas.height - bottomShiftBorder - Coin.image.height;
-			this.impulseY = -this.impulseY * Helper.getRandom(1, 6) / 10;
 		}
 	}
 

@@ -206,7 +206,6 @@ export class Collector extends Unit{
 				}
 				else //дошёл
 				{
-					this.x = this._goalCoin.centerX - this.width / 5;
 					this._collectingAnimation.restart();
 				}
 			}
@@ -218,7 +217,6 @@ export class Collector extends Unit{
 				}
 				else //дошёл
 				{
-					this.x = this._goalCoin.centerX + this.width / 5;
 					this._collectingAnimation.restart();
 				}
 			}
@@ -264,6 +262,7 @@ export class Collector extends Unit{
 
 						if(coins.length){
 							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+							this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 						}
 					}
 					else if(monsters.length) { //следим за монстрами - пора ли убегать? 

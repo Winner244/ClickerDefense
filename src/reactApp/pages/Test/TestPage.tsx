@@ -10,6 +10,7 @@ import {Waves} from '../../../gameApp/gameSystems/Waves';
 import {WawesState} from '../../../gameApp/gameSystems/WawesState';
 import {WaveData} from "../../../models/WaveData";
 import {Helper} from '../../helpers/Helper';
+import {Helper as GameHelper}  from '../../../gameApp/helpers/Helper';
 import {Draw} from '../../../gameApp/gameSystems/Draw';
 import {Gamer} from "../../../gameApp/gamer/Gamer";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
@@ -30,6 +31,7 @@ import { Skelet } from '../../../gameApp/monsters/Skelet';
 import { Units } from '../../../gameApp/units/Units';
 import { Unit } from '../../../gameApp/units/Unit';
 import { Miner } from '../../../gameApp/units/Miner';
+import { Collector } from '../../../gameApp/units/Collector';
 
 import './TestPage.scss';
 
@@ -186,7 +188,7 @@ class TestPage extends React.Component {
                 Game.startNew();
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 WawesState.isWaveStarted = false;
-                Waves.waveCurrent = 2;
+                Waves.waveCurrent = 0;
                 Gamer.coins = 1500;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -2260,6 +2262,10 @@ class TestPage extends React.Component {
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
                 }, 300);
+
+                setTimeout(() => {
+                    Game.buyThing(Collector.shopItem);
+                }, 1000);
             }
         },
     ];
