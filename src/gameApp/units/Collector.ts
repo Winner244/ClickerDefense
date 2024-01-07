@@ -80,6 +80,7 @@ export class Collector extends Unit{
 	private readonly _collectingAnimation: Animation; //анимация собирания монеток
 	private static readonly _collectingAnimationDurationMs: number = 9 * 75; //продолжительность анимации собирания монеток
 	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
+	private readonly _collectingWeaponAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -96,11 +97,13 @@ export class Collector extends Unit{
 			new Animation(18, 18 * 80, Collector.fallEndImage), 				//fall end animation
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//activeWaitingAnimation
-			new AnimationInfinite(5, 5 * 100, Collector.runImage),  		    //run animation
-			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
+			new AnimationInfinite(4, 4 * 100, Collector.runImage),  		    //run animation
+			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
 			0, 		//rotateWeaponInEarch
 			Collector.name, 
-			Collector.imageHandler, 0, 0, 
+			Collector.imageHandler, 
+			0, //frames
+			0, //animation durations Ms
 			Collector.shopItem.price, 
 			Collector.initialSpeed, 
 			0, //damage
@@ -113,6 +116,7 @@ export class Collector extends Unit{
 		
 		this._collectingAnimation = new Animation(9, Collector._collectingAnimationDurationMs, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
+		this._collectingWeaponAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 
 		this._isCollecting = true;
 		this._wasCollected = false;
@@ -344,6 +348,12 @@ export class Collector extends Unit{
 				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
 					? this._runArmorAnimation
 					: this._passiveWaitingArmorAnimation;
+
+			imageOrAnimationWeapon = this._isCollecting && this._collectingWeaponAnimation.leftTimeMs > 0
+				? this._collectingWeaponAnimation 
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 
+					? this._runWeaponAnimation
+					: this._passiveWaitingWeaponAnimation;
 		}
 
 		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
