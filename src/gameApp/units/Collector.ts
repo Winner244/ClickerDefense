@@ -200,29 +200,42 @@ export class Collector extends Unit{
 
 
 	logicMoving(drawsDiffMs: number, speed: number){
-		if(this._goalCoin && this._isCollecting && this._collectingAnimation.leftTimeMs <= 0 && this.health > 0){
-			if(this._goalCoin.centerX < this.centerX) //если монетка слева
-			{
-				let condition = this.x > this._goalCoin.centerX - this.width / 5;
-				if (condition) { //ещё не дошёл
-					this.x -= speed;
-				}
-				else //дошёл
+		if(this._isCollecting){
+			if(this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){
+				if(this._goalCoin.centerX < this.centerX) //если монетка слева
 				{
-					this._collectingAnimation.restart();
+					let condition = this.x > this._goalCoin.centerX - this.width / 5;
+					if (condition) { //ещё не дошёл
+						this.x -= speed;
+					}
+					else //дошёл
+					{
+						this._collectingAnimation.restart();
+					}
+				}
+				else 
+				{
+					let condition = this.x + this.width < this._goalCoin.centerX + this.width / 5;
+					if (condition) { //ещё не дошёл
+						this.x += speed;
+					}
+					else //дошёл
+					{
+						this._collectingAnimation.restart();
+					}
 				}
 			}
-			else 
-			{
-				let condition = this.x + this.width < this._goalCoin.centerX + this.width / 5;
-				if (condition) { //ещё не дошёл
-					this.x += speed;
-				}
-				else //дошёл
-				{
-					this._collectingAnimation.restart();
-				}
+		}
+		else{
+
+			if(this.isRunRight){
+				this.x += speed;
 			}
+			else{
+				this.x -= speed;
+			}
+
+			this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 		}
 	}
 
@@ -278,6 +291,9 @@ export class Collector extends Unit{
 						}
 					}
 				}
+				else{
+					//logic in logicMoving
+				}
 
 				//сбор монетки
 				if(this._collectingAnimation.leftTimeMs > 0 && this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
@@ -292,16 +308,7 @@ export class Collector extends Unit{
 				}
 			}
 			else{ //убегать от нападения 
-				let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-				let speed = this.speed * (drawsDiffMs / 1000);
-				speed += speed * speedMultiplier;
-	
-				if(this.isRunRight){
-					this.x += speed;
-				}
-				else{
-					this.x -= speed;
-				}
+				//logic in logicMoving
 
 				//рядом больше нет монстров
 				var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
@@ -309,8 +316,6 @@ export class Collector extends Unit{
 					this._isCollecting = true;
 					this._isRunFromMonster = false;
 				}
-
-				this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 			}
 		}
 		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0 && !this.isRunRight){

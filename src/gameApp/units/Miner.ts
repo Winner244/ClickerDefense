@@ -301,6 +301,60 @@ export class Miner extends Unit{
 		return result;
 	}
 
+	logicMoving(drawsDiffMs: number, speed: number){
+
+		//игра идёт
+		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+
+			//убегать от нападения летучих мышей
+			if(!this._isDiging && this.damage == 0){ 
+				this.isTurnOnPushUpFromCrystals = false;
+				this.timeStopRunningLeft -= drawsDiffMs;
+				if(this.timeStopRunningLeft <= 0){ //давно никто не атаковал майнера
+					this._isDiging = true;
+					this.isTurnOnPushUpFromCrystals = true;
+					return;
+				}
+			
+				//убегаем
+				if(this.isRunRight){
+					this.x += speed;
+
+					const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - this.width - 10;
+					if(this.x > xMax){
+						this.isRunRight = !this.isRunRight;
+					}
+				}
+				else{
+					this.x -= speed;
+					
+					const xMin = Buildings.flyEarth.x;
+					if(this.x < xMin){
+						this.isRunRight = !this.isRunRight;
+					}
+				}
+				this.isLeftSide = this.x < Buildings.flyEarth.centerX;
+
+				
+				//рандомное перемещение по y
+				let flyEarth = Buildings.flyEarth;
+				if(flyEarth){
+					this.y += (Math.random() - 0.5);
+
+					var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32 - this.height;
+					var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32 - this.height;
+					if(this.y > yMax){
+						this.y = yMax;
+					}
+					else if(this.y < yMin){
+						this.y = yMin;
+					}
+					this.goalY = this.y + this.height;
+				}
+			}
+		}
+	}
+
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
@@ -357,53 +411,7 @@ export class Miner extends Unit{
 				}
 			}
 			else{ //убегать от нападения летучих мышей
-				this.isTurnOnPushUpFromCrystals = false;
-				this.timeStopRunningLeft -= drawsDiffMs;
-				if(this.timeStopRunningLeft <= 0){ //давно никто не атаковал майнера
-					this._isDiging = true;
-					this.isTurnOnPushUpFromCrystals = true;
-					return;
-				}
-			
-				//убегаем
-				let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-				let speed = this.speed * (drawsDiffMs / 1000);
-				speed += speed * speedMultiplier;
-	
-				if(this.isRunRight){
-					this.x += speed;
-
-					const xMax = Buildings.flyEarth.x + Buildings.flyEarth.width - this.width - 10;
-					if(this.x > xMax){
-						this.isRunRight = !this.isRunRight;
-					}
-				}
-				else{
-					this.x -= speed;
-					
-					const xMin = Buildings.flyEarth.x;
-					if(this.x < xMin){
-						this.isRunRight = !this.isRunRight;
-					}
-				}
-				this.isLeftSide = this.x < Buildings.flyEarth.centerX;
-
-				
-				//рандомное перемещение по y
-				let flyEarth = Buildings.flyEarth;
-				if(flyEarth){
-					this.y += (Math.random() - 0.5);
-
-					var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32 - this.height;
-					var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32 - this.height;
-					if(this.y > yMax){
-						this.y = yMax;
-					}
-					else if(this.y < yMin){
-						this.y = yMin;
-					}
-					this.goalY = this.y + this.height;
-				}
+				//logic in logicMoving
 			}
 		}
 		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0 && !this.isRunRight){

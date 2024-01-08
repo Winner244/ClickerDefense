@@ -2026,6 +2026,36 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Золотодобытчики - гибель от летучей мыши",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.isWaveStarted = true;
+                Waves.all[Waves.waveCurrent] = [new WaveData(Zombie.name, 1, 30, 0)];
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    miner3.improveToGoldPick();
+                    miner3.improveToDiamondPick();
+                    Units.all.push(miner3);
+
+
+                    setTimeout(() => {
+                        var bat = new Bat(650, 280, true, 1);
+                        bat.isSelectMinerToTest = true;
+                        Monsters.all.push(bat);
+                        //miner3.improvements.find(x => x.label == 'Урон')?.improve();
+                    }, 3000);
+                }, 300);
+            }
+        },
+
+        {
             key: "Золотодобытчики - самооборона от летучей мыши",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

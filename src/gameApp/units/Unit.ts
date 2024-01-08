@@ -379,10 +379,12 @@ export class Unit extends UpgradebleObject {
 		}
 
 		//логика передвижения
-		let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
-		let speed = this.speed * (drawsDiffMs / 1000);
-		speed += speed * speedMultiplier;
-		this.logicMoving(drawsDiffMs, speed);
+		if(this.health > 0){
+			let speedMultiplier = Helper.sum(this.modifiers, (modifier: Modifier) => modifier.speedMultiplier);
+			let speed = this.speed * (drawsDiffMs / 1000);
+			speed += speed * speedMultiplier;
+			this.logicMoving(drawsDiffMs, speed);
+		}
 
 
 		//gravitations
