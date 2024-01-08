@@ -98,6 +98,7 @@ export class Bat extends Monster{
 
 	logicMoving(drawsDiffMs: number, speed: number){
 		if(this._goal){
+			super.logicMoving(drawsDiffMs, speed);
 
 			if(!this._isAttack){
 				this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
