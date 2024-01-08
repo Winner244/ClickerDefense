@@ -388,26 +388,32 @@ export class Unit extends UpgradebleObject {
 
 
 		//gravitations
-		if(this.y + this.height < (this.goalY || Draw.canvas.height - bottomShiftBorder)){
-			if(this._isDisplayWeaponInAir){
-				this.y += 15 / drawsDiffMs / (this._impulseY / 10);
-			}
-			else{
-				this.y += 15 / drawsDiffMs;
-			}
+		if(this._isDisplayWeaponInAir){
+			this.y += 15 / drawsDiffMs / (this._impulseY / 10);
 			this._isFall = true;
 		}
-		else{
-			this._isFall = false;
+		else if(!this._isDisplayWeaponInEarch){
+			if(this.y + this.height < (this.goalY || Draw.canvas.height - bottomShiftBorder)){
+				this.y += 15 / drawsDiffMs;
+				this._isFall = true;
+			}
+			else if(this._isFall) {
+				this._isFall = false;
+	
+				if(this.y + this.height > Draw.canvas.height){
+					this.y = Draw.canvas.height - this.height;
+				}
+			}
 		}
 
 		//start ending
 		if (this.health <= 0) {
 			this._weaponRotateInAir += Unit.weaponRotateForce / drawsDiffMs;
-			if(this._impulseY < 10 && this.y + this.height >= this.goalY){
+			if(this._impulseY < 10 && this.y + this.height >= (this.isLand ? Draw.canvas.height - bottomShiftBorder + this.height / 3 : this.goalY)){
 				this._impulseY = 0;
 				this._isDisplayWeaponInAir = false;
 				this._isDisplayWeaponInEarch = true;
+				this._isFall = false;
 			}
 
 			if(this.endingAnimation.animation.leftTimeMs == this.endingAnimation.animation.durationMs){
@@ -417,10 +423,6 @@ export class Unit extends UpgradebleObject {
 		}
 
 		super.logicBase(drawsDiffMs);
-
-		if(this.y + this.height > Draw.canvas.height){
-			this.y = Draw.canvas.height - this.height;
-		}
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null): number{

@@ -2300,7 +2300,7 @@ class TestPage extends React.Component {
 
         
         {
-            key: "Золотособиратель - кабан в силе",
+            key: "Золотособиратель - кабан с ускорением",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2375,7 +2375,7 @@ class TestPage extends React.Component {
                     ]];
 
                 this.waitLoadingImage(Zombie.imageHandler, () => {
-                    var zombie = new Zombie(250, 780, true, 1);
+                    var zombie = new Zombie(450, 780, true, 1);
                     Monsters.all.push(zombie);
                 });
 
@@ -2383,6 +2383,36 @@ class TestPage extends React.Component {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+                }, 300);
+            }
+        },
+        
+        {
+            key: "Золотособиратель - зомби + speed",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                this.waitLoadingImage(Zombie.imageHandler, () => {
+                    var zombie = new Zombie(450, 780, true, 1);
+                    Monsters.all.push(zombie);
+                });
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    collector1.improveSpeed();
                     Units.all.push(collector1);
                 }, 300);
             }

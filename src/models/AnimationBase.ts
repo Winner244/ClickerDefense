@@ -4,6 +4,8 @@ export default class AnimationBase{
 	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
 	readonly frames: number; //количество кадров в изображении
 
+	readonly initialDurationMs: number; //время полной анимации в миллисекундах
+
 	protected _durationMs: number; //время полной анимации в миллисекундах
 	public get durationMs(): number{
 		return this._durationMs;
@@ -23,6 +25,7 @@ export default class AnimationBase{
 		this.image = image || new Image();
 		this.frames = framesCount;
 		this._durationMs = durationMs;
+		this.initialDurationMs = durationMs;
 	}
 
 	protected getImage(filter: string|null = null): HTMLImageElement|OffscreenCanvas{

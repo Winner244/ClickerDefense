@@ -4,12 +4,9 @@ import AnimationBase from "./AnimationBase";
 export default class AnimationInfinite extends AnimationBase{
 	displayedTimeMs: number; //сколько по времени уже отображается (миллисекунды)
 
-	readonly initialDurationMs: number; //время полной анимации в миллисекундах
-
 	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
 		super(framesCount, durationMs, image);
-		this.initialDurationMs = durationMs;
 		this.displayedTimeMs = 0;
 	}
 

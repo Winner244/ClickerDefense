@@ -78,7 +78,6 @@ export class Collector extends Unit{
 	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 50, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
 
 	private readonly _collectingAnimation: Animation; //анимация собирания монеток
-	private static readonly _collectingAnimationDurationMs: number = 9 * 150; //продолжительность анимации собирания монеток
 	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
 	private readonly _collectingWeaponAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
@@ -86,7 +85,6 @@ export class Collector extends Unit{
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
 	protected _goalCoin: Coin|null; //цель-монетка для сбора
-
 
 	constructor(x: number, y: number) {
 		super(x, y, 
@@ -116,7 +114,7 @@ export class Collector extends Unit{
 			true, //isSupportHealing
 			true); //isSupportUpgrade
 		
-		this._collectingAnimation = new Animation(9, Collector._collectingAnimationDurationMs, Collector.collectImage);
+		this._collectingAnimation = new Animation(9, 9 * 150, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 		this._collectingWeaponAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 
@@ -182,9 +180,15 @@ export class Collector extends Unit{
 	improveSpeed(){
 		this.speed += 10;
 
-		var newDurationDigging = Collector.initialSpeed / this.speed * Collector._collectingAnimationDurationMs;
+		var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
 		this._collectingAnimation.changeDuration(newDurationDigging);
 		this._collectingArmorAnimation.changeDuration(newDurationDigging);
+		this._collectingWeaponAnimation.changeDuration(newDurationDigging);
+
+		var newDurationRun = Collector.initialSpeed / this.speed * this._runAnimation.initialDurationMs;
+		this._runAnimation.changeDuration(newDurationRun);
+		this._runArmorAnimation.changeDuration(newDurationRun);
+		this._runWeaponAnimation.changeDuration(newDurationRun);
 	}
 
 	recovery(): boolean{
@@ -315,6 +319,9 @@ export class Collector extends Unit{
 				if (!closerMonster){
 					this._isCollecting = true;
 					this._isRunFromMonster = false;
+				}
+				else{
+					//TODO: со всех сторон монстры
 				}
 			}
 		}
