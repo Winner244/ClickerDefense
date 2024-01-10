@@ -98,6 +98,7 @@ export class Unit extends UpgradebleObject {
 	protected _isDisplayWeaponInEarch: boolean; //отображать оружие воткнутую в землю?
 	protected _weaponRotateInAir: number; //угол вращения оружие в воздухе
 	protected _rotateWeaponInEarch: number; //угол вращения оружие в Земле
+	protected _shiftYWeaponInEarch: number; //сдвиг по y для отображения оружия в земле
 	protected static readonly impulseWeapon: number = 34; //импульс придаваемый оружию после гибели юнита
 	protected static readonly weaponRotateForce: number = 31; //сила вращения оружия в воздухе (градусы в секундах)
 	protected _brightnessOfWeaponInEarch: number = 0.5; //фильтр для плавного мигания оружия в земле в мирное время (между волнами)
@@ -199,6 +200,7 @@ export class Unit extends UpgradebleObject {
 		this._isDisplayWeaponInEarch = false;
 		this._weaponRotateInAir = 0;
 		this._rotateWeaponInEarch = rotateWeaponInEarch;
+		this._shiftYWeaponInEarch = 0;
 
 		this._hearts = [];
 		this._healingAnimationLeftTimeMs = 0;
@@ -409,7 +411,7 @@ export class Unit extends UpgradebleObject {
 		//start ending
 		if (this.health <= 0) {
 			this._weaponRotateInAir += Unit.weaponRotateForce / drawsDiffMs;
-			if(this._impulseY < 10 && this.y + this.height >= (this.isLand ? Draw.canvas.height - bottomShiftBorder + this.height / 3 : this.goalY)){
+			if(this._impulseY < 10 && this.y + this.height >= (this.isLand ? Draw.canvas.height - bottomShiftBorder + this._shiftYWeaponInEarch : this.goalY)){
 				this._impulseY = 0;
 				this._isDisplayWeaponInAir = false;
 				this._isDisplayWeaponInEarch = true;

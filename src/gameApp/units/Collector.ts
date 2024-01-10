@@ -124,6 +124,7 @@ export class Collector extends Unit{
 		this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 		this.isRunRight = true;
 		this._goalCoin = null;
+		this._shiftYWeaponInEarch = this.height / 2 - 10;
 
 		this.shopItemName = Collector.shopItem.name;
 
@@ -338,9 +339,11 @@ export class Collector extends Unit{
 			if(this.health <= 0){
 				if(damage >= this.healthMax){
 					this.imageWeapon = Collector.fallImage;
+					this._weaponRotateInAir = 0;
 				}
 				else{
 					this.imageWeapon = Collector.weaponImage;
+					this._weaponRotateInAir = 180;
 				}
 			}
 		}

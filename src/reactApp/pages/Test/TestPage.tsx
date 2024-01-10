@@ -2417,6 +2417,63 @@ class TestPage extends React.Component {
                 }, 300);
             }
         },
+        
+        {
+            key: "Золотособиратель - гибель",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+
+                        setTimeout(() => {
+                            collector1.applyDamage(2);
+                            collector1.applyDamage(1);
+                        }, 1500);
+                }, 300);
+            }
+        },
+        
+        {
+            key: "Золотособиратель - гибель2",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+
+                        setTimeout(() => {
+                            collector1.applyDamage(4);
+                        }, 3000);
+                }, 300);
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){
