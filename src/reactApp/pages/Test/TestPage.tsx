@@ -34,6 +34,8 @@ import { Miner } from '../../../gameApp/units/Miner';
 import { Collector } from '../../../gameApp/units/Collector';
 
 import './TestPage.scss';
+import { Coins } from '../../../gameApp/coins/Coins';
+import { Coin } from '../../../gameApp/coins/Coin';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -2417,8 +2419,67 @@ class TestPage extends React.Component {
                 }, 300);
             }
         },
+
         
         {
+            key: "Золотособиратель - зомби + монетка",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                var barricade1 = new Barricade(Draw.canvas.width / 2 - 100);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                this.waitLoadingImage(Zombie.imageHandler, () => {
+
+                    var zombie = new Zombie(Draw.canvas.width / 2 - 150, 780, true, 1);
+                    Monsters.all.push(zombie);
+                });
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Draw.canvas.width / 2, y);
+                    collector1.loadedResourcesAfterBuild();
+                    Units.all.push(collector1);
+                }, 300);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
+                }, 1000);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 200, Draw.canvas.height / 2));
+                }, 3000);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 100, Draw.canvas.height / 2));
+                }, 5000);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 80, Draw.canvas.height / 2));
+                }, 7000);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 90, Draw.canvas.height / 2));
+                }, 10000);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 95, Draw.canvas.height / 2));
+                }, 12000);
+            }
+        },
+        
+        /*{
             key: "Золотособиратель - гибель",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -2445,8 +2506,8 @@ class TestPage extends React.Component {
                         }, 1500);
                 }, 300);
             }
-        },
-        
+        },*/
+        /*
         {
             key: "Золотособиратель - гибель2",
             code: () => {
@@ -2473,7 +2534,7 @@ class TestPage extends React.Component {
                         }, 3000);
                 }, 300);
             }
-        },
+        },*/
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){
