@@ -117,7 +117,7 @@ export class Unit extends UpgradebleObject {
 
 	readonly endingAnimation: AnimatedObject; //анимация появления юнита
 
-	static readonly smokeAnimation: Animation = new Animation(10, 1000);  
+	readonly smokeAnimation: Animation = new Animation(10, 1000);  
 
 
 	constructor(x: number, y: number, 
@@ -209,6 +209,9 @@ export class Unit extends UpgradebleObject {
 		this._stars = [];
 		this._starsNewDurationMsLeft = 0;
 
+		this.smokeAnimation.image.src = SmokeImage;
+		this.smokeAnimation.leftTimeMs = 0;
+
 		AudioSystem.load(CreatingSound);
 		AudioSystem.load(End1Sound);
 		AudioSystem.load(End2Sound);
@@ -218,17 +221,14 @@ export class Unit extends UpgradebleObject {
 		AudioSystem.load(End6Sound);
 		AudioSystem.load(End7Sound);
 	}
-
 	
 	static loadHealingResources(): void{
 		Unit.heartImage.src = HeartImage;
 		Unit.starImage.src = StarImage;
-		Unit.smokeAnimation.image.src = SmokeImage;
-		Unit.smokeAnimation.leftTimeMs = 0;
 	}
 
 	static upgradeUnit(unit: Unit){
-		this.smokeAnimation.restart();
+		unit.smokeAnimation.restart();
 	}
 
 	displayRecoveryAnimationLogic(drawsDiffMs: number){
@@ -510,12 +510,12 @@ export class Unit extends UpgradebleObject {
 	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null){
 		this.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimation, imageOrAnimation, isGameOver, invertSign, x, y, filter);
 
-		if(Unit.smokeAnimation.leftTimeMs > 0){
+		if(this.smokeAnimation.leftTimeMs > 0){
 			let smokeWidth = this.width * 2;
-			let newHeight = Unit.smokeAnimation.image.height * (smokeWidth / (Unit.smokeAnimation.image.width / Unit.smokeAnimation.frames));
+			let newHeight = this.smokeAnimation.image.height * (smokeWidth / (this.smokeAnimation.image.width / this.smokeAnimation.frames));
 			const x = this.x - this.width / 2;
 			const y = this.y + this.height - newHeight;
-			Unit.smokeAnimation.draw(drawsDiffMs, isGameOver, x, y, smokeWidth, newHeight);
+			this.smokeAnimation.draw(drawsDiffMs, isGameOver, x, y, smokeWidth, newHeight);
 		}
 	}
 
