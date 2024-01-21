@@ -305,6 +305,7 @@ export class Collector extends Unit{
 					if(!this._wasCollected && this._goalCoin){
 						var i = Coins.all.indexOf(this._goalCoin);
 						Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
+						this._goalCoin = null;
 						this._wasCollected = true;
 					}
 				}
