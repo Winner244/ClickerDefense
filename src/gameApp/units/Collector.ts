@@ -287,7 +287,8 @@ export class Collector extends Unit{
 							this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 						}
 					}
-					else if(monsters.length) { //следим за монстрами - пора ли убегать? 
+					
+					if(!this._goalCoin && monsters.length) { //следим за монстрами - пора ли убегать? 
 						var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
 						if (closerMonster){
 							this._isCollecting = false;
@@ -353,6 +354,7 @@ export class Collector extends Unit{
 		if(this._isCollecting){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
+			this._isRunFromMonster = true;
 			this._collectingAnimation.leftTimeMs = 0;
 		}
 

@@ -2476,6 +2476,12 @@ class TestPage extends React.Component {
                 setTimeout(() => {
                     Coins.all.push(new Coin(Draw.canvas.width / 2 - 95, Draw.canvas.height / 2));
                 }, 12000);
+                
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 + 150, Draw.canvas.height / 2));
+                    var zombie = new Zombie(Draw.canvas.width / 2 + 280, 780, false, 1);
+                    Monsters.all.push(zombie);
+                }, 17000);
             }
         },
         
