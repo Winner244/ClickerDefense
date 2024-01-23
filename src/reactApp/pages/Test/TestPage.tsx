@@ -2453,17 +2453,18 @@ class TestPage extends React.Component {
                     Units.all.push(collector1);
                 }, 300);
 
+                //first coin
                 setTimeout(() => {
                     Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
                 }, 1000);
 
                 setTimeout(() => {
-                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 200, Draw.canvas.height / 2));
-                }, 3000);
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 50, Draw.canvas.height / 2));
+                }, 3500);
 
                 setTimeout(() => {
-                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 100, Draw.canvas.height / 2));
-                }, 5000);
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 200, Draw.canvas.height / 2));
+                }, 7000);
 
                 setTimeout(() => {
                     Coins.all.push(new Coin(Draw.canvas.width / 2 - 80, Draw.canvas.height / 2));

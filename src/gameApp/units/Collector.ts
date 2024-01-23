@@ -117,6 +117,7 @@ export class Collector extends Unit{
 		this._collectingAnimation = new Animation(9, 9 * 150, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 		this._collectingWeaponAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
+		this._collectingAnimation.leftTimeMs = 0;
 
 		this._isCollecting = true;
 		this._wasCollected = false;
@@ -205,8 +206,8 @@ export class Collector extends Unit{
 
 
 	logicMoving(drawsDiffMs: number, speed: number){
-		if(this._isCollecting){
-			if(this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){
+		if(this._isCollecting){ //период сбора монет
+			if(this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){ //есть цель монетка и сбор предыдущей уже окончен
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
 				{
 					let condition = this.x > this._goalCoin.centerX - this.width / 5;
@@ -231,8 +232,7 @@ export class Collector extends Unit{
 				}
 			}
 		}
-		else{
-
+		else {
 			if(this.isRunRight){
 				this.x += speed;
 			}
@@ -260,11 +260,11 @@ export class Collector extends Unit{
 		
 		//игра пошла
 		if(this.health > 0 && WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
-			if(this._isCollecting){ //собирание монеток
+			if(this._isCollecting){ //период сбора монеток
 
 				//если нет монетки - ищем ближайшую монетку
 				if(!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0){
-					this._collectingAnimation.leftTimeMs = 0;
+					this._goalCoin = null;
 
 					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
 					if (coins.length){ 
@@ -287,10 +287,11 @@ export class Collector extends Unit{
 							this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 						}
 					}
-					
-					if(!this._goalCoin && monsters.length) { //следим за монстрами - пора ли убегать? 
+
+					//следим за монстрами - пора ли убегать? 
+					if(!this._goalCoin && monsters.length) {
 						var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
-						if (closerMonster){
+						if (closerMonster && this._collectingAnimation.leftTimeMs <= this._collectingAnimation.durationMs / 5){
 							this._isCollecting = false;
 							this.isRunRight = closerMonster.isLeftSide;
 							this._isRunFromMonster = true;
@@ -324,6 +325,7 @@ export class Collector extends Unit{
 					this._isRunFromMonster = false;
 				}
 				else{
+					this._collectingAnimation.leftTimeMs = 0;
 					//TODO: со всех сторон монстры
 				}
 			}
