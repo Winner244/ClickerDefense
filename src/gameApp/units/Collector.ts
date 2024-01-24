@@ -81,7 +81,6 @@ export class Collector extends Unit{
 	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
 	private readonly _collectingWeaponAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
-	private _isRunFromMonster: boolean; //бежит от монстра сейчас?
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
 	protected _goalCoin: Coin|null; //цель-монетка для сбора
@@ -121,7 +120,6 @@ export class Collector extends Unit{
 
 		this._isCollecting = true;
 		this._wasCollected = false;
-		this._isRunFromMonster = false;
 		this.isLeftSide = this.x < Buildings.flyEarth.centerX;
 		this.isRunRight = true;
 		this._goalCoin = null;
@@ -263,7 +261,7 @@ export class Collector extends Unit{
 			if(this._isCollecting){ //период сбора монеток
 
 				//если нет монетки - ищем ближайшую монетку
-				if(!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0){
+				if((!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0) && this._collectingAnimation.leftTimeMs <= 0){
 					this._goalCoin = null;
 
 					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
@@ -290,11 +288,20 @@ export class Collector extends Unit{
 
 					//следим за монстрами - пора ли убегать? 
 					if(!this._goalCoin && monsters.length) {
-						var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
-						if (closerMonster && this._collectingAnimation.leftTimeMs <= this._collectingAnimation.durationMs / 5){
+						var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
+						var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+
+						if(leftMonster && rightMonster){
+							//TODO: shield
+						}
+						else if(leftMonster){
 							this._isCollecting = false;
-							this.isRunRight = closerMonster.isLeftSide;
-							this._isRunFromMonster = true;
+							this.isRunRight = leftMonster.isLeftSide;
+						}
+						else if(rightMonster){
+							this._isCollecting = false;
+							this.isRunRight = rightMonster.isLeftSide;
 						}
 					}
 				}
@@ -303,31 +310,46 @@ export class Collector extends Unit{
 				}
 
 				//сбор монетки
-				if(this._collectingAnimation.leftTimeMs > 0 && this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
-					if(!this._wasCollected && this._goalCoin){
-						var i = Coins.all.indexOf(this._goalCoin);
-						Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
-						this._goalCoin = null;
-						this._wasCollected = true;
+				if(this._collectingAnimation.leftTimeMs > 0){
+					if(this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
+						if(!this._wasCollected && this._goalCoin){
+							var i = Coins.all.indexOf(this._goalCoin);
+							Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
+							this._goalCoin = null;
+							this._wasCollected = true;
+						}
 					}
-				}
-				else{
-					this._wasCollected = false;
+					else{
+						this._wasCollected = false;
+					}
 				}
 			}
 			else{ //убегать от нападения 
 				//logic in logicMoving
 
+				var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
+				var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+				var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+
 				//рядом больше нет монстров
-				var closerMonster = monsters.find(x => x.isLand && Math.abs(x.isLeftSide ? (x.x + x.width) - this.x : x.x - (this.x + this.width)) < this.width);
-				if (!closerMonster){
+				if (!leftMonster && !rightMonster){
 					this._isCollecting = true;
-					this._isRunFromMonster = false;
 				}
 				else{
 					this._collectingAnimation.leftTimeMs = 0;
-					//TODO: со всех сторон монстры
+					
+					if(this.isRunRight){
+						if(rightMonster){
+							this._isCollecting = true;
+						}
+					}
+					else{
+						if(leftMonster){
+							this._isCollecting = true;
+						}
+					}
 				}
+
 			}
 		}
 		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0 && !this.isRunRight){
@@ -356,7 +378,6 @@ export class Collector extends Unit{
 		if(this._isCollecting){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
-			this._isRunFromMonster = true;
 			this._collectingAnimation.leftTimeMs = 0;
 		}
 
@@ -373,19 +394,19 @@ export class Collector extends Unit{
 		if(WawesState.isWaveStarted){
 			imageOrAnimation = this._isCollecting && this._collectingAnimation.leftTimeMs > 0
 				? this._collectingAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || this._isRunFromMonster 
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting 
 					? this._runAnimation
 					: this._passiveWaitingAnimation;
 
 			imageOrAnimationArmor = this._isCollecting && this._collectingArmorAnimation.leftTimeMs > 0
 				? this._collectingArmorAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || this._isRunFromMonster
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting
 					? this._runArmorAnimation
 					: this._passiveWaitingArmorAnimation;
 
 			imageOrAnimationWeapon = this._isCollecting && this._collectingWeaponAnimation.leftTimeMs > 0
 				? this._collectingWeaponAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || this._isRunFromMonster
+				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting
 					? this._runWeaponAnimation
 					: this._passiveWaitingWeaponAnimation;
 		}

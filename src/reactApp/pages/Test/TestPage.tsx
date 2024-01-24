@@ -2438,11 +2438,13 @@ class TestPage extends React.Component {
 
                 var barricade1 = new Barricade(Draw.canvas.width / 2 - 100);
                 barricade1.loadedResourcesAfterBuild();
+                barricade1.health = 30;
                 Buildings.all.push(barricade1);
 
                 this.waitLoadingImage(Zombie.imageHandler, () => {
 
                     var zombie = new Zombie(Draw.canvas.width / 2 - 150, 780, true, 1);
+                    zombie.health =+ 50;
                     Monsters.all.push(zombie);
                 });
 
@@ -2460,7 +2462,7 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     Coins.all.push(new Coin(Draw.canvas.width / 2 - 50, Draw.canvas.height / 2));
-                }, 3500);
+                }, 3000);
 
                 setTimeout(() => {
                     Coins.all.push(new Coin(Draw.canvas.width / 2 - 200, Draw.canvas.height / 2));
@@ -2480,9 +2482,16 @@ class TestPage extends React.Component {
                 
                 setTimeout(() => {
                     Coins.all.push(new Coin(Draw.canvas.width / 2 + 150, Draw.canvas.height / 2));
+                }, 16000);
+
+                setTimeout(() => {
                     var zombie = new Zombie(Draw.canvas.width / 2 + 280, 780, false, 1);
                     Monsters.all.push(zombie);
-                }, 17000);
+                }, 17500);
+                
+                setTimeout(() => {
+                    //Coins.all.push(new Coin(Draw.canvas.width / 2 - 50, Draw.canvas.height / 2));
+                }, 18000);
             }
         },
         
