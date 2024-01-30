@@ -248,7 +248,7 @@ export class AttackedObject {
 
 	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
 		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null,
-		invertAnimation: boolean = false){
+		isInvertAnimation: boolean = false){
 		x = x ?? this.x;
 		y = y ?? this.y;
 		if(imageOrAnimation instanceof HTMLImageElement){
@@ -256,7 +256,7 @@ export class AttackedObject {
 			Draw.ctx.drawImage(image, invertSign * x, y, invertSign * this.width, this.height);
 		}
 		else{
-			imageOrAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height, filter, invertAnimation);
+			imageOrAnimation.draw(drawsDiffMs, isGameOver, invertSign * x, y, invertSign * this.width, this.height, filter, isInvertAnimation);
 		}
 	}
 

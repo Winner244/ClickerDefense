@@ -498,7 +498,7 @@ export class Collector extends Unit{
 		x: number|null = null, 
 		y: number|null = null, 
 		filter: string|null = null,
-		invertAnimation: boolean = false)
+		isInvertAnimation: boolean = false)
 	{
 		if (this._isDefenseActivated){
 			imageOrAnimation = this.defenseAnimation;
@@ -514,7 +514,7 @@ export class Collector extends Unit{
 			imageOrAnimation = this.defenseActivationAnimation;
 			imageOrAnimationArmor = this.defenseActivationArmorAnimation;
 			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
-			invertAnimation = true;
+			isInvertAnimation = true;
 		}
 		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
 			imageOrAnimation = this._collectingAnimation;
@@ -532,7 +532,14 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this._passiveWaitingWeaponAnimation;
 		}
 
-		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, invertAnimation);
+		if(!WawesState.isWaveStarted && Coins.all.length){
+			super.drawObjectBase(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObjectBase(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObjectBase(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+		}
+		else{
+			super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+		}
 	}
 
 }
