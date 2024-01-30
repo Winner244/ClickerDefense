@@ -523,42 +523,43 @@ export class Unit extends UpgradebleObject {
 		imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
 		imageOrAnimationArmor: AnimationInfinite|Animation|HTMLImageElement, 
 		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
-		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
+		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null,
+		invertAnimation: boolean = false)
 	{
 		if(this._isFall){
-			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter, invertAnimation);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){
-			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, this._fallEndArmorAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, this._fallEndWeaponAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, this._fallEndArmorAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, this._fallEndWeaponAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
 		}
 		else if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0) {
 			if(this._startActiveWaitingAnimation.leftTimeMs > 0){
-				super.drawObject(drawsDiffMs, this._startActiveWaitingAnimation, isGameOver, invertSign, x, y, filter);
-				super.drawObject(drawsDiffMs, this._startActiveWaitingArmorAnimation, isGameOver, invertSign, x, y, filter);
-				super.drawObject(drawsDiffMs, this._startActiveWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter);
+				super.drawObject(drawsDiffMs, this._startActiveWaitingAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+				super.drawObject(drawsDiffMs, this._startActiveWaitingArmorAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+				super.drawObject(drawsDiffMs, this._startActiveWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
 			}
 			else{
-				super.drawObject(drawsDiffMs, this._activeWaitingAnimation, isGameOver, invertSign, x, y, filter);
-				super.drawObject(drawsDiffMs, this._activeWaitingArmorAnimation, isGameOver, invertSign, x, y, filter);
-				super.drawObject(drawsDiffMs, this._activeWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter);
+				super.drawObject(drawsDiffMs, this._activeWaitingAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+				super.drawObject(drawsDiffMs, this._activeWaitingArmorAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+				super.drawObject(drawsDiffMs, this._activeWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
 			}
 		}
 		else if(WawesState.isWaveStarted){
-			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, invertAnimation);
 		}
 		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0){
-			super.drawObject(drawsDiffMs, this._joyAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, this._joyArmorAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, this._joyWeaponAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._joyAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, this._joyArmorAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, this._joyWeaponAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
 		}
 		else{ 
-			super.drawObject(drawsDiffMs, this._passiveWaitingAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, this._passiveWaitingArmorAnimation, isGameOver, invertSign, x, y, filter);
-			super.drawObject(drawsDiffMs, this._passiveWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter);
+			super.drawObject(drawsDiffMs, this._passiveWaitingAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, this._passiveWaitingArmorAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
+			super.drawObject(drawsDiffMs, this._passiveWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter, invertAnimation);
 		}
 	}
 

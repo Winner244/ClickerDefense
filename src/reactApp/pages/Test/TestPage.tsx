@@ -2422,7 +2422,7 @@ class TestPage extends React.Component {
 
         
         {
-            key: "Золотособиратель - зомби + монетка",
+            key: "Золотособиратель - зомби + монетки",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2492,6 +2492,42 @@ class TestPage extends React.Component {
                 setTimeout(() => {
                     //Coins.all.push(new Coin(Draw.canvas.width / 2 - 50, Draw.canvas.height / 2));
                 }, 18000);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - защита",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                    collector1.loadedResourcesAfterBuild();
+                    collector1.defense = 1;
+                    Units.all.push(collector1);
+                }, 300);
+
+                setTimeout(() => {
+                    this.waitLoadingImage(Zombie.imageHandler, () => {
+                        var zombie = new Zombie(Draw.canvas.width / 2 - 250, 780, true, 1);
+                        Monsters.all.push(zombie);
+    
+                        var zombie = new Zombie(Draw.canvas.width / 2 + 220, 780, false, 1);
+                        Monsters.all.push(zombie);
+                    });
+                }, 1500);
             }
         },
         

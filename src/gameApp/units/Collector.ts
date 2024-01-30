@@ -41,6 +41,8 @@ import CollectorFallEndImage from '../../assets/img/units/collector/fallEnd.png'
 import CollectorCollectImage from '../../assets/img/units/collector/collect.png'; 
 import CollectorPassiveWaitingImage from '../../assets/img/units/collector/passiveWaiting.png'; 
 import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
+import CollectorDefenseImage from '../../assets/img/units/collector/defense.png'; 
+import CollectorDefenseStartImage from '../../assets/img/units/collector/defenseStart.png'; 
 /*import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
 
 import WoodArmorImage from '../../assets/img/units/collector/woodArmor.png'; 
@@ -69,6 +71,8 @@ export class Collector extends Unit{
 	private static readonly fallEndImage: HTMLImageElement = new Image(); 
 	private static readonly collectImage: HTMLImageElement = new Image(); 
 	private static readonly runImage: HTMLImageElement = new Image(); 
+	private static readonly defenseImage: HTMLImageElement = new Image(); 
+	private static readonly defenseStartImage: HTMLImageElement = new Image(); 
 	//TODO: private static readonly joyImage: HTMLImageElement = new Image(); 
 
 	private static readonly weaponImage: HTMLImageElement = new Image();
@@ -84,6 +88,24 @@ export class Collector extends Unit{
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
 	protected _goalCoin: Coin|null; //цель-монетка для сбора
+
+	//активная защита
+	private static readonly defensePercentage: number = 20; //сколько в процентах съедается урона активной защитой
+	private static readonly defenseModifierName: string = 'Defense'; //имя модифатора защиты
+	private static readonly defenseMinDurationMs: number = 2000; //минимальное время действия защиты - если никто больше не атакует
+
+	private readonly defenseActivationAnimation: Animation; //анимация старта защиты
+	private readonly defenseActivationArmorAnimation: Animation; //анимация старта защиты - для брони
+	private readonly defenseActivationToolAnimation: Animation; //анимация старта защиты - для инструмента
+
+	private readonly defenseAnimation: AnimationInfinite; //анимация защиты
+	private readonly defenseArmorAnimation: AnimationInfinite; //анимация защиты - для брони
+	private readonly defenseToolAnimation: AnimationInfinite; //анимация защиты - для инструмента
+
+	private _isDefenseActivationStarted: boolean; //началась анимация защиты
+	private _isDefenseActivated: boolean; //защита установлена
+	private _isDefenseDeactivationStarted: boolean; //защита убирается
+	
 
 	constructor(x: number, y: number) {
 		super(x, y, 
@@ -125,6 +147,18 @@ export class Collector extends Unit{
 		this._goalCoin = null;
 		this._shiftYWeaponInEarch = this.height / 2 - 10;
 
+		this._isDefenseActivationStarted = false;
+		this._isDefenseActivated = false;
+		this._isDefenseDeactivationStarted = false;
+
+		this.defenseActivationAnimation = new Animation(4, 400, Collector.defenseStartImage);
+		this.defenseActivationArmorAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.durationMs);
+		this.defenseActivationToolAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.durationMs);
+
+		this.defenseAnimation = new AnimationInfinite(1, 1000, Collector.defenseImage);
+		this.defenseArmorAnimation = new AnimationInfinite(this.defenseAnimation.frames, this.defenseAnimation.durationMs);
+		this.defenseToolAnimation = new AnimationInfinite(this.defenseAnimation.frames, this.defenseAnimation.durationMs);
+
 		this.shopItemName = Collector.shopItem.name;
 
         Collector.init(true); //reserve init
@@ -150,6 +184,8 @@ export class Collector extends Unit{
 			Collector.imageHandler.new(Collector.fallEndImage).src = CollectorFallEndImage;
 			Collector.imageHandler.new(Collector.collectImage).src = CollectorCollectImage;
 			Collector.imageHandler.new(Collector.runImage).src = CollectorRunImage;
+			Collector.imageHandler.new(Collector.defenseImage).src = CollectorDefenseImage;
+			Collector.imageHandler.new(Collector.defenseStartImage).src = CollectorDefenseStartImage;
 			//TODO: Collector.imageHandler.new(Collector.joyImage).src = CollectorJoyImage;
 			Collector.imageHandler.new(Collector.weaponImage).src = WeaponImage;
 		}
@@ -204,6 +240,10 @@ export class Collector extends Unit{
 
 
 	logicMoving(drawsDiffMs: number, speed: number){
+		if(this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted){
+			return;  //игнорируем логику движения
+		}
+
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){ //есть цель монетка и сбор предыдущей уже окончен
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
@@ -255,9 +295,56 @@ export class Collector extends Unit{
 			this.imageWeapon = Collector.weaponImage;
 			return;
 		}
+
+		if(this.health <= 0){
+			return;
+		}
+
+		//создание защиты
+		if(this._isDefenseActivationStarted){
+			let defenseModifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
+			if(this.defenseActivationAnimation.leftTimeMs <= 0) {
+				this._isDefenseActivated = true;
+				this._isDefenseActivationStarted = false;
+				this.defenseAnimation.restart();
+				this.defenseArmorAnimation.restart();
+				this.defenseToolAnimation.restart();
+				if(!defenseModifier){
+					this.addModifier(new Modifier(Collector.defenseModifierName, 0, -Collector.defensePercentage / 100, 0, 0, 0, Collector.defenseMinDurationMs));
+				}
+			}
+			else if(this.defenseActivationAnimation.leftTimeMs <= 100 && !defenseModifier){
+				this.addModifier(new Modifier(Collector.defenseModifierName, 0, -Collector.defensePercentage / 100, 0, 0, 0, Collector.defenseMinDurationMs));
+			}
+
+			return;
+		}
+
+		//удержание защиты
+		if(this._isDefenseActivated){
+			let defenseModifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
+			if(!defenseModifier){
+				this._isDefenseActivated = false;
+				this._isDefenseDeactivationStarted = true;
+				this.defenseActivationAnimation.restart();
+				this.defenseActivationArmorAnimation.restart();
+				this.defenseActivationToolAnimation.restart();
+			}
+			
+			return;
+		}
+
+		//убираем защиту
+		if(this._isDefenseDeactivationStarted){
+			if(this.defenseActivationAnimation.leftTimeMs <= 0){
+				this._isDefenseDeactivationStarted = false;
+			}
+
+			return; 
+		}
 		
 		//игра пошла
-		if(this.health > 0 && WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
 			if(this._isCollecting){ //период сбора монеток
 
 				//если нет монетки - ищем ближайшую монетку
@@ -293,7 +380,15 @@ export class Collector extends Unit{
 						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
 						if(leftMonster && rightMonster){
-							//TODO: shield
+							//активация защиты
+							if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
+								this._isDefenseActivationStarted = true;
+								this._isDefenseDeactivationStarted = false;
+								this._isDefenseActivated = false;
+								this.defenseActivationAnimation.restart();
+								this.defenseActivationArmorAnimation.restart();
+								this.defenseActivationToolAnimation.restart();
+							}
 						}
 						else if(leftMonster){
 							this._isCollecting = false;
@@ -371,6 +466,15 @@ export class Collector extends Unit{
 					this.imageWeapon = Collector.weaponImage;
 					this._weaponRotateInAir = 180;
 				}
+				return damage;
+			}
+		}
+
+		//если защита активна и снова атакуют - продлеваем защиту
+		if(this._isDefenseActivated){
+			let modifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
+			if(modifier){
+				modifier.lifeTimeMs = Collector.defenseMinDurationMs;
 			}
 		}
 
@@ -389,29 +493,46 @@ export class Collector extends Unit{
 		imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
 		imageOrAnimationArmor: AnimationInfinite|Animation|HTMLImageElement, 
 		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
-		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
+		isGameOver: boolean, 
+		invertSign: number = 1, 
+		x: number|null = null, 
+		y: number|null = null, 
+		filter: string|null = null,
+		invertAnimation: boolean = false)
 	{
-		if(WawesState.isWaveStarted){
-			imageOrAnimation = this._isCollecting && this._collectingAnimation.leftTimeMs > 0
-				? this._collectingAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting 
-					? this._runAnimation
-					: this._passiveWaitingAnimation;
-
-			imageOrAnimationArmor = this._isCollecting && this._collectingArmorAnimation.leftTimeMs > 0
-				? this._collectingArmorAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting
-					? this._runArmorAnimation
-					: this._passiveWaitingArmorAnimation;
-
-			imageOrAnimationWeapon = this._isCollecting && this._collectingWeaponAnimation.leftTimeMs > 0
-				? this._collectingWeaponAnimation 
-				: this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting
-					? this._runWeaponAnimation
-					: this._passiveWaitingWeaponAnimation;
+		if (this._isDefenseActivated){
+			imageOrAnimation = this.defenseAnimation;
+			imageOrAnimationArmor = this.defenseArmorAnimation;
+			imageOrAnimationWeapon = this.defenseToolAnimation;
+		}
+		else if (this._isDefenseActivationStarted){
+			imageOrAnimation = this.defenseActivationAnimation;
+			imageOrAnimationArmor = this.defenseActivationArmorAnimation;
+			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
+		}
+		else if (this._isDefenseDeactivationStarted){
+			imageOrAnimation = this.defenseActivationAnimation;
+			imageOrAnimationArmor = this.defenseActivationArmorAnimation;
+			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
+			invertAnimation = true;
+		}
+		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
+			imageOrAnimation = this._collectingAnimation;
+			imageOrAnimationArmor = this._collectingArmorAnimation;
+			imageOrAnimationWeapon = this._collectingWeaponAnimation;
+		}
+		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting){
+			imageOrAnimation = this._runAnimation;
+			imageOrAnimationArmor = this._runArmorAnimation;
+			imageOrAnimationWeapon = this._runWeaponAnimation;
+		}
+		else{
+			imageOrAnimation = this._passiveWaitingAnimation;
+			imageOrAnimationArmor = this._passiveWaitingArmorAnimation;
+			imageOrAnimationWeapon = this._passiveWaitingWeaponAnimation;
 		}
 
-		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
+		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, invertAnimation);
 	}
 
 }
