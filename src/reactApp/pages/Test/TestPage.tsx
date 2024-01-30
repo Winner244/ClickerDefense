@@ -2530,6 +2530,65 @@ class TestPage extends React.Component {
                 }, 1500);
             }
         },
+
+        
+        {
+            key: "Золотособиратель - конец волны - с монетками",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                collector1.loadedResourcesAfterBuild();
+                Units.all.push(collector1);
+
+                //first coin
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
+                }, 1000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 50, Draw.canvas.height / 2));
+                }, 3000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 200, Draw.canvas.height / 2));
+                }, 4000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 80, Draw.canvas.height / 2));
+                }, 7000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 90, Draw.canvas.height / 2));
+                }, 10000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 95, Draw.canvas.height / 2));
+                }, 12000);
+                
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 150, Draw.canvas.height / 2));
+                }, 16000);
+            }
+        },
         
         /*{
             key: "Золотособиратель - гибель",

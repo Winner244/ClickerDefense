@@ -344,7 +344,7 @@ export class Collector extends Unit{
 		}
 		
 		//игра пошла
-		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
 			if(this._isCollecting){ //период сбора монеток
 
 				//если нет монетки - ищем ближайшую монетку
