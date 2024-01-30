@@ -92,7 +92,7 @@ export class Collector extends Unit{
 	//активная защита
 	private static readonly defensePercentage: number = 20; //сколько в процентах съедается урона активной защитой
 	private static readonly defenseModifierName: string = 'Defense'; //имя модифатора защиты
-	private static readonly defenseMinDurationMs: number = 2000; //минимальное время действия защиты - если никто больше не атакует
+	private static readonly defenseMinDurationMs: number = 1500; //минимальное время действия защиты - если никто больше не атакует
 
 	private readonly defenseActivationAnimation: Animation; //анимация старта защиты
 	private readonly defenseActivationArmorAnimation: Animation; //анимация старта защиты - для брони
@@ -330,7 +330,7 @@ export class Collector extends Unit{
 				this.defenseActivationArmorAnimation.restart();
 				this.defenseActivationToolAnimation.restart();
 			}
-			
+
 			return;
 		}
 

@@ -45,7 +45,7 @@ export default class Animation extends AnimationBase {
 			? 0
 			: isGameOver 
 				? this.lastFrame
-				: this.frames - Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames));
+				: this.frames - Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames)) - 1;
 		}
 
 		this.lastFrame = frame;
