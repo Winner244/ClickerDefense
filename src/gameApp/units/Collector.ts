@@ -43,8 +43,9 @@ import CollectorPassiveWaitingImage from '../../assets/img/units/collector/passi
 import CollectorRunImage from '../../assets/img/units/collector/run.png'; 
 import CollectorDefenseImage from '../../assets/img/units/collector/defense.png'; 
 import CollectorDefenseStartImage from '../../assets/img/units/collector/defenseStart.png'; 
-/*import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
+import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
 
+/*
 import WoodArmorImage from '../../assets/img/units/collector/woodArmor.png'; 
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
 import CollectorDiggingWoodArmorImage from '../../assets/img/units/collector/woodArmor/digging.png'; 
@@ -52,6 +53,7 @@ import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collecto
 import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
 */
+
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
 
@@ -73,7 +75,7 @@ export class Collector extends Unit{
 	private static readonly runImage: HTMLImageElement = new Image(); 
 	private static readonly defenseImage: HTMLImageElement = new Image(); 
 	private static readonly defenseStartImage: HTMLImageElement = new Image(); 
-	//TODO: private static readonly joyImage: HTMLImageElement = new Image(); 
+	private static readonly joyImage: HTMLImageElement = new Image(); 
 
 	private static readonly weaponImage: HTMLImageElement = new Image();
 
@@ -105,6 +107,8 @@ export class Collector extends Unit{
 	private _isDefenseActivationStarted: boolean; //началась анимация защиты
 	private _isDefenseActivated: boolean; //защита установлена
 	private _isDefenseDeactivationStarted: boolean; //защита убирается
+
+	private _isJoyDone: boolean; //было ли произведена анимация радости за текущее окончание волны?
 	
 
 	constructor(x: number, y: number) {
@@ -119,7 +123,7 @@ export class Collector extends Unit{
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//activeWaitingAnimation
 			new AnimationInfinite(4, 4 * 200, Collector.runImage),  		    //run animation
-			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 	//TODO: new Animation(21, 21 * 110, Collector.joyImage),  				//joy animation
+			new Animation(10, 10 * 100, Collector.joyImage),  				    //joy animation
 			0, //rotateWeaponInEarch
 			Collector.name, 
 			Collector.imageHandler, 
@@ -161,6 +165,9 @@ export class Collector extends Unit{
 
 		this.shopItemName = Collector.shopItem.name;
 
+		this._isJoyDone = false;
+		this._joyAnimation.leftTimeMs = 0;
+
         Collector.init(true); //reserve init
 	}
 
@@ -186,7 +193,7 @@ export class Collector extends Unit{
 			Collector.imageHandler.new(Collector.runImage).src = CollectorRunImage;
 			Collector.imageHandler.new(Collector.defenseImage).src = CollectorDefenseImage;
 			Collector.imageHandler.new(Collector.defenseStartImage).src = CollectorDefenseStartImage;
-			//TODO: Collector.imageHandler.new(Collector.joyImage).src = CollectorJoyImage;
+			Collector.imageHandler.new(Collector.joyImage).src = CollectorJoyImage;
 			Collector.imageHandler.new(Collector.weaponImage).src = WeaponImage;
 		}
 	}
@@ -242,6 +249,10 @@ export class Collector extends Unit{
 	logicMoving(drawsDiffMs: number, speed: number){
 		if(this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted){
 			return;  //игнорируем логику движения
+		}
+
+		if (this._joyAnimation.leftTimeMs > 0){
+			return;
 		}
 
 		if(this._isCollecting){ //период сбора монет
@@ -342,16 +353,24 @@ export class Collector extends Unit{
 
 			return; 
 		}
+
+		//монетка исчезла
+		if(this._goalCoin && this._goalCoin.lifeTimeLeftMs <= 0){
+			this._goalCoin = null;
+		}
 		
 		//игра пошла
 		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
+			if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+				this._isJoyDone = false;
+			}
+
 			if(this._isCollecting){ //период сбора монеток
 
 				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
 
 				//если нет монетки - ищем ближайшую монетку
-				if((!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0) && this._collectingAnimation.leftTimeMs <= 0){
-					this._goalCoin = null;
+				if(!this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){
 
 					if (coins.length){ 
 						//монетку не должен загораживать монстр
@@ -407,7 +426,7 @@ export class Collector extends Unit{
 						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 					}
-					
+
 					//logic in logicMoving
 				}
 
@@ -454,7 +473,12 @@ export class Collector extends Unit{
 
 			}
 		}
-		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0 && !this.isRunRight){
+		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0){
+
+			if(this._joyAnimation.leftTimeMs == 0 && !this._isJoyDone){
+				this._isJoyDone = true;
+				this._joyAnimation.restart();
+			}
 			this.isRunRight = true;
 		}
 	}
@@ -527,6 +551,11 @@ export class Collector extends Unit{
 			imageOrAnimation = this._collectingAnimation;
 			imageOrAnimationArmor = this._collectingArmorAnimation;
 			imageOrAnimationWeapon = this._collectingWeaponAnimation;
+		}
+		else if (this._joyAnimation.leftTimeMs > 0){
+			imageOrAnimation = this._joyAnimation;
+			imageOrAnimationArmor = this._joyArmorAnimation;
+			imageOrAnimationWeapon = this._joyWeaponAnimation;
 		}
 		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting){
 			imageOrAnimation = this._runAnimation;
