@@ -347,11 +347,12 @@ export class Collector extends Unit{
 		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
 			if(this._isCollecting){ //период сбора монеток
 
+				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
+
 				//если нет монетки - ищем ближайшую монетку
 				if((!this._goalCoin || this._goalCoin.lifeTimeLeftMs <= 0) && this._collectingAnimation.leftTimeMs <= 0){
 					this._goalCoin = null;
 
-					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
 					if (coins.length){ 
 						//монетку не должен загораживать монстр
 						var leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
@@ -401,6 +402,12 @@ export class Collector extends Unit{
 					}
 				}
 				else{
+					//выбираем более ближнюю монету
+					if(coins.length > 1){
+						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
+					}
+					
 					//logic in logicMoving
 				}
 

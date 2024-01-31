@@ -2533,6 +2533,40 @@ class TestPage extends React.Component {
 
         
         {
+            key: "Золотособиратель - переключение на более ближнюю монету",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                collector1.loadedResourcesAfterBuild();
+                Units.all.push(collector1);
+
+                //first coin
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
+                }, 1000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 50, Draw.canvas.height / 2));
+                }, 3000);
+            }
+        },
+
+        
+        {
             key: "Золотособиратель - конец волны - с монетками",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
