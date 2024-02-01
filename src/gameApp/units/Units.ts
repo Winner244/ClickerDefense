@@ -89,7 +89,6 @@ export class Units {
 		//create
 		const unit = new Miner(x, Buildings.flyEarth.y, goalY); //final 'y' will be changed inside Miner to equal 'goalY'
 		unit.pushUpFromCrystals(true);
-		unit.loadedResourcesAfterBuild();
 		this.add(unit);
 		return unit;
 	}
