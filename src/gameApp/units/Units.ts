@@ -95,6 +95,7 @@ export class Units {
 	}
 
 	static add(unit: Unit){
+		unit.loadedResourcesAfterBuild();
 		Units.all.push(unit);
 		this.creatings.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.creatingAnimation.durationMs));
 		AudioSystem.play(unit.centerX, CreatingSound, 0.1, 1, true);
