@@ -52,7 +52,7 @@ import WoodArmorImage from '../../assets/img/units/woodArmor.png';
 //import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/defense.png'; 
 //import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/defenseStart.png'; 
 import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
-//import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
+import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
 //import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
 
 
@@ -60,7 +60,6 @@ import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woo
 import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
-import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
@@ -225,6 +224,8 @@ export class Collector extends Unit{
 		this.defenseActivationArmorAnimation.image.src = CollectorDefenseWoodArmorImage;
 		this.defenseArmorAnimation.image.src = CollectorDefenseStartWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
+		this._startActiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
+		this._activeWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
 		this._fallEndArmorAnimation.image.src = CollectorFallEndWoodArmorImage;
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
