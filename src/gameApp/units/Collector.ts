@@ -48,7 +48,7 @@ import CollectorJoyImage from '../../assets/img/units/collector/joy.png';
 
 import WoodArmorImage from '../../assets/img/units/woodArmor.png'; 
 //import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
-//import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/collect.png'; 
+import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/collect.png'; 
 //import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/defense.png'; 
 //import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/defenseStart.png'; 
 import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
@@ -57,7 +57,6 @@ import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArm
 
 
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
-import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
@@ -94,7 +93,7 @@ export class Collector extends Unit{
 
 	private readonly _collectingAnimation: Animation; //анимация собирания монеток
 	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
-	private readonly _collectingWeaponAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
+	private readonly _collectingToolAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -150,7 +149,7 @@ export class Collector extends Unit{
 		
 		this._collectingAnimation = new Animation(9, 9 * 150, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
-		this._collectingWeaponAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
+		this._collectingToolAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 		this._collectingAnimation.leftTimeMs = 0;
 
 		this._isCollecting = true;
@@ -237,7 +236,7 @@ export class Collector extends Unit{
 		var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
 		this._collectingAnimation.changeDuration(newDurationDigging);
 		this._collectingArmorAnimation.changeDuration(newDurationDigging);
-		this._collectingWeaponAnimation.changeDuration(newDurationDigging);
+		this._collectingToolAnimation.changeDuration(newDurationDigging);
 
 		var newDurationRun = Collector.initialSpeed / this.speed * this._runAnimation.initialDurationMs;
 		this._runAnimation.changeDuration(newDurationRun);
@@ -277,6 +276,8 @@ export class Collector extends Unit{
 					else //дошёл
 					{
 						this._collectingAnimation.restart();
+						this._collectingArmorAnimation.restart();
+						this._collectingToolAnimation.restart();
 					}
 				}
 				else 
@@ -288,6 +289,8 @@ export class Collector extends Unit{
 					else //дошёл
 					{
 						this._collectingAnimation.restart();
+						this._collectingArmorAnimation.restart();
+						this._collectingToolAnimation.restart();
 					}
 				}
 			}
@@ -468,7 +471,7 @@ export class Collector extends Unit{
 					this._isCollecting = true;
 				}
 				else{
-					this._collectingAnimation.leftTimeMs = 0;
+					this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
 					
 					if(this.isRunRight){
 						if(rightMonster){
@@ -524,7 +527,7 @@ export class Collector extends Unit{
 		if(this._isCollecting){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
-			this._collectingAnimation.leftTimeMs = 0;
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
 		}
 
 		return damage;
@@ -561,7 +564,7 @@ export class Collector extends Unit{
 		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
 			imageOrAnimation = this._collectingAnimation;
 			imageOrAnimationArmor = this._collectingArmorAnimation;
-			imageOrAnimationWeapon = this._collectingWeaponAnimation;
+			imageOrAnimationWeapon = this._collectingToolAnimation;
 		}
 		else if (this._joyAnimation.leftTimeMs > 0){
 			imageOrAnimation = this._joyAnimation;
