@@ -45,15 +45,25 @@ import CollectorDefenseImage from '../../assets/img/units/collector/defense.png'
 import CollectorDefenseStartImage from '../../assets/img/units/collector/defenseStart.png'; 
 import CollectorJoyImage from '../../assets/img/units/collector/joy.png'; 
 
-/*
-import WoodArmorImage from '../../assets/img/units/collector/woodArmor.png'; 
-import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
-import CollectorDiggingWoodArmorImage from '../../assets/img/units/collector/woodArmor/digging.png'; 
-import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWait1.png'; 
-import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
-import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
-*/
 
+import WoodArmorImage from '../../assets/img/units/woodArmor.png'; 
+//import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
+//import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/collect.png'; 
+//import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/defense.png'; 
+//import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/defenseStart.png'; 
+import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+//import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
+//import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
+
+
+import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
+
+import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
 
@@ -204,21 +214,21 @@ export class Collector extends Unit{
 		this.infoItems = this.infoItems.filter(x => x.label != 'Защита');
 		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, Collector.shopItem.price * 0.2, () => this.improveSpeed()));
 
-		//TODO: this.improvements.push(new Improvement('Деревянная броня', Collector.shopItem.price * 2, WoodArmorImage, () => this.improveToWoodArmor(), [
-		//TODO: 	new ImprovementParameterItem(`+`, shieldIcon)
-		//TODO: ]));
+		this.improvements.push(new Improvement('Деревянная броня', Collector.shopItem.price * 2, WoodArmorImage, () => this.improveToWoodArmor(), [
+		 	new ImprovementParameterItem(`+`, shieldIcon)
+		]));
 	}
 
-	/*//TODO: improveToWoodArmor(){
-		this.defense += 0.1;
-		this._diggingArmorAnimation.image.src = CollectorDiggingWoodArmorImage;
+	improveToWoodArmor(){
+		this.defense += 1;
+		this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
+		this.defenseActivationArmorAnimation.image.src = CollectorDefenseWoodArmorImage;
+		this.defenseArmorAnimation.image.src = CollectorDefenseStartWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
 		this._fallEndArmorAnimation.image.src = CollectorFallEndWoodArmorImage;
-		this._startActiveWaitingArmorAnimation.image.src = CollectorStartActiveWaitWoodArmorImage;
-		this._activeWaitingArmorAnimation.image.src = CollectorActiveWaitWoodArmorImage;
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
-	}*/
+	}
 
 	improveSpeed(){
 		this.speed += 10;

@@ -65,7 +65,7 @@ import MinerJoyDiamondPickImage from '../../assets/img/units/miner/diamonPick/jo
 import MinerAttackDiamondPickImage from '../../assets/img/units/miner/diamonPick/attack.png'; 
 
 
-import WoodArmorImage from '../../assets/img/units/miner/woodArmor.png'; 
+import WoodArmorImage from '../../assets/img/units/woodArmor.png'; 
 import MinerFallEndWoodArmorImage from '../../assets/img/units/miner/woodArmor/fallEnd.png'; 
 import MinerDiggingWoodArmorImage from '../../assets/img/units/miner/woodArmor/digging.png'; 
 import MinerPassiveWait1WoodArmorImage from '../../assets/img/units/miner/woodArmor/passiveWait1.png'; 
