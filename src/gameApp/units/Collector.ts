@@ -49,7 +49,7 @@ import CollectorJoyImage from '../../assets/img/units/collector/joy.png';
 import WoodArmorImage from '../../assets/img/units/woodArmor.png'; 
 //import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
 import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/collect.png'; 
-//import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/defense.png'; 
+import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/defense.png'; 
 import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/defenseStart.png'; 
 import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
@@ -57,7 +57,6 @@ import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArm
 
 
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
-import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
