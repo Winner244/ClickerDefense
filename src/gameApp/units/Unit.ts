@@ -71,6 +71,7 @@ export class Unit extends UpgradebleObject {
 	protected readonly _runArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация бега
 	protected readonly _joyArmorAnimation: Animation; //для апгрейда брони - анимация радости после завершения волны
 	protected readonly _attackArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация атаки
+	protected readonly _fallArmorImage: HTMLImageElement;
 
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
 	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)
@@ -93,7 +94,7 @@ export class Unit extends UpgradebleObject {
 	protected _attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
 	protected _goal: AttackedObject|null; //цель (монстр) для атаки
 
-	protected imageWeapon: HTMLImageElement; //изображение оружия
+	protected imageWeapon: HTMLImageElement|ImageBitmap; //изображение оружия
 	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
 	protected _isDisplayWeaponInEarch: boolean; //отображать оружие воткнутую в землю?
 	protected _weaponRotateInAir: number; //угол вращения оружие в воздухе
@@ -176,6 +177,7 @@ export class Unit extends UpgradebleObject {
 		this._activeWaitingArmorAnimation = new AnimationInfinite(activeWaitingAnimation.frames, activeWaitingAnimation.durationMs); 
 		this._runArmorAnimation = new AnimationInfinite(runAnimation.frames, runAnimation.durationMs);
 		this._joyArmorAnimation = new Animation(joyAnimation.frames, joyAnimation.durationMs); 
+		this._fallArmorImage = new Image();
 
 
 		this._goal = null;
@@ -535,6 +537,7 @@ export class Unit extends UpgradebleObject {
 	{
 		if(this._isFall){
 			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObject(drawsDiffMs, this._fallArmorImage, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 		}
 		else if(this._fallEndAnimation.leftTimeMs > 0){
 			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);

@@ -2306,6 +2306,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
+                Gamer.coins = 1500;
                 WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
@@ -2325,6 +2326,7 @@ class TestPage extends React.Component {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
+                    collector1.improveToWoodArmor();
                     Units.all.push(collector1);
                 }, 300);
             }

@@ -54,6 +54,7 @@ import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collecto
 import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
+import CollectorFallWoodArmorImage from '../../assets/img/units/collector/woodArmor/fall.png'; 
 
 
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
@@ -128,7 +129,7 @@ export class Collector extends Unit{
 			new Animation(6, 6 * 350, Collector.passiveWaitingImage), 			//startActiveWaitingAnimation
 			new AnimationInfinite(6, 6 * 350, Collector.passiveWaitingImage), 	//activeWaitingAnimation
 			new AnimationInfinite(4, 4 * 200, Collector.runImage),  		    //run animation
-			new Animation(10, 10 * 100, Collector.joyImage),  				    //joy animation
+			new Animation(8, 8 * 100, Collector.joyImage),  				    //joy animation
 			0, //rotateWeaponInEarch
 			Collector.name, 
 			Collector.imageHandler, 
@@ -225,6 +226,7 @@ export class Collector extends Unit{
 		this._fallEndArmorAnimation.image.src = CollectorFallEndWoodArmorImage;
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
+		this._fallArmorImage.src = CollectorFallWoodArmorImage;
 	}
 
 	improveSpeed(){
@@ -501,7 +503,15 @@ export class Collector extends Unit{
 
 			if(this.health <= 0){
 				if(damage >= this.healthMax){
-					this.imageWeapon = Collector.fallImage;
+					let offCanvas = new OffscreenCanvas(Collector.fallImage.width, Collector.fallImage.height);
+					let offContext = offCanvas.getContext('2d');
+					if(offContext){
+						offContext.drawImage(this._fallImage, 0, 0, Collector.fallImage.width, Collector.fallImage.height);
+						offContext.drawImage(this._fallArmorImage, 0, 0, Collector.fallImage.width, Collector.fallImage.height);
+					}
+					let imageBitmap = offCanvas.transferToImageBitmap();
+
+					this.imageWeapon = imageBitmap;
 					this._weaponRotateInAir = 0;
 				}
 				else{

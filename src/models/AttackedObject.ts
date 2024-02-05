@@ -246,12 +246,15 @@ export class AttackedObject {
 		this.modifiers.forEach(modifier => modifier.drawAheadObjects(this, drawsDiffMs));
 	}
 
-	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement, 
+	drawObject(drawsDiffMs: number, imageOrAnimation: AnimationInfinite|Animation|HTMLImageElement|ImageBitmap, 
 		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null,
 		isInvertAnimation: boolean = false){
 		x = x ?? this.x;
 		y = y ?? this.y;
-		if(imageOrAnimation instanceof HTMLImageElement){
+		if(imageOrAnimation instanceof ImageBitmap){ //without filter (ImageBitmap doesn't have any specific parameters as name, src, path, size....)
+			Draw.ctx.drawImage(imageOrAnimation, invertSign * x, y, invertSign * this.width, this.height);
+		}
+		else if(imageOrAnimation instanceof HTMLImageElement){
 			let image = Draw.getFilteredImage(filter, imageOrAnimation, this.width, this.height);
 			Draw.ctx.drawImage(image, invertSign * x, y, invertSign * this.width, this.height);
 		}
