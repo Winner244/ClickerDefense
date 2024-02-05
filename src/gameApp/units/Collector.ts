@@ -50,7 +50,7 @@ import WoodArmorImage from '../../assets/img/units/woodArmor.png';
 //import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/fallEnd.png'; 
 import CollectorCollectWoodArmorImage from '../../assets/img/units/collector/woodArmor/collect.png'; 
 //import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/defense.png'; 
-//import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/defenseStart.png'; 
+import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/defenseStart.png'; 
 import CollectorPassiveWait1WoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArmor/run.png'; 
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
@@ -58,7 +58,6 @@ import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArm
 
 import CollectorFallEndWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 import CollectorDefenseWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
-import CollectorDefenseStartWoodArmorImage from '../../assets/img/units/collector/woodArmor/passiveWaiting.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -162,7 +161,7 @@ export class Collector extends Unit{
 		this._isDefenseActivated = false;
 		this._isDefenseDeactivationStarted = false;
 
-		this.defenseActivationAnimation = new Animation(4, 400, Collector.defenseStartImage);
+		this.defenseActivationAnimation = new Animation(3, 300, Collector.defenseStartImage);
 		this.defenseActivationArmorAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.durationMs);
 		this.defenseActivationToolAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.durationMs);
 
