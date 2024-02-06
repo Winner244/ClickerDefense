@@ -1637,6 +1637,42 @@ class TestPage extends React.Component {
             }
         },
 
+
+        {
+            key: "Золотодобытчики - нападение летучих мышей на множество добытчиков",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.isWaveStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+                Waves.all = [[],
+                [ 
+                    new WaveData(Bat.name, 87, 250, 0),
+                ]];
+
+                var countMax = Miner.shopItem.maxCount - 1;
+                var count = 0;
+                var create = () => {
+                    setTimeout(() => {
+                        Game.buyThing(Miner.shopItem);
+                        var s = (x: any) => x.improveToWoodArmor();
+                        s(Units.all[Units.all.length - 1]);
+                        count++;
+
+                        if(count < countMax){
+                            create();
+                        }
+                    }, 300);
+                }
+                create();
+            }
+        },
+
         {
             key: "Золотодобытчик - Авто появление - на кристалле",
             code: () => {
@@ -2717,6 +2753,50 @@ class TestPage extends React.Component {
                         collector1.applyDamage(20);
                     }, 3000);
                 }, 300);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - распределение при сборе",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                collector1.loadedResourcesAfterBuild();
+                Units.all.push(collector1);
+
+                var collector2 = new Collector(Draw.canvas.width / 2 - 100, y);
+                collector2.loadedResourcesAfterBuild();
+                Units.all.push(collector2);
+
+                //first coin
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2, Draw.canvas.height / 2));
+                }, 1000);
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 10, Draw.canvas.height / 2));
+                }, 2000);
+
+                setTimeout(() => {
+                    if(WawesState.isWaveStarted){
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 - 100, Draw.canvas.height / 2));
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
+                    }
+                }, 7000);
             }
         },
         

@@ -91,7 +91,7 @@ export class Bat extends Monster{
 		if(this.isSelectMinerToTest && this._goal?.name != Miner.name){
 			const miners = units.filter(x => x.name == Miner.name && x.health > 0);
 			if (miners.length){ 
-				this._goal = miners[0];
+				this._goal = miners[Helper.getRandom(0, miners.length - 1)];
 			}
 		}
 	}
@@ -114,11 +114,6 @@ export class Bat extends Monster{
 
 			}
 			else{ 
-				//разворот при преследовании майнера
-			    if(this._goal.name == Miner.name && this.isLeftSide != (<Miner>this._goal).isRunRight && this.centerX > this._goal.x && this.x < this._goal.x + this._goal.width){
-				    this.isLeftSide = (<Miner>this._goal).isRunRight;
-			    }
-
 				if(this.y < this._goal.y + this._goal.reduceHover){
 					this.y++;
 				}
@@ -126,6 +121,12 @@ export class Bat extends Monster{
 					this.y--;
 				}
 			}
+			
+			//разворот при преследовании майнера
+			if(this._goal.name == Miner.name){
+				this.isLeftSide = (<Miner>this._goal).centerX > this.centerX;
+			}
+
 		}
 	}
 

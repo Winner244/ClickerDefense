@@ -128,7 +128,7 @@ export class Monster extends AttackedObject{
 		if(!this.isLand && this._goal?.name == FlyEarth.name && !this._isAttack){
 			const miners = units.filter(x => x.name == Miner.name && x.health > 0);
 			if(miners.length && (Math.random() < 0.001)){ 
-				this._goal = miners[0];
+				this._goal = miners[Helper.getRandom(0, miners.length - 1)];
 			}
 		}
 	}
