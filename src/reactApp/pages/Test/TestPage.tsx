@@ -1655,6 +1655,14 @@ class TestPage extends React.Component {
                     new WaveData(Bat.name, 87, 250, 0),
                 ]];
 
+                var tower1 = new Tower(1100);
+                tower1.loadedResourcesAfterBuild();
+                Buildings.all.push(tower1);
+
+                var tower2 = new Tower(700);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+
                 var countMax = Miner.shopItem.maxCount - 1;
                 var count = 0;
                 var create = () => {
