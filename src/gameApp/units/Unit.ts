@@ -268,12 +268,7 @@ export class Unit extends UpgradebleObject {
 			Coins.playSoundGet(this.centerX);
 			this._healingAnimationLeftTimeMs = Unit.healingAnimationDurationMs;
 
-			if(this.goalY != 0 && oldHealth <= 0 && this._health > 0){
-				this.y -= this.height / 3.5;
-				this.goalY -= this.height / 3.5;
-			}
-
-			if(oldHealth <= 0){
+			if(oldHealth <= 0 && this.health > 0){
 				this.isRunRight = true;
 				this._fallEndAnimation.leftTimeMs = 
 				this._fallEndWeaponAnimation.leftTimeMs = 
@@ -281,6 +276,10 @@ export class Unit extends UpgradebleObject {
 
 				if(this.isLand){
 					this.y -= this._shiftYWeaponInEarch + 15;
+				}
+				else if(this.goalY != 0){
+					this.y -= this.height / 3.5;
+					this.goalY -= this.height / 3.5;
 				}
 			}
 	
