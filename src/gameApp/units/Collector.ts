@@ -506,9 +506,8 @@ export class Collector extends Unit{
 						offContext.drawImage(this._fallImage, 0, 0, Collector.fallImage.width, Collector.fallImage.height);
 						offContext.drawImage(this._fallArmorImage, 0, 0, Collector.fallImage.width, Collector.fallImage.height);
 					}
-					let imageBitmap = offCanvas.transferToImageBitmap();
 
-					this.imageWeapon = imageBitmap;
+					this.imageWeapon = offCanvas;
 					this._weaponRotateInAir = 0;
 				}
 				else{
@@ -528,7 +527,7 @@ export class Collector extends Unit{
 		}
 
 		//убегаем от урона - даже если его нету
-		if(this._isCollecting){
+		if(this._isCollecting && !WawesState.isWaveEnded){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;

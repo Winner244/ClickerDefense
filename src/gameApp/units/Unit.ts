@@ -94,7 +94,7 @@ export class Unit extends UpgradebleObject {
 	protected _attackLeftTimeMs: number; //оставшееся время до следующей атаки (миллисекунды)
 	protected _goal: AttackedObject|null; //цель (монстр) для атаки
 
-	protected imageWeapon: HTMLImageElement|ImageBitmap; //изображение оружия
+	protected imageWeapon: HTMLImageElement|OffscreenCanvas; //изображение оружия
 	protected _isDisplayWeaponInAir: boolean; //отображать оружие крутящуюся в воздухе?
 	protected _isDisplayWeaponInEarch: boolean; //отображать оружие воткнутую в землю?
 	protected _weaponRotateInAir: number; //угол вращения оружие в воздухе
@@ -278,6 +278,10 @@ export class Unit extends UpgradebleObject {
 				this._fallEndAnimation.leftTimeMs = 
 				this._fallEndWeaponAnimation.leftTimeMs = 
 				this._fallEndArmorAnimation.leftTimeMs = this._fallEndAnimation.durationMs;
+
+				if(this.isLand){
+					this.y -= this._shiftYWeaponInEarch + 15;
+				}
 			}
 	
 			this._isDisplayWeaponInEarch = false;
