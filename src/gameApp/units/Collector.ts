@@ -418,7 +418,7 @@ export class Collector extends Unit{
 						coins = coins.filter(x => Math.abs(this.centerX - x.centerX) < widthOfPart && Math.abs(this.goalX - x.centerX) < widthOfPart);
 					}
 
-					if(coins.length){
+					if(coins.length && (!this._goalCoin || coins.length > 1)){
 						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX) + Math.abs(x.centerX - this.goalX))[0];
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 					}
