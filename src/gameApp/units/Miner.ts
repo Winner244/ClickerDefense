@@ -302,6 +302,7 @@ export class Miner extends Unit{
 	}
 
 	logicMoving(drawsDiffMs: number, speed: number){
+		super.logicMoving(drawsDiffMs, speed);
 
 		//игра идёт
 		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
@@ -349,7 +350,6 @@ export class Miner extends Unit{
 					else if(this.y < yMin){
 						this.y = yMin;
 					}
-					this.goalY = this.y + this.height;
 				}
 			}
 		}
@@ -369,7 +369,7 @@ export class Miner extends Unit{
 		}
 
 		//gravitations
-		if(this.y + this.height < this.goalY){
+		if(this._isFall){
 			this.isTurnOnPushUpFromCrystals = false;
 		}
 		else{

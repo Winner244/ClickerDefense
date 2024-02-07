@@ -106,8 +106,10 @@ export class Unit extends UpgradebleObject {
 	protected _isIncreaseBrightnessOfWeaponInEarch: boolean = true; //увеличивать сейчас фильтр мигания оружия в земле?
 
 	public isRunRight: boolean; //юнит бежит вправо?
+	public isRun: boolean; //юнит бежит?
 	protected _isFall: boolean; //юнит падает?
-	public goalY: number; //куда юнит должен приземлиться по оси Y (это либо место на летающей земле, либо bottomShiftBorder если goalY не указан)
+	public goalY: number; //куда юнит должен приземлиться по оси Y (это либо место на летающей земле, либо bottomShiftBorder если goalY не указан), а так же место возврата юнита после волны (если на летающей земле)
+	public goalX: number; //куда должен юнит стремится вернуться после окончания волны (либо во время волны - центр притяжения юнита)
 
 	protected _isAttack: boolean; //атакует?
 
@@ -189,12 +191,14 @@ export class Unit extends UpgradebleObject {
 		this.attackTimeWaitingMs = attackTimeWaitingMs;
 		this._attackLeftTimeMs = 0;
 		this.isRunRight = true;
+		this.isRun = false;
 
 		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита
 		this.endingAnimation.animation.image.src = CreatingImage;
 
-		this._isFall = false;
+		this._isFall = true;
 		this.goalY = 0;
+		this.goalX = x;
 
 		this._isAttack = false;
 
@@ -273,13 +277,13 @@ export class Unit extends UpgradebleObject {
 				this._fallEndAnimation.leftTimeMs = 
 				this._fallEndWeaponAnimation.leftTimeMs = 
 				this._fallEndArmorAnimation.leftTimeMs = this._fallEndAnimation.durationMs;
+				this._isFall = true;
 
 				if(this.isLand){
 					this.y -= this._shiftYWeaponInEarch + 15;
 				}
 				else if(this.goalY != 0){
 					this.y -= this.height / 3.5;
-					this.goalY -= this.height / 3.5;
 				}
 			}
 	
@@ -303,55 +307,74 @@ export class Unit extends UpgradebleObject {
 
 
 	logicMoving(drawsDiffMs: number, speed: number){
-		if(this._goal && this.health > 0){
-			if(this._goal.isLeftSide) //если монстр идёт с левой стороны
-			{
-				let condition = this.isLand 
-					? this.x > this._goal.x + this._goal.width - this.width / 5
-					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
-	
-				if (condition) { //ещё не дошёл
-					this.x -= speed;
-	
-					if(!this.isLand){
-						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
-					}
-					this._isAttack = false;
-				}
-				else //дошёл
+		if(this.health > 0){
+
+			if(this._goal){
+				if(this._goal.isLeftSide) //если монстр идёт с левой стороны
 				{
-					if(this.isLand){
-						this.x = this._goal.x + this._goal.width - this.width / 5;
+					let condition = this.isLand 
+						? this.x > this._goal.x + this._goal.width - this.width / 5
+						: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+		
+					if (condition) { //ещё не дошёл
+						this.x -= speed;
+		
+						if(!this.isLand){
+							//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+						}
+						this._isAttack = false;
 					}
-					if(!this._isAttack){
-						this._attackAnimation.restart();
+					else //дошёл
+					{
+						if(this.isLand){
+							this.x = this._goal.x + this._goal.width - this.width / 5;
+						}
+						if(!this._isAttack){
+							this._attackAnimation.restart();
+						}
+						this._isAttack = true; //атакует
 					}
-					this._isAttack = true; //атакует
+				}
+				else 
+				{
+					let condition = this.isLand 
+						? this.x + this.width < this._goal.x + this.width / 5
+						: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+		
+					if (condition) { //ещё не дошёл
+						this.x += speed;
+		
+						if(!this.isLand){
+							//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+						}
+						this._isAttack = false;
+					}
+					else //дошёл
+					{
+						if(this.isLand){
+							this.x = this._goal.x - this.width + this.width / 5;
+						}
+						if(!this._isAttack){
+							this._attackAnimation.restart();
+						}
+						this._isAttack = true; //атакует
+					}
 				}
 			}
-			else 
-			{
-				let condition = this.isLand 
-					? this.x + this.width < this._goal.x + this.width / 5
-					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
-	
-				if (condition) { //ещё не дошёл
-					this.x += speed;
-	
-					if(!this.isLand){
-						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
-					}
-					this._isAttack = false;
+
+			//волна окончена
+			if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs <= 0 && !this._isFall && this._fallEndAnimation.leftTimeMs <= 0){
+				this.isRun = false;
+
+				if(this.goalX && Math.abs(this.x - this.goalX) > speed){
+					this.isRunRight = this.goalX > this.x;
+					this.x -= Math.sign(this.x - this.goalX) * speed;
+					this.isRun = true;
 				}
-				else //дошёл
-				{
-					if(this.isLand){
-						this.x = this._goal.x - this.width + this.width / 5;
-					}
-					if(!this._isAttack){
-						this._attackAnimation.restart();
-					}
-					this._isAttack = true; //атакует
+
+				if(this.goalY && Math.abs(this.y - this.goalY + this.height) > speed){
+					this.y -= Math.sign(this.y - this.goalY + this.height) * speed;
+					this.isRun = true;
 				}
 			}
 		}
@@ -398,34 +421,27 @@ export class Unit extends UpgradebleObject {
 		if(this._isDisplayWeaponInAir){
 			this.y += 15 / drawsDiffMs / (this._impulseY / 10);
 			this._isFall = true;
-		}
-		else if(!this._isDisplayWeaponInEarch){
-			if(this.y + this.height < (this.goalY || Draw.canvas.height - bottomShiftBorder)){
-				this.y += 15 / drawsDiffMs;
-				this._isFall = true;
-			}
-			else if(this._isFall) {
-				this._isFall = false;
-	
-				if(this.y + this.height > Draw.canvas.height){
-					this.y = Draw.canvas.height - this.height;
-				}
-			}
-		}
 
-		//start ending
-		if (this.health <= 0) {
 			this._weaponRotateInAir += Unit.weaponRotateForce / drawsDiffMs;
-			if(this._impulseY < 10 && this.y + this.height >= (this.isLand ? Draw.canvas.height - bottomShiftBorder + this._shiftYWeaponInEarch : this.goalY)){
+			if(this._impulseY < 10 && this.y + this.height >= (this.isLand ? Draw.canvas.height - bottomShiftBorder + this._shiftYWeaponInEarch : this.goalY + this.height / 3.5)){
 				this._impulseY = 0;
 				this._isDisplayWeaponInAir = false;
 				this._isDisplayWeaponInEarch = true;
 				this._isFall = false;
 			}
-
-			if(this.endingAnimation.animation.leftTimeMs == this.endingAnimation.animation.durationMs){
-				AudioSystem.play(this.centerX, CreatingSound);
-				AudioSystem.playRandomV(this.centerX, [End1Sound, End2Sound, End3Sound, End4Sound, End5Sound, End6Sound, End7Sound], 0);
+		}
+		else if(!this._isDisplayWeaponInEarch){
+			if(this._isFall) {
+				if(this.y + this.height < (this.goalY || Draw.canvas.height - bottomShiftBorder)){
+					this.y += 15 / drawsDiffMs;
+				}
+				else{
+					this._isFall = false;
+	
+					if(this.y + this.height > Draw.canvas.height){
+						//this.y = Draw.canvas.height - this.height;
+					}
+				}
 			}
 		}
 
@@ -436,13 +452,13 @@ export class Unit extends UpgradebleObject {
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			if(this.health <= 0){
+				this.endingAnimation.animation.restart();
 				this.endingAnimation.location = new Point(this.x, this.y);
 				this._isDisplayWeaponInAir = true;
 				this._impulseY = Unit.impulseWeapon;
-
-				if(this.goalY != 0){
-					this.goalY += this.height / 3.5;
-				}
+				
+				AudioSystem.play(this.centerX, CreatingSound);
+				AudioSystem.playRandomV(this.centerX, [End1Sound, End2Sound, End3Sound, End4Sound, End5Sound, End6Sound, End7Sound], 0);
 			}
 		}
 		return damage;
@@ -558,6 +574,11 @@ export class Unit extends UpgradebleObject {
 				super.drawObject(drawsDiffMs, this._activeWaitingArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 				super.drawObject(drawsDiffMs, this._activeWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			}
+		}
+		else if(this.isRun){
+			super.drawObject(drawsDiffMs, this._runAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObject(drawsDiffMs, this._runArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObject(drawsDiffMs, this._runWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 		}
 		else if(WawesState.isWaveStarted){
 			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);

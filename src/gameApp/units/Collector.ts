@@ -261,6 +261,8 @@ export class Collector extends Unit{
 			return;
 		}
 
+		super.logicMoving(drawsDiffMs, speed);
+
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){ //есть цель монетка и сбор предыдущей уже окончен
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
