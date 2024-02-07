@@ -379,69 +379,6 @@ export class Collector extends Unit{
 
 			if(this._isCollecting){ //период сбора монеток
 
-				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
-
-				//если нет монетки - ищем ближайшую монетку
-				if(!this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){
-
-					if (coins.length){ 
-						//монетку не должен загораживать монстр
-						var leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
-						var rightMonsters = sortBy(monsters.filter(x => x.isLand && !x.isLeftSide), x => x.centerX);
-
-						if(leftMonsters.length){
-							var closerMonsterLeft = leftMonsters[leftMonsters.length - 1];
-							coins = coins.filter(x => x.x > closerMonsterLeft.x + closerMonsterLeft.width);
-						}
-
-						if(rightMonsters.length){
-							var closerMonsterRight = rightMonsters[0];
-							coins = coins.filter(x => x.x < closerMonsterRight.x);
-						}
-
-						if(coins.length){
-							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
-							this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
-						}
-					}
-
-					//следим за монстрами - пора ли убегать? 
-					if(!this._goalCoin && monsters.length) {
-						var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
-						var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
-						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
-
-						if(leftMonster && rightMonster){
-							//активация защиты
-							if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
-								this._isDefenseActivationStarted = true;
-								this._isDefenseDeactivationStarted = false;
-								this._isDefenseActivated = false;
-								this.defenseActivationAnimation.restart();
-								this.defenseActivationArmorAnimation.restart();
-								this.defenseActivationToolAnimation.restart();
-							}
-						}
-						else if(leftMonster){
-							this._isCollecting = false;
-							this.isRunRight = leftMonster.isLeftSide;
-						}
-						else if(rightMonster){
-							this._isCollecting = false;
-							this.isRunRight = rightMonster.isLeftSide;
-						}
-					}
-				}
-				else{
-					//выбираем более ближнюю монету
-					if(coins.length > 1){
-						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
-						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
-					}
-
-					//logic in logicMoving
-				}
-
 				//сбор монетки
 				if(this._collectingAnimation.leftTimeMs > 0){
 					if(this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
@@ -454,6 +391,56 @@ export class Collector extends Unit{
 					}
 					else{
 						this._wasCollected = false;
+					}
+					return;
+				}
+
+				//выбираем новую или более ближнюю монету
+				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
+				if (coins.length && (!this._goalCoin || coins.length > 1)){ 
+					//монетку не должен загораживать монстр
+					var leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
+					var rightMonsters = sortBy(monsters.filter(x => x.isLand && !x.isLeftSide), x => x.centerX);
+
+					if(leftMonsters.length){
+						var closerMonsterLeft = leftMonsters[leftMonsters.length - 1];
+						coins = coins.filter(x => x.x > closerMonsterLeft.x + closerMonsterLeft.width);
+					}
+
+					if(rightMonsters.length){
+						var closerMonsterRight = rightMonsters[0];
+						coins = coins.filter(x => x.x < closerMonsterRight.x);
+					}
+
+					if(coins.length){
+						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX) + Math.abs(x.centerX - this.goalX))[0];
+						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
+					}
+				}
+				//следим за монстрами - пора ли убегать? 
+				else if(!this._goalCoin && this._collectingAnimation.leftTimeMs <= 0 && monsters.length){
+					var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
+					var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+					var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+
+					if(leftMonster && rightMonster){
+						//активация защиты
+						if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
+							this._isDefenseActivationStarted = true;
+							this._isDefenseDeactivationStarted = false;
+							this._isDefenseActivated = false;
+							this.defenseActivationAnimation.restart();
+							this.defenseActivationArmorAnimation.restart();
+							this.defenseActivationToolAnimation.restart();
+						}
+					}
+					else if(leftMonster){
+						this._isCollecting = false;
+						this.isRunRight = leftMonster.isLeftSide;
+					}
+					else if(rightMonster){
+						this._isCollecting = false;
+						this.isRunRight = rightMonster.isLeftSide;
 					}
 				}
 			}

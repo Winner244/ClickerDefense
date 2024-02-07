@@ -2793,6 +2793,7 @@ class TestPage extends React.Component {
 
                 var collector2 = new Collector(Draw.canvas.width / 2 - 100, y);
                 collector2.loadedResourcesAfterBuild();
+                collector2.goalX = Draw.canvas.width / 2 + 150;
                 Units.all.push(collector2);
 
                 //first coin
