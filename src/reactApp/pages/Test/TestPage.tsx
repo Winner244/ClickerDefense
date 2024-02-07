@@ -2814,6 +2814,35 @@ class TestPage extends React.Component {
                 }, 7000);
             }
         },
+
+        {
+            key: "Золотособиратель - Авто появление множественное + проверка на лимит покупки",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WawesState.delayEndLeftTimeMs = WawesState.delayStartLeftTimeMs = 0;
+                WawesState.isWaveStarted = false;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                var countMax = Collector.shopItem.maxCount - 1;
+                var count = 0;
+                var create = () => {
+                    setTimeout(() => {
+                        Game.buyThing(Collector.shopItem);
+                        count++;
+
+                        if(count < countMax){
+                            create();
+                        }
+                    }, 300);
+                }
+                create();
+            }
+        },
         
         /*{
             key: "Золотособиратель - гибель",

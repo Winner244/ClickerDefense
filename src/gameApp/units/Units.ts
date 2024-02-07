@@ -96,6 +96,17 @@ export class Units {
 	static add(unit: Unit){
 		unit.loadedResourcesAfterBuild();
 		Units.all.push(unit);
+
+		if(unit.isLand){
+			let sameUnits = Units.all.filter(x => x.name == unit.name);
+			if(sameUnits.length > 1){
+				let widthOfPart = Buildings.flyEarth.width / sameUnits.length;
+				for(let i = 0; i < sameUnits.length; i++){
+					sameUnits[i].goalX = Buildings.flyEarth.x + widthOfPart * i + widthOfPart / 2;
+				}
+			}
+		}
+
 		this.creatings.push(new SimpleObject(unit.x, unit.y, unit.width, unit.height, this.creatingAnimation.durationMs));
 		AudioSystem.play(unit.centerX, CreatingSound, 0.1, 1, true);
 	}

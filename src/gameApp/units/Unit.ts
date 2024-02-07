@@ -365,6 +365,7 @@ export class Unit extends UpgradebleObject {
 			//волна окончена
 			if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs <= 0 && !this._isFall && this._fallEndAnimation.leftTimeMs <= 0){
 				this.isRun = false;
+				this.isRunRight = true;
 
 				if(this.goalX && Math.abs(this.x - this.goalX) > speed){
 					this.isRunRight = this.goalX > this.x;
