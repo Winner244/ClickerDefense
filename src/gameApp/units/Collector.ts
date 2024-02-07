@@ -112,6 +112,7 @@ export class Collector extends Unit{
 	private _isDefenseDeactivationStarted: boolean; //защита убирается
 
 	private _isJoyDone: boolean; //было ли произведена анимация радости за текущее окончание волны?
+	private _isNewCoin: boolean; //новая монетка появилась?
 	
 
 	constructor(x: number, y: number) {
@@ -169,9 +170,12 @@ export class Collector extends Unit{
 		this.shopItemName = Collector.shopItem.name;
 
 		this._isJoyDone = false;
+		this._isNewCoin = false;
 		this._joyAnimation.leftTimeMs = 0;
 
         Collector.init(true); //reserve init
+
+		document.addEventListener(Coin.FALL_END_EVENT, () => this._isNewCoin = true);
 	}
 
 	public static get imageWidth() : number{
@@ -396,8 +400,9 @@ export class Collector extends Unit{
 				}
 
 				//выбираем новую или более ближнюю монету
-				var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
-				if (coins.length && (!this._goalCoin || coins.length > 1)){ 
+				if (!this._goalCoin || this._isNewCoin){ 
+					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
+
 					//монетку не должен загораживать монстр
 					var leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
 					var rightMonsters = sortBy(monsters.filter(x => x.isLand && !x.isLeftSide), x => x.centerX);
@@ -422,9 +427,11 @@ export class Collector extends Unit{
 						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX) + Math.abs(x.centerX - this.goalX))[0];
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 					}
+					this._isNewCoin = false;
 				}
 				//следим за монстрами - пора ли убегать? 
-				else if(!this._goalCoin && this._collectingAnimation.leftTimeMs <= 0 && monsters.length){
+				else if(!this._goalCoin && monsters.length){
+					console.log('следим за монстрами ');
 					var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
 					var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
 					var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
