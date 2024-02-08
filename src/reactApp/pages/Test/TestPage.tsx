@@ -2650,7 +2650,7 @@ class TestPage extends React.Component {
 
         
         {
-            key: "Золотособиратель - окончание волны с монетой - Тест на глюк - двойной радости и не убранной анимации радости",
+            key: "Золотособиратель - окончание волны с монетой - Тест на глюк - бег на месте",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2673,13 +2673,13 @@ class TestPage extends React.Component {
                 //first coin
                 setTimeout(() => {
                     //Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
-                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 75, Draw.canvas.height / 2));
-                }, 500);
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 100, Draw.canvas.height / 2));
+                }, 3500);
 
                 //first coin
                 setTimeout(() => {
                     Monsters.all.forEach(x => x.health = -1);
-                }, 3000);
+                }, 2000);
             }
         },
 

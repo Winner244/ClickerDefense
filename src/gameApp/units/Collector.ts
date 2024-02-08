@@ -261,7 +261,7 @@ export class Collector extends Unit{
 	logicMoving(drawsDiffMs: number, speed: number){
 		this.isRun = false;
 
-		if(this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted){
+		if (this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted){
 			return;  //игнорируем логику движения
 		}
 
