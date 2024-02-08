@@ -212,7 +212,7 @@ export class Miner extends Unit{
 		super.loadedResourcesAfterBuild();
 
 		this.infoItems = this.infoItems.filter(x => x.label != 'Защита');
-		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, Miner.shopItem.price * 0.2, () => this.improveSpeed()));
+		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, () => Miner.shopItem.price * 0.2, () => this.improveSpeed()));
 
 		this.improvements.push(new Improvement('Самооборона', Miner.shopItem.price * 2, shieldAndSwordsIcon, () => this.improveToSelfDefense(), [
 			new ImprovementParameterItem(`+`, swordIcon)
@@ -273,7 +273,7 @@ export class Miner extends Unit{
 
 	improveToSelfDefense(){
 		this.damage = 0.1;
-		this.infoItems.splice(2, 0, new ParameterItem('Урон', () => this.damage.toFixed(1), swordIcon, 13, Miner.shopItem.price, () => this.damage += 0.1));
+		this.infoItems.splice(2, 0, new ParameterItem('Урон', () => this.damage.toFixed(1), swordIcon, 13, () => Miner.shopItem.price, () => this.damage += 0.1));
 	}
 
 	improveSpeed(){

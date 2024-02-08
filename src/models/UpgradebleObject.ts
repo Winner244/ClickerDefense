@@ -78,9 +78,9 @@ export class UpgradebleObject extends AttackedObject{
 
 	loadedResourcesAfterBuild(){
 		this.infoItems = [
-			new ParameterItem(UpgradebleObject.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, 13, this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
+			new ParameterItem(UpgradebleObject.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, 13, () => this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
-			new ParameterItem('Защита', () => this.defense.toFixed(1), ShieldIcon, 13, this.price, () => this.defense += 1)
+			new ParameterItem('Защита', () => this.defense.toFixed(1), ShieldIcon, 13, () => this.price * (this.defense + 1), () => this.defense += 1)
 		];
 	}
 

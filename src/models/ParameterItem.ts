@@ -14,7 +14,7 @@ export default class ParameterItem{
 	mouseIn: () => void; //наведении мышкой на параметр в UI
 	mouseOut: () => void; //увод мышкой от параметра в UI
 
-	priceToImprove: number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
+	priceToImprove: () => number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
 	private _improve: () => void; //функция повышения характеристики
 
 	constructor(
@@ -22,7 +22,7 @@ export default class ParameterItem{
 		getValue: () => string|number, 
 		iconSrc: string = '', 
 		iconWidth: number = 13,
-		priceToImprove: number|null = null, 
+		priceToImprove: () => number|null = () => null, 
 		improve: () => void = () => {},
 		mouseIn: () => void = () => {},
 		mouseOut: () => void = () => {})
@@ -48,9 +48,10 @@ export default class ParameterItem{
 	}
 
 	improve(): boolean {
-		if(this.priceToImprove){
-			if(Gamer.coins >= this.priceToImprove){
-				Gamer.coins -= this.priceToImprove
+		let priceToImprove = this.priceToImprove();
+		if(priceToImprove){
+			if(Gamer.coins >= priceToImprove){
+				Gamer.coins -= priceToImprove
 				this._improve();
 				return true;
 			}

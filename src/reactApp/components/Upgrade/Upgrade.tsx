@@ -150,7 +150,7 @@ export class Upgrade extends React.Component<Props, {}> {
     const result = infoItem.improve();
     if(result){
       this.forceUpdate();
-      CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove || 0, 2000);
+      CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove() || 0, 2000);
       AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
       this.setParameterGreenTransition(infoItem.id);
     }
@@ -270,6 +270,7 @@ export class Upgrade extends React.Component<Props, {}> {
                   <ul className="upgrade__parameters-box">
                     {this.props.selectedObject.infoItems.map((infoItem, i) => {
                       let isDisplayRepairButton = infoItem.label == Building.improveHealthLabel && this.props.selectedObject?.health != this.props.selectedObject?.healthMax;
+                      let priceToImprove = infoItem.priceToImprove();
 
                       return (<li className={"upgrade__parameter upgrade__parameter--hover-active upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
                         <div className="upgrade__parameter-name">
@@ -297,15 +298,15 @@ export class Upgrade extends React.Component<Props, {}> {
                                 </div>
                               : null}
 
-                              {infoItem.priceToImprove && !isDisplayRepairButton
+                              {priceToImprove && !isDisplayRepairButton
                                 ? <div className='upgrade__parameter-buttons-box-group'>
-                                    <span className={'upgrade__parameter-price ' + (infoItem.priceToImprove > Gamer.coins ? 'upgrade__parameter-price--red' : '')}
+                                    <span className={'upgrade__parameter-price ' + (priceToImprove > Gamer.coins ? 'upgrade__parameter-price--red' : '')}
                                     >
-                                      {infoItem.priceToImprove}
+                                      {priceToImprove}
                                       <img className='nodrag upgrade__parameter-price-image' src={CoinImage}/>
                                     </span>
 
-                                    <button className='upgrade__parameter-button' disabled={infoItem.priceToImprove > Gamer.coins} onClick={(e) => this.improveParameter(infoItem, e)}>+</button>
+                                    <button className='upgrade__parameter-button' disabled={priceToImprove > Gamer.coins} onClick={(e) => this.improveParameter(infoItem, e)}>+</button>
                                   </div>
                                 : null}
                             

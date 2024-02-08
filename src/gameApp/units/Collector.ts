@@ -207,7 +207,7 @@ export class Collector extends Unit{
 		super.loadedResourcesAfterBuild();
 
 		this.infoItems = this.infoItems.filter(x => x.label != 'Защита');
-		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, Collector.shopItem.price * 0.2, () => this.improveSpeed()));
+		this.infoItems.splice(1, 0, new ParameterItem('Скорость', () => this.speed, speedIcon, 22, () => Collector.shopItem.price * 0.2, () => this.improveSpeed()));
 
 		this.improvements.push(new Improvement('Деревянная броня', Collector.shopItem.price * 2, WoodArmorImage, () => this.improveToWoodArmor(), [
 		 	new ImprovementParameterItem(`+`, shieldIcon)
