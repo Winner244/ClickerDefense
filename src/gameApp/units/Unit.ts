@@ -181,6 +181,7 @@ export class Unit extends UpgradebleObject {
 		this._joyArmorAnimation = new Animation(joyAnimation.frames, joyAnimation.durationMs); 
 		this._fallArmorImage = new Image();
 
+		this._joyAnimation.leftTimeMs = this._joyArmorAnimation.leftTimeMs = this._joyWeaponAnimation.leftTimeMs = 0;
 
 		this._goal = null;
 	
@@ -226,6 +227,8 @@ export class Unit extends UpgradebleObject {
 		AudioSystem.load(End5Sound);
 		AudioSystem.load(End6Sound);
 		AudioSystem.load(End7Sound);
+
+		document.addEventListener(WavesState.END_WAVE_EVENT, this.endWaveEvent.bind(this));
 	}
 	
 	static loadHealingResources(): void{
@@ -303,6 +306,12 @@ export class Unit extends UpgradebleObject {
 			let isDisplayUpgradeButton = this.isSupportUpgrade && !this.isDisplayedUpgradeWindow && this.health > 0;
 			UnitButtons.show(x, y, width, height, isDisplayRecoveryButton, isDisplayUpgradeButton, repairPrice, this);
 		}
+	}
+
+	endWaveEvent(){
+		this._joyAnimation.restart();
+		this._joyArmorAnimation.restart();
+		this._joyWeaponAnimation.restart();
 	}
 
 

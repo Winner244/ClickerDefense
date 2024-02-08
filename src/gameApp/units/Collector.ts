@@ -176,7 +176,6 @@ export class Collector extends Unit{
         Collector.init(true); //reserve init
 
 		document.addEventListener(Coin.FALL_END_EVENT, this.fallEndEvent.bind(this));
-		document.addEventListener(WavesState.END_WAVE_EVENT, this.endWaveEvent.bind(this));
 	}
 
 	public static get imageWidth() : number{
@@ -254,12 +253,6 @@ export class Collector extends Unit{
 		}
 
 		return result;
-	}
-
-	endWaveEvent(){
-		this._joyAnimation.restart();
-		this._joyArmorAnimation.restart();
-		this._joyWeaponAnimation.restart();
 	}
 
 	fallEndEvent(){
