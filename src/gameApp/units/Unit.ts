@@ -181,8 +181,6 @@ export class Unit extends UpgradebleObject {
 		this._joyArmorAnimation = new Animation(joyAnimation.frames, joyAnimation.durationMs); 
 		this._fallArmorImage = new Image();
 
-		this._joyAnimation.leftTimeMs = this._joyArmorAnimation.leftTimeMs = this._joyWeaponAnimation.leftTimeMs = 0;
-
 		this._goal = null;
 	
 		this.imageWeapon = imageWeapon;

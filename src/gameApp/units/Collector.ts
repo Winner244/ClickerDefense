@@ -111,7 +111,6 @@ export class Collector extends Unit{
 	private _isDefenseActivated: boolean; //защита установлена
 	private _isDefenseDeactivationStarted: boolean; //защита убирается
 
-	private _isJoyDone: boolean; //было ли произведена анимация радости за текущее окончание волны?
 	private _isNewCoin: boolean; //новая монетка появилась?
 	
 
@@ -169,7 +168,6 @@ export class Collector extends Unit{
 
 		this.shopItemName = Collector.shopItem.name;
 
-		this._isJoyDone = false;
 		this._isNewCoin = false;
 		this._joyAnimation.leftTimeMs = 0;
 
@@ -387,10 +385,6 @@ export class Collector extends Unit{
 		
 		//игра пошла
 		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
-			if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0){
-				this._isJoyDone = false;
-			}
-
 			if(this._isCollecting){ //период сбора монеток
 
 				//сбор монетки
@@ -510,13 +504,7 @@ export class Collector extends Unit{
 			}
 		}
 		else if(WavesState.isWaveEnded){
-
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
-
-			if(WavesState.delayEndLeftTimeMs > 0 && this._joyAnimation.leftTimeMs == 0 && !this._isJoyDone){
-				this._isJoyDone = true;
-				this._joyAnimation.restart();
-			}
 		}
 	}
 
