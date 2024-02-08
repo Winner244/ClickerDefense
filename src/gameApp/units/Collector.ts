@@ -257,6 +257,8 @@ export class Collector extends Unit{
 
 
 	logicMoving(drawsDiffMs: number, speed: number){
+		this.isRun = false;
+
 		if(this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted){
 			return;  //игнорируем логику движения
 		}
@@ -265,10 +267,14 @@ export class Collector extends Unit{
 			return;
 		}
 
+		if (this._collectingAnimation.leftTimeMs > 0){
+			return;
+		}
+
 		super.logicMoving(drawsDiffMs, speed);
 
 		if(this._isCollecting){ //период сбора монет
-			if(this._goalCoin && this._collectingAnimation.leftTimeMs <= 0){ //есть цель монетка и сбор предыдущей уже окончен
+			if(this._goalCoin){ //есть цель монетка и сбор предыдущей уже окончен
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
 				{
 					let condition = this.x > this._goalCoin.centerX - this.width / 5;
@@ -395,6 +401,9 @@ export class Collector extends Unit{
 					}
 					else{
 						this._wasCollected = false;
+						if(!this._goalCoin){
+							this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
+						}
 					}
 					return;
 				}
@@ -420,42 +429,54 @@ export class Collector extends Unit{
 					let sameUnits = units.filter(x => x.name == this.name);
 					if(sameUnits.length > 1){
 						let widthOfPart = Buildings.flyEarth.width / sameUnits.length;
-						coins = coins.filter(x => Math.abs(this.centerX - x.centerX) < widthOfPart && Math.abs(this.goalX - x.centerX) < widthOfPart);
+						let filteredCoins = coins.filter(x => Math.abs(this.centerX - x.centerX) < widthOfPart && Math.abs(this.goalX - x.centerX) < widthOfPart);
+						if(!this._goalCoin && !filteredCoins.length && coins.length){
+							coins = coins.filter(x => Math.abs(this.goalX - x.centerX) < widthOfPart);
+						}
+						else{
+							coins = filteredCoins;
+						}
 					}
 
 					if(coins.length && (!this._goalCoin || coins.length > 1)){
-						this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX) + Math.abs(x.centerX - this.goalX))[0];
+						if(sameUnits.length > 1){
+							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX) + Math.abs(x.centerX - this.goalX))[0];
+						}
+						else{
+							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+						}
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 					}
 					this._isNewCoin = false;
-				}
-				//следим за монстрами - пора ли убегать? 
-				else if(!this._goalCoin && monsters.length){
-					console.log('следим за монстрами ');
-					var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
-					var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
-					var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
-					if(leftMonster && rightMonster){
-						//активация защиты
-						if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
-							this._isDefenseActivationStarted = true;
-							this._isDefenseDeactivationStarted = false;
-							this._isDefenseActivated = false;
-							this.defenseActivationAnimation.restart();
-							this.defenseActivationArmorAnimation.restart();
-							this.defenseActivationToolAnimation.restart();
+					//следим за монстрами - пора ли убегать? 
+					if(!this._goalCoin && monsters.length){
+						var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
+						var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+	
+						if(leftMonster && rightMonster){
+							//активация защиты
+							if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
+								this._isDefenseActivationStarted = true;
+								this._isDefenseDeactivationStarted = false;
+								this._isDefenseActivated = false;
+								this.defenseActivationAnimation.restart();
+								this.defenseActivationArmorAnimation.restart();
+								this.defenseActivationToolAnimation.restart();
+							}
+						}
+						else if(leftMonster){
+							this._isCollecting = false;
+							this.isRunRight = leftMonster.isLeftSide;
+						}
+						else if(rightMonster){
+							this._isCollecting = false;
+							this.isRunRight = rightMonster.isLeftSide;
 						}
 					}
-					else if(leftMonster){
-						this._isCollecting = false;
-						this.isRunRight = leftMonster.isLeftSide;
-					}
-					else if(rightMonster){
-						this._isCollecting = false;
-						this.isRunRight = rightMonster.isLeftSide;
-					}
 				}
+				
 			}
 			else{ //убегать от нападения 
 				//logic in logicMoving
@@ -469,7 +490,6 @@ export class Collector extends Unit{
 					this._isCollecting = true;
 				}
 				else{
-					this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
 					
 					if(this.isRunRight){
 						if(rightMonster){
@@ -485,13 +505,14 @@ export class Collector extends Unit{
 
 			}
 		}
-		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0){
+		else if(WawesState.isWaveEnded){
 
-			if(this._joyAnimation.leftTimeMs == 0 && !this._isJoyDone){
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
+
+			if(WawesState.delayEndLeftTimeMs > 0 && this._joyAnimation.leftTimeMs == 0 && !this._isJoyDone){
 				this._isJoyDone = true;
 				this._joyAnimation.restart();
 			}
-			this.isRunRight = true;
 		}
 	}
 
@@ -499,6 +520,7 @@ export class Collector extends Unit{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
 
 			if(this.health <= 0){
 				if(damage >= this.healthMax){
@@ -518,6 +540,7 @@ export class Collector extends Unit{
 				}
 				return damage;
 			}
+			
 		}
 
 		//если защита активна и снова атакуют - продлеваем защиту

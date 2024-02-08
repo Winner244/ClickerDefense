@@ -307,6 +307,8 @@ export class Unit extends UpgradebleObject {
 
 
 	logicMoving(drawsDiffMs: number, speed: number){
+		this.isRun = false;
+
 		if(this.health > 0){
 
 			if(this._goal){
@@ -364,7 +366,6 @@ export class Unit extends UpgradebleObject {
 
 			//волна окончена
 			if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs <= 0 && !this._isFall && this._fallEndAnimation.leftTimeMs <= 0){
-				this.isRun = false;
 				this.isRunRight = true;
 
 				if(this.goalX && Math.abs(this.x - this.goalX) > speed){

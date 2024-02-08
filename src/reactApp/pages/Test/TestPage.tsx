@@ -2466,6 +2466,8 @@ class TestPage extends React.Component {
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveSpeed();
+                    collector1.improveSpeed();
+                    collector1.improveSpeed();
                     Units.all.push(collector1);
                 }, 300);
             }

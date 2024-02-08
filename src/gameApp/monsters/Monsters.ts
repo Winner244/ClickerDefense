@@ -133,7 +133,7 @@ export class Monsters{
 		
 			//логика взаимодействия с монетками
 			if(Coins.all.length){
-				var availableMonsters = Monsters.all.filter(monster => monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
+				var availableMonsters = Monsters.all.filter(monster => monster.isLand && monster.x > flyEarth.x && monster.x < flyEarth.x + flyEarth.width);
 				availableMonsters.forEach(monster => {
 					for(let i = 0; i < Coins.all.length; i++){
 						if(Coins.all[i].y > monster.y && monster.x < Coins.all[i].x + Coin.image.width / 2 && monster.x + monster.width > Coins.all[i].x + Coin.image.width / 2){

@@ -328,12 +328,12 @@ export class Game {
 		Buildings.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
 
 		Builder.draw(drawsDiffMs, Game.isGameOver);
-	
-		Coins.draw();
 
 		Units.draw(drawsDiffMs, Game.isGameOver);
 		Units.drawHealth();
 		Units.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
+	
+		Coins.draw();
 
 		Buildings.drawRepairingAnimation();
 		Units.drawHealingingAnimation(drawsDiffMs);
