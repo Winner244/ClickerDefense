@@ -23,7 +23,7 @@ import {Coins} from '../coins/Coins';
 import {Monster} from '../monsters/Monster';
 import {Building} from '../buildings/Building';
 
-import {WawesState} from '../gameSystems/WawesState';
+import {WavesState} from '../gameSystems/WavesState';
 
 import CreatingImage from '../../assets/img/units/creating.png'; 
 import HeartImage from '../../assets/img/icons/health.png'; 
@@ -365,7 +365,7 @@ export class Unit extends UpgradebleObject {
 			}
 
 			//волна окончена
-			if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs <= 0 && !this._isFall && this._fallEndAnimation.leftTimeMs <= 0){
+			if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs <= 0 && !this._isFall && this._fallEndAnimation.leftTimeMs <= 0){
 				this.isRunRight = true;
 
 				if(this.goalX && Math.abs(this.x - this.goalX) > speed){
@@ -485,7 +485,7 @@ export class Unit extends UpgradebleObject {
 			}
 
 			if(!this._isDisplayWeaponInAir){
-				if(!WawesState.isWaveStarted){
+				if(!WavesState.isWaveStarted){
 					this._brightnessOfWeaponInEarch += (this._isIncreaseBrightnessOfWeaponInEarch ? 1 : -1) * 0.01;
 					if(this._brightnessOfWeaponInEarch > 2){
 						this._isIncreaseBrightnessOfWeaponInEarch = false;
@@ -508,7 +508,7 @@ export class Unit extends UpgradebleObject {
 				this.drawEarchForWeaponInEarch();
 
 				//искры/звёздочки для привлечения внимания
-				if(!WawesState.isWaveStarted){
+				if(!WavesState.isWaveStarted){
 					this._stars.forEach(star => {
 						Draw.ctx.globalAlpha = star.leftTimeMs / Unit.starDurationMs;
 						Draw.ctx.drawImage(Unit.starImage, star.location.x, star.location.y, star.size.width, star.size.height);
@@ -565,7 +565,7 @@ export class Unit extends UpgradebleObject {
 			super.drawObject(drawsDiffMs, this._fallEndArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._fallEndWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 		}
-		else if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0) {
+		else if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs > 0) {
 			if(this._startActiveWaitingAnimation.leftTimeMs > 0){
 				super.drawObject(drawsDiffMs, this._startActiveWaitingAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 				super.drawObject(drawsDiffMs, this._startActiveWaitingArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
@@ -582,12 +582,12 @@ export class Unit extends UpgradebleObject {
 			super.drawObject(drawsDiffMs, this._runArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._runWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 		}
-		else if(WawesState.isWaveStarted){
+		else if(WavesState.isWaveStarted){
 			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 		}
-		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0){
+		else if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs > 0 && this._joyAnimation.leftTimeMs > 0){
 			super.drawObject(drawsDiffMs, this._joyAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._joyArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._joyWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);

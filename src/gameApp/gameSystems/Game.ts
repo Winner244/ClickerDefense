@@ -4,7 +4,7 @@ import {AnimationsSystem} from './AnimationsSystem';
 import {TestSystem} from './TestSystem';
 
 import {Waves} from './Waves';
-import {WawesState} from './WawesState';
+import {WavesState} from './WavesState';
 
 import {Labels} from '../labels/Labels';
 
@@ -264,8 +264,8 @@ export class Game {
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 		let alpha = Draw.ctx.getImageData(x, y, 1, 1).data[3];
 		let isHoverFound = alpha > 200; //если какой-либо объект находится под курсором (минимум 179 - затемнение фона)
-		let isWaveStarted = WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0;
-		let isWaveEnded = !WawesState.isWaveStarted && WawesState.delayEndLeftTimeMs <= 0;
+		let isWaveStarted = WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0;
+		let isWaveEnded = !WavesState.isWaveStarted && WavesState.delayEndLeftTimeMs <= 0;
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick, Buildings.all, this.loadResourcesAfterBuild.bind(this));
 

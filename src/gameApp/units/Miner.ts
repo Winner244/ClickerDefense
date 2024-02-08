@@ -25,7 +25,7 @@ import {Unit} from './Unit';
 
 import {Coins} from '../coins/Coins';
 
-import {WawesState} from '../gameSystems/WawesState';
+import {WavesState} from '../gameSystems/WavesState';
 
 import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
@@ -305,7 +305,7 @@ export class Miner extends Unit{
 		super.logicMoving(drawsDiffMs, speed);
 
 		//игра идёт
-		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0){
 
 			//убегать от нападения летучих мышей
 			if(!this._isDiging && this.damage == 0){ 
@@ -380,7 +380,7 @@ export class Miner extends Unit{
 		}
 		
 		//игра пошла
-		if(this.health > 0 && WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+		if(this.health > 0 && WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0){
 			if(this._isDiging){ //добывание монеток
 				if(this._diggingAnimation.displayedTimeMs % this._diggingAnimation.durationMs > this._diggingAnimation.durationMs * 0.75){
 					if(!this._wasPickHit){
@@ -414,7 +414,7 @@ export class Miner extends Unit{
 				//logic in logicMoving
 			}
 		}
-		else if(WawesState.isWaveEnded && WawesState.delayEndLeftTimeMs > 0 && !this.isRunRight){
+		else if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs > 0 && !this.isRunRight){
 			this.isRunRight = true;
 		}
 	}
@@ -504,7 +504,7 @@ export class Miner extends Unit{
 		imageOrAnimationWeapon: AnimationInfinite|Animation|HTMLImageElement, 
 		isGameOver: boolean, invertSign: number = 1, x: number|null = null, y: number|null = null, filter: string|null = null)
 	{
-		if(WawesState.isWaveStarted){
+		if(WavesState.isWaveStarted){
 			imageOrAnimation = this._isDiging 
 				? this._diggingAnimation 
 				: this.damage > 0

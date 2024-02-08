@@ -1,9 +1,10 @@
 /** Хранилище состояний волны для использования без цикличных ссылок/зависимостей */
-export class WawesState {
+export class WavesState {
+	public static readonly END_WAVE_EVENT: string = 'END_WAVE_EVENT';
 
 	public static isWaveStarted: boolean = false; //Волна запущена?
 	public static get isWaveEnded(): boolean { //Волна завершена?
-		return !WawesState.isWaveStarted;
+		return !WavesState.isWaveStarted;
 	} 
 
 	public static delayStartLeftTimeMs: number = 0; //isWaveStarted = true, но волна ещё не началась - сколько ещё осталось задержки до начала волны? (миллисекунды)

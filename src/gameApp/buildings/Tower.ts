@@ -27,7 +27,7 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {Helper} from '../helpers/Helper';
 
-import {WawesState} from '../gameSystems/WawesState';
+import {WavesState} from '../gameSystems/WavesState';
 
 import towerImage from '../../assets/img/buildings/tower/tower.png';  
 import arrowImage from '../../assets/img/buildings/tower/arrow.png';  
@@ -232,7 +232,7 @@ export class Tower extends Building{
 			}
 		}
 
-		if(WawesState.isWaveStarted && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
+		if(WavesState.isWaveStarted && (this._isDisplayRadius || this._isDisplayDynamitRadius)){
 			this._isDisplayRadius = false;
 			this._isDisplayDynamitRadius = false;
 		}

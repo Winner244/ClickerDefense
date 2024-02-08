@@ -3,7 +3,7 @@ import * as React from 'react';
 import {Menu} from '../Menu/Menu';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {WawesState} from '../../../gameApp/gameSystems/WawesState';
+import {WavesState} from '../../../gameApp/gameSystems/WavesState';
 
 import './GameDisplay.scss';
 
@@ -27,7 +27,7 @@ class GameDisplay extends React.Component {
 
     document.addEventListener('visibilitychange', () => {
       if(document.hidden){
-        if(WawesState.isWaveStarted){
+        if(WavesState.isWaveStarted){
           Game.pause();
         }
       }

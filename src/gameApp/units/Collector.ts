@@ -26,7 +26,7 @@ import {Unit} from './Unit';
 import {Coin} from '../coins/Coin';
 import {Coins} from '../coins/Coins';
 
-import {WawesState} from '../gameSystems/WawesState';
+import {WavesState} from '../gameSystems/WavesState';
 
 import ParameterItem from '../../models/ParameterItem';
 import Improvement from '../../models/Improvement';
@@ -175,7 +175,8 @@ export class Collector extends Unit{
 
         Collector.init(true); //reserve init
 
-		document.addEventListener(Coin.FALL_END_EVENT, () => this._isNewCoin = true);
+		document.addEventListener(Coin.FALL_END_EVENT, this.fallEndEvent.bind(this));
+		document.addEventListener(WavesState.END_WAVE_EVENT, this.endWaveEvent.bind(this));
 	}
 
 	public static get imageWidth() : number{
@@ -253,6 +254,16 @@ export class Collector extends Unit{
 		}
 
 		return result;
+	}
+
+	endWaveEvent(){
+		this._joyAnimation.restart();
+		this._joyArmorAnimation.restart();
+		this._joyWeaponAnimation.restart();
+	}
+
+	fallEndEvent(){
+		this._isNewCoin = true;
 	}
 
 
@@ -382,8 +393,8 @@ export class Collector extends Unit{
 		}
 		
 		//игра пошла
-		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
-			if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs <= 0){
+		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
+			if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0){
 				this._isJoyDone = false;
 			}
 
@@ -505,11 +516,11 @@ export class Collector extends Unit{
 
 			}
 		}
-		else if(WawesState.isWaveEnded){
+		else if(WavesState.isWaveEnded){
 
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
 
-			if(WawesState.delayEndLeftTimeMs > 0 && this._joyAnimation.leftTimeMs == 0 && !this._isJoyDone){
+			if(WavesState.delayEndLeftTimeMs > 0 && this._joyAnimation.leftTimeMs == 0 && !this._isJoyDone){
 				this._isJoyDone = true;
 				this._joyAnimation.restart();
 			}
@@ -552,7 +563,7 @@ export class Collector extends Unit{
 		}
 
 		//убегаем от урона - даже если его нету
-		if(this._isCollecting && !WawesState.isWaveEnded){
+		if(this._isCollecting && !WavesState.isWaveEnded){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
@@ -610,7 +621,7 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this._passiveWaitingWeaponAnimation;
 		}
 
-		if(!WawesState.isWaveStarted && Coins.all.length){
+		if(!WavesState.isWaveStarted && Coins.all.length){
 			super.drawObjectBase(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObjectBase(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObjectBase(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, isInvertAnimation);

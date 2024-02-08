@@ -14,7 +14,7 @@ import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {Keypad} from '../../../gameApp/gamer/Keypad';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
-import {WawesState} from '../../../gameApp/gameSystems/WawesState';
+import {WavesState} from '../../../gameApp/gameSystems/WavesState';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import './Menu.scss';
@@ -161,7 +161,7 @@ export class Menu extends React.Component<Props, IState> {
   }
 
   onClickShopOpen(){
-    WawesState.delayEndLeftTimeMs = 0;
+    WavesState.delayEndLeftTimeMs = 0;
     this.props.close();
     Menu.playSoundSelect();
     Upgrade.hide();

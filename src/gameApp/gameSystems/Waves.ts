@@ -17,7 +17,7 @@ import {Necromancer} from '../monsters/Necromancer';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
-import {WawesState} from './WawesState';
+import {WavesState} from './WavesState';
 
 import StartNewWaveSound from '../../assets/sounds/startWave.mp3'; 
 
@@ -86,10 +86,10 @@ export class Waves{
 
 	static startNewWave(){
 		this.waveCurrent++;
-		WawesState.delayStartLeftTimeMs = this.delayStartTimeMs;
-		WawesState.isWaveStarted = true;
+		WavesState.delayStartLeftTimeMs = this.delayStartTimeMs;
+		WavesState.isWaveStarted = true;
 		this.waveTimeMs = 0;
-		WawesState.delayEndLeftTimeMs = 0;
+		WavesState.delayEndLeftTimeMs = 0;
 
 		//call "init" in are used classes in new wave to preload lazy images
 		let currentWave = Waves.all[Waves.waveCurrent];
@@ -106,17 +106,17 @@ export class Waves{
 	}
 
 	static logic(drawsDiffMs: number, bottomShiftBorder: number): void{
-		if(WawesState.delayEndLeftTimeMs > 0){
-			WawesState.delayEndLeftTimeMs -= drawsDiffMs;
+		if(WavesState.delayEndLeftTimeMs > 0){
+			WavesState.delayEndLeftTimeMs -= drawsDiffMs;
 			return;
 		}
 
-		if(!WawesState.isWaveStarted){
+		if(!WavesState.isWaveStarted){
 			return;
 		}
 
-		if(WawesState.delayStartLeftTimeMs > 0){
-			WawesState.delayStartLeftTimeMs -= drawsDiffMs;
+		if(WavesState.delayStartLeftTimeMs > 0){
+			WavesState.delayStartLeftTimeMs -= drawsDiffMs;
 			return;
 		}
 
@@ -125,14 +125,15 @@ export class Waves{
 		//end of wave
 		if(this.waveCountKilledMonsters >= this.waveCountMonsters && Monsters.all.length == 0){
 			Menu.displayShopButton();
-			WawesState.isWaveStarted = false;
-			WawesState.delayEndLeftTimeMs = this.delayEndTimeMs;
+			WavesState.isWaveStarted = false;
+			WavesState.delayEndLeftTimeMs = this.delayEndTimeMs;
 			if(Waves.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
 			}
 			Game.loadResourcesAfterEndOfWave(Waves.waveCurrent);
 			Game.endOfWave();
 			MusicSystem.playPeaceTime(this.delayEndTimeMs / 1000);
+			document.dispatchEvent(new CustomEvent(WavesState.END_WAVE_EVENT));
 			return;
 		}
 
@@ -168,14 +169,14 @@ export class Waves{
 	}
 
 	static draw(): void{
-		if(WawesState.isWaveStarted && WawesState.delayStartLeftTimeMs > 0){
-			Draw.drawStartNewWave(Waves.waveCurrent + 1,  WawesState.delayStartLeftTimeMs, Waves.delayStartTimeMs);
+		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs > 0){
+			Draw.drawStartNewWave(Waves.waveCurrent + 1,  WavesState.delayStartLeftTimeMs, Waves.delayStartTimeMs);
 		}
-		else if(Waves.waveCountKilledMonsters >= Waves.waveCountMonsters && WawesState.delayEndLeftTimeMs > 0 && Monsters.all.length == 0){
-			Draw.drawEndNewWave(WawesState.delayEndLeftTimeMs, Waves.delayEndTimeMs);
+		else if(Waves.waveCountKilledMonsters >= Waves.waveCountMonsters && WavesState.delayEndLeftTimeMs > 0 && Monsters.all.length == 0){
+			Draw.drawEndNewWave(WavesState.delayEndLeftTimeMs, Waves.delayEndTimeMs);
 		}
 
-		if(WawesState.isWaveStarted){
+		if(WavesState.isWaveStarted){
 			Draw.drawWaveInterface(Waves.iconCountKilledMonsters, Waves.waveCountKilledMonsters, Waves.waveCountMonsters);
 		}
 	}
