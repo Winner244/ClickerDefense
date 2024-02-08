@@ -273,8 +273,6 @@ export class Collector extends Unit{
 			return;
 		}
 
-		super.logicMoving(drawsDiffMs, speed);
-
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin){ //есть цель монетка и сбор предыдущей уже окончен
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
@@ -282,6 +280,7 @@ export class Collector extends Unit{
 					let condition = this.x > this._goalCoin.centerX - this.width / 5;
 					if (condition) { //ещё не дошёл
 						this.x -= speed;
+						return;
 					}
 					else //дошёл
 					{
@@ -295,6 +294,7 @@ export class Collector extends Unit{
 					let condition = this.x + this.width < this._goalCoin.centerX + this.width / 5;
 					if (condition) { //ещё не дошёл
 						this.x += speed;
+						return;
 					}
 					else //дошёл
 					{
@@ -314,7 +314,10 @@ export class Collector extends Unit{
 			}
 
 			this.isLeftSide = this.x < Buildings.flyEarth.centerX;
+			return;
 		}
+
+		super.logicMoving(drawsDiffMs, speed);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){

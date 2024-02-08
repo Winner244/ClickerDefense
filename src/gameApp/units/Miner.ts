@@ -302,8 +302,6 @@ export class Miner extends Unit{
 	}
 
 	logicMoving(drawsDiffMs: number, speed: number){
-		super.logicMoving(drawsDiffMs, speed);
-
 		//игра идёт
 		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0){
 
@@ -352,7 +350,10 @@ export class Miner extends Unit{
 					}
 				}
 			}
+			return;
 		}
+
+		super.logicMoving(drawsDiffMs, speed);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
