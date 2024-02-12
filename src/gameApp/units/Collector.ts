@@ -242,6 +242,9 @@ export class Collector extends Unit{
 		this.imageWeapon = new Image();
 		this.imageWeapon.src = VacuumImage;
 		this._isHasVacuum = true;
+		this._rotateWeaponInEarch = -25;
+		this._weaponRotateInAir = 190;
+		this._shiftYWeaponInEarch = -5;
 		//this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1GoldPickImage;
 		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
@@ -368,7 +371,7 @@ export class Collector extends Unit{
 		
 
 		//end 
-		if(this._isDisplayWeaponInEarch){
+		if(this._isDisplayWeaponInEarch && !this._isHasVacuum){
 			this.imageWeapon = Collector.weaponImage;
 			return;
 		}
@@ -556,7 +559,7 @@ export class Collector extends Unit{
 
 			if(this.health <= 0){
 				if(this._isHasVacuum){
-					this._weaponRotateInAir = 180;
+					//ignore next logic
 				}
 				else if(damage >= this.healthMax){
 					let offCanvas = new OffscreenCanvas(Collector.fallImage.width, Collector.fallImage.height);

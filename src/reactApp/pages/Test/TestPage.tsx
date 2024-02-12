@@ -2354,7 +2354,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Gamer.coins = 1500;
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
-                Gamer.coins = 100;
                 Waves.all = [
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
@@ -2387,7 +2386,6 @@ class TestPage extends React.Component {
                 Game.startNew();
                 Gamer.coins = 1500;
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
-                Gamer.coins = 100;
                 Waves.all = [
                     [ //1-я волна
                         //new WaveData(Zombie.name, 7, 80, 0),
