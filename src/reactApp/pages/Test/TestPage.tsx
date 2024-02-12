@@ -2373,8 +2373,46 @@ class TestPage extends React.Component {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
-                    collector1.improveToWoodArmor();
+                    //collector1.improveToWoodArmor();
                     Units.all.push(collector1);
+                }, 300);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - кабан с ускорением + пылесос",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Gamer.coins = 1500;
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                Gamer.coins = 100;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Boar.name, 1, 60, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
+
+                this.waitLoadingImage(Boar.imageHandler, () => {
+                    var boar = new Boar(50, 780, true, 1, true);
+                    Monsters.all.push(boar);
+                });
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    //collector1.improveToWoodArmor();
+                    collector1.improveToVacuum();
+                    Units.all.push(collector1);
+                }, 300);
+
+                setTimeout(() => {
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 10, Draw.canvas.height / 2));
                 }, 300);
             }
         },

@@ -56,6 +56,11 @@ import CollectorRunWoodArmorImage from '../../assets/img/units/collector/woodArm
 import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArmor/joy.png'; 
 import CollectorFallWoodArmorImage from '../../assets/img/units/collector/woodArmor/fall.png'; 
 
+import VacuumImage from '../../assets/img/units/collector/vacuum/vacuum.png'; 
+import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
+
+
+
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
@@ -88,7 +93,6 @@ export class Collector extends Unit{
 
 	private readonly _collectingAnimation: Animation; //анимация собирания монеток
 	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
-	private readonly _collectingToolAnimation: Animation; //для апгрейда оружия - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -112,6 +116,8 @@ export class Collector extends Unit{
 	private _isDefenseDeactivationStarted: boolean; //защита убирается
 
 	private _isNewCoin: boolean; //новая монетка появилась?
+
+	private _isHasVacuum: boolean; //прокачен до пылесоса? - это меняет логику сбора монет
 	
 
 	constructor(x: number, y: number) {
@@ -144,7 +150,6 @@ export class Collector extends Unit{
 		
 		this._collectingAnimation = new Animation(9, 9 * 150, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
-		this._collectingToolAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 		this._collectingAnimation.leftTimeMs = 0;
 
 		this._isCollecting = true;
@@ -169,6 +174,7 @@ export class Collector extends Unit{
 		this.shopItemName = Collector.shopItem.name;
 
 		this._isNewCoin = false;
+		this._isHasVacuum = false;
 		this._joyAnimation.leftTimeMs = 0;
 
         Collector.init(true); //reserve init
@@ -212,6 +218,10 @@ export class Collector extends Unit{
 		this.improvements.push(new Improvement('Деревянная броня', Collector.shopItem.price * 2, WoodArmorImage, () => this.improveToWoodArmor(), [
 		 	new ImprovementParameterItem(`+`, shieldIcon)
 		]));
+
+		this.improvements.push(new Improvement('Пылесос', Collector.shopItem.price * 0.8, VacuumImage, () => this.improveToVacuum(), [
+			new ImprovementParameterItem(`+ авто сбор `, coinIcon)
+		]));
 	}
 
 	improveToWoodArmor(){
@@ -228,13 +238,25 @@ export class Collector extends Unit{
 		this._fallArmorImage.src = CollectorFallWoodArmorImage;
 	}
 
+	improveToVacuum(){
+		this.imageWeapon = new Image();
+		this.imageWeapon.src = VacuumImage;
+		this._isHasVacuum = true;
+		//this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1GoldPickImage;
+		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
+		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
+		//this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
+		this._runAnimation.image.src = CollectorRunVacuumImage;
+		//this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
+		//this._attackWeaponAnimation.image.src = MinerAttackGoldPickImage;
+	}
+
 	improveSpeed(){
 		this.speed += 10;
 
 		var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
 		this._collectingAnimation.changeDuration(newDurationDigging);
 		this._collectingArmorAnimation.changeDuration(newDurationDigging);
-		this._collectingToolAnimation.changeDuration(newDurationDigging);
 
 		var newDurationRun = Collector.initialSpeed / this.speed * this._runAnimation.initialDurationMs;
 		this._runAnimation.changeDuration(newDurationRun);
@@ -269,38 +291,47 @@ export class Collector extends Unit{
 			return;
 		}
 
-		if (this._collectingAnimation.leftTimeMs > 0){
+		if (this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum){
 			return;
 		}
 
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin){ //есть цель монетка и сбор предыдущей уже окончен
+				let shift = this._isHasVacuum ? 10 : this.width / 5;
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
 				{
-					let condition = this.x > this._goalCoin.centerX - this.width / 5;
+					let condition = this.x > this._goalCoin.centerX - shift;
 					if (condition) { //ещё не дошёл
 						this.x -= speed;
 						return;
 					}
 					else //дошёл
 					{
-						this._collectingAnimation.restart();
-						this._collectingArmorAnimation.restart();
-						this._collectingToolAnimation.restart();
+						if(this._isHasVacuum){
+							this.collectCoin();
+						}
+						else{
+							this._collectingAnimation.restart();
+							this._collectingArmorAnimation.restart();
+						}
 					}
 				}
 				else 
 				{
-					let condition = this.x + this.width < this._goalCoin.centerX + this.width / 5;
+					let condition = this.x + this.width < this._goalCoin.centerX + shift;
 					if (condition) { //ещё не дошёл
 						this.x += speed;
 						return;
 					}
 					else //дошёл
 					{
-						this._collectingAnimation.restart();
-						this._collectingArmorAnimation.restart();
-						this._collectingToolAnimation.restart();
+						if(this._isHasVacuum){
+							this.collectCoin();
+						}
+						else{
+							this._collectingAnimation.restart();
+							this._collectingArmorAnimation.restart();
+						}
 					}
 				}
 			}
@@ -318,6 +349,14 @@ export class Collector extends Unit{
 		}
 
 		super.logicMoving(drawsDiffMs, speed);
+	}
+
+	collectCoin(){
+		if(this._goalCoin){
+			var i = Coins.all.indexOf(this._goalCoin);
+			Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
+			this._goalCoin = null;
+		}
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -391,19 +430,17 @@ export class Collector extends Unit{
 			if(this._isCollecting){ //период сбора монеток
 
 				//сбор монетки
-				if(this._collectingAnimation.leftTimeMs > 0){
+				if(this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum){
 					if(this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
 						if(!this._wasCollected && this._goalCoin){
-							var i = Coins.all.indexOf(this._goalCoin);
-							Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
-							this._goalCoin = null;
+							this.collectCoin();
 							this._wasCollected = true;
 						}
 					}
 					else{
 						this._wasCollected = false;
 						if(!this._goalCoin){
-							this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
+							this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
 						}
 					}
 					return;
@@ -507,7 +544,7 @@ export class Collector extends Unit{
 			}
 		}
 		else if(WavesState.isWaveEnded){
-			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
 		}
 	}
 
@@ -515,10 +552,13 @@ export class Collector extends Unit{
 		var damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
-			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
 
 			if(this.health <= 0){
-				if(damage >= this.healthMax){
+				if(this._isHasVacuum){
+					this._weaponRotateInAir = 180;
+				}
+				else if(damage >= this.healthMax){
 					let offCanvas = new OffscreenCanvas(Collector.fallImage.width, Collector.fallImage.height);
 					let offContext = offCanvas.getContext('2d');
 					if(offContext){
@@ -550,7 +590,7 @@ export class Collector extends Unit{
 		if(this._isCollecting && !WavesState.isWaveEnded){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
-			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._collectingToolAnimation.leftTimeMs = 0;
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
 		}
 
 		return damage;
@@ -584,10 +624,9 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
 			isInvertAnimation = true;
 		}
-		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
+		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum){
 			imageOrAnimation = this._collectingAnimation;
 			imageOrAnimationArmor = this._collectingArmorAnimation;
-			imageOrAnimationWeapon = this._collectingToolAnimation;
 		}
 		else if (this._joyAnimation.leftTimeMs > 0){
 			imageOrAnimation = this._joyAnimation;
