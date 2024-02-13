@@ -59,6 +59,7 @@ import CollectorFallWoodArmorImage from '../../assets/img/units/collector/woodAr
 import VacuumImage from '../../assets/img/units/collector/vacuum/vacuum.png'; 
 import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
 import CollectorPassiveWaitingVacuumImage from '../../assets/img/units/collector/vacuum/passiveWaiting.png'; 
+import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
 
 
 
@@ -227,7 +228,12 @@ export class Collector extends Unit{
 
 	improveToWoodArmor(){
 		this.defense += 1;
-		this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
+		if(this.improvements.find(x => x.label == 'Пылесос')?.isImproved){
+			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage
+		}
+		else{
+			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
+		}
 		this.defenseActivationArmorAnimation.image.src = CollectorDefenseWoodArmorImage;
 		this.defenseArmorAnimation.image.src = CollectorDefenseStartWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
@@ -246,11 +252,17 @@ export class Collector extends Unit{
 		this._rotateWeaponInEarch = -25;
 		this._weaponRotateInAir = 190;
 		this._shiftYWeaponInEarch = -5;
+		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
+			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage
+		}
+		else{
+			this._collectingAnimation.image.src = CollectorRunVacuumImage;
+		}
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
 		//this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
-		this._runAnimation.image.src = CollectorRunVacuumImage;
+		//this._runAnimation.image.src = CollectorRunVacuumImage;
 		//this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
 		//this._attackWeaponAnimation.image.src = MinerAttackGoldPickImage;
 	}
