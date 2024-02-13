@@ -58,6 +58,7 @@ import CollectorFallWoodArmorImage from '../../assets/img/units/collector/woodAr
 
 import VacuumImage from '../../assets/img/units/collector/vacuum/vacuum.png'; 
 import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
+import CollectorPassiveWaitingVacuumImage from '../../assets/img/units/collector/vacuum/passiveWaiting.png'; 
 
 
 
@@ -245,7 +246,7 @@ export class Collector extends Unit{
 		this._rotateWeaponInEarch = -25;
 		this._weaponRotateInAir = 190;
 		this._shiftYWeaponInEarch = -5;
-		//this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1GoldPickImage;
+		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
 		//this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
