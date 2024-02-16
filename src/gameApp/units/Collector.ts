@@ -57,7 +57,7 @@ import CollectorJoyWoodArmorImage from '../../assets/img/units/collector/woodArm
 import CollectorFallWoodArmorImage from '../../assets/img/units/collector/woodArmor/fall.png'; 
 
 import VacuumImage from '../../assets/img/units/collector/vacuum/vacuum.png'; 
-import CollectorCollectVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
+import CollectorCollectVacuumImage from '../../assets/img/units/collector/vacuum/collect.png'; 
 import CollectorPassiveWaitingVacuumImage from '../../assets/img/units/collector/vacuum/passiveWaiting.png'; 
 import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
 import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
@@ -94,8 +94,8 @@ export class Collector extends Unit{
 
 	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 50, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
 
-	private readonly _collectingAnimation: Animation; //анимация собирания монеток
-	private readonly _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
+	private _collectingAnimation: Animation; //анимация собирания монеток
+	private _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -121,7 +121,9 @@ export class Collector extends Unit{
 	private _isNewCoin: boolean; //новая монетка появилась?
 
 	private _isHasVacuum: boolean; //прокачен до пылесоса? - это меняет логику сбора монет
+	private static readonly VacuumRunStopDistance: number = 30;
 	
+	private readonly empty: Animation;
 
 	constructor(x: number, y: number) {
 		super(x, y, 
@@ -154,6 +156,7 @@ export class Collector extends Unit{
 		this._collectingAnimation = new Animation(9, 9 * 150, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 		this._collectingAnimation.leftTimeMs = 0;
+		this.empty = new Animation(0, 0);
 
 		this._isCollecting = true;
 		this._wasCollected = false;
@@ -230,6 +233,7 @@ export class Collector extends Unit{
 	improveToWoodArmor(){
 		this.defense += 1;
 		if(this.improvements.find(x => x.label == 'Пылесос')?.isImproved){
+			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage
 		}
 		else{
@@ -254,16 +258,18 @@ export class Collector extends Unit{
 		this._weaponRotateInAir = 190;
 		this._shiftYWeaponInEarch = -5;
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
+			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage
 		}
 		else{
+			this._collectingAnimation = new Animation(4, 4 * 150);
 			this._collectingAnimation.image.src = CollectorCollectVacuumImage;
 		}
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
 		//this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
-		this._runAnimation.image.src = CollectorRunVacuumImage;
+		this._runWeaponAnimation.image.src = CollectorRunVacuumImage;
 		//this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
 		//this._attackWeaponAnimation.image.src = MinerAttackGoldPickImage;
 	}
@@ -319,6 +325,18 @@ export class Collector extends Unit{
 				{
 					let condition = this.x > this._goalCoin.centerX - shift;
 					if (condition) { //ещё не дошёл
+						if(this._isHasVacuum && this.x - (this._goalCoin.centerX - shift) < Collector.VacuumRunStopDistance){
+							this.isRun = false;
+							if(this._collectingAnimation.leftTimeMs <= 0){
+								this._collectingAnimation.restart();
+								this._collectingArmorAnimation.restart();
+							}
+						}
+						else{
+							console.log('this.isRun = true 1', this.x - (this._goalCoin.centerX - shift), Collector.VacuumRunStopDistance);
+							this.isRun = true;
+						}
+
 						this.x -= speed;
 						return;
 					}
@@ -337,6 +355,18 @@ export class Collector extends Unit{
 				{
 					let condition = this.x + this.width < this._goalCoin.centerX + shift;
 					if (condition) { //ещё не дошёл
+						if(this._isHasVacuum && (this._goalCoin.centerX + shift) - (this.x + this.width) < Collector.VacuumRunStopDistance){
+							this.isRun = false;
+							if(this._collectingAnimation.leftTimeMs <= 0){
+								this._collectingAnimation.restart();
+								this._collectingArmorAnimation.restart();
+							}
+						}
+						else{
+							console.log('this.isRun = true 2', (this._goalCoin.centerX + shift) - (this.x + this.width), Collector.VacuumRunStopDistance);
+							this.isRun = true;
+						}
+
 						this.x += speed;
 						return;
 					}
@@ -641,9 +671,11 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
 			isInvertAnimation = true;
 		}
-		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum){
+		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
+			console.log('display collecting');
 			imageOrAnimation = this._collectingAnimation;
 			imageOrAnimationArmor = this._collectingArmorAnimation;
+			imageOrAnimationWeapon = this.empty;
 		}
 		else if (this._joyAnimation.leftTimeMs > 0){
 			imageOrAnimation = this._joyAnimation;
@@ -651,6 +683,7 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this._joyWeaponAnimation;
 		}
 		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting){
+			console.log('display run inside', this._isCollecting, this._collectingAnimation.leftTimeMs);
 			imageOrAnimation = this._runAnimation;
 			imageOrAnimationArmor = this._runArmorAnimation;
 			imageOrAnimationWeapon = this._runWeaponAnimation;

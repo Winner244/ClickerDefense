@@ -2917,6 +2917,42 @@ class TestPage extends React.Component {
                 create();
             }
         },
+
+        
+        {
+            key: "Золотособиратель - пылесос",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                Gamer.coins = 1500;
+
+                FlyEarth.loadSeparateCrystals();
+
+                setTimeout(() => {
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    Units.all.push(miner3);
+                }, 300);
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    collector1.improveToVacuum();
+                    Units.all.push(collector1);
+                }, 300);
+
+                var barricade1 = new Barricade(200);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var barricade2 = new Barricade(1600);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+            }
+        },
         
         /*{
             key: "Золотособиратель - гибель",
