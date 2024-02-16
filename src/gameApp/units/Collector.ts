@@ -333,7 +333,6 @@ export class Collector extends Unit{
 							}
 						}
 						else{
-							console.log('this.isRun = true 1', this.x - (this._goalCoin.centerX - shift), Collector.VacuumRunStopDistance);
 							this.isRun = true;
 						}
 
@@ -363,7 +362,6 @@ export class Collector extends Unit{
 							}
 						}
 						else{
-							console.log('this.isRun = true 2', (this._goalCoin.centerX + shift) - (this.x + this.width), Collector.VacuumRunStopDistance);
 							this.isRun = true;
 						}
 
@@ -672,7 +670,6 @@ export class Collector extends Unit{
 			isInvertAnimation = true;
 		}
 		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
-			console.log('display collecting');
 			imageOrAnimation = this._collectingAnimation;
 			imageOrAnimationArmor = this._collectingArmorAnimation;
 			imageOrAnimationWeapon = this.empty;
@@ -683,7 +680,6 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this._joyWeaponAnimation;
 		}
 		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting){
-			console.log('display run inside', this._isCollecting, this._collectingAnimation.leftTimeMs);
 			imageOrAnimation = this._runAnimation;
 			imageOrAnimationArmor = this._runArmorAnimation;
 			imageOrAnimationWeapon = this._runWeaponAnimation;

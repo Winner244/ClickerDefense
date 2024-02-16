@@ -576,7 +576,6 @@ export class Unit extends UpgradebleObject {
 			}
 		}
 		else if(this.isRun){
-			console.log('display run');
 			super.drawObject(drawsDiffMs, this._runAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._runArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._runWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
