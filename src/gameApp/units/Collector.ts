@@ -121,7 +121,7 @@ export class Collector extends Unit{
 	private _isNewCoin: boolean; //новая монетка появилась?
 
 	private _isHasVacuum: boolean; //прокачен до пылесоса? - это меняет логику сбора монет
-	private static readonly VacuumRunStopDistance: number = 30;
+	private static readonly VacuumRunStopDistance: number = 20;
 	
 	private readonly empty: Animation;
 
@@ -234,7 +234,8 @@ export class Collector extends Unit{
 		this.defense += 1;
 		if(this.improvements.find(x => x.label == 'Пылесос')?.isImproved){
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
-			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage
+			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
 		}
 		else{
 			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
@@ -259,12 +260,13 @@ export class Collector extends Unit{
 		this._shiftYWeaponInEarch = -5;
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
-			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage
+			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
 		}
 		else{
 			this._collectingAnimation = new Animation(4, 4 * 150);
 			this._collectingAnimation.image.src = CollectorCollectVacuumImage;
 		}
+		this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
@@ -320,7 +322,7 @@ export class Collector extends Unit{
 
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin){ //есть цель монетка и сбор предыдущей уже окончен
-				let shift = this._isHasVacuum ? 10 : this.width / 5;
+				let shift = this._isHasVacuum ? -5 : this.width / 5;
 				if(this._goalCoin.centerX < this.centerX) //если монетка слева
 				{
 					let condition = this.x > this._goalCoin.centerX - shift;

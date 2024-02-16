@@ -2938,7 +2938,7 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
-                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    var collector1 = new Collector(Buildings.flyEarth.centerX, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuum();
                     Units.all.push(collector1);

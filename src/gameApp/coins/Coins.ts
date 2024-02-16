@@ -26,8 +26,11 @@ export class Coins{
 	}
 
 	static delete(i: number): void{
-		Coins.all[i].lifeTimeLeftMs = 0;
-		Coins.all.splice(i, 1);
+		var coin = Coins.all[i];
+		if (coin){
+			coin.lifeTimeLeftMs = 0;
+			Coins.all.splice(i, 1);
+		}
 	}
 
 	static collect(i: number, x: number, y: number): void{
