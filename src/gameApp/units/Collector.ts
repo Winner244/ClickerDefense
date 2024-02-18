@@ -702,6 +702,7 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this.empty;
 		}
 		else if (this._joyAnimation.leftTimeMs > 0){
+			this._startCollectingVacuumAnimation.restart();
 			imageOrAnimation = this._joyAnimation;
 			imageOrAnimationArmor = this._joyArmorAnimation;
 			imageOrAnimationWeapon = this._joyWeaponAnimation;
