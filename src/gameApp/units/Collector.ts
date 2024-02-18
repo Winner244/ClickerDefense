@@ -413,7 +413,7 @@ export class Collector extends Unit{
 	}
 
 	collectCoin(){
-		if(this._goalCoin && this._startCollectingVacuumAnimation.leftTimeMs <= 0){
+		if(this._goalCoin && (!this._isHasVacuum || this._startCollectingVacuumAnimation.leftTimeMs <= 0)){
 			var i = Coins.all.indexOf(this._goalCoin);
 			Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
 			this._goalCoin = null;
@@ -545,6 +545,9 @@ export class Collector extends Unit{
 							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
 						}
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
+					}
+					else if (!this._goalCoin && this._isHasVacuum){
+						this._startCollectingVacuumAnimation.restart();
 					}
 					this._isNewCoin = false;
 
@@ -688,7 +691,13 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
 			isInvertAnimation = true;
 		}
-		else if(this._isCollecting && this._startCollectingVacuumAnimation.leftTimeMs > 0){
+		else if (this._joyAnimation.leftTimeMs > 0){
+			this._startCollectingVacuumAnimation.restart();
+			imageOrAnimation = this._joyAnimation;
+			imageOrAnimationArmor = this._joyArmorAnimation;
+			imageOrAnimationWeapon = this._joyWeaponAnimation;
+		}
+		else if(this._isHasVacuum && this._isCollecting && this._startCollectingVacuumAnimation.leftTimeMs > 0){
 			if (this._collectingAnimation.leftTimeMs <= 0){
 				isInvertAnimation = true;
 			}
@@ -700,12 +709,6 @@ export class Collector extends Unit{
 			imageOrAnimation = this._collectingAnimation;
 			imageOrAnimationArmor = this._collectingArmorAnimation;
 			imageOrAnimationWeapon = this.empty;
-		}
-		else if (this._joyAnimation.leftTimeMs > 0){
-			this._startCollectingVacuumAnimation.restart();
-			imageOrAnimation = this._joyAnimation;
-			imageOrAnimationArmor = this._joyArmorAnimation;
-			imageOrAnimationWeapon = this._joyWeaponAnimation;
 		}
 		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting){
 			imageOrAnimation = this._runAnimation;
