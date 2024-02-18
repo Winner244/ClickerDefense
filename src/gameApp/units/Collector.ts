@@ -61,6 +61,7 @@ import CollectorCollectVacuumImage from '../../assets/img/units/collector/vacuum
 import CollectorPassiveWaitingVacuumImage from '../../assets/img/units/collector/vacuum/passiveWaiting.png'; 
 import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
 import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
+import CollectorStartCollectingVacuumImage from '../../assets/img/units/collector/vacuum/startCollecting.png'; 
 
 
 
@@ -96,6 +97,9 @@ export class Collector extends Unit{
 
 	private _collectingAnimation: Animation; //анимация собирания монеток
 	private _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
+
+	private _startCollectingVacuumAnimation: Animation; //анимация начала собирания монеток пылесосом
+
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
 
@@ -121,7 +125,7 @@ export class Collector extends Unit{
 	private _isNewCoin: boolean; //новая монетка появилась?
 
 	private _isHasVacuum: boolean; //прокачен до пылесоса? - это меняет логику сбора монет
-	private static readonly VacuumRunStopDistance: number = 20;
+	private static readonly VacuumRunStartDistance: number = 40;
 	
 	private readonly empty: Animation;
 
@@ -156,6 +160,9 @@ export class Collector extends Unit{
 		this._collectingAnimation = new Animation(9, 9 * 150, Collector.collectImage);
 		this._collectingArmorAnimation = new Animation(this._collectingAnimation.frames, this._collectingAnimation.durationMs); //пока апгрейда нету
 		this._collectingAnimation.leftTimeMs = 0;
+
+		this._startCollectingVacuumAnimation = new Animation(4, 4 * 150);
+		this._startCollectingVacuumAnimation.leftTimeMs = 0;
 		this.empty = new Animation(0, 0);
 
 		this._isCollecting = true;
@@ -268,6 +275,7 @@ export class Collector extends Unit{
 		}
 		this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
+		this._startCollectingVacuumAnimation.image.src = CollectorStartCollectingVacuumImage;
 		//this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
 		//this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
@@ -327,7 +335,7 @@ export class Collector extends Unit{
 				{
 					let condition = this.x > this._goalCoin.centerX - shift;
 					if (condition) { //ещё не дошёл
-						if(this._isHasVacuum && this.x - (this._goalCoin.centerX - shift) < Collector.VacuumRunStopDistance){
+						if(this._isHasVacuum && this.x - (this._goalCoin.centerX - shift) < Collector.VacuumRunStartDistance){
 							this.isRun = false;
 							if(this._collectingAnimation.leftTimeMs <= 0){
 								this._collectingAnimation.restart();
@@ -335,6 +343,9 @@ export class Collector extends Unit{
 							}
 						}
 						else{
+							if(this._startCollectingVacuumAnimation.leftTimeMs <= 0){
+								this._startCollectingVacuumAnimation.restart();
+							}
 							this.isRun = true;
 						}
 
@@ -356,7 +367,7 @@ export class Collector extends Unit{
 				{
 					let condition = this.x + this.width < this._goalCoin.centerX + shift;
 					if (condition) { //ещё не дошёл
-						if(this._isHasVacuum && (this._goalCoin.centerX + shift) - (this.x + this.width) < Collector.VacuumRunStopDistance){
+						if(this._isHasVacuum && (this._goalCoin.centerX + shift) - (this.x + this.width) < Collector.VacuumRunStartDistance){
 							this.isRun = false;
 							if(this._collectingAnimation.leftTimeMs <= 0){
 								this._collectingAnimation.restart();
@@ -364,6 +375,9 @@ export class Collector extends Unit{
 							}
 						}
 						else{
+							if(this._startCollectingVacuumAnimation.leftTimeMs <= 0){
+								this._startCollectingVacuumAnimation.restart();
+							}
 							this.isRun = true;
 						}
 
@@ -399,7 +413,7 @@ export class Collector extends Unit{
 	}
 
 	collectCoin(){
-		if(this._goalCoin){
+		if(this._goalCoin && this._startCollectingVacuumAnimation.leftTimeMs <= 0){
 			var i = Coins.all.indexOf(this._goalCoin);
 			Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
 			this._goalCoin = null;
@@ -553,10 +567,12 @@ export class Collector extends Unit{
 						}
 						else if(leftMonster){
 							this._isCollecting = false;
+							this._startCollectingVacuumAnimation.leftTimeMs = 0;
 							this.isRunRight = leftMonster.isLeftSide;
 						}
 						else if(rightMonster){
 							this._isCollecting = false;
+							this._startCollectingVacuumAnimation.leftTimeMs = 0;
 							this.isRunRight = rightMonster.isLeftSide;
 						}
 					}
@@ -637,6 +653,7 @@ export class Collector extends Unit{
 		if(this._isCollecting && !WavesState.isWaveEnded){
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
+			this._startCollectingVacuumAnimation.leftTimeMs = 0;
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
 		}
 
@@ -670,6 +687,14 @@ export class Collector extends Unit{
 			imageOrAnimationArmor = this.defenseActivationArmorAnimation;
 			imageOrAnimationWeapon = this.defenseActivationToolAnimation;
 			isInvertAnimation = true;
+		}
+		else if(this._isCollecting && this._startCollectingVacuumAnimation.leftTimeMs > 0){
+			if (this._collectingAnimation.leftTimeMs <= 0){
+				isInvertAnimation = true;
+			}
+			imageOrAnimation = this._startCollectingVacuumAnimation;
+			imageOrAnimationArmor = this.empty;
+			imageOrAnimationWeapon = this.empty;
 		}
 		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
 			imageOrAnimation = this._collectingAnimation;
