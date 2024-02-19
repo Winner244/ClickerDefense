@@ -585,7 +585,7 @@ export class Collector extends Unit{
 			else{ //убегать от нападения 
 				//logic in logicMoving
 
-				var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
+				var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width * 1.5);
 				var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
 				var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
