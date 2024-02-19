@@ -142,9 +142,7 @@ export class Monster extends AttackedObject{
 					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
 	
 				if (condition) { //ещё не дошёл
-					this._isAttack = false;
-					
-					if(this._attackLeftTimeMs > this.attackTimeWaitingMs / 2){
+					if(this._isAttack && this._attackLeftTimeMs > this.attackTimeWaitingMs / 2){
 						return;
 					}
 					this.x += speed;
@@ -152,6 +150,8 @@ export class Monster extends AttackedObject{
 					if(!this.isLand){
 						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 					}
+
+					this._isAttack = false;
 				}
 				else //дошёл
 				{
@@ -172,9 +172,7 @@ export class Monster extends AttackedObject{
 					: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
 	
 				if (condition) { //ещё не дошёл
-					this._isAttack = false;
-
-					if(this._attackLeftTimeMs > this.attackTimeWaitingMs / 2){
+					if(this._isAttack && this._attackLeftTimeMs > this.attackTimeWaitingMs / 2){
 						return;
 					}
 					this.x -= speed;
@@ -182,6 +180,8 @@ export class Monster extends AttackedObject{
 					if(!this.isLand){
 						//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
 					}
+					
+					this._isAttack = false;
 				}
 				else //дошёл
 				{
