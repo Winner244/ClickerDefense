@@ -360,6 +360,7 @@ export class Collector extends Unit{
 						else{
 							this._collectingAnimation.restart();
 							this._collectingArmorAnimation.restart();
+							return;
 						}
 					}
 				}
@@ -392,6 +393,7 @@ export class Collector extends Unit{
 						else{
 							this._collectingAnimation.restart();
 							this._collectingArmorAnimation.restart();
+							return;
 						}
 					}
 				}
@@ -558,15 +560,7 @@ export class Collector extends Unit{
 						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 	
 						if(leftMonster && rightMonster){
-							//активация защиты
-							if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
-								this._isDefenseActivationStarted = true;
-								this._isDefenseDeactivationStarted = false;
-								this._isDefenseActivated = false;
-								this.defenseActivationAnimation.restart();
-								this.defenseActivationArmorAnimation.restart();
-								this.defenseActivationToolAnimation.restart();
-							}
+							this.activateDefense();
 						}
 						else if(leftMonster){
 							this._isCollecting = false;
@@ -593,24 +587,24 @@ export class Collector extends Unit{
 				if (!leftMonster && !rightMonster){
 					this._isCollecting = true;
 				}
-				else{
-					
-					if(this.isRunRight){
-						if(rightMonster){
-							this._isCollecting = true;
-						}
-					}
-					else{
-						if(leftMonster){
-							this._isCollecting = true;
-						}
-					}
+				else if(leftMonster && rightMonster){
+					this.activateDefense();
 				}
-
 			}
 		}
 		else if(WavesState.isWaveEnded){
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
+		}
+	}
+
+	activateDefense(){
+		if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
+			this._isDefenseActivationStarted = true;
+			this._isDefenseDeactivationStarted = false;
+			this._isDefenseActivated = false;
+			this.defenseActivationAnimation.restart();
+			this.defenseActivationArmorAnimation.restart();
+			this.defenseActivationToolAnimation.restart();
 		}
 	}
 

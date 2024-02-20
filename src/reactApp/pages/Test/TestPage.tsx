@@ -2433,7 +2433,7 @@ class TestPage extends React.Component {
                     ]];
 
                 this.waitLoadingImage(Boar.imageHandler, () => {
-                    var boar = new Boar(50, 780, true, 1, false);
+                    var boar = new Boar(50, 780, true, 0.9, false);
                     Monsters.all.push(boar);
                 });
 
