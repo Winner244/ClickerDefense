@@ -2675,6 +2675,7 @@ class TestPage extends React.Component {
                 var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
+                //collector1.improveToVacuum();
                 Units.all.push(collector1);
 
                 //first coin

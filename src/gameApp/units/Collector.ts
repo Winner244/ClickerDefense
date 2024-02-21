@@ -61,6 +61,7 @@ import CollectorCollectVacuumImage from '../../assets/img/units/collector/vacuum
 import CollectorPassiveWaitingVacuumImage from '../../assets/img/units/collector/vacuum/passiveWaiting.png'; 
 import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
 import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
+import CollectorJoyVacuumImage from '../../assets/img/units/collector/vacuum/joy.png'; 
 import CollectorStartCollectingVacuumImage from '../../assets/img/units/collector/vacuum/startCollecting.png'; 
 
 
@@ -280,7 +281,7 @@ export class Collector extends Unit{
 		//this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
 		//this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
 		this._runWeaponAnimation.image.src = CollectorRunVacuumImage;
-		//this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
+		this._joyWeaponAnimation.image.src = CollectorJoyVacuumImage;
 		//this._attackWeaponAnimation.image.src = MinerAttackGoldPickImage;
 	}
 
