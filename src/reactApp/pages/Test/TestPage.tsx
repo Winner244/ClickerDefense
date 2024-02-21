@@ -2602,15 +2602,18 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 15, 10, 0)
                     ]];
 
+                var collector1: Collector|null = null;
                 setTimeout(() => {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
-                    var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                    collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.defense = 1;
                     Units.all.push(collector1);
                 }, 300);
 
                 setTimeout(() => {
+                    //if(collector1)
+                    //    collector1.improveToVacuum();
                     this.waitLoadingImage(Zombie.imageHandler, () => {
                         var zombie = new Zombie(Draw.canvas.width / 2 - 250, 780, true, 1);
                         Monsters.all.push(zombie);
@@ -2618,7 +2621,7 @@ class TestPage extends React.Component {
                         var zombie = new Zombie(Draw.canvas.width / 2 + 220, 780, false, 1);
                         Monsters.all.push(zombie);
                     });
-                }, 1500);
+                }, 3000);
             }
         },
 
@@ -2835,7 +2838,6 @@ class TestPage extends React.Component {
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToWoodArmor();
-                    collector1.improveToVacuum();
                     Units.all.push(collector1);
 
                     

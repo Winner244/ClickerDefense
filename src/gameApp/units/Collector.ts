@@ -64,6 +64,8 @@ import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run
 import CollectorJoyVacuumImage from '../../assets/img/units/collector/vacuum/joy.png'; 
 import CollectorFallEndVacuumImage from '../../assets/img/units/collector/vacuum/fallEnd.png'; 
 import CollectorStartCollectingVacuumImage from '../../assets/img/units/collector/vacuum/startCollecting.png'; 
+import CollectorDefenseVacuumImage from '../../assets/img/units/collector/vacuum/defense.png'; 
+import CollectorDefenseStartVacuumImage from '../../assets/img/units/collector/vacuum/defenseStart.png'; 
 
 
 
@@ -281,6 +283,8 @@ export class Collector extends Unit{
 		this._fallEndWeaponAnimation.image.src = CollectorFallEndVacuumImage;
 		this._runWeaponAnimation.image.src = CollectorRunVacuumImage;
 		this._joyWeaponAnimation.image.src = CollectorJoyVacuumImage;
+		this.defenseToolAnimation.image.src = CollectorDefenseVacuumImage;
+		this.defenseActivationToolAnimation.image.src = CollectorDefenseStartVacuumImage;
 	}
 
 	improveSpeed(){
