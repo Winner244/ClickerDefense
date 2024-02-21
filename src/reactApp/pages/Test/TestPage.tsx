@@ -2607,13 +2607,14 @@ class TestPage extends React.Component {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                     collector1.loadedResourcesAfterBuild();
+                    collector1.improveToWoodArmor();
                     collector1.defense = 1;
                     Units.all.push(collector1);
                 }, 300);
 
                 setTimeout(() => {
-                    //if(collector1)
-                    //    collector1.improveToVacuum();
+                    if(collector1)
+                        collector1.improveToVacuum();
                     this.waitLoadingImage(Zombie.imageHandler, () => {
                         var zombie = new Zombie(Draw.canvas.width / 2 - 250, 780, true, 1);
                         Monsters.all.push(zombie);
