@@ -2675,13 +2675,13 @@ class TestPage extends React.Component {
                 var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
-                //collector1.improveToVacuum();
                 Units.all.push(collector1);
 
                 //first coin
                 setTimeout(() => {
+                    //collector1.improveToVacuum();
                     Monsters.all.forEach(x => x.health = -1);
-                }, 2000);
+                }, 3000);
             }
         },
 
@@ -2835,6 +2835,7 @@ class TestPage extends React.Component {
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToWoodArmor();
+                    collector1.improveToVacuum();
                     Units.all.push(collector1);
 
                     
