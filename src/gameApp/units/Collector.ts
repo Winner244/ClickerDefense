@@ -312,6 +312,9 @@ export class Collector extends Unit{
 		if(result && oldHealth <= 0){
 			this._isCollecting = true;
 			this.isLeftSide = this.x < Buildings.flyEarth.centerX;
+			this._isDefenseActivationStarted = false;
+			this._isDefenseActivated = false;
+			this._isDefenseDeactivationStarted = false;
 		}
 
 		return result;

@@ -275,9 +275,9 @@ export class Unit extends UpgradebleObject {
 
 			if(oldHealth <= 0 && this.health > 0){
 				this.isRunRight = true;
-				this._fallEndAnimation.leftTimeMs = 
-				this._fallEndWeaponAnimation.leftTimeMs = 
-				this._fallEndArmorAnimation.leftTimeMs = this._fallEndAnimation.durationMs;
+				this._fallEndAnimation.restart();
+				this._fallEndWeaponAnimation.restart()
+				this._fallEndArmorAnimation.restart();
 				this._joyAnimation.leftTimeMs = this._joyArmorAnimation.leftTimeMs = this._joyWeaponAnimation.leftTimeMs = 0;
 				this._isFall = true;
 
