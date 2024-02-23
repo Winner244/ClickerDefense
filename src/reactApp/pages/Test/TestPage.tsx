@@ -2535,7 +2535,7 @@ class TestPage extends React.Component {
                 this.waitLoadingImage(Zombie.imageHandler, () => {
 
                     var zombie = new Zombie(Draw.canvas.width / 2 - 150, 780, true, 1);
-                    zombie.health =+ 50;
+                    zombie.health =+ 5;
                     Monsters.all.push(zombie);
                 });
 
@@ -2592,6 +2592,7 @@ class TestPage extends React.Component {
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
+                Gamer.coins = 1000;
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
@@ -2605,21 +2606,21 @@ class TestPage extends React.Component {
                 var collector1: Collector|null = null;
                 setTimeout(() => {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
-                    collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                    collector1 = new Collector(Draw.canvas.width / 2 - 100, y);
                     collector1.loadedResourcesAfterBuild();
-                    collector1.improveToWoodArmor();
-                    collector1.defense = 1;
+                    //collector1.improveToWoodArmor();
+                    //collector1.defense = 1;
                     Units.all.push(collector1);
                 }, 300);
 
                 setTimeout(() => {
-                    if(collector1)
-                        collector1.improveToVacuum();
+                    //if(collector1)
+                    //    collector1.improveToVacuum();
                     this.waitLoadingImage(Zombie.imageHandler, () => {
-                        var zombie = new Zombie(Draw.canvas.width / 2 - 250, 780, true, 1);
+                        var zombie = new Zombie(Draw.canvas.width / 2 - 200, 780, true, 1);
                         Monsters.all.push(zombie);
     
-                        var zombie = new Zombie(Draw.canvas.width / 2 + 220, 780, false, 1);
+                        var zombie = new Zombie(Draw.canvas.width / 2 + 120, 780, false, 1);
                         Monsters.all.push(zombie);
                     });
                 }, 3000);
@@ -2838,7 +2839,7 @@ class TestPage extends React.Component {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
-                    collector1.improveToWoodArmor();
+                    //collector1.improveToWoodArmor();
                     Units.all.push(collector1);
 
                     

@@ -59,7 +59,6 @@ import CollectorFallWoodArmorImage from '../../assets/img/units/collector/woodAr
 import VacuumImage from '../../assets/img/units/collector/vacuum/vacuum.png'; 
 import CollectorCollectVacuumImage from '../../assets/img/units/collector/vacuum/collect.png'; 
 import CollectorPassiveWaitingVacuumImage from '../../assets/img/units/collector/vacuum/passiveWaiting.png'; 
-import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
 import CollectorRunVacuumImage from '../../assets/img/units/collector/vacuum/run.png'; 
 import CollectorJoyVacuumImage from '../../assets/img/units/collector/vacuum/joy.png'; 
 import CollectorFallEndVacuumImage from '../../assets/img/units/collector/vacuum/fallEnd.png'; 
@@ -67,6 +66,8 @@ import CollectorStartCollectingVacuumImage from '../../assets/img/units/collecto
 import CollectorDefenseVacuumImage from '../../assets/img/units/collector/vacuum/defense.png'; 
 import CollectorDefenseStartVacuumImage from '../../assets/img/units/collector/vacuum/defenseStart.png'; 
 
+import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
+import CollectorStartCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/startCollect.png'; 
 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
@@ -103,6 +104,7 @@ export class Collector extends Unit{
 	private _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток
 
 	private _startCollectingVacuumAnimation: Animation; //анимация начала собирания монеток пылесосом
+	private _startCollectingVacuumArmorAnimation: Animation; //для апгрейда брони - анимация начала собирания монеток пылесосом
 
 	private _isCollecting: boolean; //Собирает монеты сейчас? 
 	private _wasCollected: boolean; //Сбор уже состоялся за текущий цикл анимации collecting ?
@@ -166,7 +168,8 @@ export class Collector extends Unit{
 		this._collectingAnimation.leftTimeMs = 0;
 
 		this._startCollectingVacuumAnimation = new Animation(4, 4 * 150);
-		this._startCollectingVacuumAnimation.leftTimeMs = 0;
+		this._startCollectingVacuumArmorAnimation = new Animation(this._startCollectingVacuumAnimation.frames, this._startCollectingVacuumAnimation.durationMs); //пока апгрейда нету
+		this._startCollectingVacuumAnimation.leftTimeMs = this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 		this.empty = new Animation(0, 0);
 
 		this._isCollecting = true;
@@ -246,6 +249,7 @@ export class Collector extends Unit{
 		if(this.improvements.find(x => x.label == 'Пылесос')?.isImproved){
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
+			this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
 		}
 		else{
@@ -272,12 +276,14 @@ export class Collector extends Unit{
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
+			this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
+			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
 		}
 		else{
 			this._collectingAnimation = new Animation(4, 4 * 150);
 			this._collectingAnimation.image.src = CollectorCollectVacuumImage;
 		}
-		this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
+		this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		this._startCollectingVacuumAnimation.image.src = CollectorStartCollectingVacuumImage;
 		this._fallEndWeaponAnimation.image.src = CollectorFallEndVacuumImage;
