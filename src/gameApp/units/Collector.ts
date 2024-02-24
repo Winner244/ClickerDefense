@@ -250,7 +250,10 @@ export class Collector extends Unit{
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
 			this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
-			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
+			this._collectingAnimation.leftTimeMs = 
+			this._collectingArmorAnimation.leftTimeMs =
+			this._startCollectingVacuumAnimation.leftTimeMs = 
+			this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 		}
 		else{
 			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
@@ -278,13 +281,13 @@ export class Collector extends Unit{
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
 			this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
-			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs =  0;
 		}
-		else{
-			this._collectingAnimation = new Animation(4, 4 * 150);
-			this._collectingAnimation.image.src = CollectorCollectVacuumImage;
-		}
-		this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
+		this._collectingAnimation = new Animation(4, 4 * 150);
+		this._collectingAnimation.image.src = CollectorCollectVacuumImage;
+		this._collectingAnimation.leftTimeMs = 
+		this._collectingArmorAnimation.leftTimeMs = 
+		this._startCollectingVacuumAnimation.leftTimeMs = 
+		this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		this._startCollectingVacuumAnimation.image.src = CollectorStartCollectingVacuumImage;
 		this._fallEndWeaponAnimation.image.src = CollectorFallEndVacuumImage;
