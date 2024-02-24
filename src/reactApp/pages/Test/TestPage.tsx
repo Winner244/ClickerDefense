@@ -2609,6 +2609,7 @@ class TestPage extends React.Component {
                     collector1 = new Collector(Draw.canvas.width / 2 - 100, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToWoodArmor();
+                    collector1.improveToVacuum();
                     //collector1.defense = 1;
                     Units.all.push(collector1);
                 }, 300);

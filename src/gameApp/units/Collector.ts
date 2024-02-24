@@ -112,7 +112,7 @@ export class Collector extends Unit{
 	protected _goalCoin: Coin|null; //цель-монетка для сбора
 
 	//активная защита
-	private static readonly defensePercentage: number = 20; //сколько в процентах съедается урона активной защитой
+	private static readonly defensePercentage: number = 15; //сколько в процентах съедается урона активной защитой
 	private static readonly defenseModifierName: string = 'Defense'; //имя модифатора защиты
 	private static readonly defenseMinDurationMs: number = 1500; //минимальное время действия защиты - если никто больше не атакует
 
@@ -264,6 +264,7 @@ export class Collector extends Unit{
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
 		this._fallArmorImage.src = CollectorFallWoodArmorImage;
+		this.improvements.find(x => x.label == 'Деревянная броня')?.improve();
 	}
 
 	improveToVacuum(){
@@ -291,6 +292,7 @@ export class Collector extends Unit{
 		this._joyWeaponAnimation.image.src = CollectorJoyVacuumImage;
 		this.defenseToolAnimation.image.src = CollectorDefenseVacuumImage;
 		this.defenseActivationToolAnimation.image.src = CollectorDefenseStartVacuumImage;
+		this.improvements.find(x => x.label == 'Пылесос')?.improve();
 	}
 
 	improveSpeed(){
@@ -357,6 +359,7 @@ export class Collector extends Unit{
 						else{
 							if(this._startCollectingVacuumAnimation.leftTimeMs <= 0){
 								this._startCollectingVacuumAnimation.restart();
+								this._startCollectingVacuumArmorAnimation.restart();
 							}
 							this.isRun = true;
 						}
@@ -390,6 +393,7 @@ export class Collector extends Unit{
 						else{
 							if(this._startCollectingVacuumAnimation.leftTimeMs <= 0){
 								this._startCollectingVacuumAnimation.restart();
+								this._startCollectingVacuumArmorAnimation.restart();
 							}
 							this.isRun = true;
 						}
@@ -578,6 +582,7 @@ export class Collector extends Unit{
 					}
 					else if (!this._goalCoin && this._isHasVacuum){
 						this._startCollectingVacuumAnimation.restart();
+						this._startCollectingVacuumArmorAnimation.restart();
 					}
 					this._isNewCoin = false;
 
@@ -593,11 +598,13 @@ export class Collector extends Unit{
 						else if(leftMonster){
 							this._isCollecting = false;
 							this._startCollectingVacuumAnimation.leftTimeMs = 0;
+							this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 							this.isRunRight = leftMonster.isLeftSide;
 						}
 						else if(rightMonster){
 							this._isCollecting = false;
 							this._startCollectingVacuumAnimation.leftTimeMs = 0;
+							this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 							this.isRunRight = rightMonster.isLeftSide;
 						}
 					}
@@ -679,6 +686,7 @@ export class Collector extends Unit{
 			this.isRunRight = (x || 0) < this.centerX;
 			this._isCollecting = false;
 			this._startCollectingVacuumAnimation.leftTimeMs = 0;
+			this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
 		}
 
@@ -697,7 +705,11 @@ export class Collector extends Unit{
 		filter: string|null = null,
 		isInvertAnimation: boolean = false)
 	{
-		if (this._isDefenseActivated){
+		if (this._isFall || this._fallEndAnimation.leftTimeMs > 0)
+		{
+			//nothing do
+		}
+		else if (this._isDefenseActivated){
 			imageOrAnimation = this.defenseAnimation;
 			imageOrAnimationArmor = this.defenseArmorAnimation;
 			imageOrAnimationWeapon = this.defenseToolAnimation;
@@ -715,6 +727,7 @@ export class Collector extends Unit{
 		}
 		else if (this._joyAnimation.leftTimeMs > 0){
 			this._startCollectingVacuumAnimation.restart();
+			this._startCollectingVacuumArmorAnimation.restart();
 			imageOrAnimation = this._joyAnimation;
 			imageOrAnimationArmor = this._joyArmorAnimation;
 			imageOrAnimationWeapon = this._joyWeaponAnimation;
@@ -724,7 +737,7 @@ export class Collector extends Unit{
 				isInvertAnimation = true;
 			}
 			imageOrAnimation = this._startCollectingVacuumAnimation;
-			imageOrAnimationArmor = this.empty;
+			imageOrAnimationArmor = this._startCollectingVacuumArmorAnimation;
 			imageOrAnimationWeapon = this.empty;
 		}
 		else if(this._isCollecting && this._collectingAnimation.leftTimeMs > 0){
