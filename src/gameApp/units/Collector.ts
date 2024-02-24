@@ -276,7 +276,7 @@ export class Collector extends Unit{
 		this._isHasVacuum = true;
 		this._rotateWeaponInEarch = -25;
 		this._weaponRotateInAir = 190;
-		this._shiftYWeaponInEarch = -5;
+		this._shiftYWeaponInEarch = 5;
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
 			this._collectingArmorAnimation = new Animation(4, 4 * 150);
 			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
