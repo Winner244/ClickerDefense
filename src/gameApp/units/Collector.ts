@@ -255,8 +255,8 @@ export class Collector extends Unit{
 		else{
 			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
 		}
-		this.defenseActivationArmorAnimation.image.src = CollectorDefenseWoodArmorImage;
-		this.defenseArmorAnimation.image.src = CollectorDefenseStartWoodArmorImage;
+		this.defenseActivationArmorAnimation.image.src = CollectorDefenseStartWoodArmorImage;
+		this.defenseArmorAnimation.image.src = CollectorDefenseWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
 		this._startActiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
 		this._activeWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
