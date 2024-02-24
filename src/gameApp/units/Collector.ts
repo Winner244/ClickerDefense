@@ -267,7 +267,7 @@ export class Collector extends Unit{
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
 		this._fallArmorImage.src = CollectorFallWoodArmorImage;
-		this.improvements.find(x => x.label == 'Деревянная броня')?.improve();
+		let t = this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved; t = true;
 	}
 
 	improveToVacuum(){
@@ -295,7 +295,7 @@ export class Collector extends Unit{
 		this._joyWeaponAnimation.image.src = CollectorJoyVacuumImage;
 		this.defenseToolAnimation.image.src = CollectorDefenseVacuumImage;
 		this.defenseActivationToolAnimation.image.src = CollectorDefenseStartVacuumImage;
-		this.improvements.find(x => x.label == 'Пылесос')?.improve();
+		var t = this.improvements.find(x => x.label == 'Пылесос')?.isImproved; t = true;
 	}
 
 	improveSpeed(){
