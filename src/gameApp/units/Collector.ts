@@ -434,6 +434,11 @@ export class Collector extends Unit{
 		}
 	}
 
+	getCLoserMonsters(monsters: Monster[]){
+		var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width * 1.5);
+		return closerMonsters;
+	}
+
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
@@ -474,13 +479,24 @@ export class Collector extends Unit{
 
 		//удержание защиты
 		if(this._isDefenseActivated){
+			var closerMonsters = this.getCLoserMonsters(monsters);
+			var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+			var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+
 			let defenseModifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
-			if(!defenseModifier){
+			if(!defenseModifier || !leftMonster || !rightMonster){
 				this._isDefenseActivated = false;
 				this._isDefenseDeactivationStarted = true;
 				this.defenseActivationAnimation.restart();
 				this.defenseActivationArmorAnimation.restart();
 				this.defenseActivationToolAnimation.restart();
+
+				if(leftMonster){
+					this.isRunRight = true;
+				}
+				else if(rightMonster){
+					this.isRunRight = false;
+				}
 			}
 
 			return;
@@ -567,7 +583,7 @@ export class Collector extends Unit{
 
 					//следим за монстрами - пора ли убегать? 
 					if(!this._goalCoin && monsters.length){
-						var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width);
+						var closerMonsters = this.getCLoserMonsters(monsters);
 						var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
 						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 	
@@ -591,7 +607,7 @@ export class Collector extends Unit{
 			else{ //убегать от нападения 
 				//logic in logicMoving
 
-				var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width * 1.5);
+				var closerMonsters = this.getCLoserMonsters(monsters);
 				var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
 				var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
