@@ -507,7 +507,7 @@ export class Unit extends UpgradebleObject {
 
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 			Draw.ctx.rotate((this._isDisplayWeaponInAir ? this._weaponRotateInAir : this._rotateWeaponInEarch) * Math.PI / 180);
-			super.drawObject(drawsDiffMs, this.imageWeapon, isGameOver, 1, -this.width / 2, -this.height / 2, filter);
+			Draw.ctx.drawImage(this.imageWeapon, -this.width / 2, -this.height / 2, this.width, this.height);
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
 
