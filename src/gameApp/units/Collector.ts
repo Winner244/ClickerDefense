@@ -590,6 +590,8 @@ export class Collector extends Unit{
 					else if (!this._goalCoin && this._isHasVacuum){
 						this._startCollectingVacuumAnimation.restart();
 						this._startCollectingVacuumArmorAnimation.restart();
+						this._collectingAnimation.leftTimeMs = 0;
+						this._collectingArmorAnimation.leftTimeMs = 0;
 					}
 					this._isNewCoin = false;
 
