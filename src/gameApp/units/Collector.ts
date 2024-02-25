@@ -267,7 +267,8 @@ export class Collector extends Unit{
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
 		this._fallArmorImage.src = CollectorFallWoodArmorImage;
-		let t = this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved; t = true;
+		let t = this.improvements.find(x => x.label == 'Деревянная броня');
+		if(t) t.isImproved = true;
 	}
 
 	improveToVacuum(){
@@ -289,13 +290,16 @@ export class Collector extends Unit{
 		this._startCollectingVacuumAnimation.leftTimeMs = 
 		this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
 		this._passiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
+		this._startActiveWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
+		this._activeWaitingWeaponAnimation.image.src = CollectorPassiveWaitingVacuumImage;
 		this._startCollectingVacuumAnimation.image.src = CollectorStartCollectingVacuumImage;
 		this._fallEndWeaponAnimation.image.src = CollectorFallEndVacuumImage;
 		this._runWeaponAnimation.image.src = CollectorRunVacuumImage;
 		this._joyWeaponAnimation.image.src = CollectorJoyVacuumImage;
 		this.defenseToolAnimation.image.src = CollectorDefenseVacuumImage;
 		this.defenseActivationToolAnimation.image.src = CollectorDefenseStartVacuumImage;
-		var t = this.improvements.find(x => x.label == 'Пылесос')?.isImproved; t = true;
+		var t = this.improvements.find(x => x.label == 'Пылесос'); 
+		if(t) t.isImproved = true;
 	}
 
 	improveSpeed(){
