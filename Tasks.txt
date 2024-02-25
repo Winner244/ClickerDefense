@@ -201,9 +201,15 @@ RoadMap:
 				fixed. есть глюк в отображении
 					http://localhost:3000/test?v=74
 					если самостоятельно купить всё, то будет другой глюк - собиратель стоит без пылесоса в passive waiting
-				> если монет нет, то замирает на последнем кадре анимации StartCollecting
+				fixed. если монет нет, то замирает на последнем кадре анимации StartCollecting
 					else if (!this._goalCoin && this._isHasVacuum){
 						this._startCollectingVacuumAnimation.restart();
+						
+					стадии анимации:
+						passiveWaiting  -> run to goal -> start collecting -> collecting -> end collecting -> run to next goal OR passiveWaiting
+						
+					проблему нет без пылесоса
+						
 				ok. деревянную броню отдельно переделать надо 
 				ok. анимация run - двух видов - убегание от врагов и пылесосить
 					ok. пылесосить когда расстояние до монетки совсем небольшое остаётся

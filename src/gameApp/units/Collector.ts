@@ -131,6 +131,7 @@ export class Collector extends Unit{
 	private _isNewCoin: boolean; //новая монетка появилась?
 
 	private _isHasVacuum: boolean; //прокачен до пылесоса? - это меняет логику сбора монет
+	private _isVacuumCollectingStarted: boolean; //была ли начата анимация старта сбора?
 	private static readonly VacuumRunStartDistance: number = 40;
 	
 	private readonly empty: Animation;
@@ -195,6 +196,7 @@ export class Collector extends Unit{
 
 		this._isNewCoin = false;
 		this._isHasVacuum = false;
+		this._isVacuumCollectingStarted = false;
 		this._joyAnimation.leftTimeMs = 0;
 
         Collector.init(true); //reserve init
@@ -351,74 +353,59 @@ export class Collector extends Unit{
 
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin){ //есть цель монетка и сбор предыдущей уже окончен
-				let shift = this._isHasVacuum ? -5 : this.width / 5;
-				if(this._goalCoin.centerX < this.centerX) //если монетка слева
-				{
-					let condition = this.x > this._goalCoin.centerX - shift;
-					if (condition) { //ещё не дошёл
-						if(this._isHasVacuum && this.x - (this._goalCoin.centerX - shift) < Collector.VacuumRunStartDistance){
-							this.isRun = false;
-							if(this._collectingAnimation.leftTimeMs <= 0){
-								this._collectingAnimation.restart();
-								this._collectingArmorAnimation.restart();
-							}
-						}
-						else{
-							if(this._startCollectingVacuumAnimation.leftTimeMs <= 0){
-								this._startCollectingVacuumAnimation.restart();
-								this._startCollectingVacuumArmorAnimation.restart();
-							}
-							this.isRun = true;
-						}
+				let shift = this._isHasVacuum ? 5 : this.width / 5;
+				let isLeftMoving = this._goalCoin.centerX < this.centerX;
+				let isArrived = isLeftMoving 
+					? this.x <= this._goalCoin.centerX - shift
+					: this.x + this.width >= this._goalCoin.centerX + shift;
 
-						this.x -= speed;
-						return;
-					}
-					else //дошёл
-					{
-						if(this._isHasVacuum){
-							this.collectCoin();
-						}
-						else{
+
+				if(this._isHasVacuum){
+					let distance = isLeftMoving 
+						? this.x - (this._goalCoin.centerX - shift)
+						: (this._goalCoin.centerX + shift) - (this.x + this.width);
+
+					if(distance < Collector.VacuumRunStartDistance){
+						this.isRun = false; //to display collectingAnimation
+
+						if(!this._isVacuumCollectingStarted){
+							this._startCollectingVacuumAnimation.restart();
+							this._startCollectingVacuumArmorAnimation.restart();
+							this._isVacuumCollectingStarted = true;
 							this._collectingAnimation.restart();
 							this._collectingArmorAnimation.restart();
+						}
+						else if (this._startCollectingVacuumAnimation.leftTimeMs > 0){
+							//nothing do - waiting
 							return;
 						}
+
+						if(this._collectingAnimation.leftTimeMs <= 0){
+							this._collectingAnimation.restart();
+							this._collectingArmorAnimation.restart();
+						}
+					}
+					else{
+						this.isRun = true;
 					}
 				}
-				else 
-				{
-					let condition = this.x + this.width < this._goalCoin.centerX + shift;
-					if (condition) { //ещё не дошёл
-						if(this._isHasVacuum && (this._goalCoin.centerX + shift) - (this.x + this.width) < Collector.VacuumRunStartDistance){
-							this.isRun = false;
-							if(this._collectingAnimation.leftTimeMs <= 0){
-								this._collectingAnimation.restart();
-								this._collectingArmorAnimation.restart();
-							}
-						}
-						else{
-							if(this._startCollectingVacuumAnimation.leftTimeMs <= 0){
-								this._startCollectingVacuumAnimation.restart();
-								this._startCollectingVacuumArmorAnimation.restart();
-							}
-							this.isRun = true;
-						}
-
+				
+				if (isArrived) { //дошёл
+					if(this._isHasVacuum){
+						this.collectCoin();
+					}
+					else{
+						this._collectingAnimation.restart();
+						this._collectingArmorAnimation.restart();
+					}
+					return;
+				}
+				else{ //ещё не дошёл
+					if(isLeftMoving)
+						this.x -= speed;
+					else 
 						this.x += speed;
-						return;
-					}
-					else //дошёл
-					{
-						if(this._isHasVacuum){
-							this.collectCoin();
-						}
-						else{
-							this._collectingAnimation.restart();
-							this._collectingArmorAnimation.restart();
-							return;
-						}
-					}
+					return;
 				}
 			}
 		}
@@ -442,6 +429,8 @@ export class Collector extends Unit{
 			var i = Coins.all.indexOf(this._goalCoin);
 			Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
 			this._goalCoin = null;
+			this._wasCollected = true;
+			this._isVacuumCollectingStarted = false;
 		}
 	}
 
@@ -525,6 +514,7 @@ export class Collector extends Unit{
 		//монетка исчезла
 		if(this._goalCoin && this._goalCoin.lifeTimeLeftMs <= 0){
 			this._goalCoin = null;
+			this._isVacuumCollectingStarted = false;
 		}
 		
 		//игра пошла
@@ -587,7 +577,8 @@ export class Collector extends Unit{
 						}
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 					}
-					else if (!this._goalCoin && this._isHasVacuum){
+					else if (!this._goalCoin && this._isHasVacuum && this._wasCollected){
+						this._wasCollected = false;
 						this._startCollectingVacuumAnimation.restart();
 						this._startCollectingVacuumArmorAnimation.restart();
 						this._collectingAnimation.leftTimeMs = 0;
