@@ -413,7 +413,9 @@ export class Collector extends Unit{
 					return;
 				}
 				else{ //ещё не дошёл
-					this.isRun = true;
+					if(!this._isHasVacuum){
+						this.isRun = true;
+					}
 					if(isLeftMoving)
 						this.x -= speed;
 					else 
@@ -423,7 +425,9 @@ export class Collector extends Unit{
 			}
 		}
 		else {
-			this.isRun = true;
+			if(!this._isHasVacuum){
+				this.isRun = true;
+			}
 			if(this.isRunRight){
 				this.x += speed;
 			}
