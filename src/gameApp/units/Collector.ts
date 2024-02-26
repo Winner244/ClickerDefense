@@ -1,7 +1,8 @@
+import * as Tone from 'tone';
+
 import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
-import {Draw} from '../gameSystems/Draw';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import {Modifier} from '../modifiers/Modifier';
@@ -11,15 +12,11 @@ import {Monster} from '../monsters/Monster';
 import {Buildings} from '../buildings/Buildings';
 import {Building} from '../buildings/Building';
 
-import {FlyEarth} from '../buildings/FlyEarth';
-
 import Animation from '../../models/Animation';
 import AnimationInfinite from '../../models/AnimationInfinite';
 import ShopItem from '../../models/ShopItem';
 
 import {AttackedObject} from '../../models/AttackedObject';
-
-import {Helper} from '../helpers/Helper';
 
 import {Unit} from './Unit';
 
@@ -78,6 +75,10 @@ import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3';
 import SoundAttacked2 from '../../assets/sounds/units/miner/attacked2.mp3'; 
 import SoundAttacked3 from '../../assets/sounds/units/miner/attacked3.mp3'; 
 
+import SoundVacuumStart from '../../assets/sounds/units/collector/vacuumStart.mp3'; 
+import SoundVacuum from '../../assets/sounds/units/collector/vacuum.mp3'; 
+import SoundVacuumEnd from '../../assets/sounds/units/collector/vacuumEnd.mp3'; 
+
 
 /** Собиратель монет - тип юнитов пользователя */
 export class Collector extends Unit{
@@ -132,6 +133,8 @@ export class Collector extends Unit{
 
 	private _isHasVacuum: boolean; //прокачен до пылесоса? - это меняет логику сбора монет
 	private _isVacuumCollectingStarted: boolean; //была ли начата анимация старта сбора?
+	private _vacuumSound: Tone.Player|null; //звук пылесоса
+	private _vacuumSoundEnd: Tone.Player|null; //звук пылесоса
 	private static readonly VacuumRunStartDistance: number = 30;
 	
 	private readonly empty: Animation;
@@ -198,6 +201,8 @@ export class Collector extends Unit{
 		this._isHasVacuum = false;
 		this._isVacuumCollectingStarted = false;
 		this._joyAnimation.leftTimeMs = 0;
+		this._vacuumSound = null;
+		this._vacuumSoundEnd = null;
 
         Collector.init(true); //reserve init
 
@@ -348,6 +353,62 @@ export class Collector extends Unit{
 		return 0;
 	}
 
+	startVacuumSound(){
+		if(this._vacuumSoundEnd){
+			this._vacuumSoundEnd.stop();
+		}
+
+		AudioSystem.play(this.centerX, SoundVacuumStart).then(source => {
+			this._vacuumSound = source;
+			if(source){
+				source.onstop = () => {
+					if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
+						this.playVacuumSound(true);
+					}
+					else{
+						this.endVacuumSound();
+					}
+				};
+			}
+		});
+	}
+
+	endVacuumSound(){
+		this._vacuumSound = null;
+		AudioSystem.play(this.centerX, SoundVacuumEnd).then(source => {
+			this._vacuumSoundEnd = source;
+			if(source){
+				source.onstop = () => this._vacuumSoundEnd = null;
+			}
+		});
+	}
+
+	playVacuumSound(isForce: boolean = false){
+		if(!this._vacuumSound){
+			this.startVacuumSound();
+			return;
+		}
+
+		if(!isForce){
+			return;
+		}
+
+		AudioSystem.play(this.centerX, SoundVacuum).then(source => {
+			this._vacuumSound = source;
+			if(source){
+				source.onstop = () => {
+					if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
+						source.start(0);
+					}
+					else{
+						this.endVacuumSound();
+					}
+				};
+			}
+		});
+
+	}
+
 	logicMoving(drawsDiffMs: number, speed: number){
 		this.isRun = false;
 
@@ -390,6 +451,8 @@ export class Collector extends Unit{
 							this._collectingAnimation.restart();
 							this._collectingArmorAnimation.restart();
 						}
+
+						this.playVacuumSound();
 					}
 					else{
 						this.isRun = true;
