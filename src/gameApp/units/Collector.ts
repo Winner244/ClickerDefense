@@ -355,6 +355,10 @@ export class Collector extends Unit{
 			return;  //игнорируем логику движения
 		}
 
+		if (this._fallEndAnimation.leftTimeMs > 0){
+			return;
+		}
+
 		if (this._joyAnimation.leftTimeMs > 0){
 			return;
 		}
@@ -409,6 +413,7 @@ export class Collector extends Unit{
 					return;
 				}
 				else{ //ещё не дошёл
+					this.isRun = true;
 					if(isLeftMoving)
 						this.x -= speed;
 					else 
@@ -418,6 +423,7 @@ export class Collector extends Unit{
 			}
 		}
 		else {
+			this.isRun = true;
 			if(this.isRunRight){
 				this.x += speed;
 			}
@@ -726,9 +732,12 @@ export class Collector extends Unit{
 		filter: string|null = null,
 		isInvertAnimation: boolean = false)
 	{
+
 		if (this._isFall || this._fallEndAnimation.leftTimeMs > 0)
 		{
-			//nothing do
+			imageOrAnimation = this._fallEndAnimation;
+			imageOrAnimationArmor = this._fallEndArmorAnimation;
+			imageOrAnimationWeapon = this._fallEndWeaponAnimation;
 		}
 		else if (this._isDefenseActivated){
 			imageOrAnimation = this.defenseAnimation;
@@ -777,6 +786,7 @@ export class Collector extends Unit{
 			imageOrAnimationWeapon = this._passiveWaitingWeaponAnimation;
 		}
 
+		//переопределяем логику отрисовки при окончании волны с монетами - что бы собирать их
 		if(!WavesState.isWaveStarted && Coins.all.length){
 			super.drawObjectBase(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObjectBase(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter, isInvertAnimation);

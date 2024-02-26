@@ -576,6 +576,15 @@ export class Unit extends UpgradebleObject {
 				super.drawObject(drawsDiffMs, this._activeWaitingWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			}
 		}
+		else if(this._isFall){
+			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObject(drawsDiffMs, this._fallArmorImage, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+		}
+		else if(this._fallEndAnimation.leftTimeMs > 0){
+			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObject(drawsDiffMs, this._fallEndArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+			super.drawObject(drawsDiffMs, this._fallEndWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
+		}
 		else if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs > 0 && this._joyAnimation.leftTimeMs > 0){
 			super.drawObject(drawsDiffMs, this._joyAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._joyArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
@@ -585,15 +594,6 @@ export class Unit extends UpgradebleObject {
 			super.drawObject(drawsDiffMs, this._runAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._runArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObject(drawsDiffMs, this._runWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
-		}
-		else if(this._isFall){
-			super.drawObject(drawsDiffMs, this._fallImage, isGameOver, invertSign, x, y, filter, isInvertAnimation);
-			super.drawObject(drawsDiffMs, this._fallArmorImage, isGameOver, invertSign, x, y, filter, isInvertAnimation);
-		}
-		else if(this._fallEndAnimation.leftTimeMs > 0){
-			super.drawObject(drawsDiffMs, this._fallEndAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
-			super.drawObject(drawsDiffMs, this._fallEndArmorAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
-			super.drawObject(drawsDiffMs, this._fallEndWeaponAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 		}
 		else if(WavesState.isWaveStarted){
 			super.drawObject(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
