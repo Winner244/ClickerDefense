@@ -10,10 +10,10 @@ last version: 0.17
 
 🎃 Zombie
   
-  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie1.gif" height="70" />
-  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie2.gif" height="70" />
-  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie3.gif" height="70" />
-  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie4.gif" height="70" />
+  <img src="https://clicker-defense.ru/static/media/readmy/Zombie1.gif" height="70" />
+  <img src="https://clicker-defense.ru/static/media/readmy/Zombie2.gif" height="70" />
+  <img src="https://clicker-defense.ru/static/media/readmy/Zombie3.gif" height="70" />
+  <img src="https://clicker-defense.ru/static/media/readmy/Zombie4.gif" height="70" />
 	
 🎃 Boar
 
