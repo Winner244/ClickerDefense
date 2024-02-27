@@ -6,47 +6,63 @@ Canvas game - need to defense flying earch + mine coins from it + destroy waves 
 
 last version: 0.17
 
-Monsters: 
-	
-	Zombie 
-		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie1.gif)
-		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie2.gif)
-		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie3.gif)
-		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie4.gif)
-		
-	Boar 
-		boost
-		
-	Bat
-	
-	Necromancer 
-		acid rain
-		call skeletes
-		energy defense
-		debuf fire
-	
-Units:
-	
-	Miner - to auto pick coins
-		wood armor
-		gold pickaxe
-		diamond pickaxe
-		self-defense
-		
-	Collector - to auto collect coins 
-		wood armor
-		vacuum
-	
-Buildings:
-	
-	Tower
-		fire arrows
-		dynamit arrows 
-		
-	Barricade
-		Iron spikes
+<h3>Monsters:</h3>
 
-Waves:
+🎃 Zombie
+  
+  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie1.gif" height="70" />
+  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie2.gif" height="70" />
+  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie3.gif" height="70" />
+  <img src="https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie4.gif" height="70" />
+	
+🎃 Boar
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boost
+	
+🎃 Bat
+
+🎃 Necromancer
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; acid rain
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; call skeletes
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; energy defense
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; debuf fire
+	
+<h3>Units:</h3>
+
+👲Miner - to auto pick coins
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wood armor
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gold pickaxe
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; diamond pickaxe
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self-defense
+	
+👲Collector - to auto collect coins 
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wood armor
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vacuum
+	
+<h3>Buildings:</h3>
+
+🏯 Tower
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fire arrows
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dynamit arrows 
+	
+🏯 Barricade
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Iron spikes
+
+<h3>Waves:</h3>
+
 1. Zombies 
 2. Zombies + Boars
 3. Zombies + Boars + Bats
