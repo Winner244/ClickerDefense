@@ -7,36 +7,36 @@ Canvas game - need to defense flying earch + mine coins from it + destroy waves 
 last version: 0.17
 
 Monsters: 
-	> Zombie 
+	Zombie 
 		4 skins
 		
-	> Boar 
+	Boar 
 		boost
 		
-	> Bat
+	Bat
 	
-	> Necromancer 
+	Necromancer 
 		acid rain
 		call skeletes
 		energy defense
 		debuf fire
 	
 Units:
-	> Miner - to auto pick coins
+	Miner - to auto pick coins
 		wood armor
 		gold pickaxe
 		diamond pickaxe
 		self-defense
 		
-	> Collector - to auto collect coins 
+	Collector - to auto collect coins 
 		wood armor
 		vacuum
 	
 Buildings:
-	> Tower
+	Tower
 		fire arrows
 		dynamit arrows 
-	> Barricade
+	Barricade
 		Iron spikes
 
 Waves:
