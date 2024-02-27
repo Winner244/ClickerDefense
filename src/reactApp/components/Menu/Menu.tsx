@@ -315,6 +315,14 @@ export class Menu extends React.Component<Props, IState> {
             </button>
           : null
         }
+
+
+        {this.props.isOpen && !this.props.isDisplayButtonContinueGame
+          ? <div className='menu__footer'>
+              <a className='menu__footer-link-version' href='https://gitlab.com/sanek244/clickerdefense__canvas'>v0.17</a>
+            </div>
+          : null
+        }
       </div>);
   }
 }

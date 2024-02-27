@@ -177,4 +177,17 @@
 		font-size: 22px;
 		font-family: cursive;
 	}
+
+	&__footer{
+		width: 100%;
+		text-align: center;
+		position: absolute;
+		bottom: 0;
+		padding: 5px 0;
+	}
+
+	&__footer-link-version{
+		text-decoration: none;
+		color: #ffa400;
+	}
 }
