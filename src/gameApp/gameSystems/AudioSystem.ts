@@ -134,7 +134,7 @@ export class AudioSystem{
 					source.onstop = () => {
 						var isContinue = stopCallback(source);
 						if(isCycling && source.autostart && isContinue){
-							source.start(0);
+							source.start(delayStartingSeconds, offsetStartingSeconds);
 						}
 						else{
 							this._soundsForPause = this._soundsForPause.filter(x => x != source);
@@ -145,7 +145,7 @@ export class AudioSystem{
 					source.onstop = () => {
 						var isContinue = stopCallback(source);
 						if(source.autostart && isContinue){
-							source.start(0);
+							source.start(delayStartingSeconds, offsetStartingSeconds);
 						}
 					};
 				}

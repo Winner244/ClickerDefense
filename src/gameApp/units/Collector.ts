@@ -358,7 +358,7 @@ export class Collector extends Unit{
 			this._vacuumSoundEnd.stop();
 		}
 
-		AudioSystem.play(this.centerX, SoundVacuumStart, 1, 1, false, true, 0, 0, false, false, (source: Tone.Player) => {
+		AudioSystem.play(this.centerX, SoundVacuumStart, -15, 1, false, true, 0, 0, false, false, (source: Tone.Player) => {
 			if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
 				this.playVacuumSound(true);
 			}
@@ -371,7 +371,7 @@ export class Collector extends Unit{
 
 	endVacuumSound(){
 		this._vacuumSound = null;
-		AudioSystem.play(this.centerX, SoundVacuumEnd, 1, 1, false, true, 0, 0, false, false, (source: Tone.Player) => {
+		AudioSystem.play(this.centerX, SoundVacuumEnd, -15, 1, false, true, 0, 0.3, false, false, (source: Tone.Player) => {
 			this._vacuumSoundEnd = null;
 			return false;
 		}).then(source => this._vacuumSoundEnd = source);
@@ -387,7 +387,7 @@ export class Collector extends Unit{
 			return;
 		}
 
-		AudioSystem.play(this.centerX, SoundVacuum, 1, 1, false, true, 0, 0, false, true, (source: Tone.Player) => {
+		AudioSystem.play(this.centerX, SoundVacuum, -15, 1, false, true, 0, 0.3, false, true, (source: Tone.Player) => {
 			let coinDistance = this.getCoinDistance();
 			if (coinDistance < Collector.VacuumRunStartDistance && this._goalCoin){
 				return true;
