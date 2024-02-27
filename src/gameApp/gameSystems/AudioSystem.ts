@@ -104,7 +104,8 @@ export class AudioSystem{
 		delayStartingSeconds: number = 0, 
 		offsetStartingSeconds: number = 0,
 		isMusic: boolean = false,
-		isCycling: boolean = false): Promise<Tone.Player|null>
+		isCycling: boolean = false,
+		stopCallback: (source: Tone.Player) => boolean = () => true): Promise<Tone.Player|null>
 	{
 		if (!AudioSystem.isEnabled){
 			return new Promise(done => done(null));
@@ -131,7 +132,8 @@ export class AudioSystem{
 					(<any>source).startedAt = this._context.currentTime + delayStartingSeconds;
 					this._soundsForPause.push(source);
 					source.onstop = () => {
-						if(isCycling && source.autostart){
+						var isContinue = stopCallback(source);
+						if(isCycling && source.autostart && isContinue){
 							source.start(0);
 						}
 						else{
@@ -141,7 +143,8 @@ export class AudioSystem{
 				}
 				else if(isCycling){
 					source.onstop = () => {
-						if(source.autostart){
+						var isContinue = stopCallback(source);
+						if(source.autostart && isContinue){
 							source.start(0);
 						}
 					};

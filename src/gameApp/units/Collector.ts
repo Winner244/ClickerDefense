@@ -358,29 +358,23 @@ export class Collector extends Unit{
 			this._vacuumSoundEnd.stop();
 		}
 
-		AudioSystem.play(this.centerX, SoundVacuumStart).then(source => {
-			this._vacuumSound = source;
-			if(source){
-				source.onstop = () => {
-					if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
-						this.playVacuumSound(true);
-					}
-					else{
-						this.endVacuumSound();
-					}
-				};
+		AudioSystem.play(this.centerX, SoundVacuumStart, 1, 1, false, true, 0, 0, false, false, (source: Tone.Player) => {
+			if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
+				this.playVacuumSound(true);
 			}
-		});
+			else{
+				this.endVacuumSound();
+			}
+			return false;
+		}).then(source => this._vacuumSound = source);
 	}
 
 	endVacuumSound(){
 		this._vacuumSound = null;
-		AudioSystem.play(this.centerX, SoundVacuumEnd).then(source => {
-			this._vacuumSoundEnd = source;
-			if(source){
-				source.onstop = () => this._vacuumSoundEnd = null;
-			}
-		});
+		AudioSystem.play(this.centerX, SoundVacuumEnd, 1, 1, false, true, 0, 0, false, false, (source: Tone.Player) => {
+			this._vacuumSoundEnd = null;
+			return false;
+		}).then(source => this._vacuumSoundEnd = source);
 	}
 
 	playVacuumSound(isForce: boolean = false){
@@ -393,19 +387,15 @@ export class Collector extends Unit{
 			return;
 		}
 
-		AudioSystem.play(this.centerX, SoundVacuum).then(source => {
-			this._vacuumSound = source;
-			if(source){
-				source.onstop = () => {
-					if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
-						source.start(0);
-					}
-					else{
-						this.endVacuumSound();
-					}
-				};
+		AudioSystem.play(this.centerX, SoundVacuum, 1, 1, false, true, 0, 0, false, true, (source: Tone.Player) => {
+			let coinDistance = this.getCoinDistance();
+			if (coinDistance < Collector.VacuumRunStartDistance && this._goalCoin){
+				return true;
 			}
-		});
+
+			this.endVacuumSound();
+			return false;
+		}).then(source => this._vacuumSound = source);
 
 	}
 
