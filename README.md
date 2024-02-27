@@ -9,7 +9,10 @@ last version: 0.17
 Monsters: 
 	
 	Zombie 
-		4 skins
+		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie1.gif)
+		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie2.gif)
+		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie3.gif)
+		![Alt Text](https://github.com/Winner244/ClickerDefense/blob/master/readmyMedia/Zombie4.gif)
 		
 	Boar 
 		boost
