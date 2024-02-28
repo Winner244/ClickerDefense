@@ -123,3 +123,12 @@ attacked:
 2. Zombies + Boars
 3. Zombies + Boars + Bats
 4. many Bats + Boars, after: Zombies + Necromancers
+
+
+
+
+Game Over:
+
+<img src="https://clicker-defense.ru/static/media/readmy/GameOverTop.gif" height="500" />
+
+<img src="https://clicker-defense.ru/static/media/readmy/GameOverBottom.gif" height="500" />
