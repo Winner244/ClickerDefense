@@ -22,7 +22,7 @@ last version: 0.17
   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: boost
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/BoarSpecialAbility.gif" height="200" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/BoarSpecialAbility.gif" height="200" />
 	
 🎃 Bat
 
@@ -34,21 +34,46 @@ last version: 0.17
   
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: acid rain
 
-<img src="https://clicker-defense.ru/static/media/readmy/NecromancerAcidRain.gif" height="300" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/NecromancerAcidRain.gif" height="300" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: call skeletes
 
-<img src="https://clicker-defense.ru/static/media/readmy/NecromancerCallSkeletons.gif" height="180" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/NecromancerCallSkeletons.gif" height="180" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: energy defense
 
-<img src="https://clicker-defense.ru/static/media/readmy/NecromancerEnergyShield.gif" height="200" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/NecromancerEnergyShield.gif" height="200" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: debuf fire
 
-<img src="https://clicker-defense.ru/static/media/readmy/NecromancerDebufFire.gif" height="200" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/NecromancerDebufFire.gif" height="200" />
 
+	
 <br>
+<br>
+<h3>Buildings:</h3>
+
+🏯 Barricade
+
+<img src="https://clicker-defense.ru/static/media/readmy/BarricadeAndZombie.gif" height="100" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: Iron
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/BarricadeIronAndZombie.gif" height="100" />
+
+
+🏯 Tower
+
+<img src="https://clicker-defense.ru/static/media/readmy/Tower.gif" height="200" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: Fire arrows
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/TowerFire.gif" height="200" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: Dynamit arrows 
+	
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/TowerDynamit.gif" height="200" />
+
 <br>
 <h3>Units:</h3>
 
@@ -67,20 +92,6 @@ last version: 0.17
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wood armor
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vacuum
-	
-<br>
-<h3>Buildings:</h3>
-
-🏯 Tower
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; fire arrows
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dynamit arrows 
-	
-🏯 Barricade
-
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Iron spikes
-
 <br>
 <h3>Waves:</h3>
 
