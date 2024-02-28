@@ -75,23 +75,37 @@ last version: 0.17
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/TowerDynamit.gif" height="200" />
 
 <br>
+<br>
 <h3>Units:</h3>
 
-👲Miner - to auto pick coins
+👲Miner
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wood armor
+<img src="https://clicker-defense.ru/static/media/readmy/Miner.gif" height="300" />
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; gold pickaxe
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: gold pickaxe
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; diamond pickaxe
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerGoldPickare.gif" height="300" />
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; self-defense
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: diamond pickaxe
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerDiamondPickare.gif" height="300" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: self-defense
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerSelfDefence.gif" height="300" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: wood armor
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerWoodArmor.gif" height="300" />
 	
-👲Collector - to auto collect coins 
+👲Collector
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wood armor
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: wood armor
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vacuum
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: vacuum
+
+
+<br>
 <br>
 <h3>Waves:</h3>
 
