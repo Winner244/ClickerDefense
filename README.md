@@ -6,6 +6,7 @@ Canvas game - need to defense flying earch + mine coins from it + destroy waves 
 
 last version: 0.17
 
+<br>
 <h3>Monsters:</h3>
 
 🎃 Zombie
@@ -25,16 +26,30 @@ last version: 0.17
 	
 🎃 Bat
 
+<img src="https://clicker-defense.ru/static/media/readmy/Bat.gif" height="200" />
+
 🎃 Necromancer
+
+<img src="https://clicker-defense.ru/static/media/readmy/Necromancer.gif" height="200" />
   
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; acid rain
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: acid rain
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; call skeletes
+<img src="https://clicker-defense.ru/static/media/readmy/NecromancerAcidRain.gif" height="300" />
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; energy defense
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: call skeletes
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; debuf fire
-	
+<img src="https://clicker-defense.ru/static/media/readmy/NecromancerCallSkeletons.gif" height="180" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: energy defense
+
+<img src="https://clicker-defense.ru/static/media/readmy/NecromancerEnergyShield.gif" height="200" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: debuf fire
+
+<img src="https://clicker-defense.ru/static/media/readmy/NecromancerDebufFire.gif" height="200" />
+
+<br>
+<br>
 <h3>Units:</h3>
 
 👲Miner - to auto pick coins
@@ -53,6 +68,7 @@ last version: 0.17
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vacuum
 	
+<br>
 <h3>Buildings:</h3>
 
 🏯 Tower
@@ -65,6 +81,7 @@ last version: 0.17
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Iron spikes
 
+<br>
 <h3>Waves:</h3>
 
 1. Zombies 
