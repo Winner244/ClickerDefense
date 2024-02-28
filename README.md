@@ -17,7 +17,11 @@ last version: 0.17
 	
 🎃 Boar
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; boost
+  <img src="https://clicker-defense.ru/static/media/readmy/Boar.gif" height="70" />
+  
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟special ability: boost
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/BoarSpecialAbility.gif" height="200" />
 	
 🎃 Bat
 
