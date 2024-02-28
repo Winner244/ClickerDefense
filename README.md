@@ -82,6 +82,10 @@ last version: 0.17
 
 <img src="https://clicker-defense.ru/static/media/readmy/Miner.gif" height="300" />
 
+attacked:
+
+<img src="https://clicker-defense.ru/static/media/readmy/MinerAndBat.gif" height="300" />
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: gold pickaxe
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerGoldPickare.gif" height="300" />
@@ -100,9 +104,15 @@ last version: 0.17
 	
 👲Collector
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: wood armor
+<img src="https://clicker-defense.ru/static/media/readmy/Collector.gif" height="200" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: vacuum
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorVacuum.gif" height="200" />
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: wood armor
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorWoodArmor.gif" height="200" />
 
 
 <br>
