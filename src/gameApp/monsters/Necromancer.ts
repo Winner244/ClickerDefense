@@ -348,7 +348,7 @@ export class Necromancer extends Monster{
 		}
 
 		//активация атаки
-		if(this._goal && this._goal.health > 0 && this._attackXStart)
+		if(this._goal && this._goal.health > 0 && this._attackXStart && this.centerX > 0 && this.centerX < Draw.canvas.width)
 		{
 			if ( this.isLeftSide && this.centerX >= this._attackXStart || 
 				!this.isLeftSide && this.centerX <= this._attackXStart)
