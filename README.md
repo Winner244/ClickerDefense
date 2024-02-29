@@ -61,6 +61,7 @@ last version: 0.17
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/BarricadeIronAndZombie.gif" height="100" />
 
+<img src="https://clicker-defense.ru/static/media/readmy/Barricade.jpg" height="300" />
 
 🏯 Tower
 
@@ -73,6 +74,8 @@ last version: 0.17
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: Dynamit arrows 
 	
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/TowerDynamit.gif" height="200" />
+
+<img src="https://clicker-defense.ru/static/media/readmy/tower.jpg" height="500" />
 
 <br>
 <br>
@@ -102,6 +105,8 @@ attacked:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerWoodArmor.gif" height="300" />
 	
+<img src="https://clicker-defense.ru/static/media/readmy/miner.jpg" height="250" />
+
 👲Collector
 
 <img src="https://clicker-defense.ru/static/media/readmy/Collector.gif" height="200" />
@@ -114,6 +119,7 @@ attacked:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorWoodArmor.gif" height="200" />
 
+<img src="https://clicker-defense.ru/static/media/readmy/collector.jpg" height="250" />
 
 <br>
 <br>
@@ -125,10 +131,54 @@ attacked:
 4. many Bats + Boars, after: Zombies + Necromancers
 
 
+<br>
 
+Shop:
+
+<img src="https://clicker-defense.ru/static/media/readmy/shop.jpg" height="400" />
+
+<br>
 
 Game Over:
 
 <img src="https://clicker-defense.ru/static/media/readmy/GameOverTop.gif" height="500" />
 
 <img src="https://clicker-defense.ru/static/media/readmy/GameOverBottom.gif" height="500" />
+
+
+
+<br>
+<br>
+
+<h3>Road Map:</h3>
+
+😃 Magic
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 crusher (impulse anomaly with magnet)
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 cursor passive magic ....
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 meteors
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 lightning
+
+....
+
+😃 5th wave with mini fire-Dragons
+
+😃 6th wave with chess soldiers
+
+😃 7th wave with Centaur and monster drum buffer 
+
+😃 archer unit
+
+😃 swordsman unit
+
+😃 wizard unit
+
+😃 8th wave with new monster (???)
+
+😃 9th wave with new monster (???)
+
+😃 10th wave with boss 😈
+
