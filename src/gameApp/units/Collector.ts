@@ -305,6 +305,9 @@ export class Collector extends Unit{
 		this._joyWeaponAnimation.image.src = CollectorJoyVacuumImage;
 		this.defenseToolAnimation.image.src = CollectorDefenseVacuumImage;
 		this.defenseActivationToolAnimation.image.src = CollectorDefenseStartVacuumImage;
+
+		this.improveSpeedOfVacuum();
+
 		var t = this.improvements.find(x => x.label == 'Пылесос'); 
 		if(t) t.isImproved = true;
 	}
@@ -312,14 +315,26 @@ export class Collector extends Unit{
 	improveSpeed(){
 		this.speed += 10;
 
-		var newDurationDigging = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
-		this._collectingAnimation.changeDuration(newDurationDigging);
-		this._collectingArmorAnimation.changeDuration(newDurationDigging);
+		var newDurationCollecting = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
+		this._collectingAnimation.changeDuration(newDurationCollecting);
+		this._collectingArmorAnimation.changeDuration(newDurationCollecting);
 
 		var newDurationRun = Collector.initialSpeed / this.speed * this._runAnimation.initialDurationMs;
 		this._runAnimation.changeDuration(newDurationRun);
 		this._runArmorAnimation.changeDuration(newDurationRun);
 		this._runWeaponAnimation.changeDuration(newDurationRun);
+
+		this.improveSpeedOfVacuum();
+	}
+
+	improveSpeedOfVacuum(){
+		var newDurationCollecting = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
+		this._collectingAnimation.changeDuration(newDurationCollecting);
+		this._collectingArmorAnimation.changeDuration(newDurationCollecting);
+		
+		var newDurationStartCollecting = Collector.initialSpeed / this.speed * this._startCollectingVacuumAnimation.initialDurationMs;
+		this._startCollectingVacuumAnimation.changeDuration(newDurationStartCollecting);
+		this._startCollectingVacuumArmorAnimation.changeDuration(newDurationStartCollecting);
 	}
 
 	recovery(): boolean{
