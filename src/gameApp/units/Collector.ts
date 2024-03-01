@@ -66,6 +66,8 @@ import CollectorDefenseStartVacuumImage from '../../assets/img/units/collector/v
 import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/collect.png'; 
 import CollectorStartCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/startCollect.png'; 
 
+import VacuumCarImage from '../../assets/img/units/collector/vacuumCar/vacuumCar.png'; 
+import CollectorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/passiveWaiting.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -136,6 +138,8 @@ export class Collector extends Unit{
 	private _vacuumSound: Tone.Player|null; //звук пылесоса
 	private _vacuumSoundEnd: Tone.Player|null; //звук пылесоса
 	private static readonly VacuumRunStartDistance: number = 30;
+
+	private _isHasVacuumCar: boolean; //прокачен до машины-пылесоса - это меняет логику сбора монет
 	
 	private readonly empty: Animation;
 
@@ -199,6 +203,7 @@ export class Collector extends Unit{
 
 		this._isNewCoin = false;
 		this._isHasVacuum = false;
+		this._isHasVacuumCar = false;
 		this._isVacuumCollectingStarted = false;
 		this._joyAnimation.leftTimeMs = 0;
 		this._vacuumSound = null;
@@ -249,6 +254,10 @@ export class Collector extends Unit{
 		this.improvements.push(new Improvement('Пылесос', Collector.shopItem.price * 0.8, VacuumImage, () => this.improveToVacuum(), [
 			new ImprovementParameterItem(`+ авто сбор `, coinIcon)
 		]));
+
+		this.improvements.push(new Improvement('Пылесос-машина', Collector.shopItem.price * 0.8, VacuumCarImage, () => this.improveToVacuumCar(), [
+			new ImprovementParameterItem(`+++ авто сбор `, coinIcon)
+		], true));
 	}
 
 	improveToWoodArmor(){
@@ -310,6 +319,33 @@ export class Collector extends Unit{
 
 		var t = this.improvements.find(x => x.label == 'Пылесос'); 
 		if(t) t.isImproved = true;
+	}
+
+	improveToVacuumCar(){
+		this._isHasVacuumCar = true;
+		this._isHasVacuum = false;
+		this._rotateWeaponInEarch = 0;
+		this._weaponRotateInAir = 0;
+		this._shiftYWeaponInEarch = 0;
+
+		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
+			//TODO
+		}
+
+		//this._collectingAnimation
+
+		this._passiveWaitingAnimation = new AnimationInfinite(1, 1000);
+		this._passiveWaitingAnimation.image.src = CollectorPassiveWaitingVacuumCarImage;
+		this._passiveWaitingWeaponAnimation = new AnimationInfinite(1, 1000);
+		this._passiveWaitingArmorAnimation = new AnimationInfinite(1, 1000);
+		
+		//update height/width, Y
+		var oldheight = this.height;
+		this.image.src = CollectorPassiveWaitingVacuumCarImage;
+		this.image.onload = (ev: Event) => {
+			this.y -= this.height - oldheight;
+			this._isFall = true;
+		};
 	}
 
 	improveSpeed(){

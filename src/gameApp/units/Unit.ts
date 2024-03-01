@@ -45,7 +45,7 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 
 /** Базовый класс для всех Юнитов пользователя */
 export class Unit extends UpgradebleObject {
-	protected readonly _passiveWaitingAnimation: AnimationInfinite; //анимация ожидания в мирное время (между волнами)
+	protected _passiveWaitingAnimation: AnimationInfinite; //анимация ожидания в мирное время (между волнами)
 	protected readonly _fallEndAnimation: Animation; //анимация приземления юнита 
 	protected readonly _fallImage: HTMLImageElement;
 	protected readonly _startActiveWaitingAnimation: Animation; //анимация начала ожидания волны
@@ -55,7 +55,7 @@ export class Unit extends UpgradebleObject {
 	protected readonly _attackAnimation: AnimationInfinite; //анимация атаки
 
 	//to upgrade weapon
-	protected readonly _passiveWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания в мирное время (между волнами)
+	protected _passiveWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания в мирное время (между волнами)
 	protected readonly _fallEndWeaponAnimation: Animation; //для апгрейда оружия - анимация приземления юнита 
 	protected readonly _startActiveWaitingWeaponAnimation: Animation; //для апгрейда оружия - анимация начала ожидания волны
 	protected readonly _activeWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания начала волны
@@ -64,7 +64,7 @@ export class Unit extends UpgradebleObject {
 	protected readonly _attackWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация атаки
 
 	//to upgrade armor
-	protected readonly _passiveWaitingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация ожидания в мирное время (между волнами)
+	protected _passiveWaitingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация ожидания в мирное время (между волнами)
 	protected readonly _fallEndArmorAnimation: Animation; //для апгрейда брони - анимация приземления юнита 
 	protected readonly _startActiveWaitingArmorAnimation: Animation; //для апгрейда брони - анимация начала ожидания волны
 	protected readonly _activeWaitingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация ожидания начала волны
