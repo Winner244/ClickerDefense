@@ -67,6 +67,7 @@ import CollectorCollectVacuumWoodArmorImage from '../../assets/img/units/collect
 import CollectorStartCollectVacuumWoodArmorImage from '../../assets/img/units/collector/vacuum/woodArmor/startCollect.png'; 
 
 import VacuumCarImage from '../../assets/img/units/collector/vacuumCar/vacuumCar.png'; 
+import CollectorImageForVacuumCarImage from '../../assets/img/units/collector/vacuumCar/image.png'; 
 import CollectorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/passiveWaiting.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
@@ -334,14 +335,14 @@ export class Collector extends Unit{
 
 		//this._collectingAnimation
 
-		this._passiveWaitingAnimation = new AnimationInfinite(1, 1000);
+		this._passiveWaitingAnimation = new AnimationInfinite(4, 4 * 500);
 		this._passiveWaitingAnimation.image.src = CollectorPassiveWaitingVacuumCarImage;
 		this._passiveWaitingWeaponAnimation = new AnimationInfinite(1, 1000);
 		this._passiveWaitingArmorAnimation = new AnimationInfinite(1, 1000);
 		
 		//update height/width, Y
 		var oldheight = this.height;
-		this.image.src = CollectorPassiveWaitingVacuumCarImage;
+		this.image.src = CollectorImageForVacuumCarImage;
 		this.image.onload = (ev: Event) => {
 			this.y -= this.height - oldheight;
 			this._isFall = true;
