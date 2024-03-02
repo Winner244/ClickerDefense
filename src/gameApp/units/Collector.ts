@@ -1,5 +1,7 @@
 import * as Tone from 'tone';
 
+import {Draw} from '../gameSystems/Draw';
+
 import {ImageHandler} from '../ImageHandler';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
@@ -147,6 +149,8 @@ export class Collector extends Unit{
 	private static readonly _vacuumCarPowerIncreasing: number = 1; //шаг приращение/прокачки мощности
 	private _vacuumCarGravityDistance: number; //дальность притягивания монет машиной (в пикселях)
 	private static readonly _vacuumCarGravityDistanceIncreasing: number = 50; //шаг приращение/прокачки дальности притягивания монет машиной
+	private static readonly _vacuumCarGravityAngle: number = 65; //угол прямоугольного треугольника притяжения монет
+	private _isDisplayDistanceVacuumCar: boolean; //рисовать дистанцию притяжения монет для машины-пылесоса? 
 	
 	private readonly empty: Animation;
 
@@ -217,8 +221,9 @@ export class Collector extends Unit{
 
 		
 		this._isHasVacuumCar = false;
-		this._vacuumCarPower = Collector._vacuumCarPowerIncreasing * 4;
-		this._vacuumCarGravityDistance = Collector._vacuumCarGravityDistanceIncreasing * 4;
+		this._vacuumCarPower = Collector._vacuumCarPowerIncreasing;
+		this._vacuumCarGravityDistance = Collector._vacuumCarGravityDistanceIncreasing * 3;
+		this._isDisplayDistanceVacuumCar = false;
 
         Collector.init(true); //reserve init
 
@@ -383,6 +388,22 @@ export class Collector extends Unit{
 			this.y -= this.height - oldheight;
 			this._isFall = true;
 		};
+
+		
+		this.infoItems.push(new ParameterItem('Сила магнита', () => this._vacuumCarPower, '', 13, () => this.price / 2, () => this._vacuumCarPower += Collector._vacuumCarPowerIncreasing));
+		this.infoItems.push(new ParameterItem('Дальность магнита', () => this._vacuumCarGravityDistance, '', 13, () => this.price / 2, () => this._vacuumCarGravityDistance += Collector._vacuumCarGravityDistanceIncreasing, 
+			this.displayDistanceVacuumCar.bind(this), this.hideDistanceVacuumCar.bind(this)));
+
+		var t = this.improvements.find(x => x.label == 'Пылесос-машина'); 
+		if(t) t.isImproved = true;
+	}
+
+	displayDistanceVacuumCar(){
+		this._isDisplayDistanceVacuumCar = true;
+	}
+
+	hideDistanceVacuumCar(){
+		this._isDisplayDistanceVacuumCar = false;
 	}
 
 	improveSpeed(){
@@ -690,10 +711,14 @@ export class Collector extends Unit{
 
 			//логика всасывания монет машиной-пылесосом
 			if(this._isHasVacuumCar){
+				if(this._isDisplayDistanceVacuumCar){
+					this._isDisplayDistanceVacuumCar = false;
+				}
+
 				//TODO: притягиваем пропорционально расстоянию и по геометрической форме треугольника
-				this._vacuumCarPower
-				this._vacuumCarGravityDistance
-				Coins.all.length
+				//this._vacuumCarPower
+				//this._vacuumCarGravityDistance
+				//Coins.all.length
 				return;
 			}
 			
@@ -887,6 +912,26 @@ export class Collector extends Unit{
 		filter: string|null = null,
 		isInvertAnimation: boolean = false)
 	{
+		//display radius attack
+		if(this._isHasVacuumCar && this._isDisplayDistanceVacuumCar){
+			Draw.ctx.beginPath();
+
+			var yStart = this.y + this.height;
+			var xStart = this.x;
+			var height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
+			var width = this._vacuumCarGravityDistance;
+
+			console.log('height, width', height, width);
+            Draw.ctx.moveTo(xStart, yStart);
+            Draw.ctx.lineTo(xStart + width, yStart);
+            Draw.ctx.lineTo(xStart + width, yStart + height);
+            Draw.ctx.lineTo(xStart, yStart);
+			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+			Draw.ctx.fill();
+			Draw.ctx.lineWidth = 2;
+			Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
+			Draw.ctx.stroke();
+		}
 
 		if (this._isFall || this._fallEndAnimation.leftTimeMs > 0)
 		{
