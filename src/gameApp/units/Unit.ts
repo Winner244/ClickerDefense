@@ -46,32 +46,32 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 /** Базовый класс для всех Юнитов пользователя */
 export class Unit extends UpgradebleObject {
 	protected _passiveWaitingAnimation: AnimationInfinite; //анимация ожидания в мирное время (между волнами)
-	protected readonly _fallEndAnimation: Animation; //анимация приземления юнита 
-	protected readonly _fallImage: HTMLImageElement;
-	protected readonly _startActiveWaitingAnimation: Animation; //анимация начала ожидания волны
-	protected readonly _activeWaitingAnimation: AnimationInfinite; //анимация ожидания начала волны
-	protected readonly _runAnimation: AnimationInfinite; //анимация бега
-	protected readonly _joyAnimation: Animation; //анимация радости после завершения волны
-	protected readonly _attackAnimation: AnimationInfinite; //анимация атаки
+	protected _fallEndAnimation: Animation; //анимация приземления юнита 
+	protected _fallImage: HTMLImageElement;
+	protected _startActiveWaitingAnimation: Animation; //анимация начала ожидания волны
+	protected _activeWaitingAnimation: AnimationInfinite; //анимация ожидания начала волны
+	protected _runAnimation: AnimationInfinite; //анимация бега
+	protected _joyAnimation: Animation; //анимация радости после завершения волны
+	protected _attackAnimation: AnimationInfinite; //анимация атаки
 
 	//to upgrade weapon
 	protected _passiveWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания в мирное время (между волнами)
-	protected readonly _fallEndWeaponAnimation: Animation; //для апгрейда оружия - анимация приземления юнита 
-	protected readonly _startActiveWaitingWeaponAnimation: Animation; //для апгрейда оружия - анимация начала ожидания волны
-	protected readonly _activeWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания начала волны
-	protected readonly _runWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация бега
-	protected readonly _joyWeaponAnimation: Animation; //для апгрейда оружия - анимация радости после завершения волны
-	protected readonly _attackWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация атаки
+	protected _fallEndWeaponAnimation: Animation; //для апгрейда оружия - анимация приземления юнита 
+	protected _startActiveWaitingWeaponAnimation: Animation; //для апгрейда оружия - анимация начала ожидания волны
+	protected _activeWaitingWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация ожидания начала волны
+	protected _runWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация бега
+	protected _joyWeaponAnimation: Animation; //для апгрейда оружия - анимация радости после завершения волны
+	protected _attackWeaponAnimation: AnimationInfinite; //для апгрейда оружия - анимация атаки
 
 	//to upgrade armor
 	protected _passiveWaitingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация ожидания в мирное время (между волнами)
-	protected readonly _fallEndArmorAnimation: Animation; //для апгрейда брони - анимация приземления юнита 
-	protected readonly _startActiveWaitingArmorAnimation: Animation; //для апгрейда брони - анимация начала ожидания волны
-	protected readonly _activeWaitingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация ожидания начала волны
-	protected readonly _runArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация бега
-	protected readonly _joyArmorAnimation: Animation; //для апгрейда брони - анимация радости после завершения волны
-	protected readonly _attackArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация атаки
-	protected readonly _fallArmorImage: HTMLImageElement;
+	protected _fallEndArmorAnimation: Animation; //для апгрейда брони - анимация приземления юнита 
+	protected _startActiveWaitingArmorAnimation: Animation; //для апгрейда брони - анимация начала ожидания волны
+	protected _activeWaitingArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация ожидания начала волны
+	protected _runArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация бега
+	protected _joyArmorAnimation: Animation; //для апгрейда брони - анимация радости после завершения волны
+	protected _attackArmorAnimation: AnimationInfinite; //для апгрейда брони - анимация атаки
+	protected _fallArmorImage: HTMLImageElement;
 
 	static readonly heartImage: HTMLImageElement = new Image(); //картинка для анимации лечения
 	static readonly healingAnimationDurationMs: number = 1200; //продолжительность анимации лечения (миллисекунды)

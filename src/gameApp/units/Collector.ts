@@ -69,6 +69,8 @@ import CollectorStartCollectVacuumWoodArmorImage from '../../assets/img/units/co
 import VacuumCarImage from '../../assets/img/units/collector/vacuumCar/vacuumCar.png'; 
 import CollectorImageForVacuumCarImage from '../../assets/img/units/collector/vacuumCar/image.png'; 
 import CollectorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/passiveWaiting.png'; 
+import CollectorRunVacuumCarImage from '../../assets/img/units/collector/vacuumCar/run.png'; 
+import CollectorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/startActive.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -141,6 +143,10 @@ export class Collector extends Unit{
 	private static readonly VacuumRunStartDistance: number = 30;
 
 	private _isHasVacuumCar: boolean; //прокачен до машины-пылесоса - это меняет логику сбора монет
+	private _vacuumCarPower: number; //мощность машины всасывания (ускорение в пискелях придаваемое монете по оси x в сторону машины)
+	private static readonly _vacuumCarPowerIncreasing: number = 1; //шаг приращение/прокачки мощности
+	private _vacuumCarGravityDistance: number; //дальность притягивания монет машиной (в пикселях)
+	private static readonly _vacuumCarGravityDistanceIncreasing: number = 50; //шаг приращение/прокачки дальности притягивания монет машиной
 	
 	private readonly empty: Animation;
 
@@ -204,11 +210,15 @@ export class Collector extends Unit{
 
 		this._isNewCoin = false;
 		this._isHasVacuum = false;
-		this._isHasVacuumCar = false;
 		this._isVacuumCollectingStarted = false;
 		this._joyAnimation.leftTimeMs = 0;
 		this._vacuumSound = null;
 		this._vacuumSoundEnd = null;
+
+		
+		this._isHasVacuumCar = false;
+		this._vacuumCarPower = Collector._vacuumCarPowerIncreasing * 4;
+		this._vacuumCarGravityDistance = Collector._vacuumCarGravityDistanceIncreasing * 4;
 
         Collector.init(true); //reserve init
 
@@ -339,7 +349,33 @@ export class Collector extends Unit{
 		this._passiveWaitingAnimation.image.src = CollectorPassiveWaitingVacuumCarImage;
 		this._passiveWaitingWeaponAnimation = new AnimationInfinite(1, 1000);
 		this._passiveWaitingArmorAnimation = new AnimationInfinite(1, 1000);
+		//TODO: armor wood
+
+		this._startActiveWaitingAnimation = new Animation(3, 3 * 200);
+		this._startActiveWaitingAnimation.image.src = CollectorStartActiveVacuumCarImage;
+		this._startActiveWaitingArmorAnimation = new Animation(3, 3 * 200);
+		this._startActiveWaitingWeaponAnimation = new Animation(3, 3 * 200);
+		//TODO: armor wood
 		
+		this._runAnimation = new AnimationInfinite(1, 1000);
+		this._runAnimation.image.src = CollectorRunVacuumCarImage;
+		this._runArmorAnimation = new AnimationInfinite(1, 1000);
+		this._runWeaponAnimation = new AnimationInfinite(1, 1000);
+		//TODO: armor wood
+
+		this._activeWaitingAnimation = new AnimationInfinite(1, 1000);
+		this._activeWaitingAnimation.image.src = CollectorRunVacuumCarImage;
+		this._activeWaitingWeaponAnimation = new AnimationInfinite(1, 1000);
+		this._activeWaitingArmorAnimation = new AnimationInfinite(1, 1000);
+		//TODO: armor wood
+
+		this._collectingAnimation = new Animation(1, 1000);
+		this._collectingAnimation.image.src = CollectorRunVacuumCarImage;
+		this._collectingArmorAnimation = new Animation(1, 1000);
+		this._collectingAnimation.leftTimeMs = 
+		this._collectingArmorAnimation.leftTimeMs = 0;
+		//TODO: armor wood
+
 		//update height/width, Y
 		var oldheight = this.height;
 		this.image.src = CollectorImageForVacuumCarImage;
@@ -466,7 +502,7 @@ export class Collector extends Unit{
 			return;
 		}
 
-		if (this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum){
+		if (this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum && !this._isHasVacuumCar){
 			return;
 		}
 
@@ -508,7 +544,7 @@ export class Collector extends Unit{
 					: this.x + this.width >= this._goalCoin.centerX + shift;
 
 				if (isArrived) { //дошёл
-					if(this._isHasVacuum){
+					if(this._isHasVacuum || this._isHasVacuumCar){
 						this.collectCoin();
 					}
 					else{
@@ -648,9 +684,19 @@ export class Collector extends Unit{
 			this.isRun = false;
 			this.clear();
 		}
-		
+
 		//игра пошла
 		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
+
+			//логика всасывания монет машиной-пылесосом
+			if(this._isHasVacuumCar){
+				//TODO: притягиваем пропорционально расстоянию и по геометрической форме треугольника
+				this._vacuumCarPower
+				this._vacuumCarGravityDistance
+				Coins.all.length
+				return;
+			}
+			
 			if(this._isCollecting){ //период сбора монеток
 
 				//сбор монетки
