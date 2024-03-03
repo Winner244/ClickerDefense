@@ -3034,6 +3034,8 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 80;
                     var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
+                    miner3.improveToGoldPick();
+                    miner3.improveToDiamondPick();
                     Units.all.push(miner3);
                 }, 300);
 

@@ -14,6 +14,7 @@ export class Coin {
 	x: number;
 	y: number;
 	impulseY: number;
+	impulseX: number;
 	lifeTimeLeftMs: number; //осталось времени жизни (миллисекунды)
 	isFallEnd: boolean; //падение завершено?
 
@@ -35,11 +36,18 @@ export class Coin {
 		this.x = x; 
 		this.y = y;
 		this.impulseY = 0.1;
+		this.impulseX = 0;
 		this.lifeTimeLeftMs = Coin.lifeTimeMs;
 		this.isFallEnd = false;
 	}
 
 	logic(drawsDiffMs: number, bottomShiftBorder: number): void{
+		//боковой испульс
+		if(this.impulseX != 0){
+			this.x += this.impulseX;
+			this.impulseX -= Math.sign(this.impulseX) * 0.01;
+		}
+
 		if(this.isFallEnd){
 			return;
 		}

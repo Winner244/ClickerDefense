@@ -1,5 +1,7 @@
 import * as Tone from 'tone';
 
+import {Helper} from '../helpers/Helper';
+
 import {Draw} from '../gameSystems/Draw';
 
 import {ImageHandler} from '../ImageHandler';
@@ -333,7 +335,7 @@ export class Collector extends Unit{
 
 		this.improveSpeedOfVacuum();
 
-		var t = this.improvements.find(x => x.label == 'Пылесос'); 
+		let t = this.improvements.find(x => x.label == 'Пылесос'); 
 		if(t) t.isImproved = true;
 	}
 
@@ -382,19 +384,20 @@ export class Collector extends Unit{
 		//TODO: armor wood
 
 		//update height/width, Y
-		var oldheight = this.height;
+		let oldheight = this.height;
 		this.image.src = CollectorImageForVacuumCarImage;
 		this.image.onload = (ev: Event) => {
 			this.y -= this.height - oldheight;
 			this._isFall = true;
 		};
 
+		this.speed += 15;
 		
 		this.infoItems.push(new ParameterItem('Сила магнита', () => this._vacuumCarPower, '', 13, () => this.price / 2, () => this._vacuumCarPower += Collector._vacuumCarPowerIncreasing));
 		this.infoItems.push(new ParameterItem('Дальность магнита', () => this._vacuumCarGravityDistance, '', 13, () => this.price / 2, () => this._vacuumCarGravityDistance += Collector._vacuumCarGravityDistanceIncreasing, 
 			this.displayDistanceVacuumCar.bind(this), this.hideDistanceVacuumCar.bind(this)));
 
-		var t = this.improvements.find(x => x.label == 'Пылесос-машина'); 
+		let t = this.improvements.find(x => x.label == 'Пылесос-машина'); 
 		if(t) t.isImproved = true;
 	}
 
@@ -409,11 +412,11 @@ export class Collector extends Unit{
 	improveSpeed(){
 		this.speed += 10;
 
-		var newDurationCollecting = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
+		let newDurationCollecting = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
 		this._collectingAnimation.changeDuration(newDurationCollecting);
 		this._collectingArmorAnimation.changeDuration(newDurationCollecting);
 
-		var newDurationRun = Collector.initialSpeed / this.speed * this._runAnimation.initialDurationMs;
+		let newDurationRun = Collector.initialSpeed / this.speed * this._runAnimation.initialDurationMs;
 		this._runAnimation.changeDuration(newDurationRun);
 		this._runArmorAnimation.changeDuration(newDurationRun);
 		this._runWeaponAnimation.changeDuration(newDurationRun);
@@ -422,11 +425,11 @@ export class Collector extends Unit{
 	}
 
 	improveSpeedOfVacuum(){
-		var newDurationCollecting = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
+		let newDurationCollecting = Collector.initialSpeed / this.speed * this._collectingAnimation.initialDurationMs;
 		this._collectingAnimation.changeDuration(newDurationCollecting);
 		this._collectingArmorAnimation.changeDuration(newDurationCollecting);
 		
-		var newDurationStartCollecting = Collector.initialSpeed / this.speed * this._startCollectingVacuumAnimation.initialDurationMs;
+		let newDurationStartCollecting = Collector.initialSpeed / this.speed * this._startCollectingVacuumAnimation.initialDurationMs;
 		this._startCollectingVacuumAnimation.changeDuration(newDurationStartCollecting);
 		this._startCollectingVacuumArmorAnimation.changeDuration(newDurationStartCollecting);
 	}
@@ -606,7 +609,7 @@ export class Collector extends Unit{
 
 	collectCoin(){
 		if(this._goalCoin && (!this._isHasVacuum || this._startCollectingVacuumAnimation.leftTimeMs <= 0)){
-			var i = Coins.all.indexOf(this._goalCoin);
+			let i = Coins.all.indexOf(this._goalCoin);
 			Coins.collect(i, this._goalCoin.centerX, this._goalCoin.centerY);
 			this._goalCoin = null;
 			this._wasCollected = true;
@@ -614,7 +617,7 @@ export class Collector extends Unit{
 	}
 
 	getCLoserMonsters(monsters: Monster[]){
-		var closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width * 1.5);
+		let closerMonsters = monsters.filter(x => Math.abs(this.centerX - x.centerX) < this.width * 1.5);
 		return closerMonsters;
 	}
 
@@ -668,9 +671,9 @@ export class Collector extends Unit{
 
 		//удержание защиты
 		if(this._isDefenseActivated){
-			var closerMonsters = this.getCLoserMonsters(monsters);
-			var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
-			var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+			let closerMonsters = this.getCLoserMonsters(monsters);
+			let leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+			let rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
 			let defenseModifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
 			if(!defenseModifier || !leftMonster || !rightMonster){
@@ -715,17 +718,36 @@ export class Collector extends Unit{
 					this._isDisplayDistanceVacuumCar = false;
 				}
 
-				//TODO: притягиваем пропорционально расстоянию и по геометрической форме треугольника
-				//this._vacuumCarPower
-				//this._vacuumCarGravityDistance
-				//Coins.all.length
-				return;
+				for(let coin of Coins.all){
+				    //авто сбор монет упавших на машину
+					if (coin.centerX > this.x && coin.centerX < this.x + this.width && coin.centerY > this.centerY){
+						let i = Coins.all.indexOf(coin);
+						Coins.collect(i, coin.centerX, coin.centerY);
+					}
+					else {
+						//притягиваем пропорционально расстоянию и по геометрической форме треугольника
+						let yStart = this.y + this.height;
+						let xStart = this.isRunRight ? this.x : this.x + this.width;
+						let height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
+						let width = (this.isRunRight ? 1 : -1) * this._vacuumCarGravityDistance;
+						let isGravity = Helper.IsTriangleContainsPoint(coin.centerX, coin.centerY, 
+							xStart, yStart, 
+							xStart + width, yStart,
+							xStart + width, yStart + height)
+						if(isGravity){
+							let sign = Math.sign(this.centerX - coin.centerX);
+							coin.impulseX += sign * Math.abs(this.centerX + (-1 * sign * this._vacuumCarGravityDistance) - coin.centerX) / 1000 * this._vacuumCarPower;
+							console.log('coin.impulseX ', coin.impulseX );
+							coin.impulseY /= this._vacuumCarPower;
+						}
+					}
+				}
 			}
 			
 			if(this._isCollecting){ //период сбора монеток
 
 				//сбор монетки
-				if(this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum){
+				if(this._collectingAnimation.leftTimeMs > 0 && !this._isHasVacuum && !this._isHasVacuumCar){
 					if(this._collectingAnimation.leftTimeMs < this._collectingAnimation.durationMs * 0.45){
 						if(!this._wasCollected && this._goalCoin){
 							this.collectCoin();
@@ -743,19 +765,21 @@ export class Collector extends Unit{
 
 				//выбираем новую или более ближнюю монету
 				if (!this._goalCoin || this._isNewCoin){ 
-					var coins = Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
+					let coins = this._isHasVacuumCar 
+						? Coins.all.filter(x => x.centerY > this.y)
+						: Coins.all.filter(x => x.impulseY == 0 && x.lifeTimeLeftMs > 0);
 
 					//монетку не должен загораживать монстр
-					var leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
-					var rightMonsters = sortBy(monsters.filter(x => x.isLand && !x.isLeftSide), x => x.centerX);
+					let leftMonsters = sortBy(monsters.filter(x => x.isLand && x.isLeftSide), x => x.centerX);
+					let rightMonsters = sortBy(monsters.filter(x => x.isLand && !x.isLeftSide), x => x.centerX);
 
 					if(leftMonsters.length){
-						var closerMonsterLeft = leftMonsters[leftMonsters.length - 1];
+						let closerMonsterLeft = leftMonsters[leftMonsters.length - 1];
 						coins = coins.filter(x => x.x > closerMonsterLeft.x + closerMonsterLeft.width);
 					}
 
 					if(rightMonsters.length){
-						var closerMonsterRight = rightMonsters[0];
+						let closerMonsterRight = rightMonsters[0];
 						coins = coins.filter(x => x.x < closerMonsterRight.x);
 					}
 
@@ -792,9 +816,9 @@ export class Collector extends Unit{
 
 					//следим за монстрами - пора ли убегать? 
 					if(!this._goalCoin && monsters.length){
-						var closerMonsters = this.getCLoserMonsters(monsters);
-						var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
-						var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+						let closerMonsters = this.getCLoserMonsters(monsters);
+						let leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+						let rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 	
 						if(leftMonster && rightMonster){
 							this.activateDefense();
@@ -818,9 +842,9 @@ export class Collector extends Unit{
 			else{ //убегать от нападения 
 				//logic in logicMoving
 
-				var closerMonsters = this.getCLoserMonsters(monsters);
-				var leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
-				var rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
+				let closerMonsters = this.getCLoserMonsters(monsters);
+				let leftMonster = closerMonsters.find(x => x.isLand && x.isLeftSide);
+				let rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
 				//рядом больше нет монстров
 				if (!leftMonster && !rightMonster){
@@ -849,7 +873,7 @@ export class Collector extends Unit{
 	}
 
 	applyDamage(damage: number, x: number|null = null, y: number|null = null, attackingObject: AttackedObject|null = null): number{
-		var damage = super.applyDamage(damage, x, y);
+		damage = super.applyDamage(damage, x, y);
 		if(damage > 0){
 			AudioSystem.playRandom(this.centerX, [SoundAttacked1, SoundAttacked2, SoundAttacked3], [-1, -1, -1, -1], false, 1, true);
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
@@ -863,7 +887,7 @@ export class Collector extends Unit{
 				else if(damage >= this.healthMax){
 					let offCanvas = new OffscreenCanvas(Collector.fallImage.width, Collector.fallImage.height);
 					let offContext = offCanvas.getContext('2d');
-					if(offContext){
+					if (offContext){
 						offContext.drawImage(this._fallImage, 0, 0, Collector.fallImage.width, Collector.fallImage.height);
 						offContext.drawImage(this._fallArmorImage, 0, 0, Collector.fallImage.width, Collector.fallImage.height);
 					}
@@ -916,12 +940,11 @@ export class Collector extends Unit{
 		if(this._isHasVacuumCar && this._isDisplayDistanceVacuumCar){
 			Draw.ctx.beginPath();
 
-			var yStart = this.y + this.height;
-			var xStart = this.x;
-			var height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
-			var width = this._vacuumCarGravityDistance;
+			let yStart = this.y + this.height;
+			let xStart = this.x;
+			let height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
+			let width = this._vacuumCarGravityDistance;
 
-			console.log('height, width', height, width);
             Draw.ctx.moveTo(xStart, yStart);
             Draw.ctx.lineTo(xStart + width, yStart);
             Draw.ctx.lineTo(xStart + width, yStart + height);
@@ -975,7 +998,7 @@ export class Collector extends Unit{
 			imageOrAnimationArmor = this._collectingArmorAnimation;
 			imageOrAnimationWeapon = this.empty;
 		}
-		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting){
+		else if(this._goalCoin && this._goalCoin.lifeTimeLeftMs > 0 || !this._isCollecting || this._isHasVacuumCar && WavesState.isWaveStarted){
 			imageOrAnimation = this._runAnimation;
 			imageOrAnimationArmor = this._runArmorAnimation;
 			imageOrAnimationWeapon = this._runWeaponAnimation;

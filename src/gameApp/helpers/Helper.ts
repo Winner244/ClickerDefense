@@ -75,17 +75,31 @@ export class Helper{
 	 * @returns 
 	 */
 	static isIntersectByCenter(x1: number, y1: number, width1: number, height1: number, x2: number, y2: number, width2: number, height2: number): boolean {
-		var centerX1 = x1 + width1 / 2;
-		var centerY1 = y1 + height1 / 2;
+		let centerX1 = x1 + width1 / 2;
+		let centerY1 = y1 + height1 / 2;
 		return centerX1 > x2 && centerX1 < x2 + width2 && 
 			   centerY1 > y2 && centerY1 < y2 + height2;
 	}
 
     /** создаёт уникальный идентификатор */
-    public static generateUid(): string{
+    static generateUid(): string{
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
             let r = Math.random()*16|0, v = c === 'x' ? r : (r&0x3|0x8);
             return v.toString(16);
         });
     }
+
+	static IsTriangleContainsPoint(xPoint: number, yPoint: number, x1: number, y1: number, x2: number, y2: number, x3: number, y3: number): boolean{
+		let a = (x1 - xPoint) * (y2 - y1) - (x2 - x1) * (y1 - yPoint);
+		let b = (x2 - xPoint) * (y3 - y2) - (x3 - x2) * (y2 - yPoint);
+		let c = (x3 - xPoint) * (y1 - y3) - (x1 - x3) * (y3 - yPoint);
+
+		let isContains = (a >= 0 && b >= 0 && c >= 0) || (a <= 0 && b <= 0 && c <= 0);
+		return isContains;
+	}
+
+	static vect(x1: number, y1: number, x2: number, y2: number): number
+	{
+		return x1 * y2 - y1 * x2;
+	}
 }
