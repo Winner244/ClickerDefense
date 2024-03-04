@@ -3095,6 +3095,40 @@ class TestPage extends React.Component {
                 }, 3000);
             }
         },
+
+        
+        {
+            key: "Золотособиратель - пылесос-машина - воскрешение",
+            code: () => {
+                
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                WavesState.isWaveStarted = false;
+                Waves.waveCurrent = 0;
+                Gamer.coins = 1500;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+
+                setTimeout(() => {
+                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
+                    collector1.loadedResourcesAfterBuild();
+                    collector1.improveToVacuum();
+                    collector1.improveToVacuumCar();
+                    //collector1.improveToWoodArmor();
+                    Units.all.push(collector1);
+
+                    
+                    setTimeout(() => {
+                        collector1.applyDamage(20);
+                    }, 3000);
+                }, 300);
+            }
+        },
         
         /*{
             key: "Золотособиратель - гибель",
