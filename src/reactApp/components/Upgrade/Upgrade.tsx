@@ -278,7 +278,8 @@ export class Upgrade extends React.Component<Props, {}> {
                             ? <img className="upgrade__parameter-icon" src={infoItem.icon.src} style={{width: infoItem.iconWidth + 'px'}}/> 
                             : null}
                             {infoItem.label}
-                        </div>: 
+                        </div>
+                        <span className='upgrade__parameter-separator'>:</span> 
                         <div className="upgrade__parameter-value-box">
                           <div className='upgrade__parameter-value' dangerouslySetInnerHTML={{__html: infoItem.getValue() + ''}}></div>
                           <div className='upgrade__parameter-buttons-box'>

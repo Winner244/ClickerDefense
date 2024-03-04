@@ -82,6 +82,8 @@ import CollectorFallEndVacuumCarImage from '../../assets/img/units/collector/vac
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
+import magnetIcon from '../../assets/img/icons/magnet.png';  
+import magnetDistanceIcon from '../../assets/img/icons/magnet-distance.png';  
 
 import SoundAttacked1 from '../../assets/sounds/units/miner/attacked1.mp3'; 
 import SoundAttacked2 from '../../assets/sounds/units/miner/attacked2.mp3'; 
@@ -410,8 +412,8 @@ export class Collector extends Unit{
 
 		this.speed += 15;
 		
-		this.infoItems.push(new ParameterItem('Сила магнита', () => this._vacuumCarPower, '', 13, () => this.price / 2, () => this._vacuumCarPower += Collector._vacuumCarPowerIncreasing));
-		this.infoItems.push(new ParameterItem('Дальность магнита', () => this._vacuumCarGravityDistance, '', 13, () => this.price / 2, () => this._vacuumCarGravityDistance += Collector._vacuumCarGravityDistanceIncreasing, 
+		this.infoItems.push(new ParameterItem('Сила магнита', () => this._vacuumCarPower, magnetIcon, 12, () => this.price / 2, () => this._vacuumCarPower += Collector._vacuumCarPowerIncreasing));
+		this.infoItems.push(new ParameterItem('Дальность магнита', () => this._vacuumCarGravityDistance, magnetDistanceIcon, 24, () => this.price / 2, () => this._vacuumCarGravityDistance += Collector._vacuumCarGravityDistanceIncreasing, 
 			this.displayDistanceVacuumCar.bind(this), this.hideDistanceVacuumCar.bind(this)));
 
 		let t = this.improvements.find(x => x.label == 'Пылесос-машина'); 
