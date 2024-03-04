@@ -75,6 +75,7 @@ import CollectorImageForVacuumCarImage from '../../assets/img/units/collector/va
 import CollectorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/passiveWaiting.png'; 
 import CollectorRunVacuumCarImage from '../../assets/img/units/collector/vacuumCar/run.png'; 
 import CollectorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/startActive.png'; 
+import CollectorJoyVacuumCarImage from '../../assets/img/units/collector/vacuumCar/joy.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -381,6 +382,10 @@ export class Collector extends Unit{
 		this._collectingArmorAnimation = new Animation(1, 1000);
 		this._collectingAnimation.leftTimeMs = 
 		this._collectingArmorAnimation.leftTimeMs = 0;
+		//TODO: armor wood
+
+		this._joyAnimation.image.src = CollectorJoyVacuumCarImage;
+		this._joyWeaponAnimation.image.src = '';
 		//TODO: armor wood
 
 		//update height/width, Y
@@ -737,7 +742,6 @@ export class Collector extends Unit{
 						if(isGravity){
 							let sign = Math.sign(this.centerX - coin.centerX);
 							coin.impulseX += sign * Math.abs(this.centerX + (-1 * sign * this._vacuumCarGravityDistance) - coin.centerX) / 1000 * this._vacuumCarPower;
-							console.log('coin.impulseX ', coin.impulseX );
 							coin.impulseY /= this._vacuumCarPower;
 						}
 					}

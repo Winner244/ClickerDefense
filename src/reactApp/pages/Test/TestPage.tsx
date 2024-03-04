@@ -3058,6 +3058,43 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade2);
             }
         },
+
+        
+        {
+            key: "Золотособиратель - пылесос-машина - окончание волны без монеты",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 1, 10, 0)
+                    ]];
+
+                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                collector1.loadedResourcesAfterBuild();
+                collector1.improveToVacuum();
+                collector1.improveToVacuumCar();
+                Units.all.push(collector1);
+
+
+                //first coin
+                setTimeout(() => {
+                    //Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
+                    Coins.all.push(new Coin(Draw.canvas.width / 2 - 10, Draw.canvas.height / 2));
+                }, 3500);
+
+                //first coin
+                setTimeout(() => {
+                    Monsters.all.forEach(x => x.health = -1);
+                }, 3000);
+            }
+        },
         
         /*{
             key: "Золотособиратель - гибель",
