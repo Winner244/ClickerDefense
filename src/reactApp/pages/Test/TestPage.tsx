@@ -3046,7 +3046,7 @@ class TestPage extends React.Component {
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuum();
                     collector1.improveToVacuumCar();
-                    //collector1.improveToWoodArmor();
+                    collector1.improveToWoodArmor();
                     Units.all.push(collector1);
                 }, 300);
 

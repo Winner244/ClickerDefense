@@ -164,8 +164,8 @@ RoadMap:
 			ok. защита (defense, startDefense)
 				ok. логика отталкивания монстров от центра ценой своей жизни
 			ok. sound
-			> wood Armor
 			fixed. ошибка после воскрешения http://localhost:3000/test?v=87 кликнуть на апгрейд пока сердечки поднимаются
+			> wood Armor
 			
 
 	> магия: 

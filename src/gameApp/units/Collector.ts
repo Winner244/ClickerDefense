@@ -79,6 +79,8 @@ import CollectorStartActiveVacuumCarImage from '../../assets/img/units/collector
 import CollectorJoyVacuumCarImage from '../../assets/img/units/collector/vacuumCar/joy.png'; 
 import CollectorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/fallEnd.png'; 
 
+import CollectorWoodArmorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/fallEnd.png'; 
+
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
 import coinIcon from '../../assets/img/coin.png';  
@@ -285,18 +287,6 @@ export class Collector extends Unit{
 
 	improveToWoodArmor(){
 		this.defense += 1;
-		if(this.improvements.find(x => x.label == 'Пылесос')?.isImproved){
-			this._collectingArmorAnimation = new Animation(4, 4 * 150);
-			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
-			this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
-			this._collectingAnimation.leftTimeMs = 
-			this._collectingArmorAnimation.leftTimeMs =
-			this._startCollectingVacuumAnimation.leftTimeMs = 
-			this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
-		}
-		else{
-			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
-		}
 		this.defenseActivationArmorAnimation.image.src = CollectorDefenseStartWoodArmorImage;
 		this.defenseArmorAnimation.image.src = CollectorDefenseWoodArmorImage;
 		this._passiveWaitingArmorAnimation.image.src = CollectorPassiveWait1WoodArmorImage;
@@ -306,6 +296,17 @@ export class Collector extends Unit{
 		this._runArmorAnimation.image.src = CollectorRunWoodArmorImage;
 		this._joyArmorAnimation.image.src = CollectorJoyWoodArmorImage;
 		this._fallArmorImage.src = CollectorFallWoodArmorImage;
+
+		if(this._isHasVacuum){
+			this.improveVacuumToWoodArmor();
+		}
+		else if(this._isHasVacuumCar){
+			this.improveVacuumCarToWoodArmor();
+		}
+		else{
+			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
+		}
+		
 		let t = this.improvements.find(x => x.label == 'Деревянная броня');
 		if(t) t.isImproved = true;
 	}
@@ -320,9 +321,7 @@ export class Collector extends Unit{
 		this._shiftYWeaponInEarch = 5;
 
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
-			this._collectingArmorAnimation = new Animation(4, 4 * 150);
-			this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
-			this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
+			this.improveVacuumToWoodArmor();
 		}
 		this._collectingAnimation = new Animation(4, 4 * 150);
 		this._collectingAnimation.image.src = CollectorCollectVacuumImage;
@@ -350,6 +349,17 @@ export class Collector extends Unit{
 		if(t) t.isImproved = true;
 	}
 
+	improveVacuumToWoodArmor(){
+		this._collectingArmorAnimation = new Animation(4, 4 * 150);
+		this._collectingArmorAnimation.image.src = CollectorCollectVacuumWoodArmorImage;
+		this._startCollectingVacuumArmorAnimation.image.src = CollectorStartCollectVacuumWoodArmorImage;
+
+		this._collectingAnimation.leftTimeMs = 
+		this._collectingArmorAnimation.leftTimeMs =
+		this._startCollectingVacuumAnimation.leftTimeMs = 
+		this._startCollectingVacuumArmorAnimation.leftTimeMs = 0;
+	}
+
 	improveToVacuumCar(){
 		this._isHasVacuumCar = true;
 		this._isHasVacuum = false;
@@ -359,12 +369,6 @@ export class Collector extends Unit{
 		this._rotateWeaponInEarch = 90;
 		this._weaponRotateInAir = 0;
 		this._shiftYWeaponInEarch = 40;
-
-		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
-			//TODO
-		}
-
-		//this._collectingAnimation
 
 		this._passiveWaitingAnimation = new AnimationInfinite(4, 4 * 500);
 		this._passiveWaitingAnimation.image.src = CollectorPassiveWaitingVacuumCarImage;
@@ -403,8 +407,13 @@ export class Collector extends Unit{
 
 		this._fallEndAnimation.image.src = CollectorFallEndVacuumCarImage;
 		this._fallEndWeaponAnimation.image.src = '';
-		//TODO: armor wood
+		this._fallEndArmorAnimation.image.src = '';
 		
+
+		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
+			this.improveVacuumCarToWoodArmor();
+		}
+
 
 		//update height/width, Y
 		let oldheight = this.height;
@@ -427,6 +436,11 @@ export class Collector extends Unit{
 
 		let t = this.improvements.find(x => x.label == 'Пылесос-машина'); 
 		if(t) t.isImproved = true;
+	}
+
+	improveVacuumCarToWoodArmor(){
+		this._fallEndArmorAnimation.image.src = CollectorWoodArmorFallEndVacuumCarImage;
+
 	}
 
 	displayDistanceVacuumCar(){
