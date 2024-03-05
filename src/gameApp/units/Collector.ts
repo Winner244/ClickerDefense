@@ -80,6 +80,7 @@ import CollectorJoyVacuumCarImage from '../../assets/img/units/collector/vacuumC
 import CollectorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/fallEnd.png'; 
 
 import CollectorWoodArmorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/fallEnd.png'; 
+import CollectorWoodArmorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/passiveWaiting.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -306,7 +307,7 @@ export class Collector extends Unit{
 		else{
 			this._collectingArmorAnimation.image.src = CollectorCollectWoodArmorImage;
 		}
-		
+
 		let t = this.improvements.find(x => x.label == 'Деревянная броня');
 		if(t) t.isImproved = true;
 	}
@@ -372,9 +373,8 @@ export class Collector extends Unit{
 
 		this._passiveWaitingAnimation = new AnimationInfinite(4, 4 * 500);
 		this._passiveWaitingAnimation.image.src = CollectorPassiveWaitingVacuumCarImage;
-		this._passiveWaitingWeaponAnimation = new AnimationInfinite(1, 1000);
-		this._passiveWaitingArmorAnimation = new AnimationInfinite(1, 1000);
-		//TODO: armor wood
+		this._passiveWaitingWeaponAnimation = new AnimationInfinite(this._passiveWaitingAnimation.frames, this._passiveWaitingAnimation.initialDurationMs);
+		this._passiveWaitingArmorAnimation = new AnimationInfinite(this._passiveWaitingAnimation.frames, this._passiveWaitingAnimation.initialDurationMs);
 
 		this._startActiveWaitingAnimation = new Animation(3, 3 * 200);
 		this._startActiveWaitingAnimation.image.src = CollectorStartActiveVacuumCarImage;
@@ -440,6 +440,8 @@ export class Collector extends Unit{
 
 	improveVacuumCarToWoodArmor(){
 		this._fallEndArmorAnimation.image.src = CollectorWoodArmorFallEndVacuumCarImage;
+		this._passiveWaitingArmorAnimation = new AnimationInfinite(this._passiveWaitingAnimation.frames, this._passiveWaitingAnimation.initialDurationMs);
+		this._passiveWaitingArmorAnimation.image.src = CollectorWoodArmorPassiveWaitingVacuumCarImage;
 
 	}
 
