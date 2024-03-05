@@ -3051,10 +3051,12 @@ class TestPage extends React.Component {
 
                 var barricade1 = new Barricade(200);
                 barricade1.loadedResourcesAfterBuild();
+                barricade1.impoveToIron();
                 Buildings.all.push(barricade1);
 
                 var barricade2 = new Barricade(1600);
                 barricade2.loadedResourcesAfterBuild();
+                barricade2.impoveToIron();
                 Buildings.all.push(barricade2);
             }
         },

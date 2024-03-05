@@ -404,6 +404,7 @@ export class Collector extends Unit{
 
 		//update height/width, Y
 		let oldheight = this.height;
+		this.image = new Image();
 		this.image.src = CollectorImageForVacuumCarImage;
 		this.image.onload = (ev: Event) => {
 			this.y -= this.height - oldheight;
@@ -818,7 +819,16 @@ export class Collector extends Unit{
 							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX) + Math.abs(x.centerX - this.goalX))[0];
 						}
 						else{
-							this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+							if(this._isHasVacuumCar){
+								if(this._goalCoin){
+									this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
+									coins = coins.filter(coin => this.isRunRight ? coin.centerX > this.centerX : coin.centerX < this.centerX);
+								}
+								this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[coins.length - 1];
+							}
+							else{
+								this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
+							}
 						}
 						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
 					}
