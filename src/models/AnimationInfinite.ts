@@ -19,7 +19,7 @@ export default class AnimationInfinite extends AnimationBase{
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null, filter: string|null = null){
-		if(!this._durationMs){
+		if(!this._durationMs || !this.image.width || !this.frames){
 			return;
 		}
 

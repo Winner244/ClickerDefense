@@ -22,7 +22,7 @@ export default class Animation extends AnimationBase {
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, filter: string|null = null, isInvert: boolean = false){
-		if(!this._durationMs){
+		if(!this._durationMs || !this.image.width || !this.frames){
 			return;
 		}
 		
@@ -42,10 +42,10 @@ export default class Animation extends AnimationBase {
 
 		if(isInvert){
 			frame = this.leftTimeMs <= 0 
-			? 0
-			: isGameOver 
-				? this.lastFrame
-				: this.frames - Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames)) - 1;
+				? 0
+				: isGameOver 
+					? this.lastFrame
+					: this.frames - Math.floor((this.durationMs - this.leftTimeMs) / (this.durationMs / this.frames)) - 1;
 		}
 
 		this.lastFrame = frame;
