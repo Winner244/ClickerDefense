@@ -3028,7 +3028,14 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 10, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 1, 10, 0)
+                    ]];
                 FlyEarth.loadSeparateCrystals();
 
                 setTimeout(() => {

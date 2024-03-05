@@ -83,6 +83,7 @@ import CollectorWoodArmorFallEndVacuumCarImage from '../../assets/img/units/coll
 import CollectorWoodArmorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/passiveWaiting.png'; 
 import CollectorWoodArmorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/startActive.png'; 
 import CollectorWoodArmorRunVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/run.png'; 
+import CollectorWoodArmorJoyVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/joy.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -454,8 +455,7 @@ export class Collector extends Unit{
 		this._collectingAnimation.leftTimeMs = 
 		this._collectingArmorAnimation.leftTimeMs = 0;
 
-		//this._fallEndArmorAnimation.image.src = '';
-		//TODO: armor wood: joy
+		this._joyArmorAnimation.image.src = CollectorWoodArmorJoyVacuumCarImage;
 	}
 
 	displayDistanceVacuumCar(){
