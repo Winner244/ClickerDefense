@@ -342,6 +342,10 @@ export class Collector extends Unit{
 
 		this.improveSpeedOfVacuum();
 
+		AudioSystem.load(SoundVacuumStart);
+		AudioSystem.load(SoundVacuum);
+		AudioSystem.load(SoundVacuumEnd);
+
 		let t = this.improvements.find(x => x.label == 'Пылесос'); 
 		if(t) t.isImproved = true;
 	}
@@ -412,6 +416,10 @@ export class Collector extends Unit{
 		};
 
 		this.speed += 15;
+
+		AudioSystem.load(SoundVacuumStart);
+		AudioSystem.load(SoundVacuum);
+		AudioSystem.load(SoundVacuumEnd);
 		
 		this.infoItems.push(new ParameterItem('Сила магнита', () => this._vacuumCarPower, magnetIcon, 12, () => this.price / 2, () => this._vacuumCarPower += Collector._vacuumCarPowerIncreasing));
 		this.infoItems.push(new ParameterItem('Дальность магнита', () => this._vacuumCarGravityDistance, magnetDistanceIcon, 24, () => this.price / 2, () => this._vacuumCarGravityDistance += Collector._vacuumCarGravityDistanceIncreasing, 
@@ -491,7 +499,7 @@ export class Collector extends Unit{
 		}
 
 		AudioSystem.play(this.centerX, SoundVacuumStart, -15, 1, false, true, 0, 0, false, false, (source: Tone.Player) => {
-			if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0){
+			if(this._startCollectingVacuumAnimation.leftTimeMs > 0 || this._collectingAnimation.leftTimeMs > 0 || this._isHasVacuumCar){
 				this.playVacuumSound(true);
 			}
 			else{
@@ -520,9 +528,17 @@ export class Collector extends Unit{
 		}
 
 		AudioSystem.play(this.centerX, SoundVacuum, -15, 1, false, true, 0, 0.3, false, true, (source: Tone.Player) => {
-			let coinDistance = this.getCoinDistance();
-			if (coinDistance < Collector.VacuumRunStartDistance && this._goalCoin){
-				return true;
+			if(this._goalCoin){
+				if(this._isHasVacuumCar){
+					return true;
+				}
+	
+				if(this._isHasVacuum){
+					let coinDistance = this.getCoinDistance();
+					if (coinDistance < Collector.VacuumRunStartDistance){
+						return true;
+					}
+				}
 			}
 
 			this.endVacuumSound();
@@ -552,6 +568,10 @@ export class Collector extends Unit{
 
 		if(this._isCollecting){ //период сбора монет
 			if(this._goalCoin){ //есть цель монетка и сбор предыдущей уже окончен
+				if(this._isHasVacuumCar){
+					this.playVacuumSound();
+				}
+
 				if(this._isHasVacuum){
 					let coinDistance = this.getCoinDistance();
 					if (coinDistance < Collector.VacuumRunStartDistance){
@@ -820,17 +840,19 @@ export class Collector extends Unit{
 						}
 						else{
 							if(this._isHasVacuumCar){
-								if(this._goalCoin){
-									this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
-									coins = coins.filter(coin => this.isRunRight ? coin.centerX > this.centerX : coin.centerX < this.centerX);
+								var coinsOnTheOneSide = coins.filter(coin => this.isRunRight ? coin.centerX > this.centerX : coin.centerX < this.centerX);
+								if (coinsOnTheOneSide.length){
+									this._goalCoin = sortBy(coinsOnTheOneSide, x => Math.abs(this.centerX - x.centerX))[coinsOnTheOneSide.length - 1];
 								}
-								this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[coins.length - 1];
+								else{
+									this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[coins.length - 1];
+								}
 							}
 							else{
 								this._goalCoin = sortBy(coins, x => Math.abs(this.centerX - x.centerX))[0];
 							}
 						}
-						this.isRunRight = this._goalCoin.centerX > this.x + this.width / 2;
+						this.isRunRight = this._goalCoin.centerX > this.centerX;
 					}
 					else if ((!this._goalCoin || this.getCoinDistance() > Collector.VacuumRunStartDistance) && this._isHasVacuum && this._wasCollected){
 						this._isVacuumCollectingStarted = false;
@@ -881,6 +903,15 @@ export class Collector extends Unit{
 				else if(leftMonster && rightMonster){
 					this.activateDefense();
 				}
+				else if(this._isHasVacuumCar){
+					//отталкиваем монстров от кнута :D
+					if(this.centerX > Buildings.flyEarth.x + Buildings.flyEarth.width){
+						this.isRunRight = false;
+					}
+					else if(this.centerX < Buildings.flyEarth.x){
+						this.isRunRight = true;
+					}
+				}
 			}
 		}
 		else if(WavesState.isWaveEnded){
@@ -890,7 +921,7 @@ export class Collector extends Unit{
 	}
 
 	activateDefense(){
-		if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
+		if(!this._isDefenseActivationStarted && !this._isDefenseActivated && !this._isHasVacuumCar){
 			this._isDefenseActivationStarted = true;
 			this._isDefenseDeactivationStarted = false;
 			this._isDefenseActivated = false;
