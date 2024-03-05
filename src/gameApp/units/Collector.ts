@@ -82,6 +82,7 @@ import CollectorFallEndVacuumCarImage from '../../assets/img/units/collector/vac
 import CollectorWoodArmorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/fallEnd.png'; 
 import CollectorWoodArmorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/passiveWaiting.png'; 
 import CollectorWoodArmorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/startActive.png'; 
+import CollectorWoodArmorRunVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/run.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -384,36 +385,31 @@ export class Collector extends Unit{
 		
 		this._runAnimation = new AnimationInfinite(1, 1000);
 		this._runAnimation.image.src = CollectorRunVacuumCarImage;
-		this._runArmorAnimation = new AnimationInfinite(1, 1000);
-		this._runWeaponAnimation = new AnimationInfinite(1, 1000);
-		//TODO: armor wood
+		this._runArmorAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
+		this._runWeaponAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
 
-		this._activeWaitingAnimation = new AnimationInfinite(1, 1000);
+		this._activeWaitingAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
 		this._activeWaitingAnimation.image.src = CollectorRunVacuumCarImage;
-		this._activeWaitingWeaponAnimation = new AnimationInfinite(1, 1000);
-		this._activeWaitingArmorAnimation = new AnimationInfinite(1, 1000);
-		//TODO: armor wood
+		this._activeWaitingWeaponAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
+		this._activeWaitingArmorAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
 
-		this._collectingAnimation = new Animation(1, 1000);
+		this._collectingAnimation = new Animation(this._runAnimation.frames, this._runAnimation.initialDurationMs);
 		this._collectingAnimation.image.src = CollectorRunVacuumCarImage;
-		this._collectingArmorAnimation = new Animation(1, 1000);
+		this._collectingArmorAnimation = new Animation(this._runAnimation.frames, this._runAnimation.initialDurationMs);
 		this._collectingAnimation.leftTimeMs = 
 		this._collectingArmorAnimation.leftTimeMs = 0;
-		//TODO: armor wood
 
 		this._joyAnimation.image.src = CollectorJoyVacuumCarImage;
 		this._joyWeaponAnimation.image.src = '';
-		//TODO: armor wood
+		this._joyArmorAnimation.image.src = '';
 
 		this._fallEndAnimation.image.src = CollectorFallEndVacuumCarImage;
 		this._fallEndWeaponAnimation.image.src = '';
 		this._fallEndArmorAnimation.image.src = '';
 		
-
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
 			this.improveVacuumCarToWoodArmor();
 		}
-
 
 		//update height/width, Y
 		let oldheight = this.height;
@@ -440,14 +436,26 @@ export class Collector extends Unit{
 
 	improveVacuumCarToWoodArmor(){
 		this._fallEndArmorAnimation.image.src = CollectorWoodArmorFallEndVacuumCarImage;
-		
+
 		this._passiveWaitingArmorAnimation = new AnimationInfinite(this._passiveWaitingAnimation.frames, this._passiveWaitingAnimation.initialDurationMs);
 		this._passiveWaitingArmorAnimation.image.src = CollectorWoodArmorPassiveWaitingVacuumCarImage;
 
 		this._startActiveWaitingArmorAnimation = new Animation(this._startActiveWaitingAnimation.frames, this._startActiveWaitingAnimation.initialDurationMs);
 		this._startActiveWaitingArmorAnimation.image.src = CollectorWoodArmorStartActiveVacuumCarImage;
 
-		//TODO: armor wood
+		this._runArmorAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
+		this._runArmorAnimation.image.src = CollectorWoodArmorRunVacuumCarImage;
+
+		this._activeWaitingArmorAnimation = new AnimationInfinite(this._runAnimation.frames, this._runAnimation.initialDurationMs);
+		this._activeWaitingArmorAnimation.image.src = CollectorWoodArmorRunVacuumCarImage;
+
+		this._collectingArmorAnimation = new Animation(this._runAnimation.frames, this._runAnimation.initialDurationMs);
+		this._collectingArmorAnimation.image.src = CollectorWoodArmorRunVacuumCarImage;
+		this._collectingAnimation.leftTimeMs = 
+		this._collectingArmorAnimation.leftTimeMs = 0;
+
+		//this._fallEndArmorAnimation.image.src = '';
+		//TODO: armor wood: joy
 	}
 
 	displayDistanceVacuumCar(){
