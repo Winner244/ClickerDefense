@@ -81,6 +81,7 @@ import CollectorFallEndVacuumCarImage from '../../assets/img/units/collector/vac
 
 import CollectorWoodArmorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/fallEnd.png'; 
 import CollectorWoodArmorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/passiveWaiting.png'; 
+import CollectorWoodArmorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/startActive.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -378,9 +379,8 @@ export class Collector extends Unit{
 
 		this._startActiveWaitingAnimation = new Animation(3, 3 * 200);
 		this._startActiveWaitingAnimation.image.src = CollectorStartActiveVacuumCarImage;
-		this._startActiveWaitingArmorAnimation = new Animation(3, 3 * 200);
-		this._startActiveWaitingWeaponAnimation = new Animation(3, 3 * 200);
-		//TODO: armor wood
+		this._startActiveWaitingArmorAnimation = new Animation(this._startActiveWaitingAnimation.frames, this._startActiveWaitingAnimation.initialDurationMs);
+		this._startActiveWaitingWeaponAnimation = new Animation(this._startActiveWaitingAnimation.frames, this._startActiveWaitingAnimation.initialDurationMs);
 		
 		this._runAnimation = new AnimationInfinite(1, 1000);
 		this._runAnimation.image.src = CollectorRunVacuumCarImage;
@@ -440,9 +440,14 @@ export class Collector extends Unit{
 
 	improveVacuumCarToWoodArmor(){
 		this._fallEndArmorAnimation.image.src = CollectorWoodArmorFallEndVacuumCarImage;
+		
 		this._passiveWaitingArmorAnimation = new AnimationInfinite(this._passiveWaitingAnimation.frames, this._passiveWaitingAnimation.initialDurationMs);
 		this._passiveWaitingArmorAnimation.image.src = CollectorWoodArmorPassiveWaitingVacuumCarImage;
 
+		this._startActiveWaitingArmorAnimation = new Animation(this._startActiveWaitingAnimation.frames, this._startActiveWaitingAnimation.initialDurationMs);
+		this._startActiveWaitingArmorAnimation.image.src = CollectorWoodArmorStartActiveVacuumCarImage;
+
+		//TODO: armor wood
 	}
 
 	displayDistanceVacuumCar(){
