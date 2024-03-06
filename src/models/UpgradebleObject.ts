@@ -73,7 +73,7 @@ export class UpgradebleObject extends AttackedObject{
 	}
 
 	static loadUpgradeResources(): void{
-		UpgradebleObject.upgradeAnimation.image.src = UpgradeAnimation;
+		UpgradebleObject.upgradeAnimation.changeImage(UpgradeAnimation);
 	}
 
 	loadedResourcesAfterBuild(){

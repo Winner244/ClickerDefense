@@ -235,40 +235,40 @@ export class Miner extends Unit{
 		this.imageWeapon = new Image();
 		this.imageWeapon.src = PickGoldImage;
 		this._countCoinsDiging = 2;
-		this._diggingWeaponAnimation.image.src = MinerDiggingGoldPickImage;
-		this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1GoldPickImage;
-		this._fallEndWeaponAnimation.image.src = MinerFallEndGoldPickImage;
-		this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitGoldPickImage;
-		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitGoldPickImage;
-		this._runWeaponAnimation.image.src = MinerRunGoldPickImage;
-		this._joyWeaponAnimation.image.src = MinerJoyGoldPickImage;
-		this._attackWeaponAnimation.image.src = MinerAttackGoldPickImage;
+		this._diggingWeaponAnimation.changeImage(MinerDiggingGoldPickImage);
+		this._passiveWaitingWeaponAnimation.changeImage(MinerPassiveWait1GoldPickImage);
+		this._fallEndWeaponAnimation.changeImage(MinerFallEndGoldPickImage);
+		this._startActiveWaitingWeaponAnimation.changeImage(MinerStartActiveWaitGoldPickImage);
+		this._activeWaitingWeaponAnimation.changeImage(MinerActiveWaitGoldPickImage);
+		this._runWeaponAnimation.changeImage(MinerRunGoldPickImage);
+		this._joyWeaponAnimation.changeImage(MinerJoyGoldPickImage);
+		this._attackWeaponAnimation.changeImage(MinerAttackGoldPickImage);
 	}
 
 	improveToDiamondPick(){
 		this.imageWeapon = new Image();
 		this.imageWeapon.src = PickDiamondImage;
 		this._countCoinsDiging = 3;
-		this._diggingWeaponAnimation.image.src = MinerDiggingDiamondPickImage;
-		this._passiveWaitingWeaponAnimation.image.src = MinerPassiveWait1DiamondPickImage;
-		this._fallEndWeaponAnimation.image.src = MinerFallEndDiamondPickImage;
-		this._startActiveWaitingWeaponAnimation.image.src = MinerStartActiveWaitDiamondPickImage;
-		this._activeWaitingWeaponAnimation.image.src = MinerActiveWaitDiamondPickImage;
-		this._runWeaponAnimation.image.src = MinerRunDiamondPickImage;
-		this._joyWeaponAnimation.image.src = MinerJoyDiamondPickImage;
-		this._attackWeaponAnimation.image.src = MinerAttackDiamondPickImage;
+		this._diggingWeaponAnimation.changeImage(MinerDiggingDiamondPickImage);
+		this._passiveWaitingWeaponAnimation.changeImage(MinerPassiveWait1DiamondPickImage);
+		this._fallEndWeaponAnimation.changeImage(MinerFallEndDiamondPickImage);
+		this._startActiveWaitingWeaponAnimation.changeImage(MinerStartActiveWaitDiamondPickImage);
+		this._activeWaitingWeaponAnimation.changeImage(MinerActiveWaitDiamondPickImage);
+		this._runWeaponAnimation.changeImage(MinerRunDiamondPickImage);
+		this._joyWeaponAnimation.changeImage(MinerJoyDiamondPickImage);
+		this._attackWeaponAnimation.changeImage(MinerAttackDiamondPickImage);
 	}
 
 	improveToWoodArmor(){
 		this.defense += 0.1;
-		this._diggingArmorAnimation.image.src = MinerDiggingWoodArmorImage;
-		this._passiveWaitingArmorAnimation.image.src = MinerPassiveWait1WoodArmorImage;
-		this._fallEndArmorAnimation.image.src = MinerFallEndWoodArmorImage;
-		this._startActiveWaitingArmorAnimation.image.src = MinerStartActiveWaitWoodArmorImage;
-		this._activeWaitingArmorAnimation.image.src = MinerActiveWaitWoodArmorImage;
-		this._runArmorAnimation.image.src = MinerRunWoodArmorImage;
-		this._joyArmorAnimation.image.src = MinerJoyWoodArmorImage;
-		this._attackArmorAnimation.image.src = MinerAttackWoodArmorImage;
+		this._diggingArmorAnimation.changeImage(MinerDiggingWoodArmorImage);
+		this._passiveWaitingArmorAnimation.changeImage(MinerPassiveWait1WoodArmorImage);
+		this._fallEndArmorAnimation.changeImage(MinerFallEndWoodArmorImage);
+		this._startActiveWaitingArmorAnimation.changeImage(MinerStartActiveWaitWoodArmorImage);
+		this._activeWaitingArmorAnimation.changeImage(MinerActiveWaitWoodArmorImage);
+		this._runArmorAnimation.changeImage(MinerRunWoodArmorImage);
+		this._joyArmorAnimation.changeImage(MinerJoyWoodArmorImage);
+		this._attackArmorAnimation.changeImage(MinerAttackWoodArmorImage);
 	}
 
 	improveToSelfDefense(){

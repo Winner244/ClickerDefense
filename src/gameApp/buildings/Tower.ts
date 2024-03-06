@@ -149,8 +149,8 @@ export class Tower extends Building{
 
 	improveToFireArrows(){
 		this.isHasFireArrows = true;
-		this._brazierAnimation.image.src = brazierImage;
-		this._fireAnimation.image.src = fireImage;
+		this._brazierAnimation.changeImage(brazierImage);
+		this._fireAnimation.changeImage(fireImage);
 		AudioSystem.load(arrowFireStrikeSound);
 		this.infoItems.push(new ParameterItem('Урон огня', () => this.fireDamageInSecond.toFixed(1) + '/сек', fireIcon, 13, () => this.price / 2, () => this.fireDamageInSecond += 0.1));
 		this.infoItems.push(new ParameterItem('Горение', () => (this.fireDurationMs / 1000).toFixed(0) + 'сек', timerIcon, 13, () => this.price / 2, () => this.fireDurationMs += 1000));

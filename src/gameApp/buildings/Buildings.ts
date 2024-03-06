@@ -59,7 +59,7 @@ export class Buildings{
 	}
 
 	static loadResources(){
-		this.explosionAnimation.image.src = ExplosionImage;
+		this.explosionAnimation.changeImage(ExplosionImage);
 		AudioSystem.load(ExplosionSound);
 	}
 

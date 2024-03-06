@@ -34,7 +34,7 @@ export class Units {
 
 	static loadResources(){
 		AudioSystem.load(CreatingSound);
-		this.creatingAnimation.image.src = CreatingImage;
+		this.creatingAnimation.changeImage(CreatingImage);
 	}
 
 	static addMiner(): Miner {

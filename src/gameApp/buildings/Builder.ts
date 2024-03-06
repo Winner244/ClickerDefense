@@ -29,7 +29,7 @@ export class Builder {
 
 	static init(isLoadResources: boolean = true){
 		if(isLoadResources){
-			this.smokeAnimation.image.src = SmokeImage; //load image only once
+			this.smokeAnimation.changeImage(SmokeImage); //load image only once
 			AudioSystem.load(BuildSoundUrl);
 		}
 		this.selectedBuildingForBuild = null;

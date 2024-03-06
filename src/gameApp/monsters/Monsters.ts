@@ -42,7 +42,7 @@ export class Monsters{
 		Monsters.all = [];
 
 		if(isLoadResources){
-			this.explosionAnimation.image.src = ExplosionImage;
+			this.explosionAnimation.changeImage(ExplosionImage);
 			AudioSystem.load(SwordAttackSound);
 			AudioSystem.load(ExplosionSound);
 		}

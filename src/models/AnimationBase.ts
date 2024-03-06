@@ -1,7 +1,7 @@
 import { Draw } from "../gameApp/gameSystems/Draw";
+import { ImmutableImage } from "./ImmutableImage"
 
 export default class AnimationBase{
-	readonly image: HTMLImageElement; //изображение с несколькими кадрами в ряд
 	readonly frames: number; //количество кадров в изображении
 
 	readonly initialDurationMs: number; //время полной анимации в миллисекундах
@@ -11,8 +11,17 @@ export default class AnimationBase{
 		return this._durationMs;
 	}
 	
+	protected _image: ImmutableImage; //защищённое для изменения изображение
+	public get image(): ImmutableImage{
+		return this._image;
+	}
+
 	changeDuration(newValue: number){
 		this._durationMs = newValue;
+	}
+
+	changeImage(newSrc: string){
+		this._image = new ImmutableImage(newSrc);
 	}
 
 	/**
@@ -20,20 +29,16 @@ export default class AnimationBase{
 	 * @param durationMs - время полной анимации в миллисекундах
 	 * @param image - изображение содержащее все кадры анимации
 	 */
-	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
+	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|string|null = null)
 	{
-		this.image = new Image();
-		if(image){
-			this.image.src = image.src;
-		}
+		this._image = new ImmutableImage(image || new Image());
 		this.frames = framesCount;
 		this._durationMs = durationMs;
 		this.initialDurationMs = durationMs;
 	}
 
 	protected getImage(filter: string|null = null): HTMLImageElement|OffscreenCanvas{
-		let image = Draw.getFilteredImage(filter, this.image, this.image.width, this.image.height);
+		let image = Draw.getFilteredImage(filter, this.image.getImage(), this.image.width, this.image.height);
 		return image;
 	}
-
 }

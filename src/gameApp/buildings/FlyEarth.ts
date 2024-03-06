@@ -99,15 +99,15 @@ export class FlyEarth extends Building{
 
 	static loadSeparateCrystals(){
 		if(!this.crystal1Image.image.src){
-			this.crystal1Image.image.src = Crystal1Image;
-			this.crystal2Image.image.src = Crystal2Image;
-			this.crystal3Image.image.src = Crystal3Image;
-			this.crystal4Image.image.src = Crystal4Image;
+			this.crystal1Image.changeImage(Crystal1Image);
+			this.crystal2Image.changeImage(Crystal2Image);
+			this.crystal3Image.changeImage(Crystal3Image);
+			this.crystal4Image.changeImage(Crystal4Image);
 		}
 	}
 
 	static loadExplosionResources(){
-		this.explosionAnimation.image.src = ExplosionImage;
+		this.explosionAnimation.changeImage(ExplosionImage);
 		AudioSystem.load(ExplosionSound);
 	}
 

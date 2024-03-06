@@ -120,7 +120,7 @@ export class Unit extends UpgradebleObject {
 
 	readonly endingAnimation: AnimatedObject; //анимация появления юнита
 
-	readonly smokeAnimation: Animation = new Animation(10, 1000);  
+	readonly smokeAnimation: Animation;  
 
 
 	constructor(x: number, y: number, 
@@ -192,8 +192,7 @@ export class Unit extends UpgradebleObject {
 		this.isRunRight = true;
 		this.isRun = false;
 
-		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600)); //анимация появления юнита
-		this.endingAnimation.animation.image.src = CreatingImage;
+		this.endingAnimation = new AnimatedObject(x, y, this.width, this.height, true, new Animation(6, 600, CreatingImage)); //анимация появления юнита
 
 		this._isFall = true;
 		this.goalY = 0;
@@ -214,7 +213,7 @@ export class Unit extends UpgradebleObject {
 		this._stars = [];
 		this._starsNewDurationMsLeft = 0;
 
-		this.smokeAnimation.image.src = SmokeImage;
+		this.smokeAnimation = new Animation(10, 1000, SmokeImage);
 		this.smokeAnimation.leftTimeMs = 0;
 
 		AudioSystem.load(CreatingSound);

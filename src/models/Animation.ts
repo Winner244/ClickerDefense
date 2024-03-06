@@ -11,7 +11,7 @@ export default class Animation extends AnimationBase {
 	 * @param durationMs - время полной анимации в миллисекундах
 	 * @param image - изображение содержащее все кадры анимации
 	 */
-	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
+	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|string|null = null)
 	{
 		super(framesCount, durationMs, image);
 		this.leftTimeMs = durationMs;
@@ -25,13 +25,13 @@ export default class Animation extends AnimationBase {
 		if(!isGameOver){
 			this.leftTimeMs -= drawsDiffMs;
 		}
-
-		if(!this._durationMs || !this.image.width || !this.frames){
-			return;
-		}
 		
 		if(!this.image.complete){
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
+			return;
+		}
+
+		if(!this._durationMs || !this.image.width || !this.frames){
 			return;
 		}
 
