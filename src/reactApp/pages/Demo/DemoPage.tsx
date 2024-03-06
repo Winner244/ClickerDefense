@@ -18,16 +18,16 @@ class DemoPage extends React.Component {
         Gamer.coins = 500;
         Waves.all = [ //монстры на волнах
             [ //1-я волна
-                new WaveData(Zombie.name, 7, 80, 0),
+                new WaveData(Zombie.name, 7, 5, 0),
             ],
             [ //2-я волна
-                new WaveData(Zombie.name, 13, 80, 0),
-                new WaveData(Boar.name, 5, 60, 5)
+                new WaveData(Zombie.name, 5, 7, 0),
+                new WaveData(Boar.name, 5, 5, 0)
             ],
 			[ //3-я волна
-				new WaveData(Zombie.name, 30, 70, 0),
-				new WaveData(Boar.name, 35, 25, 1),
-				new WaveData(Bat.name, 30, 60, 2)
+				new WaveData(Zombie.name, 5, 10, 0),
+				new WaveData(Boar.name, 5, 10, 0),
+				new WaveData(Bat.name, 7, 5, 0)
 			]];
     }
 

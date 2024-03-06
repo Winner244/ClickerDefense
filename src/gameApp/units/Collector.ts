@@ -119,7 +119,7 @@ export class Collector extends Unit{
 
 	private static readonly initialSpeed: number = 30;
 
-	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 50, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
+	static readonly shopItem: ShopItem = new ShopItem('Золотособиратель', Collector.shopImage, 20, 'Собирает монетки', ShopCategoryEnum.UNITS, 10);
 
 	private _collectingAnimation: Animation; //анимация собирания монеток
 	private _collectingArmorAnimation: Animation; //для апгрейда брони - анимация собирания монеток

@@ -191,7 +191,7 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 WavesState.isWaveStarted = false;
                 Waves.waveCurrent = 0;
-                Gamer.coins = 1500;
+                Gamer.coins = 75;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
@@ -206,7 +206,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -227,7 +226,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -247,7 +245,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -275,7 +272,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -303,7 +299,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -330,7 +325,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -357,7 +351,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -654,7 +647,6 @@ class TestPage extends React.Component {
                 
                 Waves.all = [ //монстры на волнах
                 [ //1-я волна
-                    //new WaveData(Zombie.name, 7, 80, 0),
                     new WaveData(Boar.name, 111, 1, 61)
                 ],
                 [ //2-я волна
@@ -930,7 +922,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -963,7 +954,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -1002,7 +992,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -1023,7 +1012,7 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
+                        //Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -1048,7 +1037,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -1097,7 +1085,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -1134,7 +1121,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -1167,7 +1153,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 60, 16)
                     ],
                     [ //2-я волна
@@ -1195,7 +1180,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 60, 16)
                     ],
                     [ //2-я волна
@@ -1222,7 +1206,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -1251,7 +1234,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [ //монстры на волнах
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Necromancer.name, 1, 1, 6)
                     ],
                     [ //2-я волна
@@ -2356,7 +2338,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2388,7 +2369,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2425,7 +2405,6 @@ class TestPage extends React.Component {
                 Gamer.coins = 100;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2456,7 +2435,6 @@ class TestPage extends React.Component {
                 Gamer.coins = 100;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2486,7 +2464,6 @@ class TestPage extends React.Component {
                 Gamer.coins = 100;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2520,7 +2497,6 @@ class TestPage extends React.Component {
                 Gamer.coins = 100;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2596,7 +2572,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -2638,7 +2613,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -2672,7 +2646,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -2701,7 +2674,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -2736,7 +2708,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -2770,7 +2741,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -2901,7 +2871,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -2977,7 +2946,6 @@ class TestPage extends React.Component {
 
                 /*Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -3030,7 +2998,6 @@ class TestPage extends React.Component {
 
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 10, 0)
                     ],
                     [ //2-я волна
@@ -3078,7 +3045,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -3124,7 +3090,6 @@ class TestPage extends React.Component {
 
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 0)
                     ],
                     [ //2-я волна
@@ -3172,9 +3137,19 @@ class TestPage extends React.Component {
                     Units.all.push(miner2);
 
                     setTimeout(() => {
+                        collector1.x += 40;
+                        collector2.x += 40;
+                        collector3.x += 40;
+                        miner1.x += 40;
+                        miner2.x += 40;
+                        miner3.x += 40;
+                    }, 2800);
+
+                    setTimeout(() => {
                         collector1.applyDamage(20);
                         collector2.applyDamage(20);
                         collector3.applyDamage(20);
+
                         miner1.applyDamage(20);
                         miner2.applyDamage(20);
                         miner3.applyDamage(20);
@@ -3191,7 +3166,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 6)
                     ],
                     [ //2-я волна
@@ -3220,7 +3194,6 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 Waves.all = [
                     [ //1-я волна
-                        //new WaveData(Zombie.name, 7, 80, 0),
                         new WaveData(Zombie.name, 1, 60, 6)
                     ],
                     [ //2-я волна

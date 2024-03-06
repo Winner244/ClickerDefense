@@ -108,7 +108,7 @@ export class Miner extends Unit{
 
 	private static readonly initialSpeed: number = 75;
 
-	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.shopImage, 50, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
+	static readonly shopItem: ShopItem = new ShopItem('Золотодобытчик', Miner.shopImage, 20, 'Добывает монетки', ShopCategoryEnum.UNITS, 20);
 
 	private readonly _diggingAnimation: AnimationInfinite; //анимация добывания монеток
 	private readonly _diggingWeaponAnimation: AnimationInfinite; //для апгрейда кирки - анимация добывания монеток

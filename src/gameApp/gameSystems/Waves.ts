@@ -50,32 +50,32 @@ export class Waves{
 		
 		Waves.all = [ //монстры на волнах
 			[ //1-я волна
-				new WaveData(Zombie.name, 15, 30, 0),
+				new WaveData(Zombie.name, 15, 15, 0),
 			],
 			[ //2-я волна
-				new WaveData(Zombie.name, 22, 80, 0),
-				new WaveData(Boar.name, 13, 30, 5)
+				new WaveData(Zombie.name, 22, 16.5, 0),
+				new WaveData(Boar.name, 13, 21, 5)
 			],
 			[ //3-я волна
-				new WaveData(Zombie.name, 30, 75, 0),
-				new WaveData(Boar.name, 18, 28, 1),
-				new WaveData(Bat.name, 35, 63, 2)
+				new WaveData(Zombie.name, 30, 24, 0),
+				new WaveData(Boar.name, 18, 37.5, 1),
+				new WaveData(Bat.name, 35, 31, 2)
 			],
 			[ //4-ая волна
-				new WaveData(Boar.name, 23, 70, 0),
-				new WaveData(Bat.name, 87, 250, 0),
+				new WaveData(Boar.name, 23, 20, 0),
+				new WaveData(Bat.name, 87, 21, 0),
 
-				new WaveData(Zombie.name, 100, 100, 15),
-				new WaveData(Necromancer.name, 10, 10, 15),
+				new WaveData(Zombie.name, 100, 45, 15),
+				new WaveData(Necromancer.name, 10, 45, 15),
 
-				new WaveData(Boar.name, 9, 9, 20),
-				new WaveData(Bat.name, 15, 15, 20),
+				new WaveData(Boar.name, 9, 40, 20),
+				new WaveData(Bat.name, 15, 40, 20),
 			],
 			[ //5-ая волна (демо - без нового монстра)
-				new WaveData(Zombie.name, 30, 75, 0),
-				new WaveData(Boar.name, 18, 28, 1),
-				new WaveData(Bat.name, 90, 93, 2),
-				new WaveData(Necromancer.name, 15, 12, 0),
+				new WaveData(Zombie.name, 30, 24, 0),
+				new WaveData(Boar.name, 18, 37.5, 1),
+				new WaveData(Bat.name, 90, 50, 2),
+				new WaveData(Necromancer.name, 15, 45, 0),
 			]];
 	}
 
@@ -160,8 +160,8 @@ export class Waves{
 
 				Monsters.add(monster);
 
-				let periodTimeMs = 1000 * 60 / waveData.frequencyCreating;
-				waveData.timeWaitingNewMonsterMs = periodTimeMs + Helper.getRandom(-periodTimeMs / 2, periodTimeMs / 2)
+				let periodWaitingTimeMs = waveData.durationCreatingMs / waveData.count;
+				waveData.timeWaitingNewMonsterMs = periodWaitingTimeMs + Helper.getRandom(-periodWaitingTimeMs / 2, periodWaitingTimeMs / 2)
 				waveData.timeFromLastCreatedMs = 0;
 				waveData.wasCreatedCount++;
 			}
