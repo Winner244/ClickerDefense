@@ -2360,7 +2360,7 @@ class TestPage extends React.Component {
                         new WaveData(Boar.name, 1, 60, 6)
                     ],
                     [ //2-я волна
-                        new WaveData(Boar.name, 15, 10, 0)
+                        new WaveData(Boar.name, 10, 10, 0)
                     ]];
 
                 this.waitLoadingImage(Boar.imageHandler, () => {
@@ -3122,6 +3122,15 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
+                Waves.all = [
+                    [ //1-я волна
+                        //new WaveData(Zombie.name, 7, 80, 0),
+                        new WaveData(Zombie.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 1, 10, 0)
+                    ]];
+
 
                 setTimeout(() => {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
@@ -3129,12 +3138,46 @@ class TestPage extends React.Component {
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuum();
                     collector1.improveToVacuumCar();
-                    //collector1.improveToWoodArmor();
+                    collector1.improveToWoodArmor();
                     Units.all.push(collector1);
 
+                    var collector2 = new Collector(Buildings.flyEarth.centerX - 50, y);
+                    collector2.loadedResourcesAfterBuild();
+                    collector2.improveToWoodArmor();
+                    Units.all.push(collector2);
                     
+
+                    var collector3 = new Collector(Buildings.flyEarth.centerX + 50, y);
+                    collector3.loadedResourcesAfterBuild();
+                    collector3.improveToVacuum();
+                    collector3.improveToWoodArmor();
+                    Units.all.push(collector3);
+
+                    var y = Buildings.flyEarth.centerY - 80;
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 115, y, y + Miner.imageHeight);
+                    miner3.loadedResourcesAfterBuild();
+                    miner3.improveToGoldPick();
+                    Units.all.push(miner3);
+                    
+                    var y = Buildings.flyEarth.centerY - 90;
+                    var miner1 = new Miner(Buildings.flyEarth.centerX + 20, y, y + Miner.imageHeight);
+                    miner1.loadedResourcesAfterBuild();
+                    miner1.improveToGoldPick();
+                    miner1.improveToDiamondPick();
+                    Units.all.push(miner1);
+
+                    var y = Buildings.flyEarth.centerY - 70;
+                    var miner2 = new Miner(Buildings.flyEarth.centerX - 35, y, y + Miner.imageHeight);
+                    miner2.loadedResourcesAfterBuild();
+                    Units.all.push(miner2);
+
                     setTimeout(() => {
                         collector1.applyDamage(20);
+                        collector2.applyDamage(20);
+                        collector3.applyDamage(20);
+                        miner1.applyDamage(20);
+                        miner2.applyDamage(20);
+                        miner3.applyDamage(20);
                     }, 3000);
                 }, 300);
             }

@@ -851,7 +851,7 @@ export class Collector extends Unit{
 						coins = coins.filter(x => x.x < closerMonsterRight.x);
 					}
 
-					let sameUnits = units.filter(x => x.name == this.name);
+					let sameUnits = units.filter(x => x.name == this.name && x.health > 0);
 					if(sameUnits.length > 1){
 						let widthOfPart = Buildings.flyEarth.width / sameUnits.length;
 						let filteredCoins = coins.filter(x => Math.abs(this.centerX - x.centerX) < widthOfPart && Math.abs(this.goalX - x.centerX) < widthOfPart);

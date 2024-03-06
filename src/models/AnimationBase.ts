@@ -22,7 +22,10 @@ export default class AnimationBase{
 	 */
 	constructor(framesCount: number, durationMs: number, image: HTMLImageElement|null = null)
 	{
-		this.image = image || new Image();
+		this.image = new Image();
+		if(image){
+			this.image.src = image.src;
+		}
 		this.frames = framesCount;
 		this._durationMs = durationMs;
 		this.initialDurationMs = durationMs;
