@@ -455,6 +455,10 @@ export class Unit extends UpgradebleObject {
 			}
 		}
 
+		if(WavesState.isWaveStarted && this._fallEndAnimation.leftTimeMs > 0){
+			this._fallEndAnimation.leftTimeMs = this._fallEndArmorAnimation.leftTimeMs = this._fallEndWeaponAnimation.leftTimeMs = 0;
+		}
+
 		super.logicBase(drawsDiffMs);
 	}
 

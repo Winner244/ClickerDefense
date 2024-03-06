@@ -22,6 +22,10 @@ export default class Animation extends AnimationBase {
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, filter: string|null = null, isInvert: boolean = false){
+		if(!isGameOver){
+			this.leftTimeMs -= drawsDiffMs;
+		}
+
 		if(!this._durationMs || !this.image.width || !this.frames){
 			return;
 		}
@@ -30,9 +34,6 @@ export default class Animation extends AnimationBase {
 			console.warn(`image src=${this.image.src} is not loaded yet!`);
 			return;
 		}
-
-		if(!isGameOver)
-			this.leftTimeMs -= drawsDiffMs;
 
 		let frame = this.leftTimeMs <= 0 
 			? this.frames - 1

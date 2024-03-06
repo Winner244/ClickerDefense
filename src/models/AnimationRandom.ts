@@ -21,7 +21,11 @@ export default class AnimationRandom extends AnimationBase{
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number|null = null, height: number|null = null, filter: string|null = null){
-		if(!this._durationMs){
+		if(!isGameOver){
+			this.displayedTimeMs += drawsDiffMs;
+		}
+
+		if(!this._durationMs || !this.image.width || !this.frames){
 			return;
 		}
 		
@@ -31,8 +35,6 @@ export default class AnimationRandom extends AnimationBase{
 		}
 
 		if(!isGameOver){
-			this.displayedTimeMs += drawsDiffMs;
-
 			let newKeyFrame = Math.floor(this.displayedTimeMs % this.durationMs / (this.durationMs / this.frames));
 			if(newKeyFrame != this.keyFrame){
 				this.keyFrame = newKeyFrame;

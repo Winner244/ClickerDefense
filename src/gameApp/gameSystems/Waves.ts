@@ -75,7 +75,7 @@ export class Waves{
 				new WaveData(Zombie.name, 30, 75, 0),
 				new WaveData(Boar.name, 18, 28, 1),
 				new WaveData(Bat.name, 90, 93, 2),
-				new WaveData(Necromancer.name, 15, 10, 0),
+				new WaveData(Necromancer.name, 15, 12, 0),
 			]];
 	}
 
