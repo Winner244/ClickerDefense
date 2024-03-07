@@ -150,7 +150,7 @@ export class Upgrade extends React.Component<Props, {}> {
     const result = infoItem.improve();
     if(result){
       this.forceUpdate();
-      CoinLabels.add(e.clientX, e.clientY, infoItem.priceToImprove() || 0, 2000);
+      CoinLabels.add(e.clientX, e.clientY, result, 2000);
       AudioSystem.play(e.clientX, ImproveSoundUrl, 0.15);
       this.setParameterGreenTransition(infoItem.id);
     }

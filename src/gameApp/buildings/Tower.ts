@@ -134,9 +134,9 @@ export class Tower extends Building{
 		super.loadedResourcesAfterBuild();
 
 		this.infoItems.splice(1, 0, new ParameterItem('Урон', () => this.damage, swordIcon, 13, () => 40, () => this.damage += 1));
-		this.infoItems.splice(2, 0, new ParameterItem('Лучников', () => this.bowmans, bowmanIcon, 13, () => 40 * 2, () => this.bowmans += 1));
-		this.infoItems.splice(3, 0, new ParameterItem('Перезарядка', () => (this.rechargeTimeMs / 1000).toFixed(2) + ' сек', rechargeIcon, 13, () => 40, () => this.rechargeTimeMs *= 0.9));
-		this.infoItems.splice(4, 0, new ParameterItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 18, () => 40, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.splice(2, 0, new ParameterItem('Лучников', () => this.bowmans, bowmanIcon, 13, () => 55, () => this.bowmans += 1));
+		this.infoItems.splice(3, 0, new ParameterItem('Перезарядка', () => (this.rechargeTimeMs / 1000).toFixed(2) + ' сек', rechargeIcon, 13, () => 40 / (this.rechargeTimeMs / 1000), () => this.rechargeTimeMs *= 0.9));
+		this.infoItems.splice(4, 0, new ParameterItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 18, () => 20, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new ParameterItem('Скорость стрел', () => this.arrowSpeed, '', 0, () => 10, () => this.arrowSpeed += 150));
 
 		this.improvements.push( new Improvement('Огненные стрелы', 100, fireArrowImproveImage, () => this.improveToFireArrows(), [

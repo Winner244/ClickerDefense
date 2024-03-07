@@ -10,11 +10,12 @@ export default class ParameterItem{
 	readonly icon: HTMLImageElement|null; //иконка характеристики 
 	readonly iconWidth: number; //ширина иконки
 	getValue: () => string|number; //функция получения значения
+	private readonly _initialValue: number; 
 
 	mouseIn: () => void; //наведении мышкой на параметр в UI
 	mouseOut: () => void; //увод мышкой от параметра в UI
 
-	priceToImprove: () => number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
+	private _priceToImprove: () => number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
 	private _improve: () => void; //функция повышения характеристики
 
 	constructor(
@@ -40,25 +41,57 @@ export default class ParameterItem{
 		}
 		
 		this.iconWidth = iconWidth;
-		this.priceToImprove = priceToImprove;
+		this._priceToImprove = priceToImprove;
 		this._improve = improve;
 
 		this.mouseIn = mouseIn;
 		this.mouseOut = mouseOut;
+
+		this._initialValue = this.getNumberValue();
 	}
 
-	improve(): boolean {
+	protected getNumberValue(){
+		let valueStr = this.getValue();
+		let valueNumber = 0;
+		if(typeof valueStr == 'string'){
+			valueNumber = parseFloat(valueStr.replace(/\D/g, ""));
+			if(isNaN(valueNumber)){
+				valueNumber = 0;
+			}
+		}
+		else{
+			valueNumber = valueStr;
+		}
+
+		return valueNumber;
+	}
+	
+	priceToImprove(): number|null{
+		let priceToImprove = this._priceToImprove();
+		if (priceToImprove){
+			var kof = 1;
+			if(this._initialValue != 0){
+				kof = this.getNumberValue() / this._initialValue;
+				kof = Math.max(kof, 1);
+			}
+
+			priceToImprove = Math.round(kof * priceToImprove);
+		}
+		return priceToImprove;
+	}
+
+	improve(): number {
 		let priceToImprove = this.priceToImprove();
 		if(priceToImprove){
 			if(Gamer.coins >= priceToImprove){
 				Gamer.coins -= priceToImprove
 				this._improve();
-				return true;
+				return priceToImprove;
 			}
 
-			return false;
+			return 0;
 		}
 
-		return false;
+		return 0;
 	}
 }
