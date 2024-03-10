@@ -2857,12 +2857,12 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-
                 setTimeout(() => {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     //collector1.improveToWoodArmor();
+                    //collector1.improveToVacuum();
                     Units.all.push(collector1);
 
                     
@@ -3060,8 +3060,8 @@ class TestPage extends React.Component {
                     var y = Buildings.flyEarth.centerY - 80;
                     var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
-                    miner3.improveToGoldPick();
-                    miner3.improveToDiamondPick();
+                    //miner3.improveToGoldPick();
+                    //miner3.improveToDiamondPick();
                     Units.all.push(miner3);
                 }, 300);
 
