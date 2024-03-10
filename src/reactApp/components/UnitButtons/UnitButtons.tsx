@@ -75,6 +75,7 @@ export class UnitButtons extends React.Component<Props, IState> {
 
   static hide(): void{
     App.Store.dispatch(UnitButtonsStore.actionCreators.close());
+    UnitButtons.isEnterMouse = false;
   }
 
   private static playSoundSelect(){

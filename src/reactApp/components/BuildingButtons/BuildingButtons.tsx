@@ -75,6 +75,7 @@ export class BuildingButtons extends React.Component<Props, IState> {
 
   static hide(): void{
     App.Store.dispatch(BuildingButtonsStore.actionCreators.close());
+    BuildingButtons.isEnterMouse = false;
   }
 
   private static playSoundSelect(){
