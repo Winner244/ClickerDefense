@@ -319,8 +319,8 @@ export class Menu extends React.Component<Props, IState> {
 
         {this.props.isOpen && !this.props.isDisplayButtonContinueGame
           ? <div className='menu__footer'>
-              <a className='menu__footer-link-version' href='https://gitlab.com/sanek244/clickerdefense__canvas'>v0.18</a>
-              <a className='menu__footer-link-author' href='https://vk.com/aleksandr_winner'>© winner</a>
+              <a className='menu__footer-link-version' target="_blank" href='https://gitlab.com/sanek244/clickerdefense__canvas'>v0.18</a>
+              <a className='menu__footer-link-author' target="_blank" href='https://vk.com/aleksandr_winner'>© winner</a>
             </div>
           : null
         }
