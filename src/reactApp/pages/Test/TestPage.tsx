@@ -653,9 +653,10 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 2;
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
 
-                var tower1 = new Tower(500);
+                var tower1 = new Tower(710);
                 tower1.loadedResourcesAfterBuild();
                 tower1.bowmans = 1;
+                //tower1.arrowSpeed += 1500
                 tower1.radiusAttack = 500;
                 tower1.improveToDynamitArrows();
                 tower1.improvements.filter(x => x.label == 'Взрывные стрелы').forEach(x => x.isImproved = true);
