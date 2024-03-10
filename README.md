@@ -4,7 +4,7 @@ React + Redux + TypeScript + canvas + Tone.js
 
 Canvas game - need to defense flying earch + mine coins from it + destroy waves of monsters by setting up defenses
 
-last version: 0.17
+last version: 0.18
 
 <br>
 <h3>Monsters:</h3>
@@ -115,6 +115,10 @@ attacked:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorVacuum.gif" height="200" />
 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: vacuum car
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorVacuumCar.gif" height="200" />
+
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: wood armor
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorWoodArmor.gif" height="200" />
@@ -156,11 +160,11 @@ Game Over:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 crusher (impulse anomaly with magnet)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 cursor passive magic ....
-
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 meteors
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 lightning
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 cursor passive magic ....
 
 ....
 

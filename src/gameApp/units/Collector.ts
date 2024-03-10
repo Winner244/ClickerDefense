@@ -78,12 +78,17 @@ import CollectorRunVacuumCarImage from '../../assets/img/units/collector/vacuumC
 import CollectorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/startActive.png'; 
 import CollectorJoyVacuumCarImage from '../../assets/img/units/collector/vacuumCar/joy.png'; 
 import CollectorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/fallEnd.png'; 
+import CollectorDefenseStartVacuumCarImage from '../../assets/img/units/collector/vacuumCar/defenseStart.png'; 
+import CollectorDefenseVacuumCarImage from '../../assets/img/units/collector/vacuumCar/defense.png'; 
+
 
 import CollectorWoodArmorFallEndVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/fallEnd.png'; 
 import CollectorWoodArmorPassiveWaitingVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/passiveWaiting.png'; 
 import CollectorWoodArmorStartActiveVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/startActive.png'; 
 import CollectorWoodArmorRunVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/run.png'; 
 import CollectorWoodArmorJoyVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/joy.png'; 
+import CollectorWoodArmorDefenseStartVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/defenseStart.png'; 
+import CollectorWoodArmorDefenseVacuumCarImage from '../../assets/img/units/collector/vacuumCar/woodArmor/defense.png'; 
 
 import shieldIcon from '../../assets/img/icons/shieldContrast.png';  
 import speedIcon from '../../assets/img/icons/speed.png';  
@@ -137,13 +142,13 @@ export class Collector extends Unit{
 	private static readonly defenseModifierName: string = 'Defense'; //имя модифатора защиты
 	private static readonly defenseMinDurationMs: number = 1500; //минимальное время действия защиты - если никто больше не атакует
 
-	private readonly defenseActivationAnimation: Animation; //анимация старта защиты
-	private readonly defenseActivationArmorAnimation: Animation; //анимация старта защиты - для брони
-	private readonly defenseActivationToolAnimation: Animation; //анимация старта защиты - для инструмента
+	private defenseActivationAnimation: Animation; //анимация старта защиты
+	private defenseActivationArmorAnimation: Animation; //анимация старта защиты - для брони
+	private defenseActivationToolAnimation: Animation; //анимация старта защиты - для инструмента
 
-	private readonly defenseAnimation: AnimationInfinite; //анимация защиты
-	private readonly defenseArmorAnimation: AnimationInfinite; //анимация защиты - для брони
-	private readonly defenseToolAnimation: AnimationInfinite; //анимация защиты - для инструмента
+	private defenseAnimation: AnimationInfinite; //анимация защиты
+	private defenseArmorAnimation: AnimationInfinite; //анимация защиты - для брони
+	private defenseToolAnimation: AnimationInfinite; //анимация защиты - для инструмента
 
 	private _isDefenseActivationStarted: boolean; //началась анимация защиты
 	private _isDefenseActivated: boolean; //защита установлена
@@ -407,6 +412,17 @@ export class Collector extends Unit{
 		this._fallEndAnimation.changeImage(CollectorFallEndVacuumCarImage);
 		this._fallEndWeaponAnimation.changeImage('');
 		this._fallEndArmorAnimation.changeImage('');
+
+		this.defenseActivationAnimation = new Animation(3, 3 * 200);
+		this.defenseActivationAnimation.changeImage(CollectorDefenseStartVacuumCarImage);
+		this.defenseActivationArmorAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.initialDurationMs);
+		this.defenseActivationToolAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.initialDurationMs);
+		
+
+		this.defenseAnimation = new AnimationInfinite(1, 1 * 200);
+		this.defenseAnimation.changeImage(CollectorDefenseVacuumCarImage);
+		this.defenseArmorAnimation = new AnimationInfinite(this.defenseAnimation.frames, this.defenseAnimation.initialDurationMs);
+		this.defenseToolAnimation = new AnimationInfinite(this.defenseAnimation.frames, this.defenseAnimation.initialDurationMs);
 		
 		if(this.improvements.find(x => x.label == 'Деревянная броня')?.isImproved){
 			this.improveVacuumCarToWoodArmor();
@@ -454,6 +470,12 @@ export class Collector extends Unit{
 		this._collectingArmorAnimation.changeImage(CollectorWoodArmorRunVacuumCarImage);
 		this._collectingAnimation.leftTimeMs = 
 		this._collectingArmorAnimation.leftTimeMs = 0;
+
+		this.defenseActivationArmorAnimation = new Animation(this.defenseActivationAnimation.frames, this.defenseActivationAnimation.initialDurationMs);
+		this.defenseActivationArmorAnimation.changeImage(CollectorWoodArmorDefenseStartVacuumCarImage);
+		
+		this.defenseArmorAnimation = new AnimationInfinite(this.defenseAnimation.frames, this.defenseAnimation.initialDurationMs);
+		this.defenseArmorAnimation.changeImage(CollectorWoodArmorDefenseVacuumCarImage);
 
 		this._joyArmorAnimation.changeImage(CollectorWoodArmorJoyVacuumCarImage);
 	}
@@ -557,11 +579,15 @@ export class Collector extends Unit{
 		}
 
 		AudioSystem.play(this.centerX, SoundVacuum, -15, 1, false, true, 0, 0.3, false, true, (source: Tone.Player) => {
+			if(this.health <= 0){
+				return false;
+			}
+
+			if(this._isHasVacuumCar && Coins.all.length){
+				return true;
+			}
+
 			if(this._goalCoin){
-				if(this._isHasVacuumCar){
-					return true;
-				}
-	
 				if(this._isHasVacuum){
 					let coinDistance = this.getCoinDistance();
 					if (coinDistance < Collector.VacuumRunStartDistance){
@@ -579,7 +605,7 @@ export class Collector extends Unit{
 	logicMoving(drawsDiffMs: number, speed: number){
 		this.isRun = false;
 
-		if (this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted){
+		if (!this._isHasVacuumCar && (this._isDefenseActivationStarted || this._isDefenseActivated || this._isDefenseDeactivationStarted)){
 			return;  //игнорируем логику движения
 		}
 
@@ -718,6 +744,39 @@ export class Collector extends Unit{
 			return;
 		}
 
+		//логика всасывания монет машиной-пылесосом
+		if(this._isHasVacuumCar && Coins.all.length){
+			if(this._isDisplayDistanceVacuumCar){
+				this._isDisplayDistanceVacuumCar = false;
+			}
+
+			for(let coin of Coins.all){
+				//авто сбор монет упавших на машину
+				if (coin.centerX > this.x && coin.centerX < this.x + this.width && coin.centerY > this.centerY){
+					let i = Coins.all.indexOf(coin);
+					Coins.collect(i, coin.centerX, coin.centerY);
+				}
+				else {
+					//притягиваем пропорционально расстоянию и по геометрической форме треугольника
+					let yStart = this.y + this.height;
+					let xStart = this.isRunRight ? this.x : this.x + this.width;
+					let height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
+					let width = (this.isRunRight ? 1 : -1) * this._vacuumCarGravityDistance;
+					let isGravity = Helper.IsTriangleContainsPoint(coin.centerX, coin.centerY, 
+						xStart, yStart, 
+						xStart + width, yStart,
+						xStart + width, yStart + height)
+					if(isGravity){
+						let sign = Math.sign(this.centerX - coin.centerX);
+						coin.impulseX += sign * Math.abs(this.centerX + (-1 * sign * this._vacuumCarGravityDistance) - coin.centerX) / 1000 * this._vacuumCarPower;
+						coin.impulseY /= this._vacuumCarPower;
+					}
+				}
+			}
+
+			this.playVacuumSound();
+		}
+
 		//создание защиты
 		if(this._isDefenseActivationStarted){
 			let defenseModifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
@@ -745,7 +804,17 @@ export class Collector extends Unit{
 			let rightMonster = closerMonsters.find(x => x.isLand && !x.isLeftSide);
 
 			let defenseModifier = this.modifiers.find(x => x.name == Collector.defenseModifierName);
-			if(!defenseModifier || !leftMonster || !rightMonster){
+			if(this._isHasVacuumCar){
+				//отталкиваем монстров от центра :D
+				if(this.centerX > Buildings.flyEarth.x + Buildings.flyEarth.width){
+					this.isRunRight = false;
+				}
+				else if(this.centerX < Buildings.flyEarth.x){
+					this.isRunRight = true;
+				}
+			}
+
+			if(!defenseModifier || (!leftMonster || !rightMonster) && !this._isHasVacuumCar || this._isHasVacuumCar && !leftMonster && !rightMonster){
 				this._isDefenseActivated = false;
 				this._isDefenseDeactivationStarted = true;
 				this.defenseActivationAnimation.restart();
@@ -780,37 +849,6 @@ export class Collector extends Unit{
 
 		//игра пошла
 		if(WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0 || Coins.all.length){
-
-			//логика всасывания монет машиной-пылесосом
-			if(this._isHasVacuumCar){
-				if(this._isDisplayDistanceVacuumCar){
-					this._isDisplayDistanceVacuumCar = false;
-				}
-
-				for(let coin of Coins.all){
-				    //авто сбор монет упавших на машину
-					if (coin.centerX > this.x && coin.centerX < this.x + this.width && coin.centerY > this.centerY){
-						let i = Coins.all.indexOf(coin);
-						Coins.collect(i, coin.centerX, coin.centerY);
-					}
-					else {
-						//притягиваем пропорционально расстоянию и по геометрической форме треугольника
-						let yStart = this.y + this.height;
-						let xStart = this.isRunRight ? this.x : this.x + this.width;
-						let height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
-						let width = (this.isRunRight ? 1 : -1) * this._vacuumCarGravityDistance;
-						let isGravity = Helper.IsTriangleContainsPoint(coin.centerX, coin.centerY, 
-							xStart, yStart, 
-							xStart + width, yStart,
-							xStart + width, yStart + height)
-						if(isGravity){
-							let sign = Math.sign(this.centerX - coin.centerX);
-							coin.impulseX += sign * Math.abs(this.centerX + (-1 * sign * this._vacuumCarGravityDistance) - coin.centerX) / 1000 * this._vacuumCarPower;
-							coin.impulseY /= this._vacuumCarPower;
-						}
-					}
-				}
-			}
 			
 			if(this._isCollecting){ //период сбора монеток
 
@@ -932,15 +970,6 @@ export class Collector extends Unit{
 				else if(leftMonster && rightMonster){
 					this.activateDefense();
 				}
-				else if(this._isHasVacuumCar){
-					//отталкиваем монстров от центра :D
-					if(this.centerX > Buildings.flyEarth.x + Buildings.flyEarth.width){
-						this.isRunRight = false;
-					}
-					else if(this.centerX < Buildings.flyEarth.x){
-						this.isRunRight = true;
-					}
-				}
 				else if(leftMonster){
 					this.isRunRight = leftMonster.isLeftSide;
 				}
@@ -956,7 +985,7 @@ export class Collector extends Unit{
 	}
 
 	activateDefense(){
-		if(!this._isDefenseActivationStarted && !this._isDefenseActivated && !this._isHasVacuumCar){
+		if(!this._isDefenseActivationStarted && !this._isDefenseActivated){
 			this._isDefenseActivationStarted = true;
 			this._isDefenseDeactivationStarted = false;
 			this._isDefenseActivated = false;
@@ -1110,7 +1139,7 @@ export class Collector extends Unit{
 		}
 
 		//переопределяем логику отрисовки при окончании волны с монетами - что бы собирать их
-		if(!WavesState.isWaveStarted && Coins.all.length){
+		if(!WavesState.isWaveStarted && Coins.all.length || this._isHasVacuumCar && (this._isDefenseActivated || this._isDefenseActivationStarted || this._isDefenseDeactivationStarted)){
 			super.drawObjectBase(drawsDiffMs, imageOrAnimation, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObjectBase(drawsDiffMs, imageOrAnimationArmor, isGameOver, invertSign, x, y, filter, isInvertAnimation);
 			super.drawObjectBase(drawsDiffMs, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter, isInvertAnimation);
