@@ -933,13 +933,19 @@ export class Collector extends Unit{
 					this.activateDefense();
 				}
 				else if(this._isHasVacuumCar){
-					//отталкиваем монстров от кнута :D
+					//отталкиваем монстров от центра :D
 					if(this.centerX > Buildings.flyEarth.x + Buildings.flyEarth.width){
 						this.isRunRight = false;
 					}
 					else if(this.centerX < Buildings.flyEarth.x){
 						this.isRunRight = true;
 					}
+				}
+				else if(leftMonster){
+					this.isRunRight = leftMonster.isLeftSide;
+				}
+				else if(rightMonster){
+					this.isRunRight = rightMonster.isLeftSide;
 				}
 			}
 		}

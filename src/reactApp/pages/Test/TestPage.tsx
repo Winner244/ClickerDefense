@@ -1673,7 +1673,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = true;
                 Waves.all = [[],
                 [ 
-                    new WaveData(Bat.name, 87, 250, 0),
+                    new WaveData(Bat.name, 87, 21, 0),
                 ]];
 
                 var tower1 = new Tower(1100);
@@ -2393,6 +2393,7 @@ class TestPage extends React.Component {
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     //collector1.improveToWoodArmor();
+                    //collector1.improveToVacuumCar();
                     Units.all.push(collector1);
                 }, 300);
             }
@@ -2513,14 +2514,24 @@ class TestPage extends React.Component {
                     var zombie = new Zombie(450, 780, true, 1);
                     Monsters.all.push(zombie);
                 });
+                
+                setTimeout(() => {
+                   // Coins.all.push(new Coin(Draw.canvas.width / 2 + 100, Draw.canvas.height / 2));
+                }, 1000);
+
+
+                setTimeout(() => {
+                    var zombie = new Zombie(1450, 780, false, 1);
+                    Monsters.all.push(zombie);
+                }, 6000);
 
                 setTimeout(() => {
                     var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
+                    collector1.improveToVacuumCar();
                     collector1.improveSpeed();
-                    collector1.improveSpeed();
-                    collector1.improveSpeed();
+                    collector1.improveToWoodArmor();
                     Units.all.push(collector1);
                 }, 300);
             }
@@ -2623,8 +2634,8 @@ class TestPage extends React.Component {
                     collector1 = new Collector(Draw.canvas.width / 2 - 100, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToWoodArmor();
-                    collector1.improveToVacuum();
-                    collector1.improveToVacuumCar();
+                    //collector1.improveToVacuum();
+                    //collector1.improveToVacuumCar();
                     //collector1.defense = 1;
                     Units.all.push(collector1);
                 }, 300);
@@ -2661,6 +2672,7 @@ class TestPage extends React.Component {
                 var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
+                collector1.improveToVacuum();
                 Units.all.push(collector1);
 
                 //first coin
