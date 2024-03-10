@@ -19,7 +19,10 @@ export class Mouse{
 	}
 
 	static onMove(event: MouseEvent): void{
+		let reactDiv = document.getElementById('react');
+		let scrollTopMain = reactDiv?.scrollTop ?? 0;
+
 		Mouse.x = event.pageX;
-		Mouse.y = event.pageY;
+		Mouse.y = event.pageY + scrollTopMain;
 	}
 }
