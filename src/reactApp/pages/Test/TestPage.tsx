@@ -191,7 +191,7 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 WavesState.isWaveStarted = false;
                 Waves.waveCurrent = 0;
-                Gamer.coins = 75;
+                Gamer.coins = 775;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
@@ -525,12 +525,12 @@ class TestPage extends React.Component {
                 Waves.waveCurrent = 2;
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
 
-                var tower1 = new Tower(500);
+                var tower1 = new Tower(700);
                 tower1.loadedResourcesAfterBuild();
                 tower1.bowmans = 3;
                 Buildings.all.push(tower1);
 
-                var barricade1 = new Barricade(400);
+                var barricade1 = new Barricade(600);
                 barricade1.loadedResourcesAfterBuild();
                 Buildings.all.push(barricade1);
                 
@@ -546,6 +546,44 @@ class TestPage extends React.Component {
                 Buildings.all.push(barricade2);
             }
         },
+
+       /* {
+            key: "Башня - несколько лучников - выбор цели",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.waveCurrent = 2;
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+
+                var tower1 = new Tower(710);
+                tower1.loadedResourcesAfterBuild();
+                tower1.bowmans = 3;
+                Buildings.all.push(tower1);
+
+                var barricade1 = new Barricade(600);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+
+                var barricade2 = new Barricade(1600);
+                barricade2.health = 2000;
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+
+                Monsters.all.push(new Bat(650, 380, true, 1));
+                Monsters.all.push(new Bat(550, 380, true, 1));
+                Monsters.all.push(new Bat(700, 380, true, 1));
+                //Monsters.all.push(new Bat(710, 180, true, 1));
+
+                
+                Monsters.all.push(new Zombie(550, 780, true, 1));
+                Monsters.all.push(new Zombie(580, 780, true, 1));
+                Monsters.all.push(new Zombie(500, 780, true, 1));
+                Monsters.all.push(new Zombie(480, 780, true, 1));
+                Monsters.all.push(new Zombie(450, 780, true, 1));
+                Monsters.all.push(new Zombie(420, 780, true, 1));
+            }
+        },*/
 
         {
             key: "Башня - скоростные стрелы",

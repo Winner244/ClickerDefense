@@ -135,8 +135,8 @@ export class Tower extends Building{
 
 		this.infoItems.splice(1, 0, new ParameterItem('Урон', () => this.damage, swordIcon, 13, () => 40, () => this.damage += 1));
 		this.infoItems.splice(2, 0, new ParameterItem('Лучников', () => this.bowmans, bowmanIcon, 13, () => 55, () => this.bowmans += 1));
-		this.infoItems.splice(3, 0, new ParameterItem('Перезарядка', () => (this.rechargeTimeMs / 1000).toFixed(2) + ' сек', rechargeIcon, 13, () => 40 / (this.rechargeTimeMs / 1000), () => this.rechargeTimeMs *= 0.9));
-		this.infoItems.splice(4, 0, new ParameterItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 18, () => 20, () => this.radiusAttack += 100, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
+		this.infoItems.splice(3, 0, new ParameterItem('Перезарядка', () => (this.rechargeTimeMs / 1000).toFixed(2) + ' сек', rechargeIcon, 13, () => 25 / (this.rechargeTimeMs / 1000), () => this.rechargeTimeMs *= 0.9));
+		this.infoItems.splice(4, 0, new ParameterItem('Радиус атаки', () => this.radiusAttack, radiusIcon, 18, () => 20, () => this.radiusAttack += 50, this.displayRadius.bind(this), this.hideRadius.bind(this) ));
 		this.infoItems.splice(5, 0, new ParameterItem('Скорость стрел', () => this.arrowSpeed, '', 0, () => 10, () => this.arrowSpeed += 150));
 
 		this.improvements.push( new Improvement('Огненные стрелы', 100, fireArrowImproveImage, () => this.improveToFireArrows(), [
@@ -215,10 +215,15 @@ export class Tower extends Building{
 						: (this.bowmans - this._bowmansWaiting) % monstersInRadius.length;
 
 					let sortedMonstersByDistance: Monster[] = [];
-					if(this.bowmans > 1){
+					if(this.bowmans > 1 && this.bowmans <= monstersInRadius.length){
 						const landMonsters = sortBy(monstersInRadius.filter(x => x.isLand), [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
 						const flyMonsters = sortBy(monstersInRadius.filter(x => !x.isLand), [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
-						sortedMonstersByDistance = (skipCount % 2 == 0 ? landMonsters : flyMonsters).concat((skipCount % 2 == 0 ? flyMonsters : landMonsters));
+						let i = 0;
+						while(sortedMonstersByDistance.length <= skipCount){
+							let monster = i++ % 2 == 0 ? flyMonsters.shift() : landMonsters.shift();
+							if (monster)
+								sortedMonstersByDistance.push(monster);
+						}
 					}
 					else{
 						sortedMonstersByDistance = sortBy(monstersInRadius, [monster => Helper.getDistance(this.centerX, this.centerY, monster.centerX, monster.centerY)]);
