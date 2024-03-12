@@ -388,8 +388,8 @@ export class Miner extends Unit{
 						let flyEarth = Buildings.flyEarth;
 						if(flyEarth){ //создание монетки
 							for(var i = 0; i < this._countCoinsDiging; i++){
-								let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
-								let coinY = flyEarth.y + flyEarth.height / 2;
+								let coinX = flyEarth.x + flyEarth.reduceHover * 2 + Math.random() * (flyEarth.width - flyEarth.reduceHover * 4);
+								let coinY = flyEarth.y + flyEarth.height / 2 + Math.random() * (flyEarth.height / 2 - flyEarth.reduceHover * 2);
 								Coins.create(coinX, Math.max(coinY, this.y + this.height));
 								FlyEarth.playSoundPick(this.x + this.width, -30);
 							}
@@ -524,6 +524,11 @@ export class Miner extends Unit{
 					? this._attackWeaponAnimation
 					: this._runWeaponAnimation;
 		}
+
+		
+		var yMin = flyEarth.centerY - (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 6 + 32 - this.height;
+		var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - this.x - this.width / 2)) / 7 - 32 - this.height;
+		//TODO: drow
 
 		super.drawObjects(drawsDiffMs, imageOrAnimation, imageOrAnimationArmor, imageOrAnimationWeapon, isGameOver, invertSign, x, y, filter);
 	}
