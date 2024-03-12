@@ -2,6 +2,7 @@ import * as React from 'react';
 
 import Menu from "../Menu/Menu";
 import Shop from "../Shop/Shop";
+import Panel from "../Panel/Panel";
 import BuildingButtons from "../BuildingButtons/BuildingButtons";
 import UnitButtons from "../UnitButtons/UnitButtons";
 import GameDisplay from "../GameDisplay/GameDisplay";
@@ -17,11 +18,12 @@ export default class Layout extends React.Component<Props, {}> {
         return <div>
             <GameDisplay />
             {this.props.children}
-            <Menu />
-            <Shop />
+            <Panel />
             <BuildingButtons />
             <UnitButtons />
+            <Shop />
             <Upgrade />
+            <Menu />
             <CoinLabels />
         </div>;
     }

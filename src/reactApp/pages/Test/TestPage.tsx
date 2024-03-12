@@ -2,6 +2,7 @@
 
 import { App } from '../../App';
 import * as MenuStore from '../../components/Menu/MenuStore';
+import * as PanelStore from '../../components/Panel/PanelStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Buildings} from '../../../gameApp/buildings/Buildings';
@@ -3263,6 +3264,26 @@ class TestPage extends React.Component {
                 }, 300);
             }
         },*/
+
+        
+        {
+            key: "Панель магии - добавление панели",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                WavesState.isWaveStarted = false;
+                Waves.waveCurrent = 0;
+                Gamer.coins = 775;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                App.Store.dispatch(PanelStore.actionCreators.add());
+                //TODO: add panel
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){
