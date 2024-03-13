@@ -61,28 +61,22 @@ export class Panel extends React.Component<Props, {}> {
     }
 
     return (
-      <div className='panel__box'>
+      <div className='panels'>
         {this.props.panels.map((panel, index) => (
-          <div className="panel noselect" id="panel">
-                  <div className="panel__body">
-                        <div className='panel__items-container'>
-                            <div className="panel__items-container-body">
-                                {panel.items.map((item, index) => (
-                                  <div key={index} className={"panel__item " + ((this.props.selectedItemId != null && this.props.selectedItemId == item?.id) ? 'panel__item--selected ' : '')}>
-                                      <div className="panel__item-img-container" onClick={() => this.onClickSelectItem(item?.id)}>
-                                        {item == null 
-                                          ? null 
-                                          : <div>
-                                              <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />
-                                              <div className="panel__item-number">{index}</div>
-                                            </div>}
-                                      </div>
-                                  </div>
-                                ))}
-                            </div>
-                        </div>
-                  </div>
-              </div>
+          <div className="panel">
+              {panel.items.map((item, index) => (
+                <div key={index} 
+                  onClick={() => this.onClickSelectItem(item?.id)}
+                  className={"panel__item " + ((this.props.selectedItemId != null && this.props.selectedItemId == item?.id) ? 'panel__item--selected ' : '')}>
+                    {item == null 
+                      ? null 
+                      : <div>
+                          <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />
+                          <div className="panel__item-number">{index}</div>
+                        </div>}
+                </div>
+              ))}
+          </div>
           ))}
       </div>
     );
