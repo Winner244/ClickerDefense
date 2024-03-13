@@ -3355,9 +3355,9 @@ class TestPage extends React.Component {
         if(this.text){
             return <div className='test-page'>
                 <div className='test-page__name-test noselect'>{this.text}</div>
-                <a className='test-page__button-prev' href={'/test?v=' + (variant - 1)}>Prev test</a>
-                <a className='test-page__button-all' href={'/test'}>all</a>
-                <a className='test-page__button-next' href={'/test?v=' + (variant + 1)}>Next test</a>
+                <a className='test-page__button-prev noselect' href={'/test?v=' + (variant - 1)}>Prev test</a>
+                <a className='test-page__button-all noselect' href={'/test'}>all</a>
+                <a className='test-page__button-next noselect' href={'/test?v=' + (variant + 1)}>Next test</a>
             </div>;
         }
 
