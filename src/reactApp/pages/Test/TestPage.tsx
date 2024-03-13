@@ -2356,7 +2356,7 @@ class TestPage extends React.Component {
 
                 setTimeout(() => {
                     var y = Buildings.flyEarth.centerY - 80;
-                    var miner3 = new Miner(Buildings.flyEarth.centerX - 144, y, y + Miner.imageHeight);
+                    var miner3 = new Miner(Buildings.flyEarth.centerX - 64, y, y + Miner.imageHeight);
                     miner3.loadedResourcesAfterBuild();
                     Units.all.push(miner3);
                 }, 300);

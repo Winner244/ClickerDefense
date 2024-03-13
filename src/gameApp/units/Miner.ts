@@ -413,6 +413,9 @@ export class Miner extends Unit{
 		}
 		else if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs > 0 && !this.isRunRight){
 			this.isRunRight = true;
+			this._diggingAnimation.restart();
+			this._diggingArmorAnimation.restart();
+			this._diggingWeaponAnimation.restart();
 		}
 	}
 
