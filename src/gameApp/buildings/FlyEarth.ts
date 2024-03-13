@@ -17,6 +17,8 @@ import {SimpleObject} from '../../models/SimpleObject';
 
 import {Cursor} from '../gamer/Cursor';
 
+import {Helper} from '../helpers/Helper';
+
 import FlyEarthImage from '../../assets/img/buildings/flyEarth/flyEarth.png';  
 import Crystal1Image from '../../assets/img/buildings/flyEarth/crystal1.png';  
 import Crystal2Image from '../../assets/img/buildings/flyEarth/crystal2.png';  
@@ -128,9 +130,7 @@ export class FlyEarth extends Building{
 			Cursor.setCursor(Cursor.pick);
 	
 			if(isClick){
-				let coinX = this.x + this.reduceHover + Math.random() * (this.width - this.reduceHover * 2);
-				let coinY = this.y + this.height / 2;
-				Coins.create(coinX, coinY);
+				this.createCoin();
 				Cursor.setCursor(Cursor.pickYellow);
 				FlyEarth.playSoundPick(mouseX);
 			}
@@ -139,6 +139,14 @@ export class FlyEarth extends Building{
 		}
 
 		return super.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn, isBuilderActive);
+	}
+
+	createCoin(){
+		let coinX = this.x + this.reduceHover * 2 + Math.random() * (this.width - this.reduceHover * 4);
+		let yMin = this.centerY + (this.width - Math.abs(this.centerX - coinX)) / 7 - 25;
+		let yMax = this.centerY + (this.width - Math.abs(this.centerX - coinX)) / 1.4 - 130;
+		let coinY = Helper.getRandom(yMin, yMax);
+		Coins.create(coinX, coinY);
 	}
 
 	createExplosionParticles(){
