@@ -1565,4 +1565,25 @@ cancel. возможность сбивать снаряды некромант�
 fixed. http://localhost:3000/test?v=72
 	баг когда убигает от второго зомби справа - он толкает левого зомби, а щит не активируется
 ok. добавить пылесос машине анимацию защиты - во время толкания монстров - что бы было понятно, что это не баг.
-	
+ok. создавать монетки от земли на разной высоте - это пофиксит странность для gold/diamond picker
+	отрисовка прямоугольной системы:
+		let flyEarth = Buildings.flyEarth;
+		let coinX = flyEarth.x + flyEarth.reduceHover * 2 + Math.random() * (flyEarth.width - flyEarth.reduceHover * 4);
+		let coinY = flyEarth.y + flyEarth.height / 2 + Math.random() * (flyEarth.height / 2 - flyEarth.reduceHover * 2);
+		for(let xx = flyEarth.x + flyEarth.reduceHover * 2; xx < flyEarth.x + flyEarth.reduceHover * 2 + flyEarth.width - flyEarth.reduceHover * 4; xx += 4){
+			for(let yy = flyEarth.y + flyEarth.height / 2; yy < flyEarth.y + flyEarth.height / 2 + flyEarth.height / 2 - flyEarth.reduceHover * 2; yy += 4){
+				Draw.ctx.fillStyle = 'red';
+				Draw.ctx.fillRect(xx, yy, 1, 1);
+				Draw.ctx.fillStyle = 'red';
+			}
+		}
+	отрисовка треугольной системы:
+		for(let xx = flyEarth.x + flyEarth.reduceHover * 2; xx < flyEarth.x + flyEarth.reduceHover * 2 + flyEarth.width - flyEarth.reduceHover * 4; xx += 2){
+			var yMin = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - xx)) / 7 - 25;
+			var yMax = flyEarth.centerY + (flyEarth.width - Math.abs(flyEarth.centerX - xx)) / 1.4 - 130;
+			for(let yy = yMin; yy < yMax; yy += 2){
+				Draw.ctx.fillStyle = 'green';
+				Draw.ctx.fillRect(xx, yy, 1, 1);
+				Draw.ctx.fillStyle = 'green';
+			}
+		}	

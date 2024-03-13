@@ -23,8 +23,6 @@ import {Helper} from '../helpers/Helper';
 
 import {Unit} from './Unit';
 
-import {Coins} from '../coins/Coins';
-
 import {WavesState} from '../gameSystems/WavesState';
 
 import ParameterItem from '../../models/ParameterItem';
@@ -388,9 +386,7 @@ export class Miner extends Unit{
 						let flyEarth = Buildings.flyEarth;
 						if(flyEarth){ //создание монетки
 							for(var i = 0; i < this._countCoinsDiging; i++){
-								let coinX = flyEarth.x + flyEarth.reduceHover + Math.random() * (flyEarth.width - flyEarth.reduceHover * 2);
-								let coinY = flyEarth.y + flyEarth.height / 2;
-								Coins.create(coinX, Math.max(coinY, this.y + this.height));
+								flyEarth.createCoin();
 								FlyEarth.playSoundPick(this.x + this.width, -30);
 							}
 							this._wasPickHit = true;
@@ -417,6 +413,9 @@ export class Miner extends Unit{
 		}
 		else if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs > 0 && !this.isRunRight){
 			this.isRunRight = true;
+			this._diggingAnimation.restart();
+			this._diggingArmorAnimation.restart();
+			this._diggingWeaponAnimation.restart();
 		}
 	}
 

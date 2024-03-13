@@ -83,7 +83,7 @@ last version: 0.18
 
 👲Miner
 
-<img src="https://clicker-defense.ru/static/media/readmy/Miner.gif" height="300" />
+<img src="https://clicker-defense.ru/static/media/readmy/Miner.gif?v=2" height="300" />
 
 attacked:
 
@@ -91,11 +91,11 @@ attacked:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: gold pickaxe
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerGoldPickare.gif" height="300" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerGoldPickare.gif?v=2" height="300" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: diamond pickaxe
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerDiamondPickare.gif" height="300" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/MinerDiamondPickare.gif?v=2" height="300" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: self-defense
 
@@ -117,7 +117,7 @@ attacked:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: vacuum car
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorVacuumCar.gif" height="200" />
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorVacuumCar.gif?v=2" height="200" />
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 🌟upgrade: wood armor
 
