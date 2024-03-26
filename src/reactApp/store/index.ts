@@ -1,6 +1,6 @@
 import * as MenuStore from '../components/Menu/MenuStore';
 import * as ShopStore from '../components/Shop/ShopStore';
-import * as PanelStore from '../components/Panel/PanelStore';
+import * as PanelsStore from '../components/Panels/PanelsStore';
 import * as BuildingButtonsStore from '../components/BuildingButtons/BuildingButtonsStore';
 import * as UnitButtonsStore from '../components/UnitButtons/UnitButtonsStore';
 import * as UpgradeStore from '../components/Upgrade/UpgradeStore';
@@ -10,7 +10,7 @@ import * as CoinLabelsStore from '../components/CoinLabels/CoinLabelsStore';
 export interface ApplicationState {
     menu: MenuStore.MenuState | undefined;
     shop: ShopStore.ShopState | undefined;
-    panel: PanelStore.PanelState | undefined;
+    panels: PanelsStore.PanelsState | undefined;
     buildingButtons: BuildingButtonsStore.BuildingButtonsState | undefined;
     unitButtons: UnitButtonsStore.UnitButtonsState | undefined;
     upgrade: UpgradeStore.UpgradeState | undefined;
@@ -23,7 +23,7 @@ export interface ApplicationState {
 export const reducers = {
     menu: MenuStore.reducer,
     shop: ShopStore.reducer,
-    panel: PanelStore.reducer,
+    panels: PanelsStore.reducer,
     buildingButtons: BuildingButtonsStore.reducer,
     unitButtons: UnitButtonsStore.reducer,
     upgrade: UpgradeStore.reducer,

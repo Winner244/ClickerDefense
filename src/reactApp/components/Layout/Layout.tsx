@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Menu from "../Menu/Menu";
 import Shop from "../Shop/Shop";
-import Panel from "../Panel/Panel";
+import Panels from "../Panels/Panels";
 import BuildingButtons from "../BuildingButtons/BuildingButtons";
 import UnitButtons from "../UnitButtons/UnitButtons";
 import GameDisplay from "../GameDisplay/GameDisplay";
@@ -18,7 +18,7 @@ export default class Layout extends React.Component<Props, {}> {
         return <div>
             <GameDisplay />
             {this.props.children}
-            <Panel />
+            <Panels />
             <BuildingButtons />
             <UnitButtons />
             <Shop />

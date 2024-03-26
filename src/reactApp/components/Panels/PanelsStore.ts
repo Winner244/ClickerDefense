@@ -3,7 +3,7 @@ import { Reducer } from 'redux';
 import Panel from '../../../models/Panel';
 
 // STATE
-export interface PanelState {
+export interface PanelsState {
     selectedItemId: string|null;
     panels: Panel[]
 }
@@ -11,28 +11,25 @@ export interface PanelState {
 // ACTIONS
 interface AddPanelAction { type: 'PANEL__ADD' }
 interface RemovePanelAction { type: 'PANEL__REMOVE', index: number }
-interface MovePanelAction { type: 'PANEL__MOVE', oldIndex: number, newIndex: number }
 
 interface SelectItemAction { type: 'PANEL__SELECT_ITEM', itemId: string }
 
-type KnownAction = AddPanelAction | RemovePanelAction | MovePanelAction | SelectItemAction;
+type KnownAction = AddPanelAction | RemovePanelAction | SelectItemAction;
 
 // ACTION CREATORS
 //for TypeScript
 export interface PanelAction {
     add: () => AddPanelAction;
     remove: (index: number) => RemovePanelAction;
-    move: (oldIndex: number, newIndex: number) => MovePanelAction;
     selectItem: (itemId: string) => SelectItemAction;
 }
 export const actionCreators = {
     add: () => <AddPanelAction>{ type: 'PANEL__ADD'},
     remove: (index: number) => <RemovePanelAction>{ type: 'PANEL__REMOVE', index: index },
-    move: (oldIndex: number, newIndex: number) => <MovePanelAction>{ type: 'PANEL__MOVE', newIndex: newIndex, oldIndex: oldIndex },
     selectItem: (itemId: string) => <SelectItemAction>{ type: 'PANEL__SELECT_ITEM', itemId: itemId},
 };
 
-function getDefaultState(): PanelState{
+function getDefaultState(): PanelsState{
     return {
         selectedItemId: null,
         panels: []
@@ -40,7 +37,7 @@ function getDefaultState(): PanelState{
 }
 
 // REDUCER 
-export const reducer: Reducer<PanelState> = (state: PanelState | undefined, action: KnownAction) => {
+export const reducer: Reducer<PanelsState> = (state: PanelsState | undefined, action: KnownAction) => {
     let newPanels: Panel[] = [];
     
     if(state){
@@ -54,11 +51,6 @@ export const reducer: Reducer<PanelState> = (state: PanelState | undefined, acti
 
         case 'PANEL__REMOVE':
             newPanels.splice(action.index, 1);
-            return Object.assign({}, getDefaultState(), { panels: newPanels });
-
-        case 'PANEL__MOVE':
-            let movedPanels = newPanels.splice(action.oldIndex, 1);
-            newPanels.splice(action.newIndex, 0, movedPanels[0]);
             return Object.assign({}, getDefaultState(), { panels: newPanels });
 
         case 'PANEL__SELECT_ITEM':

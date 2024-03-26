@@ -2,7 +2,7 @@
 
 import { App } from '../../App';
 import * as MenuStore from '../../components/Menu/MenuStore';
-import * as PanelStore from '../../components/Panel/PanelStore';
+import * as PanelsStore from '../../components/Panels/PanelsStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Buildings} from '../../../gameApp/buildings/Buildings';
@@ -3280,7 +3280,9 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-                App.Store.dispatch(PanelStore.actionCreators.add());
+                App.Store.dispatch(PanelsStore.actionCreators.add());
+                App.Store.dispatch(PanelsStore.actionCreators.add());
+                App.Store.dispatch(PanelsStore.actionCreators.add());
                 //TODO: add panel
             }
         },

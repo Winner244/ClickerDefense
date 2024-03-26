@@ -1,15 +1,18 @@
 .panels{
-	position: relative;
-	top: -3px;
-	text-align: center;
-    display: flex;
-    flex-direction: column;
-
+	&--bottom{
+		position: relative;
+		top: -3px;
+		text-align: center;
+		display: flex;
+		flex-direction: column;
+	}
+	
 	&--top{
 		position: absolute;
 		left: 0;
 		right: 0;
 		top: 0;
+		text-align: center;
 	}
 }
 
