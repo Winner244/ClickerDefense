@@ -2,7 +2,6 @@
 
 import { App } from '../../App';
 import * as MenuStore from '../../components/Menu/MenuStore';
-import * as PanelsStore from '../../components/Panels/PanelsStore';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {Buildings} from '../../../gameApp/buildings/Buildings';
@@ -11,7 +10,6 @@ import {Waves} from '../../../gameApp/gameSystems/Waves';
 import {WavesState} from '../../../gameApp/gameSystems/WavesState';
 import {WaveData} from "../../../models/WaveData";
 import {Helper} from '../../helpers/Helper';
-import {Helper as GameHelper}  from '../../../gameApp/helpers/Helper';
 import {Draw} from '../../../gameApp/gameSystems/Draw';
 import {Gamer} from "../../../gameApp/gamer/Gamer";
 import {Zombie} from "../../../gameApp/monsters/Zombie";
@@ -37,6 +35,7 @@ import { Collector } from '../../../gameApp/units/Collector';
 import './TestPage.scss';
 import { Coins } from '../../../gameApp/coins/Coins';
 import { Coin } from '../../../gameApp/coins/Coin';
+import { Panels } from '../../components/Panels/Panels';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -3280,10 +3279,14 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-                App.Store.dispatch(PanelsStore.actionCreators.add());
-                App.Store.dispatch(PanelsStore.actionCreators.add());
-                App.Store.dispatch(PanelsStore.actionCreators.add());
-                //TODO: add panel
+                Panels.add();
+                setTimeout(() => {
+                    Panels.add();
+                    
+                    setTimeout(() => {
+                        Panels.add();
+                    }, 3000);
+                }, 3000);
             }
         },
     ];

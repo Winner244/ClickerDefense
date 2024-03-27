@@ -1,7 +1,7 @@
 .panels{
 	&--bottom{
 		position: relative;
-		top: -3px;
+		top: -7px;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
@@ -13,6 +13,15 @@
 		right: 0;
 		top: 0;
 		text-align: center;
+		z-index: 2;
+	}
+
+	&--shift-top{
+		top: -115px !important;
+	}
+
+	&--transition{
+		transition: top 2s;
 	}
 }
 
@@ -23,11 +32,18 @@
 	padding: 15px 20px;
 	margin: auto;
 
-	&:nth-child(2) {
-		top: -15px;
+	&--bottom{
 		position: relative;
-		padding: 10px 15px; 
-		clip-path: inset(8px 0px -10px -10px);
+		top: 0;
+		&:nth-child(2) {
+			top: -12px;
+			padding: 10px 15px; 
+			z-index: -1;
+		}
+	}
+
+	&--clip-bottom{
+		clip-path: inset(0px 0px 4px 0px);
 	}
 
 	&--top{
