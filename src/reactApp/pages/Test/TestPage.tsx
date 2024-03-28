@@ -3266,7 +3266,7 @@ class TestPage extends React.Component {
 
         
         {
-            key: "Панель магии - добавление панели",
+            key: "Панель магии - добавление панелей",
             code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());

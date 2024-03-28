@@ -28,7 +28,7 @@ export class Buildings{
 	static flyEarth: FlyEarth; //ключевое воздушное здание
 	static flyEarthRope: FlyEarthRope; //ключивое наземное здание
 
-	static init(isLoadResources: boolean = true): void{
+	static init(): void{
 		this.all = [];
 
 		this.flyEarth = new FlyEarth(0, -1000);
@@ -107,17 +107,19 @@ export class Buildings{
 		if(!isGameOver){
 			for(let i = 0; i < this.all.length; i++)
 			{
+				 //проверка здоровья
 				let building = this.all[i];
-				if(this.all[i].health <= 0){ //проверка здоровья
+				if(this.all[i].health <= 0){
 					building.destroy();
 					this.explosions.push(new SimpleObject(building.x, building.y, building.width, building.height, this.explosionAnimation.durationMs));
 					this.all.splice(i, 1);
 					i--;
 					AudioSystem.play(building.centerX, ExplosionSound, 0, 2, false, true);
+					continue;
 				}
-				else{
-					building.logic(drawsDiffMs, this.all, monsters, units, bottomShiftBorder)
-				}
+
+				//логика строений
+				building.logic(drawsDiffMs, this.all, monsters, units, bottomShiftBorder)
 			}
 		}
 	}

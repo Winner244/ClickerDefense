@@ -34,6 +34,8 @@ import {FlyEarthRope} from '../buildings/FlyEarthRope';
 import {Tower} from '../buildings/Tower';
 import {Barricade} from '../buildings/Barricade';
 
+import {Magics} from '../magic/Magics';
+
 import {Helper} from '../helpers/Helper';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
@@ -88,12 +90,13 @@ export class Game {
 		Draw.init(canvas);
 		Mouse.init();
 		Units.init();
-		Buildings.init(isLoadResources);
+		Buildings.init();
 		Monsters.init(isLoadResources);
 		Coins.init(isLoadResources);
 		Gamer.init();
 		Labels.init();
 		Waves.init(isLoadResources);
+		Magics.init();
 
 		if(isLoadResources){
 			Menu.loadSelectSound();
@@ -233,6 +236,8 @@ export class Game {
 		Units.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Game.bottomShiftBorder);
 		
 		Coins.logic(drawsDiffMs, Game.bottomShiftBorder);
+
+		Magics.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Units.all, Game.bottomShiftBorder);
 		
 		Labels.logic(drawsDiffMs);
 
@@ -340,6 +345,8 @@ export class Game {
 	
 		Monsters.draw(drawsDiffMs, Game.isGameOver);
 		Monsters.drawModifiersAhead(drawsDiffMs, Game.isGameOver);
+
+		Magics.draw(drawsDiffMs, Game.isGameOver);
 	
 		Draw.drawGrass(Game.grassImage); 
 	
