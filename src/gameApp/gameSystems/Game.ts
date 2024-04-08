@@ -138,6 +138,7 @@ export class Game {
 			Builder.init(true);
 			Miner.initForShop();
 			Collector.initForShop();
+			Meteor.initForShop();
 		}
 		else{
 			if(Buildings.all.find(x => x.health < x.healthMax)){
@@ -496,21 +497,21 @@ export class Game {
 		}
 		else if(shopItem.category == ShopCategoryEnum.MAGIC){
 			
-			let promises: Promise<boolean>[] = [];
+			let promise: Promise<boolean>;
 			if(Meteor.shopItem == shopItem){
-				promises.push(Panels.addItemToPanel(new Meteor(0, 0)));
+				promise = Panels.addItemToPanel(new Meteor(0, 0));
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
 			}
 
-			Promise.all(promises).then(isSuccess => {
+			promise.then(isSuccess => {
 				if(isSuccess){
 					console.log('magic buy - succesful added to panel', shopItem);
 					
 					Gamer.coins -= shopItem.price;
-					//TODO: Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
-					//TODO: Coins.playSoundGet();
+					Labels.createCoinLabel(Mouse.x, Mouse.y, '-' + shopItem.price, 2000);
+					Coins.playSoundGet(Draw.canvas.width / 2);
 				}
 			});
 			console.log('magic buy', shopItem);

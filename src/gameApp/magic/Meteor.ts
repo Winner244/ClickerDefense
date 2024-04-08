@@ -14,19 +14,19 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
 import AnimationInfinite from '../../models/AnimationInfinite';
 
-import Image from '../../assets/img/magics/meteor/image.png';  
+import BaseImage from '../../assets/img/magics/meteor/image.png';  
 import AnimationImage from '../../assets/img/magics/meteor/animation.png';  
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
-	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
-
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
 	private static readonly imageAnimation: HTMLImageElement = new Image(); //картинка анимации магии
 	private static readonly imageAnimationFrames: number = 3;
 	private static readonly imageAnimationDuration: number = 100;
+
+	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
 	constructor(x: number, y: number)
 	{
@@ -38,9 +38,13 @@ export class Meteor extends Magic{
 			Meteor.imageHandler)
 	}
 
+	static initForShop(): void{
+		Meteor.image.src = BaseImage;
+	}
+
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources && Meteor.imageHandler.isEmpty){
-			Meteor.imageHandler.new(Meteor.image).src = Image;
+			Meteor.imageHandler.new(Meteor.image).src = BaseImage;
 			Meteor.imageHandler.new(Meteor.imageAnimation).src = AnimationImage;
 		}
 	}

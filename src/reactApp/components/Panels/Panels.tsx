@@ -16,6 +16,7 @@ import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
 interface Prop {
 }
@@ -26,6 +27,8 @@ type Props =
   & Prop;
 
 export class Panels extends React.Component<Props, {}> {
+
+
 
   private static addNewPanel(): Promise<boolean>{
     let countPanels = App.Store.getState().panels?.panels?.length || 0;
@@ -49,20 +52,32 @@ export class Panels extends React.Component<Props, {}> {
             document.getElementsByClassName("panel--bottom")[1].classList.remove("panels--shift-top");
             document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
           }
-          done(true);
+
+          setTimeout(() => done(true), 2500); //ожидаем полного появления панели
       }, 100);
      });
   }
+
+
 
   private static removePanel(index: number): void{
     App.Store.dispatch(PanelsStore.actionCreators.remove(index));
     //TODO: AudioSystem.load(RemovePanelSoundUrl);
   }
-  
-  static addItemToPanel(item: Magic): Promise<boolean>{
+
+
+
+  private static getFirstFreePanel(): Panel|undefined {
     let panels = App.Store.getState().panels?.panels;
-    let panelsWithFreePlace = panels?.filter(panel => panel?.items?.length < 10);
-    if (!panels?.length || !panelsWithFreePlace?.length){
+    let panelWithFreePlace = panels?.find(panel => panel?.items?.some(item => item == null));
+    return panelWithFreePlace;
+  }
+  
+
+
+  static addItemToPanel(item: Magic): Promise<boolean>{
+    let panelWithFreePlace = this.getFirstFreePanel();
+    if (!panelWithFreePlace){
       return this.addNewPanel().then(isSuccess => {
         if(isSuccess){
           return this._addItemToPanel(item);
@@ -70,22 +85,27 @@ export class Panels extends React.Component<Props, {}> {
 
         return false;
       });
-      ;
     }
 
     return new Promise((done, fail) => { done(this._addItemToPanel(item)) });
   }
 
+
+
   private static _addItemToPanel(item: Magic): boolean{
-    let freePanels = App.Store.getState().panels?.panels.filter(panel => panel.items.length < 10);
-    if (!freePanels?.length){
-      console.error('freePanels is empty in Panels._addItemToPanel', freePanels);
+    let panelWithFreePlace = this.getFirstFreePanel();
+    if (!panelWithFreePlace){
+      console.error('freePanels is empty in Panels._addItemToPanel');
       throw 'freePanels is empty in Panels._addItemToPanel';
     }
+    
+    let panels = App.Store.getState().panels?.panels;
+    let panelWithFreePlaceIndex = panels?.findIndex(panel => panel?.items?.some(item => item == null)) || 0;
 
-    freePanels[0].items.push(item);
+    let freePlaceIndex = panelWithFreePlace.items.findIndex(x => x == null);
+    App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
 
-    //TODO: AudioSystem.load(AddItemSoundUrl);
+    AudioSystem.load(AddingItemSoundUrl);
     return true;
   }
 

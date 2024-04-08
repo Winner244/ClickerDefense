@@ -1,6 +1,7 @@
 import { Reducer } from 'redux';
 
 import Panel from '../../../models/Panel';
+import {Magic} from '../../../gameApp/magic/Magic';
 
 // STATE
 export interface PanelsState {
@@ -12,19 +13,23 @@ export interface PanelsState {
 interface AddPanelAction { type: 'PANEL__ADD' }
 interface RemovePanelAction { type: 'PANEL__REMOVE', index: number }
 
+interface AddItemAction { type: 'PANEL__ADD_ITEM', panelIndex: number, placeIndex: number, item: Magic }
+
 interface SelectItemAction { type: 'PANEL__SELECT_ITEM', itemId: string }
 
-type KnownAction = AddPanelAction | RemovePanelAction | SelectItemAction;
+type KnownAction = AddPanelAction | RemovePanelAction | AddItemAction | SelectItemAction;
 
 // ACTION CREATORS
 //for TypeScript
 export interface PanelAction {
     add: () => AddPanelAction;
+    addItem: (panelIndex: number, placeIndex: number, item: Magic) => AddItemAction;
     remove: (index: number) => RemovePanelAction;
     selectItem: (itemId: string) => SelectItemAction;
 }
 export const actionCreators = {
     add: () => <AddPanelAction>{ type: 'PANEL__ADD'},
+    addItem: (panelIndex: number, placeIndex: number, item: Magic) => <AddItemAction>{ type: 'PANEL__ADD_ITEM', panelIndex, placeIndex, item },
     remove: (index: number) => <RemovePanelAction>{ type: 'PANEL__REMOVE', index: index },
     selectItem: (itemId: string) => <SelectItemAction>{ type: 'PANEL__SELECT_ITEM', itemId: itemId},
 };
@@ -51,6 +56,10 @@ export const reducer: Reducer<PanelsState> = (state: PanelsState | undefined, ac
 
         case 'PANEL__REMOVE':
             newPanels.splice(action.index, 1);
+            return Object.assign({}, getDefaultState(), { panels: newPanels });
+
+        case 'PANEL__ADD_ITEM':
+            newPanels[action.panelIndex].items.splice(action.placeIndex, 0, action.item);
             return Object.assign({}, getDefaultState(), { panels: newPanels });
 
         case 'PANEL__SELECT_ITEM':
