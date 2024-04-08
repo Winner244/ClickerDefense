@@ -25,8 +25,8 @@ export class Meteor extends Magic{
 
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
 	private static readonly imageAnimation: HTMLImageElement = new Image(); //картинка анимации магии
-	private static readonly imageAnimationFrames: number = 10;
-	private static readonly imageAnimationDuration: number = 1000;
+	private static readonly imageAnimationFrames: number = 3;
+	private static readonly imageAnimationDuration: number = 100;
 
 	constructor(x: number, y: number)
 	{

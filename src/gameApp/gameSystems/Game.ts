@@ -35,11 +35,13 @@ import {Tower} from '../buildings/Tower';
 import {Barricade} from '../buildings/Barricade';
 
 import {Magics} from '../magic/Magics';
+import {Meteor} from '../magic/Meteor';
 
 import {Helper} from '../helpers/Helper';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 import {Shop} from '../../reactApp/components/Shop/Shop';
+import {Panels} from '../../reactApp/components/Panels/Panels';
 import {Upgrade} from '../../reactApp/components/Upgrade/Upgrade';
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
 import {UnitButtons} from '../../reactApp/components/UnitButtons/UnitButtons';
@@ -491,6 +493,27 @@ export class Game {
 			Gamer.coins -= shopItem.price;
 			Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
 			Coins.playSoundGet(newUnit.x);
+		}
+		else if(shopItem.category == ShopCategoryEnum.MAGIC){
+			
+			let promises: Promise<boolean>[] = [];
+			if(Meteor.shopItem == shopItem){
+				promises.push(Panels.addItemToPanel(new Meteor(0, 0)));
+			}
+			else{
+				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
+			}
+
+			Promise.all(promises).then(isSuccess => {
+				if(isSuccess){
+					console.log('magic buy - succesful added to panel', shopItem);
+					
+					Gamer.coins -= shopItem.price;
+					//TODO: Labels.createCoinLabel(newUnit.x + newUnit.width / 2, newUnit.y + newUnit.height / 2, '-' + shopItem.price, 2000);
+					//TODO: Coins.playSoundGet();
+				}
+			});
+			console.log('magic buy', shopItem);
 		}
 		else{
 			throw `unexpected shopItem category = '${shopItem.category}'`;

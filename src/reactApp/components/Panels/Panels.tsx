@@ -8,6 +8,8 @@ import { App } from '../../App';
 
 import Panel from '../../../models/Panel';
 
+import {Magic} from '../../../gameApp/magic/Magic';
+
 import './Panels.scss';
 
 import {Mouse} from '../../../gameApp/gamer/Mouse';
@@ -25,33 +27,66 @@ type Props =
 
 export class Panels extends React.Component<Props, {}> {
 
-  static add(): void{
-    let countPanels = App.Store.getState().panels?.panels.length;
+  private static addNewPanel(): Promise<boolean>{
+    let countPanels = App.Store.getState().panels?.panels?.length || 0;
     if (countPanels && countPanels >= 3){
       console.error("Can't add new panel. Count of panels is maximum!");
-      return;
+      return new Promise((done, fail) => { done(false) });
     }
 
     App.Store.dispatch(PanelsStore.actionCreators.add());
-    //TODO: AudioSystem.load(AddSoundUrl);
+    //TODO: AudioSystem.load(AddPanelSoundUrl);
 
-    setTimeout(() => {
-        if(countPanels == 0){
-          document.getElementsByClassName("panels--top")[0].classList.remove("panels--shift-top");
-        }
-        else if(countPanels == 1){
-          document.getElementsByClassName("panel--bottom")[0].classList.remove("panels--shift-top");
-        }
-        else if(countPanels == 2){
-          document.getElementsByClassName("panel--bottom")[1].classList.remove("panels--shift-top");
-          document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
-        }
-    }, 100);
+    return new Promise((done, fail) => { 
+      setTimeout(() => {
+          if(countPanels == 0){
+            document.getElementsByClassName("panels--top")[0].classList.remove("panels--shift-top");
+          }
+          else if(countPanels == 1){
+            document.getElementsByClassName("panel--bottom")[0].classList.remove("panels--shift-top");
+          }
+          else if(countPanels == 2){
+            document.getElementsByClassName("panel--bottom")[1].classList.remove("panels--shift-top");
+            document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
+          }
+          done(true);
+      }, 100);
+     });
   }
 
-  static remove(index: number): void{
+  private static removePanel(index: number): void{
     App.Store.dispatch(PanelsStore.actionCreators.remove(index));
-    //TODO: AudioSystem.load(RemoveSoundUrl);
+    //TODO: AudioSystem.load(RemovePanelSoundUrl);
+  }
+  
+  static addItemToPanel(item: Magic): Promise<boolean>{
+    let panels = App.Store.getState().panels?.panels;
+    let panelsWithFreePlace = panels?.filter(panel => panel?.items?.length < 10);
+    if (!panels?.length || !panelsWithFreePlace?.length){
+      return this.addNewPanel().then(isSuccess => {
+        if(isSuccess){
+          return this._addItemToPanel(item);
+        }
+
+        return false;
+      });
+      ;
+    }
+
+    return new Promise((done, fail) => { done(this._addItemToPanel(item)) });
+  }
+
+  private static _addItemToPanel(item: Magic): boolean{
+    let freePanels = App.Store.getState().panels?.panels.filter(panel => panel.items.length < 10);
+    if (!freePanels?.length){
+      console.error('freePanels is empty in Panels._addItemToPanel', freePanels);
+      throw 'freePanels is empty in Panels._addItemToPanel';
+    }
+
+    freePanels[0].items.push(item);
+
+    //TODO: AudioSystem.load(AddItemSoundUrl);
+    return true;
   }
 
   onKey(event: KeyboardEvent){

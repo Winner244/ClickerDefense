@@ -2,10 +2,14 @@ import { Reducer } from 'redux';
 
 import {ShopCategoryEnum} from '../../../enum/ShopCategoryEnum';
 import ShopItem from '../../../models/ShopItem';
-import { Barricade } from '../../../gameApp/buildings/Barricade';
-import { Tower } from '../../../gameApp/buildings/Tower';
-import { Miner } from '../../../gameApp/units/Miner';
-import { Collector } from '../../../gameApp/units/Collector';
+
+import {Barricade} from '../../../gameApp/buildings/Barricade';
+import {Tower} from '../../../gameApp/buildings/Tower';
+
+import {Miner} from '../../../gameApp/units/Miner';
+import {Collector} from '../../../gameApp/units/Collector';
+
+import {Meteor} from '../../../gameApp/magic/Meteor';
 
 // STATE
 export interface ShopState {
@@ -61,7 +65,9 @@ function getDefaultOpenState(): ShopState{
         selectedCategory: ShopCategoryEnum.ALL,
         selectedItemNames: [],
         items: {
-            [ShopCategoryEnum.MAGIC]: [],
+            [ShopCategoryEnum.MAGIC]: [
+                Meteor.shopItem
+            ],
             [ShopCategoryEnum.BUILDINGS]: [
                 Barricade.shopItem,
                 Tower.shopItem

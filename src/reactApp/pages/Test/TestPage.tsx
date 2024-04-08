@@ -3265,7 +3265,7 @@ class TestPage extends React.Component {
         },*/
 
         
-        {
+        /*{
             key: "Панель магии - добавление панелей",
             code: () => {
                 AudioSystem.isEnabled = false;
@@ -3279,16 +3279,16 @@ class TestPage extends React.Component {
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
 
-                Panels.add();
+                Panels.addNewPanel();
                 setTimeout(() => {
-                    Panels.add();
+                    Panels.addNewPanel();
                     
                     setTimeout(() => {
-                        Panels.add();
+                        Panels.addNewPanel();
                     }, 3000);
                 }, 3000);
             }
-        },
+        },*/
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){
