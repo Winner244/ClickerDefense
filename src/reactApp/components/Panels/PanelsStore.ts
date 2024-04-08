@@ -59,7 +59,7 @@ export const reducer: Reducer<PanelsState> = (state: PanelsState | undefined, ac
             return Object.assign({}, getDefaultState(), { panels: newPanels });
 
         case 'PANEL__ADD_ITEM':
-            newPanels[action.panelIndex].items.splice(action.placeIndex, 0, action.item);
+            newPanels[action.panelIndex].items.splice(action.placeIndex, 1, action.item);
             return Object.assign({}, getDefaultState(), { panels: newPanels });
 
         case 'PANEL__SELECT_ITEM':

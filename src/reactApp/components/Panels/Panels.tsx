@@ -37,6 +37,7 @@ export class Panels extends React.Component<Props, {}> {
       return new Promise((done, fail) => { done(false) });
     }
 
+    AudioSystem.load(AddingItemSoundUrl);
     App.Store.dispatch(PanelsStore.actionCreators.add());
     //TODO: AudioSystem.load(AddPanelSoundUrl);
 
@@ -53,7 +54,7 @@ export class Panels extends React.Component<Props, {}> {
             document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
           }
 
-          setTimeout(() => done(true), 2500); //ожидаем полного появления панели
+          setTimeout(() => done(true), 2000); //ожидаем полного появления панели
       }, 100);
      });
   }
@@ -105,7 +106,7 @@ export class Panels extends React.Component<Props, {}> {
     let freePlaceIndex = panelWithFreePlace.items.findIndex(x => x == null);
     App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
 
-    AudioSystem.load(AddingItemSoundUrl);
+    AudioSystem.play(0, AddingItemSoundUrl); //TODO: x
     return true;
   }
 
