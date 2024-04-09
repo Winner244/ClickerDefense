@@ -35,7 +35,9 @@ export class Meteor extends Magic{
 			Meteor.image, 
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationDuration, Meteor.imageAnimation), 
 			null, //lifeTime
-			Meteor.imageHandler)
+			Meteor.imageHandler);
+
+		Meteor.init(true);
 	}
 
 	static initForShop(): void{

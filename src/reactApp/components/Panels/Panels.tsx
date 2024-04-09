@@ -134,16 +134,16 @@ export class Panels extends React.Component<Props, {}> {
 
   renderPanel(panel: Panel, index: number, isTop: boolean){
     return <div className={"panel " + (isTop ? "panel--top" : "panel--bottom panels--shift-top panels--transition")} key={index}>
-        {panel.items.map((item, index2) => (
+        {panel.items.map((item: Magic, index2) => (
           <div key={index2} 
             onClick={() => this.onClickSelectItem(item?.id)}
             className={"panel__item " + ((this.props.selectedItemId != null && this.props.selectedItemId == item?.id) ? 'panel__item--selected ' : '')}>
               {item == null 
                 ? null 
-                : <div>
-                    <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />
-                    <div className="panel__item-number">{index2}</div>
-                  </div>}
+                : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
+              {item == null 
+                ? null 
+                : <div className="panel__item-number noselect">{(index2 + 1) % 10}</div>}
           </div>
         ))}
     </div>

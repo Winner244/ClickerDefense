@@ -1,4 +1,4 @@
-import { Magic } from "../gameApp/magic/Magic";
+import {Magic} from "../gameApp/magic/Magic";
 
 export default class Panel{
 	public isTop: boolean; //else - bottom
