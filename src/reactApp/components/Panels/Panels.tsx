@@ -15,7 +15,8 @@ import './Panels.scss';
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
-import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
+import SelectingSoundUrl from '../../../assets/sounds/menu/panel-open.mp3'; 
+import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
 import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
 interface Prop {
@@ -38,8 +39,10 @@ export class Panels extends React.Component<Props, {}> {
     }
 
     AudioSystem.load(AddingItemSoundUrl);
+    AudioSystem.load(AddingPanelSoundUrl);
     App.Store.dispatch(PanelsStore.actionCreators.add());
-    //TODO: AudioSystem.load(AddPanelSoundUrl);
+
+    setTimeout(() => AudioSystem.play(-1, AddingPanelSoundUrl, -1), 200);
 
     return new Promise((done, fail) => { 
       setTimeout(() => {
@@ -54,7 +57,7 @@ export class Panels extends React.Component<Props, {}> {
             document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
           }
 
-          setTimeout(() => done(true), 2000); //ожидаем полного появления панели
+          setTimeout(() => done(true), 1000); //ожидаем полного появления панели
       }, 100);
      });
   }
@@ -106,7 +109,7 @@ export class Panels extends React.Component<Props, {}> {
     let freePlaceIndex = panelWithFreePlace.items.findIndex(x => x == null);
     App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
 
-    AudioSystem.play(0, AddingItemSoundUrl); //TODO: x
+    AudioSystem.play(-1, AddingItemSoundUrl);
     return true;
   }
 

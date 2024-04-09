@@ -21,7 +21,7 @@
 	}
 
 	&--transition{
-		transition: top 2s;
+		transition: top 1s cubic-bezier(.57,.21,.69,1.25);
 	}
 }
 
