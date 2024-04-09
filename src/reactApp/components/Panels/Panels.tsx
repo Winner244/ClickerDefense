@@ -29,7 +29,10 @@ type Props =
 
 export class Panels extends React.Component<Props, {}> {
 
-
+  public static countAllItems(): number{
+    let panels = App.Store.getState().panels?.panels;
+    return panels?.reduce((partialSum, panel) => partialSum + panel.items.filter(item => item != null).length, 0) || 0;
+  }
 
   private static addNewPanel(): Promise<boolean>{
     let countPanels = App.Store.getState().panels?.panels?.length || 0;

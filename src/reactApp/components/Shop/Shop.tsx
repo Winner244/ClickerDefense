@@ -20,6 +20,8 @@ import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import ShopItem from '../../../models/ShopItem';
 
+import {Panels} from '../Panels/Panels';
+
 import {ShopCategoryEnum, ShopCategory} from '../../../enum/ShopCategoryEnum';
 
 import CoinImage from '../../../assets/img/coin.png';
@@ -130,6 +132,9 @@ export class Shop extends React.Component<Props, {}> {
       }
       else if(item.category == ShopCategoryEnum.UNITS){
         isDisabled = Units.all.filter(x => x.shopItemName == item.name).length >= item.maxCount;
+      }
+      else if(item.category == ShopCategoryEnum.MAGIC){
+        isDisabled = Panels.countAllItems() >= item.maxCount;
       }
     }
 
