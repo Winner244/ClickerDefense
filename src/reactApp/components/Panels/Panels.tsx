@@ -45,7 +45,7 @@ export class Panels extends React.Component<Props, {}> {
     AudioSystem.load(AddingPanelSoundUrl);
     App.Store.dispatch(PanelsStore.actionCreators.add());
 
-    setTimeout(() => AudioSystem.play(-1, AddingPanelSoundUrl, -1), 200);
+    setTimeout(() => AudioSystem.play(-1, AddingPanelSoundUrl, -5), 200);
 
     return new Promise((done, fail) => { 
       setTimeout(() => {
@@ -110,6 +110,19 @@ export class Panels extends React.Component<Props, {}> {
     let panelWithFreePlaceIndex = panels?.findIndex(panel => panel?.items?.some(item => item == null)) || 0;
 
     let freePlaceIndex = panelWithFreePlace.items.findIndex(x => x == null);
+
+    let element = document.getElementsByClassName(`panel${panelWithFreePlaceIndex}__item${freePlaceIndex}`);
+    if (element.length > 0){
+      if(element[0].classList.contains("panel__item--transition-color")){
+        element[0].classList.replace("panel__item--transition-color", "panel__item--yellow");
+      }
+      else{
+        element[0].classList.add("panel__item--yellow");
+      }
+      setTimeout(() => element[0].classList.add("panel__item--transition-color"), 200);
+      setTimeout(() => element[0].classList.remove("panel__item--yellow"), 300);
+    }
+
     App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
 
     AudioSystem.play(-1, AddingItemSoundUrl);
@@ -143,7 +156,7 @@ export class Panels extends React.Component<Props, {}> {
         {panel.items.map((item: Magic, index2) => (
           <div key={index2} 
             onClick={() => this.onClickSelectItem(item?.id)}
-            className={"panel__item " + ((this.props.selectedItemId != null && this.props.selectedItemId == item?.id) ? 'panel__item--selected ' : '')}>
+            className={"panel__item " + ` panel${index}__item${index2} ` + ((this.props.selectedItemId != null && this.props.selectedItemId == item?.id) ? 'panel__item--selected ' : '')}>
               {item == null 
                 ? null 
                 : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}

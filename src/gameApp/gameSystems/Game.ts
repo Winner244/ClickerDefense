@@ -507,14 +507,11 @@ export class Game {
 
 			promise.then(isSuccess => {
 				if(isSuccess){
-					console.log('magic buy - succesful added to panel', shopItem);
-					
 					Gamer.coins -= shopItem.price;
 					Labels.createCoinLabel(Mouse.x, Mouse.y, '-' + shopItem.price, 2000);
 					Coins.playSoundGet(Draw.canvas.width / 2);
 				}
 			});
-			console.log('magic buy', shopItem);
 		}
 		else{
 			throw `unexpected shopItem category = '${shopItem.category}'`;
