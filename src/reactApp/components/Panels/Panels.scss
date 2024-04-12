@@ -91,5 +91,13 @@
 		&--transition-color{
 			transition: background-color 1s;
 		}
+
+		&-canvas{
+			position: absolute;
+			left: -120px;
+			top: -120px;
+			z-index: 3;
+			display: none;
+		}
 	}
 }

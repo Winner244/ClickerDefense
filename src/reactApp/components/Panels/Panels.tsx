@@ -9,6 +9,8 @@ import { App } from '../../App';
 import Panel from '../../../models/Panel';
 import {BaseObject} from '../../../models/BaseObject';
 
+import Animation from '../../../models/Animation';
+
 import {Magic} from '../../../gameApp/magic/Magic';
 
 import './Panels.scss';
@@ -20,6 +22,8 @@ import SelectingSoundUrl from '../../../assets/sounds/menu/panel-open.mp3';
 import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
 import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
+import AddingImage from '../../../assets/img/magics/adding.png'; 
+
 interface Prop {
 }
 
@@ -29,6 +33,8 @@ type Props =
   & Prop;
 
 export class Panels extends React.Component<Props, {}> {
+
+	private static readonly imageAdding: HTMLImageElement = new Image(); //анимация добавления элемента
 
   public static countAllItems(): number{
     let panels = App.Store.getState().panels?.panels;
@@ -42,8 +48,10 @@ export class Panels extends React.Component<Props, {}> {
       return new Promise((done, fail) => { done(false) });
     }
 
-    AudioSystem.load(AddingItemSoundUrl);
-    AudioSystem.load(AddingPanelSoundUrl);
+    if(countPanels == 0){
+      this.initAddingItem();
+    }
+
     App.Store.dispatch(PanelsStore.actionCreators.add());
 
     setTimeout(() => AudioSystem.play(-1, AddingPanelSoundUrl, -5), 200);
@@ -66,24 +74,24 @@ export class Panels extends React.Component<Props, {}> {
      });
   }
 
-
+  private static initAddingItem(){
+    AudioSystem.load(AddingItemSoundUrl);
+    AudioSystem.load(AddingPanelSoundUrl);
+    this.imageAdding.src = AddingImage;
+  }
 
   private static removePanel(index: number): void{
     App.Store.dispatch(PanelsStore.actionCreators.remove(index));
     //TODO: AudioSystem.load(RemovePanelSoundUrl);
   }
 
-
-
   private static getFirstFreePanel(): Panel|undefined {
     let panels = App.Store.getState().panels?.panels;
     let panelWithFreePlace = panels?.find(panel => panel?.items?.some(item => item == null));
     return panelWithFreePlace;
   }
-  
 
-
-  static addItemToPanel(item: Magic): Promise<BaseObject|null>{
+  public static addItemToPanel(item: Magic): Promise<BaseObject|null>{
     let panelWithFreePlace = this.getFirstFreePanel();
     if (!panelWithFreePlace){
       return this.addNewPanel().then(isSuccess => {
@@ -98,8 +106,6 @@ export class Panels extends React.Component<Props, {}> {
     return new Promise((done, fail) => { done(this._addItemToPanel(item)) });
   }
 
-
-
   private static _addItemToPanel(item: Magic): BaseObject|null{
     let panelWithFreePlace = this.getFirstFreePanel();
     if (!panelWithFreePlace){
@@ -112,32 +118,76 @@ export class Panels extends React.Component<Props, {}> {
 
     let freePlaceIndex = panelWithFreePlace.items.findIndex(x => x == null);
 
-    let element = document.getElementsByClassName(`panel${panelWithFreePlaceIndex}__item${freePlaceIndex}`);
-    if (element.length > 0){
-      if(element[0].classList.contains("panel__item--transition-color")){
-        element[0].classList.replace("panel__item--transition-color", "panel__item--yellow");
-      }
-      else{
-        element[0].classList.add("panel__item--yellow");
-      }
-      setTimeout(() => element[0].classList.add("panel__item--transition-color"), 200);
-      setTimeout(() => element[0].classList.remove("panel__item--yellow"), 300);
-
-      let elementPosition = element[0].getBoundingClientRect();
-      let x = elementPosition.x;
-      let y = elementPosition.y;
-      let width = elementPosition.width;
-      let height = elementPosition.height;
-
-      App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
-
-      AudioSystem.play(-1, AddingItemSoundUrl);
-      return new BaseObject(x, y, width, height);
+    let classItem = `panel${panelWithFreePlaceIndex}__item${freePlaceIndex}`;
+    let elements = document.getElementsByClassName(classItem);
+    if (!elements.length){
+      console.error('element not found in the panel!', classItem);
+      return null;
     }
 
-    console.error('element not found in the panel!', `panel${panelWithFreePlaceIndex}__item${freePlaceIndex}`);
-    return null;
+    let element = elements[0];
+    if(element.classList.contains("panel__item--transition-color")){
+      element.classList.replace("panel__item--transition-color", "panel__item--yellow");
+    }
+    else{
+      element.classList.add("panel__item--yellow");
+    }
+    setTimeout(() => element.classList.add("panel__item--transition-color"), 200);
+    setTimeout(() => element.classList.remove("panel__item--yellow"), 300);
+
+    let elementPosition = element.getBoundingClientRect();
+    let x = elementPosition.x;
+    let y = elementPosition.y;
+    let width = elementPosition.width;
+    let height = elementPosition.height;
+
+    App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
+
+    AudioSystem.play(-1, AddingItemSoundUrl);
+
+    this.startAnimation(panelWithFreePlaceIndex, freePlaceIndex);
+
+    return new BaseObject(x, y, width, height);
   }
+
+  static startAnimation(panelIndex: number, itemIndex: number){
+    let classItem = `panel${panelIndex}__item${itemIndex}-canvas`;
+    let elements = document.getElementsByClassName(classItem);
+    if (!elements.length){
+      console.error('canvas not found in the panel!', classItem);
+      return;
+    }
+
+    let canvas: HTMLCanvasElement = elements[0] as HTMLCanvasElement;
+    canvas.style.display = 'block';
+		let ctx = canvas.getContext('2d') || new CanvasRenderingContext2D();
+    let animation = new Animation(9, 9 * 100, this.imageAdding, ctx);
+
+
+    let lastDrawTime: number = 0;
+    let animationCallback = (millisecondsFromStart: number) => {
+      if(!lastDrawTime){
+        lastDrawTime = millisecondsFromStart - 10;
+      }
+
+		  let drawsDiffMs = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
+      lastDrawTime = millisecondsFromStart;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      animation.draw(drawsDiffMs, false, 0, 0, 320, 320);
+
+      if (animation.leftTimeMs > 0){
+        window.requestAnimationFrame(animationCallback);
+      }
+      else{
+        canvas.style.display = 'none';
+      }
+    };
+
+    window.requestAnimationFrame(animationCallback);
+  }
+
+
 
   onKey(event: KeyboardEvent){
     if(!this.props.panels?.length){
@@ -173,6 +223,7 @@ export class Panels extends React.Component<Props, {}> {
               {item == null 
                 ? null 
                 : <div className="panel__item-number noselect">{(index2 + 1) % 10}</div>}
+              <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
           </div>
         ))}
     </div>
