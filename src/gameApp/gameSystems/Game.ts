@@ -8,6 +8,8 @@ import {WavesState} from './WavesState';
 
 import {Labels} from '../labels/Labels';
 
+import {BaseObject} from '../../models/BaseObject';
+
 import {FPS} from '../FPS';
 
 import {Mouse} from '../gamer/Mouse';
@@ -497,7 +499,7 @@ export class Game {
 		}
 		else if(shopItem.category == ShopCategoryEnum.MAGIC){
 			
-			let promise: Promise<boolean>;
+			let promise: Promise<BaseObject|null>;
 			if(Meteor.shopItem == shopItem){
 				promise = Panels.addItemToPanel(new Meteor(0, 0));
 			}
@@ -505,11 +507,16 @@ export class Game {
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
 			}
 
-			promise.then(isSuccess => {
-				if(isSuccess){
+			promise.then(itemPosition => {
+				if(itemPosition){
+					let x = itemPosition.location.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+					let y = itemPosition.location.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+					if (itemPosition.location.y > Draw.canvas.height){
+						y = Draw.canvas.height - 60;
+					}
 					Gamer.coins -= shopItem.price;
-					Labels.createCoinLabel(Mouse.x, Mouse.y, '-' + shopItem.price, 2000);
-					Coins.playSoundGet(Draw.canvas.width / 2);
+					Labels.createCoinLabel(x + itemPosition.size.width - 25, y + itemPosition.size.height - 15, '-' + shopItem.price, 2000);
+					Coins.playSoundGet(itemPosition.centerX);
 				}
 			});
 		}

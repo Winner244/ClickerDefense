@@ -7,6 +7,7 @@ import * as PanelsStore from './PanelsStore';
 import { App } from '../../App';
 
 import Panel from '../../../models/Panel';
+import {BaseObject} from '../../../models/BaseObject';
 
 import {Magic} from '../../../gameApp/magic/Magic';
 
@@ -60,7 +61,7 @@ export class Panels extends React.Component<Props, {}> {
             document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
           }
 
-          setTimeout(() => done(true), 1000); //ожидаем полного появления панели
+          setTimeout(() => done(true), 1200); //ожидаем полного появления панели
       }, 100);
      });
   }
@@ -82,7 +83,7 @@ export class Panels extends React.Component<Props, {}> {
   
 
 
-  static addItemToPanel(item: Magic): Promise<boolean>{
+  static addItemToPanel(item: Magic): Promise<BaseObject|null>{
     let panelWithFreePlace = this.getFirstFreePanel();
     if (!panelWithFreePlace){
       return this.addNewPanel().then(isSuccess => {
@@ -90,7 +91,7 @@ export class Panels extends React.Component<Props, {}> {
           return this._addItemToPanel(item);
         }
 
-        return false;
+        return null;
       });
     }
 
@@ -99,7 +100,7 @@ export class Panels extends React.Component<Props, {}> {
 
 
 
-  private static _addItemToPanel(item: Magic): boolean{
+  private static _addItemToPanel(item: Magic): BaseObject|null{
     let panelWithFreePlace = this.getFirstFreePanel();
     if (!panelWithFreePlace){
       console.error('freePanels is empty in Panels._addItemToPanel');
@@ -121,12 +122,21 @@ export class Panels extends React.Component<Props, {}> {
       }
       setTimeout(() => element[0].classList.add("panel__item--transition-color"), 200);
       setTimeout(() => element[0].classList.remove("panel__item--yellow"), 300);
+
+      let elementPosition = element[0].getBoundingClientRect();
+      let x = elementPosition.x;
+      let y = elementPosition.y;
+      let width = elementPosition.width;
+      let height = elementPosition.height;
+
+      App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
+
+      AudioSystem.play(-1, AddingItemSoundUrl);
+      return new BaseObject(x, y, width, height);
     }
 
-    App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
-
-    AudioSystem.play(-1, AddingItemSoundUrl);
-    return true;
+    console.error('element not found in the panel!', `panel${panelWithFreePlaceIndex}__item${freePlaceIndex}`);
+    return null;
   }
 
   onKey(event: KeyboardEvent){
@@ -182,7 +192,7 @@ export class Panels extends React.Component<Props, {}> {
         </div>
 
         <div className='panels--bottom'>
-          {this.props.panels.slice(countTopPanels).map((panel, index) => this.renderPanel(panel, index, false))}
+          {this.props.panels.slice(countTopPanels).map((panel, index) => this.renderPanel(panel, index + 1, false))}
         </div>
       </div>
     );
