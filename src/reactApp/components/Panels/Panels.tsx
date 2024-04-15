@@ -222,7 +222,7 @@ export class Panels extends React.Component<Props, {}> {
                 : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
               {item == null 
                 ? null 
-                : <div className="panel__item-number noselect">{(index2 + 1) % 10}</div>}
+                : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Ctrl + " : ""}{(index2 + 1) % 10}</div>}
               <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
           </div>
         ))}
