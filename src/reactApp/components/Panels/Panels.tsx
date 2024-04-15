@@ -213,19 +213,31 @@ export class Panels extends React.Component<Props, {}> {
 
   renderPanel(panel: Panel, index: number, isTop: boolean){
     return <div className={"panel " + (isTop ? "panel--top" : "panel--bottom panels--shift-top panels--transition")} key={index}>
-        {panel.items.map((item: Magic, index2) => (
-          <div key={index2} 
-            onClick={() => this.onClickSelectItem(item?.id)}
-            className={"panel__item " + ` panel${index}__item${index2} ` + ((this.props.selectedItemId != null && this.props.selectedItemId == item?.id) ? 'panel__item--selected ' : '')}>
-              {item == null 
-                ? null 
-                : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
-              {item == null 
-                ? null 
-                : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Ctrl + " : ""}{(index2 + 1) % 10}</div>}
-              <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
-          </div>
-        ))}
+        {panel.items.map((item: Magic, index2) => {
+          let className = `panel__item  panel${index}__item${index2} `;
+
+          if(this.props.selectedItemId != null && this.props.selectedItemId == item?.id){
+            className += ' panel__item--selected ';
+          }
+
+          if(item != null){
+            //className += ' panel__item--not-empty ';
+          }
+
+          return (
+            <div key={index2} 
+              onClick={() => this.onClickSelectItem(item?.id)}
+              className={className}>
+                {item == null 
+                  ? null 
+                  : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
+                {item == null 
+                  ? null 
+                  : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Ctrl + " : ""}{(index2 + 1) % 10}</div>}
+                <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
+            </div>
+          );
+        })}
     </div>
   }
 

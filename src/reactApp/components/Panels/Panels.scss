@@ -100,5 +100,11 @@
 			z-index: 3;
 			display: none;
 		}
+
+		&--not-empty{
+			&:hover{
+				background-color: yellowgreen;
+			}
+		}
 	}
 }
