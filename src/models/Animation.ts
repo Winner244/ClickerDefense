@@ -53,7 +53,7 @@ export default class Animation extends AnimationBase {
 
 		this.lastFrame = frame;
 
-		this.canvas.drawImage(this.getImage(filter), 
+		(this.canvas || Draw.ctx).drawImage(this.getImage(filter), 
 			this.image.width / this.frames * frame, //crop from x
 			0, //crop from y
 			this.image.width / this.frames, //crop by width
