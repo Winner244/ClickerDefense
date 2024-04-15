@@ -161,7 +161,7 @@ export class Panels extends React.Component<Props, {}> {
     let canvas: HTMLCanvasElement = elements[0] as HTMLCanvasElement;
     canvas.style.display = 'block';
 		let ctx = canvas.getContext('2d') || new CanvasRenderingContext2D();
-    let animation = new Animation(9, 9 * 100, this.imageAdding, ctx);
+    let animation = new Animation(31, 31 * 50, this.imageAdding, ctx);
 
 
     let lastDrawTime: number = 0;
