@@ -194,6 +194,23 @@ export class Panels extends React.Component<Props, {}> {
       return;
     }
 
+    if(event.code.indexOf("Digit") == 0){
+      let key = +event.code.replace("Digit", '');
+      let panelIndex = event.altKey 
+        ? 1 
+        : event.shiftKey 
+          ? 2 
+          : 0;
+      let itemIndex = key - 1;
+      if (itemIndex == -1)
+          itemIndex = 9;
+      let items = document.getElementsByClassName(`panel${panelIndex}__item${itemIndex}`);
+      if (items.length){
+        let item = items[0] as HTMLElement;
+        item.click();
+      }
+    }
+    
     //TODO event.key
     //TODO this.onClickSelectItem(itemId);
   }
@@ -220,15 +237,11 @@ export class Panels extends React.Component<Props, {}> {
             className += ' panel__item--selected ';
           }
 
-          if(item != null){
-            //className += ' panel__item--not-empty ';
-          }
-
           return (
             <div key={index2} 
               onClick={() => this.onClickSelectItem(item?.id)}
               className={className}>
-                <div className='panel__item-container'>
+                <div className={"panel__item-container " + (item == null ? " panel__item-container--empty " : "")}>
                   {item == null 
                     ? null 
                     : <div className={"panel__item-img-gif nodrag "} style={{backgroundImage: `url(${item.imageGif.src})`}} />}
@@ -237,7 +250,7 @@ export class Panels extends React.Component<Props, {}> {
                     : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
                   {item == null 
                     ? null 
-                    : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Ctrl + " : ""}{(index2 + 1) % 10}</div>}
+                    : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Shift + " : ""}{(index2 + 1) % 10}</div>}
                 </div>
                 <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
             </div>
