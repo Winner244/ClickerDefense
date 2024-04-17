@@ -230,6 +230,9 @@ export class Panels extends React.Component<Props, {}> {
               className={className}>
                 {item == null 
                   ? null 
+                  : <div className={"panel__item-img-gif nodrag "} style={{backgroundImage: `url(${item.imageGif.src})`}} />}
+                {item == null 
+                  ? null 
                   : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
                 {item == null 
                   ? null 

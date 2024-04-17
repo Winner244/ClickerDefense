@@ -15,13 +15,15 @@ import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 import AnimationInfinite from '../../models/AnimationInfinite';
 
 import BaseImage from '../../assets/img/magics/meteor/image.png';  
-import AnimationImage from '../../assets/img/magics/meteor/animation.png';  
+import ImageGif from '../../assets/img/magics/meteor/imageGif.gif';  
+import AnimationImage from '../../assets/img/magics/meteor/animation.png'; 
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
+	private static readonly imageGif: HTMLImageElement = new Image(); //для отображения на панели доступа при наведении
 	private static readonly imageAnimation: HTMLImageElement = new Image(); //картинка анимации магии
 	private static readonly imageAnimationFrames: number = 3;
 	private static readonly imageAnimationDuration: number = 100;
@@ -33,6 +35,7 @@ export class Meteor extends Magic{
 		super(x, y, 
 			Meteor.name, 
 			Meteor.image, 
+			Meteor.imageGif, 
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationDuration, Meteor.imageAnimation), 
 			null, //lifeTime
 			Meteor.imageHandler);
@@ -47,6 +50,7 @@ export class Meteor extends Magic{
 	static init(isLoadResources: boolean = true): void{
 		if(isLoadResources && Meteor.imageHandler.isEmpty){
 			Meteor.imageHandler.new(Meteor.image).src = BaseImage;
+			Meteor.imageHandler.new(Meteor.imageGif).src = ImageGif;
 			Meteor.imageHandler.new(Meteor.imageAnimation).src = AnimationImage;
 		}
 	}

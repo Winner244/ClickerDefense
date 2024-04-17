@@ -18,6 +18,7 @@ export class Magic{
 	y: number;
 	name: string;
 	image: HTMLImageElement; //для отображения на панели доступа и в магазине
+	imageGif: HTMLImageElement; //для отображения на панели доступа при наведении
 	animation: AnimationInfinite; //анимация магии в действии
 	leftTime: number|null; //оставшееся время жизни магии
 
@@ -26,6 +27,7 @@ export class Magic{
 		y: number, 
 		name: string, 
 		image: HTMLImageElement, 
+		imageGif: HTMLImageElement, 
 		animation: AnimationInfinite, 
 		lifeTime: number|null,
 		imageHandler: ImageHandler)
@@ -35,6 +37,7 @@ export class Magic{
 		this.y = y;
 		this.name = name;
 		this.image = image;
+		this.imageGif = imageGif;
 		this.animation = animation;
 		this.leftTime = lifeTime;
 		this.imageHandler = imageHandler;
