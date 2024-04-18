@@ -1,3 +1,5 @@
+import AnimationInfinite from '../../models/AnimationInfinite';
+
 import {Building} from '../buildings/Building';
 import {Monster} from '../monsters/Monster';
 import {Unit} from '../units/Unit';
@@ -8,6 +10,7 @@ import {Magic} from './Magic';
 /** Система управления всеми задействованными магиями - единичный статичный класс */
 export class Magics{
 	static all: Magic[] = []; //все задействованные магии
+	static cursorMagicAnimation: AnimationInfinite|null; //анимация магии на курсоре
 
 	static init(): void{
 		this.all = [];
@@ -16,8 +19,22 @@ export class Magics{
 	static loadResources(){
 	}
 
+	static displayOnCursor(magic: Magic){
+		//TODO: this.cursorMagicAnimation = magic;
+	}
+
+	static deleteAllFromCursor(){
+		this.cursorMagicAnimation = null;
+	}
+
+	static add(magic: Magic){
+		//TODO: clone magic or create new by class
+		this.all.push(magic);
+	}
+
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
 		let isProcessed = false;
+		//TODO this.cursorMagicAnimation.
 		return isProcessed;
 	}
 
@@ -44,5 +61,6 @@ export class Magics{
 
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		this.all.forEach(magic => magic.draw(drawsDiffMs, isGameOver));
+		//TODO this.cursorMagicAnimation.
 	}
 }

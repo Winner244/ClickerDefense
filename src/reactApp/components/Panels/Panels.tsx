@@ -14,6 +14,7 @@ import {Helper} from '../../../gameApp/helpers/Helper';
 import Animation from '../../../models/Animation';
 
 import {Magic} from '../../../gameApp/magic/Magic';
+import {Magics} from '../../../gameApp/magic/Magics';
 
 import './Panels.scss';
 
@@ -215,6 +216,7 @@ export class Panels extends React.Component<Props, {}> {
 
         case 2: //right click
           this.props.selectItem(''); 
+          Magics.deleteAllFromCursor();
           break;  
       }
     }
@@ -238,6 +240,7 @@ export class Panels extends React.Component<Props, {}> {
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
         console.log('apply magic', {angle, distance, selectedItem});
+        Magics.add(selectedItem);
       }
       this.props.selectItem('');
       this.mouseDown = null;
@@ -284,7 +287,7 @@ export class Panels extends React.Component<Props, {}> {
 		AudioSystem.play(-1, SelectingSoundUrl);
     let selectedItem = this.getSelectedItem();
     if (selectedItem){
-      //TODO: display selected magic under cursor, update in Game
+      Magics.displayOnCursor(selectedItem);
     }
   }
 
