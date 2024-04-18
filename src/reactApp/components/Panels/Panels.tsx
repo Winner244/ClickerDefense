@@ -8,6 +8,8 @@ import { App } from '../../App';
 
 import Panel from '../../../models/Panel';
 import {BaseObject} from '../../../models/BaseObject';
+import {Point} from '../../../models/Point';
+import {Helper} from '../../../gameApp/helpers/Helper';
 
 import Animation from '../../../models/Animation';
 
@@ -15,7 +17,6 @@ import {Magic} from '../../../gameApp/magic/Magic';
 
 import './Panels.scss';
 
-import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
 import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
@@ -146,12 +147,12 @@ export class Panels extends React.Component<Props, {}> {
 
     AudioSystem.play(-1, AddingItemSoundUrl);
 
-    this.startAnimation(panelWithFreePlaceIndex, freePlaceIndex);
+    this.startAddingItemAnimation(panelWithFreePlaceIndex, freePlaceIndex);
 
     return new BaseObject(x, y, width, height);
   }
 
-  static startAnimation(panelIndex: number, itemIndex: number){
+  static startAddingItemAnimation(panelIndex: number, itemIndex: number){
     let classItem = `panel${panelIndex}__item${itemIndex}-canvas`;
     let elements = document.getElementsByClassName(classItem);
     if (!elements.length){
@@ -188,7 +189,60 @@ export class Panels extends React.Component<Props, {}> {
     window.requestAnimationFrame(animationCallback);
   }
 
+  getSelectedItem(): Magic|null{
+    if(!this.props.selectedItemId){
+      return null;
+    }
+    
+    let items = this.props.panels
+      .map(x => x.items.find(item => item.id == this.props.selectedItemId))
+      .filter(x => x);
 
+    if(items.length && items[0]){
+      return items[0];
+    }
+
+    return null;
+  }
+
+  mouseDown: Point|null = null;
+  onMouseDown(event: MouseEvent){
+    if(this.props.selectedItemId){
+      switch(event.button){
+        case 0: // left click
+          this.mouseDown = new Point(event.offsetY, event.offsetX); 
+          break;
+
+        case 2: //right click
+          this.props.selectItem(''); 
+          break;  
+      }
+    }
+  }
+
+  onMouseUp(event: MouseEvent){
+    let isLeftClick = event.button == 0;
+
+    if(this.props.selectedItemId && isLeftClick){
+
+      let mouseDown = this.mouseDown != null 
+        ? this.mouseDown 
+        : new Point(event.offsetY, event.offsetX);
+
+      let mouseUp = new Point(event.offsetY, event.offsetX);
+
+      let angle = Helper.getRotateAngle(mouseDown.x, mouseDown.y, mouseUp.x, mouseUp.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
+      let distance = Helper.getDistance(mouseDown.x, mouseDown.y, mouseUp.x, mouseUp.y);
+
+
+      let selectedItem = this.getSelectedItem();
+      if (selectedItem){
+        console.log('apply magic', {angle, distance, selectedItem});
+      }
+      this.props.selectItem('');
+      this.mouseDown = null;
+    }
+  }
 
   onKey(event: KeyboardEvent){
     if(!this.props.panels?.length){
@@ -212,18 +266,26 @@ export class Panels extends React.Component<Props, {}> {
       }
     }
   }
-
+ 
   componentDidMount() {
 		document.addEventListener('keydown', this.onKey.bind(this));
+		document.addEventListener('mousedown', this.onMouseDown.bind(this));
+		document.addEventListener('mouseup', this.onMouseUp.bind(this));
   } 
   
   componentWillUnmount() {
 		document.removeEventListener('keydown', this.onKey.bind(this));
+		document.removeEventListener('mousedown', this.onMouseDown.bind(this));
+		document.removeEventListener('mouseup', this.onMouseUp.bind(this));
   }
 
   onClickSelectItem(itemId: string){
     this.props.selectItem(itemId);
 		AudioSystem.play(-1, SelectingSoundUrl);
+    let selectedItem = this.getSelectedItem();
+    if (selectedItem){
+      //TODO: display selected magic under cursor, update in Game
+    }
   }
 
   renderPanel(panel: Panel, index: number, isTop: boolean){
