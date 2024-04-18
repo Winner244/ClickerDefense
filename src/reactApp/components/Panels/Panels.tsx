@@ -18,7 +18,7 @@ import './Panels.scss';
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
-import SelectingSoundUrl from '../../../assets/sounds/menu/panel-open.mp3'; 
+import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
 import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
 import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
@@ -77,6 +77,7 @@ export class Panels extends React.Component<Props, {}> {
   private static initAddingItem(){
     AudioSystem.load(AddingItemSoundUrl);
     AudioSystem.load(AddingPanelSoundUrl);
+    AudioSystem.load(SelectingSoundUrl);
     this.imageAdding.src = AddingImage;
   }
 
@@ -210,9 +211,6 @@ export class Panels extends React.Component<Props, {}> {
         item.click();
       }
     }
-    
-    //TODO event.key
-    //TODO this.onClickSelectItem(itemId);
   }
 
   componentDidMount() {
@@ -225,7 +223,7 @@ export class Panels extends React.Component<Props, {}> {
 
   onClickSelectItem(itemId: string){
     this.props.selectItem(itemId);
-		//TODO: AudioSystem.play(Mouse.x, SelectingSoundUrl, value);
+		AudioSystem.play(-1, SelectingSoundUrl);
   }
 
   renderPanel(panel: Panel, index: number, isTop: boolean){
