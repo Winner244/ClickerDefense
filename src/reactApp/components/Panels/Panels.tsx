@@ -225,7 +225,7 @@ export class Panels extends React.Component<Props, {}> {
   onMouseUp(event: MouseEvent){
     let isLeftClick = event.button == 0;
 
-    if(this.props.selectedItemId && isLeftClick){
+    if(this.props.selectedItemId && isLeftClick && !this.isMouseIn){
 
       let mouseDown = this.mouseDown != null 
         ? this.mouseDown 
@@ -283,9 +283,32 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onClickSelectItem(itemId: string){
+    if(this.props.selectedItemId == itemId){
+      this.props.selectItem('');
+      Magics.clearCursor();
+      return;
+    }
+
     this.props.selectItem(itemId);
 		AudioSystem.play(-1, SelectingSoundUrl);
     let selectedItem = this.getSelectedItem(itemId);
+    if (selectedItem && !this.isMouseIn){
+      Magics.displayOnCursor(selectedItem.animationForCursor, selectedItem.shiftAnimationForCursor);
+    }
+  }
+
+  isMouseIn: boolean = false;
+  onMouseEnter(item: Magic){
+    if(item == null)
+      return;
+
+    this.isMouseIn = true;
+    Magics.clearCursor();
+  }
+
+  onMouseLeave(){
+    this.isMouseIn = false;
+    let selectedItem = this.getSelectedItem();
     if (selectedItem){
       Magics.displayOnCursor(selectedItem.animationForCursor, selectedItem.shiftAnimationForCursor);
     }
@@ -303,6 +326,8 @@ export class Panels extends React.Component<Props, {}> {
           return (
             <div key={index2} 
               onClick={() => this.onClickSelectItem(item?.id)}
+              onMouseEnter={() => this.onMouseEnter(item)}
+              onMouseLeave={() => this.onMouseLeave()}
               className={className}>
                 <div className={"panel__item-container " + (item == null ? " panel__item-container--empty " : "")}>
                   {item == null 
