@@ -10,13 +10,16 @@ import {Building} from '../buildings/Building';
 import {Monster} from '../monsters/Monster';
 import {Unit} from '../units/Unit';
 import {Magic} from './Magic';
+import {Meteor} from './Meteor';
+
+import {Helper} from '../helpers/Helper';
 
 
 /** Система управления всеми задействованными магиями - единичный статичный класс */
 export class Magics{
 	static all: Magic[] = []; //все задействованные магии
-	static cursorMagicAnimation: AnimationInfinite|null; //анимация магии на курсоре
-	static shiftCursorMagicAnimation: Point; //сдвиг анимация магии на курсоре
+	static starCreatingPoint: Point|null; //точка начала создания магии
+	static cursorMagic: Magic|null; //магия на курсоре
 
 	static init(): void{
 		this.all = [];
@@ -25,19 +28,35 @@ export class Magics{
 	static loadResources(){
 	}
 
-	static displayOnCursor(magicAnimationForCursor: AnimationInfinite, shiftAnimationForCursor: Point){
-		this.cursorMagicAnimation = magicAnimationForCursor
-		this.shiftCursorMagicAnimation = shiftAnimationForCursor
+	static displayOnCursor(magic: Magic){
+		this.cursorMagic = magic
 	}
 
 	static clearCursor(){
-		this.cursorMagicAnimation = null;
+		this.cursorMagic = null;
+		this.starCreatingPoint = null;
 	}
 
-	static create(magic: Magic){
-		//TODO: clone magic or create new by class
-		this.all.push(magic);
-		this.cursorMagicAnimation = null;
+	static startCreatingCursorAnimation(magic: Magic, pointStart: Point){
+		this.starCreatingPoint = pointStart;
+		this.cursorMagic = magic;
+	}
+
+	static create(magic: Magic, pointEnd: Point){
+		let pointStart = this.starCreatingPoint ?? pointEnd;
+		let angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
+		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
+
+		switch(magic.name){
+			case Meteor.name: 
+				let x =
+				let y =  
+				this.all.push(new Meteor());
+				break;
+			default: throw `not expected magic name '${magic.name}'`;
+		}
+		
+		this.clearCursor();
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
@@ -71,12 +90,16 @@ export class Magics{
 
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		this.all.forEach(magic => magic.draw(drawsDiffMs, isGameOver));
-		if(this.cursorMagicAnimation && !isGameOver){
+		if(this.cursorMagic && !isGameOver){
+			if(this.starCreatingPoint){
+				//TODO: display trajectory 
+			}
+
 			let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 			let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
 			let width = 50;
 			let height = 50;
-			this.cursorMagicAnimation.draw(drawsDiffMs, isGameOver, x + this.shiftCursorMagicAnimation.x, y + this.shiftCursorMagicAnimation.y, width, height);
+			this.cursorMagic.animationForCursor.draw(drawsDiffMs, isGameOver, x + this.cursorMagic.shiftAnimationForCursor.x, y + this.cursorMagic.shiftAnimationForCursor.y, width, height);
 		}
 	}
 }

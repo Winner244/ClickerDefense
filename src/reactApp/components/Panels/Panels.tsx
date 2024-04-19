@@ -206,12 +206,15 @@ export class Panels extends React.Component<Props, {}> {
     return null;
   }
 
-  mouseDown: Point|null = null;
   onMouseDown(event: MouseEvent){
     if(this.props.selectedItemId){
       switch(event.button){
         case 0: // left click
-          this.mouseDown = new Point(event.offsetY, event.offsetX); 
+          let selectedItem = this.getSelectedItem();
+          if (selectedItem){
+            let mouseDown = new Point(event.offsetY, event.offsetX);
+            Magics.startCreatingCursorAnimation(selectedItem, mouseDown);
+          }
           break;
 
         case 2: //right click
@@ -226,24 +229,12 @@ export class Panels extends React.Component<Props, {}> {
     let isLeftClick = event.button == 0;
 
     if(this.props.selectedItemId && isLeftClick && !this.isMouseIn){
-
-      let mouseDown = this.mouseDown != null 
-        ? this.mouseDown 
-        : new Point(event.offsetY, event.offsetX);
-
-      let mouseUp = new Point(event.offsetY, event.offsetX);
-
-      let angle = Helper.getRotateAngle(mouseDown.x, mouseDown.y, mouseUp.x, mouseUp.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
-      let distance = Helper.getDistance(mouseDown.x, mouseDown.y, mouseUp.x, mouseUp.y);
-
-
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
-        console.log('apply magic', {angle, distance, selectedItem});
-        Magics.create(selectedItem);
+        let mouseUp = new Point(event.offsetY, event.offsetX);
+        Magics.create(selectedItem, mouseUp);
       }
       this.props.selectItem('');
-      this.mouseDown = null;
     }
   }
 
@@ -293,7 +284,7 @@ export class Panels extends React.Component<Props, {}> {
 		AudioSystem.play(-1, SelectingSoundUrl);
     let selectedItem = this.getSelectedItem(itemId);
     if (selectedItem && !this.isMouseIn){
-      Magics.displayOnCursor(selectedItem.animationForCursor, selectedItem.shiftAnimationForCursor);
+      Magics.displayOnCursor(selectedItem);
     }
   }
 
@@ -310,7 +301,7 @@ export class Panels extends React.Component<Props, {}> {
     this.isMouseIn = false;
     let selectedItem = this.getSelectedItem();
     if (selectedItem){
-      Magics.displayOnCursor(selectedItem.animationForCursor, selectedItem.shiftAnimationForCursor);
+      Magics.displayOnCursor(selectedItem);
     }
   }
 
