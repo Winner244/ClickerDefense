@@ -6,6 +6,8 @@ import {Building} from '../buildings/Building';
 import {Monster} from '../monsters/Monster';
 import {Unit} from '../units/Unit';
 
+import {Point} from '../../models/Point';
+
 import {Helper} from '../helpers/Helper';
 
 
@@ -20,6 +22,8 @@ export class Magic{
 	image: HTMLImageElement; //для отображения на панели доступа и в магазине
 	imageGif: HTMLImageElement; //для отображения на панели доступа при наведении
 	animation: AnimationInfinite; //анимация магии в действии
+	animationForCursor: AnimationInfinite; //анимация магии для курсора после выбора магии и до момента её активации
+	shiftAnimationForCursor: Point; //сдвиг для анимации для курсора
 	leftTime: number|null; //оставшееся время жизни магии
 
 	constructor(
@@ -29,6 +33,8 @@ export class Magic{
 		image: HTMLImageElement, 
 		imageGif: HTMLImageElement, 
 		animation: AnimationInfinite, 
+		animationForCursor: AnimationInfinite, 
+		shiftAnimationForCursor: Point,
 		lifeTime: number|null,
 		imageHandler: ImageHandler)
 	{
@@ -39,6 +45,8 @@ export class Magic{
 		this.image = image;
 		this.imageGif = imageGif;
 		this.animation = animation;
+		this.animationForCursor = animationForCursor;
+		this.shiftAnimationForCursor = shiftAnimationForCursor;
 		this.leftTime = lifeTime;
 		this.imageHandler = imageHandler;
 	}

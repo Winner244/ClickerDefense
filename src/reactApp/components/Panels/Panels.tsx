@@ -190,13 +190,13 @@ export class Panels extends React.Component<Props, {}> {
     window.requestAnimationFrame(animationCallback);
   }
 
-  getSelectedItem(): Magic|null{
-    if(!this.props.selectedItemId){
+  getSelectedItem(itemId: string|null = null): Magic|null{
+    if(!this.props.selectedItemId && !itemId){
       return null;
     }
     
     let items = this.props.panels
-      .map(x => x.items.find(item => item.id == this.props.selectedItemId))
+      .map(x => x.items.find(item => item && item.id == (this.props.selectedItemId || itemId)))
       .filter(x => x);
 
     if(items.length && items[0]){
@@ -216,7 +216,7 @@ export class Panels extends React.Component<Props, {}> {
 
         case 2: //right click
           this.props.selectItem(''); 
-          Magics.deleteAllFromCursor();
+          Magics.clearCursor();
           break;  
       }
     }
@@ -240,7 +240,7 @@ export class Panels extends React.Component<Props, {}> {
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
         console.log('apply magic', {angle, distance, selectedItem});
-        Magics.add(selectedItem);
+        Magics.create(selectedItem);
       }
       this.props.selectItem('');
       this.mouseDown = null;
@@ -285,9 +285,9 @@ export class Panels extends React.Component<Props, {}> {
   onClickSelectItem(itemId: string){
     this.props.selectItem(itemId);
 		AudioSystem.play(-1, SelectingSoundUrl);
-    let selectedItem = this.getSelectedItem();
+    let selectedItem = this.getSelectedItem(itemId);
     if (selectedItem){
-      Magics.displayOnCursor(selectedItem);
+      Magics.displayOnCursor(selectedItem.animationForCursor, selectedItem.shiftAnimationForCursor);
     }
   }
 

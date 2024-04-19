@@ -7,6 +7,8 @@ import {ImageHandler} from '../ImageHandler';
 import {Draw} from '../gameSystems/Draw';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
+import {Point} from '../../models/Point';
+
 import {Magic} from './Magic';
 
 import ShopItem from '../../models/ShopItem';
@@ -25,8 +27,9 @@ export class Meteor extends Magic{
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
 	private static readonly imageGif: HTMLImageElement = new Image(); //для отображения на панели доступа при наведении
 	private static readonly imageAnimation: HTMLImageElement = new Image(); //картинка анимации магии
-	private static readonly imageAnimationFrames: number = 3;
+	private static readonly imageAnimationFrames: number = 4;
 	private static readonly imageAnimationDuration: number = 100;
+	private static readonly imageAnimationForCursor: HTMLImageElement = new Image(); //картинка анимации магии для курсора после выбора магии и до момента её активации
 
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
@@ -36,7 +39,9 @@ export class Meteor extends Magic{
 			Meteor.name, 
 			Meteor.image, 
 			Meteor.imageGif, 
-			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationDuration, Meteor.imageAnimation), 
+			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimation), 
+			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimationForCursor), 
+			new Point(-8, -40),
 			null, //lifeTime
 			Meteor.imageHandler);
 
@@ -52,6 +57,7 @@ export class Meteor extends Magic{
 			Meteor.imageHandler.new(Meteor.image).src = BaseImage;
 			Meteor.imageHandler.new(Meteor.imageGif).src = ImageGif;
 			Meteor.imageHandler.new(Meteor.imageAnimation).src = AnimationImage;
+			Meteor.imageHandler.new(Meteor.imageAnimationForCursor).src = AnimationImage;
 		}
 	}
 
