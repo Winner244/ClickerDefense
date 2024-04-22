@@ -1,9 +1,21 @@
+import {Point} from "../../models/Point";
+
+import {Draw} from "../gameSystems/Draw";
+
 /** Данные по вводу клавиш через мышку - единичный статичный класс */
 export class Mouse{
 	static x: number;
 	static y: number;
 	static isClick: boolean;
 	static isRightClick: boolean;
+
+	static get canvasX(): number{
+		return Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width)
+	}
+
+	static get canvasY(): number{
+		return Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+	}
 
 	static init(): void{
 		window.removeEventListener('mousemove', Mouse.onMove);
@@ -24,5 +36,17 @@ export class Mouse{
 
 		Mouse.x = event.pageX;
 		Mouse.y = event.pageY + scrollTopMain;
+	}
+
+	static getCanvasMousePointByEvent(mouseEvent: MouseEvent): Point{
+		let x = mouseEvent.offsetX / (Draw.canvas.clientWidth / Draw.canvas.width);
+		let y = mouseEvent.offsetY / (Draw.canvas.clientHeight / Draw.canvas.height);
+		return new Point(x, y);
+	}
+
+	static getCanvasMousePoint(): Point{
+		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
+		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+		return new Point(x, y);
 	}
 }

@@ -16,6 +16,8 @@ import Animation from '../../../models/Animation';
 import {Magic} from '../../../gameApp/magic/Magic';
 import {Magics} from '../../../gameApp/magic/Magics';
 
+import {Mouse} from '../../../gameApp/gamer/Mouse';
+
 import './Panels.scss';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
@@ -212,7 +214,7 @@ export class Panels extends React.Component<Props, {}> {
         case 0: // left click
           let selectedItem = this.getSelectedItem();
           if (selectedItem){
-            let mouseDown = new Point(event.offsetY, event.offsetX);
+            let mouseDown = Mouse.getCanvasMousePointByEvent(event);
             Magics.startCreatingCursorAnimation(selectedItem, mouseDown);
           }
           break;
@@ -231,7 +233,7 @@ export class Panels extends React.Component<Props, {}> {
     if(this.props.selectedItemId && isLeftClick && !this.isMouseIn){
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
-        let mouseUp = new Point(event.offsetY, event.offsetX);
+        let mouseUp = Mouse.getCanvasMousePointByEvent(event);
         Magics.create(selectedItem, mouseUp);
       }
       this.props.selectItem('');

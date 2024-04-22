@@ -270,8 +270,8 @@ export class Game {
 		}
 
 		//при изменении размера canvas, мы должны масштабировать координаты мыши
-		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
-		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
+		let x = Mouse.canvasX;
+		let y = Mouse.canvasY;
 		let alpha = Draw.ctx.getImageData(x, y, 1, 1).data[3];
 		let isHoverFound = alpha > 200; //если какой-либо объект находится под курсором (минимум 179 - затемнение фона)
 		let isWaveStarted = WavesState.isWaveStarted && WavesState.delayStartLeftTimeMs <= 0;

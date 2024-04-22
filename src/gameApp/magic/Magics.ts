@@ -49,9 +49,9 @@ export class Magics{
 
 		switch(magic.name){
 			case Meteor.name: 
-				let x =
-				let y =  
-				this.all.push(new Meteor());
+				//let x = 
+				//let y = 
+				//this.all.push(new Meteor());
 				break;
 			default: throw `not expected magic name '${magic.name}'`;
 		}
@@ -90,8 +90,20 @@ export class Magics{
 
 	static draw(drawsDiffMs: number, isGameOver: boolean): void{
 		this.all.forEach(magic => magic.draw(drawsDiffMs, isGameOver));
+
 		if(this.cursorMagic && !isGameOver){
-			if(this.starCreatingPoint){
+
+			if(this.cursorMagic.name == Meteor.name){
+				let angle = 0;
+				if(this.starCreatingPoint){
+					let pointStart = this.starCreatingPoint;
+					let pointEnd = Mouse.getCanvasMousePoint();
+					let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+					if (distance > 10){
+						angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
+					} 
+				}
+
 				//TODO: display trajectory 
 			}
 
