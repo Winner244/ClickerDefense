@@ -4,6 +4,10 @@ import {Unit} from '../units/Unit';
 
 import {ImageHandler} from '../ImageHandler';
 
+import {Helper} from '../helpers/Helper';
+
+import {Mouse} from '../gamer/Mouse';
+
 import {Draw} from '../gameSystems/Draw';
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
@@ -22,6 +26,8 @@ import AnimationImage from '../../assets/img/magics/meteor/animation.png';
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
+	static readonly distanceBetweenToAddAngle: number; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
+
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
@@ -33,9 +39,14 @@ export class Meteor extends Magic{
 
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
-	constructor(x: number, y: number)
+	angle: number;
+
+	static readonly initialSize: number = 0.1;
+
+	constructor(x: number, angle: number, size: number|null = null)
 	{
-		super(x, y, 
+		super(x, 0, 
+			size || Meteor.initialSize,
 			Meteor.name, 
 			Meteor.image, 
 			Meteor.imageGif, 
@@ -44,6 +55,9 @@ export class Meteor extends Magic{
 			new Point(-8, -40),
 			null, //lifeTime
 			Meteor.imageHandler);
+		
+		this.angle = angle; //TODO: replace to dx and dy
+		this.y = -this.image.height * this.size;
 
 		Meteor.init(true);
 	}
@@ -75,6 +89,29 @@ export class Meteor extends Magic{
 		}
 
 		super.draw(drawsDiffMs, isGameOver);
+	}
+
+	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){
+		let angle = 0;
+
+		let pointEnd = Mouse.getCanvasMousePoint();
+		if(pointStart && pointEnd){
+			let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+			if (distance > Meteor.distanceBetweenToAddAngle){
+				angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
+			} 
+		}
+
+		Draw.ctx.rotate(angle);
+		Draw.ctx.beginPath();
+		let width = this.image.width * this.size;
+		Draw.ctx.rect(pointEnd.x - width / 2, -Draw.ctx.canvas.height / 2, width, Draw.ctx.canvas.height * 2);
+		Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+		Draw.ctx.fill();
+		Draw.ctx.lineWidth = 2;
+		Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
+		Draw.ctx.stroke();
+		Draw.ctx.rotate(-angle);
 	}
 }
 Object.defineProperty(Meteor, "name", { value: 'Meteor', writable: false }); //fix production minification class names

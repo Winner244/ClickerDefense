@@ -25,10 +25,12 @@ export class Magic{
 	animationForCursor: AnimationInfinite; //анимация магии для курсора после выбора магии и до момента её активации
 	shiftAnimationForCursor: Point; //сдвиг для анимации для курсора
 	leftTime: number|null; //оставшееся время жизни магии
+	size: number; //множитель размера (1 - оригинальный)
 
 	constructor(
 		x: number, 
-		y: number, 
+		y: number,
+		size: number, 
 		name: string, 
 		image: HTMLImageElement, 
 		imageGif: HTMLImageElement, 
@@ -41,6 +43,7 @@ export class Magic{
 		this.id = Helper.generateUid();
 		this.x = x;
 		this.y = y;
+		this.size = size;
 		this.name = name;
 		this.image = image;
 		this.imageGif = imageGif;
@@ -62,6 +65,8 @@ export class Magic{
 			return;
 		}
 		
-		this.animation.draw(drawsDiffMs, false, this.x, this.y);
+		this.animation.draw(drawsDiffMs, false, this.x, this.y, this.animation.image.width * this.size, this.animation.image.height * this.size);
 	}
+
+	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){}
 }

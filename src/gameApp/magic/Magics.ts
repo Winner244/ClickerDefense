@@ -1,5 +1,3 @@
-import AnimationInfinite from '../../models/AnimationInfinite';
-
 import {Draw} from '../gameSystems/Draw';
 
 import {Mouse} from '../gamer/Mouse';
@@ -20,6 +18,9 @@ export class Magics{
 	static all: Magic[] = []; //все задействованные магии
 	static starCreatingPoint: Point|null; //точка начала создания магии
 	static cursorMagic: Magic|null; //магия на курсоре
+
+	static readonly cursorMagicWidth: number = 50; //ширина отображаемой магии на курсоре после выбора
+	static readonly cursorMagicHeight: number = 50; //высота отображаемой магии на курсоре после выбора
 
 	static init(): void{
 		this.all = [];
@@ -49,9 +50,9 @@ export class Magics{
 
 		switch(magic.name){
 			case Meteor.name: 
-				//let x = 
-				//let y = 
-				//this.all.push(new Meteor());
+				let meteor = magic as Meteor;
+				//TODO: move logic to calculate x and y to inside Meteor
+				this.all.push(new Meteor(pointEnd.x, (distance > 100 ? angle : 0), meteor.size));
 				break;
 			default: throw `not expected magic name '${magic.name}'`;
 		}
@@ -93,25 +94,11 @@ export class Magics{
 
 		if(this.cursorMagic && !isGameOver){
 
-			if(this.cursorMagic.name == Meteor.name){
-				let angle = 0;
-				if(this.starCreatingPoint){
-					let pointStart = this.starCreatingPoint;
-					let pointEnd = Mouse.getCanvasMousePoint();
-					let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
-					if (distance > 10){
-						angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
-					} 
-				}
+			this.cursorMagic.drawTrajectory(drawsDiffMs, this.starCreatingPoint);
 
-				//TODO: display trajectory 
-			}
-
-			let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
-			let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);
-			let width = 50;
-			let height = 50;
-			this.cursorMagic.animationForCursor.draw(drawsDiffMs, isGameOver, x + this.cursorMagic.shiftAnimationForCursor.x, y + this.cursorMagic.shiftAnimationForCursor.y, width, height);
+			let x = Mouse.canvasX + this.cursorMagic.shiftAnimationForCursor.x;
+			let y = Mouse.canvasY + this.cursorMagic.shiftAnimationForCursor.y;
+			this.cursorMagic.animationForCursor.draw(drawsDiffMs, isGameOver, x, y, Magics.cursorMagicWidth, Magics.cursorMagicHeight);
 		}
 	}
 }
