@@ -86,6 +86,13 @@ export class Magics{
 
 			//логика магии
 			magic.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder)
+
+			//магия окончена?
+			if(magic.isEnd){
+				this.all.splice(i, 1);
+				i--;
+				continue;
+			}
 		}
 	}
 

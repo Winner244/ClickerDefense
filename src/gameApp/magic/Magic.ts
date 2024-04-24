@@ -26,6 +26,7 @@ export class Magic{
 	shiftAnimationForCursor: Point; //сдвиг для анимации для курсора
 	leftTime: number|null; //оставшееся время жизни магии
 	size: number; //множитель размера (1 - оригинальный)
+	isEnd: boolean; //действие магии закончено ?
 
 	constructor(
 		x: number, 
@@ -52,6 +53,7 @@ export class Magic{
 		this.shiftAnimationForCursor = shiftAnimationForCursor;
 		this.leftTime = lifeTime;
 		this.imageHandler = imageHandler;
+		this.isEnd = false;
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -65,7 +67,7 @@ export class Magic{
 			return;
 		}
 		
-		this.animation.draw(drawsDiffMs, false, this.x, this.y, this.animation.image.width * this.size, this.animation.image.height * this.size);
+		this.animation.draw(drawsDiffMs, false, this.x, this.y, this.animation.image.width / this.animation.frames * this.size, this.animation.image.height * this.size);
 	}
 
 	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){}

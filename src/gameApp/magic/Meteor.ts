@@ -39,13 +39,18 @@ export class Meteor extends Magic{
 
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
-	angle: number;
+	private angle: number;
+	private dx: number;
+	private dy: number;
+	private speed: number;
+	private isEndLogic: boolean;
 
-	static readonly initialSize: number = 0.1;
+	static readonly initialSize: number = 2;
+	static readonly initialSpeed: number = 0.3;
 
 	constructor(x: number, angle: number, size: number|null = null)
 	{
-		super(x, 0, 
+		super(0, 0, 
 			size || Meteor.initialSize,
 			Meteor.name, 
 			Meteor.image, 
@@ -56,8 +61,13 @@ export class Meteor extends Magic{
 			null, //lifeTime
 			Meteor.imageHandler);
 		
-		this.angle = angle; //TODO: replace to dx and dy
-		this.y = -this.image.height * this.size;
+		this.speed = Meteor.initialSpeed;
+		this.angle = angle - 45;
+		this.dx = angle;  //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
+		this.dy = 1;
+		this.x = x - this.animation.image.width / this.animation.frames * this.size / 2;
+		this.y = -this.animation.image.height * this.size;
+		this.isEndLogic = false;
 
 		Meteor.init(true);
 	}
@@ -81,6 +91,22 @@ export class Meteor extends Magic{
 		}
 
 		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
+
+		if(this.isEndLogic){
+			return;
+		}
+
+		this.x += this.dx * this.speed * drawsDiffMs;
+		this.y += this.dy * this.speed * drawsDiffMs;
+
+		if(this.y + this.animation.image.height * this.size / 1.2 > Draw.canvas.height - bottomShiftBorder){
+			//TODO: урон монстрам в радиусе взрыва monsters
+			//TODO: взрыв
+		}
+
+		if(this.y + this.animation.image.height * this.size / 3 > Draw.canvas.height - bottomShiftBorder){
+			this.isEndLogic = true;
+		}
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void{
@@ -88,7 +114,14 @@ export class Meteor extends Magic{
 			return;
 		}
 
-		super.draw(drawsDiffMs, isGameOver);
+		let width = this.animation.image.width / this.animation.frames * this.size;
+		let height = this.animation.image.height * this.size;
+
+		Draw.ctx.setTransform(1, 0, 0, 1, this.x + width / 2, this.y + height / 2); 
+		Draw.ctx.rotate(this.angle * Math.PI / 180);
+		this.animation.draw(drawsDiffMs, false, -width / 2, -height / 2, width, height);
+		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+		Draw.ctx.rotate(0);
 	}
 
 	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){
