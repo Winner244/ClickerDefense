@@ -26,7 +26,8 @@ import AnimationImage from '../../assets/img/magics/meteor/animation.png';
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
-	static readonly distanceBetweenToAddAngle: number; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
+	static readonly distanceBetweenToAddAngle: number = 30; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
+	static readonly minHorizontalAngle: number = 10; //минимальный угол наклона от горизонта
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
@@ -45,7 +46,7 @@ export class Meteor extends Magic{
 	private speed: number;
 	private isEndLogic: boolean;
 
-	static readonly initialSize: number = 2;
+	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 0.3;
 
 	constructor(x: number, angle: number, size: number|null = null)
@@ -131,20 +132,29 @@ export class Meteor extends Magic{
 		if(pointStart && pointEnd){
 			let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 			if (distance > Meteor.distanceBetweenToAddAngle){
-				angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
+				angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
+
+				if(angle > 180 - Meteor.minHorizontalAngle && angle < 270){
+					angle = 180 - Meteor.minHorizontalAngle;
+				}
+				else if(angle >= 270 || angle < Meteor.minHorizontalAngle){
+					angle = Meteor.minHorizontalAngle;
+				}
+
+				Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
+				Draw.ctx.rotate(angle * Math.PI / 180);
+				Draw.ctx.beginPath();
+				let width = this.image.width * this.size;
+				Draw.ctx.rect(-Draw.ctx.canvas.height * 5, -width / 2, Draw.ctx.canvas.height * 10, width);
+				Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+				Draw.ctx.fill();
+				Draw.ctx.lineWidth = 2;
+				Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
+				Draw.ctx.stroke();
+				Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+				Draw.ctx.rotate(0);
 			} 
 		}
-
-		Draw.ctx.rotate(angle);
-		Draw.ctx.beginPath();
-		let width = this.image.width * this.size;
-		Draw.ctx.rect(pointEnd.x - width / 2, -Draw.ctx.canvas.height / 2, width, Draw.ctx.canvas.height * 2);
-		Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-		Draw.ctx.fill();
-		Draw.ctx.lineWidth = 2;
-		Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
-		Draw.ctx.stroke();
-		Draw.ctx.rotate(-angle);
 	}
 }
 Object.defineProperty(Meteor, "name", { value: 'Meteor', writable: false }); //fix production minification class names
