@@ -56,6 +56,11 @@ export class Magic{
 		this.isEnd = false;
 	}
 
+	mouseLogicOnCursor(starCreatingMousePosition: Point, currentMousePosition: Point, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
+		let isCursorChanged = false;
+		return isCursorChanged;
+	}
+
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;
@@ -70,5 +75,5 @@ export class Magic{
 		this.animation.draw(drawsDiffMs, false, this.x, this.y, this.animation.image.width / this.animation.frames * this.size, this.animation.image.height * this.size);
 	}
 
-	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){}
+	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){}
 }

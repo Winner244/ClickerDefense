@@ -51,15 +51,22 @@ export class Magics{
 				let meteor = magic as Meteor;
 				this.all.push(meteor.createExemplar(pointStart, pointEnd));
 				break;
-			default: throw `not expected magic name '${magic.name}'`;
+			default: throw `Magics.create. not expected magic name '${magic.name}'`;
 		}
 		
 		this.clearCursor();
 	}
 
-	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
-		let isProcessed = false;
-		return isProcessed;
+	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
+		let isCursorChanged = false;
+
+		if(this.cursorMagic){
+			let pointEnd = new Point(mouseX, mouseY);
+			let pointStart = this.starCreatingPoint ?? pointEnd;
+			isCursorChanged = this.cursorMagic.mouseLogicOnCursor(pointStart, pointEnd, isClick, isHoverFound, isWaveStarted, isWaveEnded);
+		}
+
+		return isCursorChanged;
 	}
 
 	static logic(drawsDiffMs: number, isGameOver: boolean, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -97,12 +104,7 @@ export class Magics{
 		this.all.forEach(magic => magic.draw(drawsDiffMs, isGameOver));
 
 		if(this.cursorMagic && !isGameOver){
-
-			this.cursorMagic.drawTrajectory(drawsDiffMs, this.starCreatingPoint);
-
-			let x = Mouse.canvasX + this.cursorMagic.shiftAnimationForCursor.x;
-			let y = Mouse.canvasY + this.cursorMagic.shiftAnimationForCursor.y;
-			this.cursorMagic.animationForCursor.draw(drawsDiffMs, isGameOver, x, y, Magics.cursorMagicWidth, Magics.cursorMagicHeight);
+			this.cursorMagic.displayMagicOnCursor(drawsDiffMs, this.starCreatingPoint, Magics.cursorMagicWidth, Magics.cursorMagicHeight);
 		}
 	}
 }

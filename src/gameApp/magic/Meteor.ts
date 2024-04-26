@@ -66,9 +66,7 @@ export class Meteor extends Magic{
 		this.speed = Meteor.initialSpeed;
 		this.angle = angle - 45 - 90;  //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
 		this.dx = -(angle - 90) / 90;
-		this.dy = angle > 90 
-			? (angle - (angle - 90) * 2) / 90
-			: angle / 90;
+		this.dy = 1 - Math.abs(this.dx);
 		this.isEndLogic = false;
 
 		Meteor.init(true);
@@ -87,10 +85,11 @@ export class Meteor extends Magic{
 		}
 	}
 
-	private getAngle(pointStart: Point, pointEnd: Point): number{
+	getAngle(pointStart: Point, pointEnd: Point): number{
 		let angle = Meteor.defaultAngle;
 
-		if(pointStart && pointEnd && (pointStart.x != pointEnd.x || pointStart.y != pointEnd.y)) {
+		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+		if (distance > Meteor.distanceBetweenToAddAngle) {
 			angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
 
 			if(angle > 180 - Meteor.minHorizontalAngle && angle < 270){
@@ -105,12 +104,7 @@ export class Meteor extends Magic{
 	}
 
 	createExemplar(pointStart: Point, pointEnd: Point): Meteor{
-		let angle = Meteor.defaultAngle;
-		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
-		if (distance > Meteor.distanceBetweenToAddAngle){
-			angle = this.getAngle(pointStart, pointEnd);
-		} 
-
+		let angle = this.getAngle(pointStart, pointEnd);
 		let x = pointEnd.x;
 		let y = -this.animation.image.height * this.size;
 		if(angle != 90){
@@ -161,13 +155,16 @@ export class Meteor extends Magic{
 		Draw.ctx.rotate(0);
 	}
 
-	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){
+	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
+
+		//display trajectory
 		let pointEnd = Mouse.getCanvasMousePoint();
+		pointStart = pointStart || pointEnd;
+		let angle = this.getAngle(pointStart, pointEnd);
+
 		if(pointStart && pointEnd){
-			let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
-			if (distance > Meteor.distanceBetweenToAddAngle){
+			if (angle != Meteor.defaultAngle){
 				Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
-				let angle = this.getAngle(pointStart, pointEnd);
 				Draw.ctx.rotate(angle * Math.PI / 180);
 				Draw.ctx.beginPath();
 				let width = this.image.width * this.size;
@@ -181,6 +178,17 @@ export class Meteor extends Magic{
 				Draw.ctx.rotate(0);
 			} 
 		}
+
+		//display magic on the cursor
+		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX, Mouse.canvasY); 
+		Draw.ctx.rotate((angle - 90 - 45) * Math.PI / 180);
+		let x = -cursorMagicWidth / 2 + this.shiftAnimationForCursor.x; //TODO: apply angle to this shift
+		let y = -cursorMagicHeight / 2 + this.shiftAnimationForCursor.y; //TODO: apply angle to this shift
+
+		this.animationForCursor.draw(drawsDiffMs, false, x, y, cursorMagicWidth, cursorMagicHeight);
+
+		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+		Draw.ctx.rotate(0);
 	}
 }
 Object.defineProperty(Meteor, "name", { value: 'Meteor', writable: false }); //fix production minification class names

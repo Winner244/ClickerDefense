@@ -112,7 +112,7 @@ export class Units {
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean, isBuilderActive: boolean): boolean{
-		let isProcessed = false;
+		let isCursorChanged = false;
 		let isAnyMouseIn = false;
 
 		if(isHoverFound){
@@ -126,8 +126,8 @@ export class Units {
 					mouseY < unit.y + unit.height - unit.reduceHover;
 				isAnyMouseIn = isAnyMouseIn || isMouseIn;
 				
-				isProcessed = unit.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn, isBuilderActive);
-				if(isProcessed){
+				isCursorChanged = unit.mouseLogic(mouseX, mouseY, isClick, isWaveStarted, isWaveEnded, isMouseIn, isBuilderActive);
+				if(isCursorChanged){
 					break;
 				}
 			}
@@ -137,7 +137,7 @@ export class Units {
 			UnitButtons.isEnterMouse = false;
 		}
 
-		return isProcessed;
+		return isCursorChanged;
 	}
 
 	static logic(drawsDiffMs: number, isGameOver: boolean, buildings: Building[], monsters: Monster[], bottomShiftBorder: number){

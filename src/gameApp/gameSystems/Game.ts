@@ -279,32 +279,33 @@ export class Game {
 
 		Builder.mouseLogic(x, y, Mouse.isClick, Mouse.isRightClick, Buildings.all, this.loadResourcesAfterBuild.bind(this));
 
-		let isSetCursor = false;
-		if(!isSetCursor){
-			isSetCursor = Monsters.mouseLogic(x, y, Mouse.isClick, isHoverFound);
+		let isCursorChanged = Magics.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded);
+
+		if(!isCursorChanged){
+			isCursorChanged = Monsters.mouseLogic(x, y, Mouse.isClick, isHoverFound);
 		}
 
-		if(!isSetCursor){
-			isSetCursor = Coins.mouseLogic(x, y, Mouse.isClick, isHoverFound);
+		if(!isCursorChanged){
+			isCursorChanged = Coins.mouseLogic(x, y, Mouse.isClick, isHoverFound);
 		}
 
-		if(!isSetCursor){
-			isSetCursor = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
+		if(!isCursorChanged){
+			isCursorChanged = Buildings.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
 		}
 
-		if(!isSetCursor){
-			isSetCursor = Units.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
+		if(!isCursorChanged){
+			isCursorChanged = Units.mouseLogic(x, y, Mouse.isClick, isHoverFound, isWaveStarted, isWaveEnded, Builder.selectedBuildingForBuild != null);
 		}
 
 		if(Cursor.cursorWaitLeftTimeMs > 0){
 			Cursor.cursorWaitLeftTimeMs -= drawsDiffMs;
 		}
 
-		if(!isSetCursor){
+		if(!isCursorChanged){
 			Cursor.setCursor(Cursor.default);
 		}
 
-		if(Mouse.isClick && !isSetCursor && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
+		if(Mouse.isClick && !isCursorChanged && isWaveStarted && !isWaveEnded && Monsters.all.find(m => Helper.getDistance(x, y, m.centerX, m.centerY) < Math.max(m.width, m.height) * 2)){
 			AudioSystem.play(x, SwordEmptySound, 0, 1, true);
 		}
 
