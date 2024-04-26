@@ -45,14 +45,11 @@ export class Magics{
 
 	static create(magic: Magic, pointEnd: Point){
 		let pointStart = this.starCreatingPoint ?? pointEnd;
-		let angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
-		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y);
 
 		switch(magic.name){
 			case Meteor.name: 
 				let meteor = magic as Meteor;
-				//TODO: move logic to calculate x and y to inside Meteor
-				this.all.push(new Meteor(pointEnd.x, (distance > 100 ? angle : 0), meteor.size));
+				this.all.push(meteor.createExemplar(pointStart, pointEnd));
 				break;
 			default: throw `not expected magic name '${magic.name}'`;
 		}

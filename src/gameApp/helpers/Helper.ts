@@ -1,3 +1,5 @@
+import {Point} from "../../models/Point";
+
 /** Класс помошник с набором функций - единичный статичный класс */
 export class Helper{
 	static getRandom(min: number, max: number) : number {
@@ -98,8 +100,21 @@ export class Helper{
 		return isContains;
 	}
 
-	static vect(x1: number, y1: number, x2: number, y2: number): number
+	/**
+	 * Возвращает точку пересечения двух не паралельных прямых
+	 */
+	static getPointOfIntersection2LinesByPoints(line1Point1: Point, line1Point2: Point, line2Point1: Point, line2Point2: Point) : Point
 	{
-		return x1 * y2 - y1 * x2;
+		return Helper.getPointOfIntersection2Lines(line1Point1.x, line1Point1.y, line1Point2.x, line1Point2.y, line2Point1.x, line2Point1.y, line2Point2.x, line2Point2.y);
+	}
+
+	/**
+	 * Возвращает точку пересечения двух не паралельных прямых
+	 */
+	static getPointOfIntersection2Lines(x1: number, y1: number, x2: number, y2: number, x3: number, y3: number, x4: number, y4: number) : Point
+	{
+		let x = ((x1*y2 - y1*x2)*(x3 - x4) - (x1 - x2)*(x3*y4 - y3*x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		let y = ((x1*y2 - y1*x2)*(y3 - y4) - (y1 - y2)*(x3*y4 - y3*x4)) / ((x1 - x2)*(y3 - y4) - (y1 - y2)*(x3 - x4));
+		return new Point(x, y);
 	}
 }

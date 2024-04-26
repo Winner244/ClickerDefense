@@ -28,6 +28,7 @@ import AnimationImage from '../../assets/img/magics/meteor/animation.png';
 export class Meteor extends Magic{
 	static readonly distanceBetweenToAddAngle: number = 30; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
 	static readonly minHorizontalAngle: number = 10; //минимальный угол наклона от горизонта
+	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
@@ -49,9 +50,9 @@ export class Meteor extends Magic{
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 0.3;
 
-	constructor(x: number, angle: number, size: number|null = null)
+	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
-		super(0, 0, 
+		super(x, y, 
 			size || Meteor.initialSize,
 			Meteor.name, 
 			Meteor.image, 
@@ -63,11 +64,11 @@ export class Meteor extends Magic{
 			Meteor.imageHandler);
 		
 		this.speed = Meteor.initialSpeed;
-		this.angle = angle - 45;
-		this.dx = angle;  //0 - it is bottom, 90 - it is right, 360-90 it is left, 180 it is top
-		this.dy = 1;
-		this.x = x - this.animation.image.width / this.animation.frames * this.size / 2;
-		this.y = -this.animation.image.height * this.size;
+		this.angle = angle - 45 - 90;  //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
+		this.dx = -(angle - 90) / 90;
+		this.dy = angle > 90 
+			? (angle - (angle - 90) * 2) / 90
+			: angle / 90;
 		this.isEndLogic = false;
 
 		Meteor.init(true);
@@ -84,6 +85,41 @@ export class Meteor extends Magic{
 			Meteor.imageHandler.new(Meteor.imageAnimation).src = AnimationImage;
 			Meteor.imageHandler.new(Meteor.imageAnimationForCursor).src = AnimationImage;
 		}
+	}
+
+	private getAngle(pointStart: Point, pointEnd: Point): number{
+		let angle = Meteor.defaultAngle;
+
+		if(pointStart && pointEnd && (pointStart.x != pointEnd.x || pointStart.y != pointEnd.y)) {
+			angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
+
+			if(angle > 180 - Meteor.minHorizontalAngle && angle < 270){
+				angle = 180 - Meteor.minHorizontalAngle;
+			}
+			else if(angle >= 270 || angle < Meteor.minHorizontalAngle){
+				angle = Meteor.minHorizontalAngle;
+			}
+		}
+
+		return angle;
+	}
+
+	createExemplar(pointStart: Point, pointEnd: Point): Meteor{
+		let angle = Meteor.defaultAngle;
+		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+		if (distance > Meteor.distanceBetweenToAddAngle){
+			angle = this.getAngle(pointStart, pointEnd);
+		} 
+
+		let x = pointEnd.x;
+		let y = -this.animation.image.height * this.size;
+		if(angle != 90){
+			let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, y), new Point(1, y));
+			x = point.x
+		}
+
+		x -= this.animation.image.width / this.animation.frames * this.size / 2;
+		return new Meteor(x, y, angle, this.size);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -126,22 +162,12 @@ export class Meteor extends Magic{
 	}
 
 	drawTrajectory(drawsDiffMs: number, pointStart: Point|null){
-		let angle = 0;
-
 		let pointEnd = Mouse.getCanvasMousePoint();
 		if(pointStart && pointEnd){
 			let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 			if (distance > Meteor.distanceBetweenToAddAngle){
-				angle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
-
-				if(angle > 180 - Meteor.minHorizontalAngle && angle < 270){
-					angle = 180 - Meteor.minHorizontalAngle;
-				}
-				else if(angle >= 270 || angle < Meteor.minHorizontalAngle){
-					angle = Meteor.minHorizontalAngle;
-				}
-
 				Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
+				let angle = this.getAngle(pointStart, pointEnd);
 				Draw.ctx.rotate(angle * Math.PI / 180);
 				Draw.ctx.beginPath();
 				let width = this.image.width * this.size;
