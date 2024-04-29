@@ -59,7 +59,7 @@ export class Meteor extends Magic{
 			Meteor.imageGif, 
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimation), 
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimationForCursor), 
-			new Point(-8, -40),
+			new Point(0, -30),
 			null, //lifeTime
 			Meteor.imageHandler);
 		
@@ -180,18 +180,20 @@ export class Meteor extends Magic{
 		}
 
 		//display magic on the cursor
-		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX, Mouse.canvasY); 
+			//высчитываем катет по гипотенузе и углу
+			let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
+			let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
+			//let height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
+			let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
+			let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
+			//TODO: при мышке слева - нужно скорректировать
+			
+		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX - shiftX, Mouse.canvasY - shiftY); 
 		Draw.ctx.rotate((angle - 90 - 45) * Math.PI / 180);
 
-		//высчитываем катет по гипотенузе и углу
-		let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
-		let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
-		let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
-		let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
-
 		console.log('angle', angleOfRightTriangle, lengthOfShift, shiftX, shiftY);
-		let x = -cursorMagicWidth / 2 - shiftY; 
-		let y = -cursorMagicHeight / 2 - shiftX;
+		let x = -cursorMagicWidth / 2; 
+		let y = -cursorMagicHeight / 2;
 
 		this.animationForCursor.draw(drawsDiffMs, false, x, y, cursorMagicWidth, cursorMagicHeight);
 
