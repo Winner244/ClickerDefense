@@ -160,7 +160,7 @@ export class Meteor extends Magic{
 		//display trajectory
 		let pointEnd = Mouse.getCanvasMousePoint();
 		pointStart = pointStart || pointEnd;
-		let angle = this.getAngle(pointStart, pointEnd);
+		let angle = this.getAngle(pointStart, pointEnd);  //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
 
 		if(pointStart && pointEnd){
 			if (angle != Meteor.defaultAngle){
@@ -182,8 +182,16 @@ export class Meteor extends Magic{
 		//display magic on the cursor
 		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX, Mouse.canvasY); 
 		Draw.ctx.rotate((angle - 90 - 45) * Math.PI / 180);
-		let x = -cursorMagicWidth / 2 + this.shiftAnimationForCursor.x; //TODO: apply angle to this shift
-		let y = -cursorMagicHeight / 2 + this.shiftAnimationForCursor.y; //TODO: apply angle to this shift
+
+		//высчитываем катет по гипотенузе и углу
+		let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
+		let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
+		let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
+		let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
+
+		console.log('angle', angleOfRightTriangle, lengthOfShift, shiftX, shiftY);
+		let x = -cursorMagicWidth / 2 - shiftY; 
+		let y = -cursorMagicHeight / 2 - shiftX;
 
 		this.animationForCursor.draw(drawsDiffMs, false, x, y, cursorMagicWidth, cursorMagicHeight);
 
