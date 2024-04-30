@@ -178,26 +178,30 @@ export class Meteor extends Magic{
 			Draw.ctx.rotate(0);
 
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
-			
 			Draw.ctx.beginPath();
 			Draw.ctx.arc(pointStart.x, pointStart.y, 5, 0, 2 * Math.PI);
 			Draw.ctx.fill();
 
-			Draw.ctx.beginPath();
-			Draw.ctx.moveTo(pointStart.x, pointStart.y);
-			Draw.ctx.lineTo(pointEnd.x, pointEnd.y);
-			Draw.ctx.stroke();
+			var angleNotFiltered = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
+			if (angleNotFiltered == angle){
+				Draw.ctx.beginPath();
+				Draw.ctx.moveTo(pointStart.x, pointStart.y);
+				Draw.ctx.lineTo(pointEnd.x, pointEnd.y);
+				Draw.ctx.stroke();
+			}
 		}
 
 		//display magic on the cursor
-			//высчитываем катет по гипотенузе и углу
-			let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
-			let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
-			let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
-			let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
-			if(angle > 90){
-				shiftX *= -1;
-			}
+
+		//высчитываем катет по гипотенузе и углу
+		let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
+		angleOfRightTriangle += angle > 90 ? 5 : -5;
+		let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
+		let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
+		let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
+		if(angle > 90){
+			shiftX *= -1;
+		}
 
 
 		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX - shiftX, Mouse.canvasY - shiftY); 
@@ -210,6 +214,12 @@ export class Meteor extends Magic{
 
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
+
+
+		Draw.ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.arc(pointEnd.x, pointEnd.y, 1, 0, 2 * Math.PI);
+		Draw.ctx.fill();
 	}
 }
 Object.defineProperty(Meteor, "name", { value: 'Meteor', writable: false }); //fix production minification class names
