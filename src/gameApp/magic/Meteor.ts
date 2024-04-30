@@ -195,7 +195,11 @@ export class Meteor extends Magic{
 			let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
 			let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
 			let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
-			
+			if(angle > 90){
+				shiftX *= -1;
+			}
+
+
 		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX - shiftX, Mouse.canvasY - shiftY); 
 		Draw.ctx.rotate((angle - 90 - 45) * Math.PI / 180);
 
