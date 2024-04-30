@@ -59,7 +59,7 @@ export class Meteor extends Magic{
 			Meteor.imageGif, 
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimation), 
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimationForCursor), 
-			new Point(0, -30),
+			new Point(0, 30),
 			null, //lifeTime
 			Meteor.imageHandler);
 		
@@ -160,38 +160,45 @@ export class Meteor extends Magic{
 		//display trajectory
 		let pointEnd = Mouse.getCanvasMousePoint();
 		pointStart = pointStart || pointEnd;
-		let angle = this.getAngle(pointStart, pointEnd);  //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
+		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+		let angle = this.getAngle(pointStart, pointEnd);  //has distance logic inside. 0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
 
-		if(pointStart && pointEnd){
-			if (angle != Meteor.defaultAngle){
-				Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
-				Draw.ctx.rotate(angle * Math.PI / 180);
-				Draw.ctx.beginPath();
-				let width = this.image.width * this.size;
-				Draw.ctx.rect(-Draw.ctx.canvas.height * 5, -width / 2, Draw.ctx.canvas.height * 10, width);
-				Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-				Draw.ctx.fill();
-				Draw.ctx.lineWidth = 2;
-				Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
-				Draw.ctx.stroke();
-				Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-				Draw.ctx.rotate(0);
-			} 
+		if(pointStart && pointEnd && distance > Meteor.distanceBetweenToAddAngle){
+			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
+			Draw.ctx.rotate(angle * Math.PI / 180);
+			Draw.ctx.beginPath();
+			let width = this.image.width * this.size;
+			Draw.ctx.rect(-Draw.ctx.canvas.height * 5, -width / 2, Draw.ctx.canvas.height * 10, width);
+			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+			Draw.ctx.fill();
+			Draw.ctx.lineWidth = 2;
+			Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
+			Draw.ctx.stroke();
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+
+			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
+			
+			Draw.ctx.beginPath();
+			Draw.ctx.arc(pointStart.x, pointStart.y, 5, 0, 2 * Math.PI);
+			Draw.ctx.fill();
+
+			Draw.ctx.beginPath();
+			Draw.ctx.moveTo(pointStart.x, pointStart.y);
+			Draw.ctx.lineTo(pointEnd.x, pointEnd.y);
+			Draw.ctx.stroke();
 		}
 
 		//display magic on the cursor
 			//высчитываем катет по гипотенузе и углу
 			let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
 			let lengthOfShift = Helper.getDistance(0, 0, this.shiftAnimationForCursor.x, this.shiftAnimationForCursor.y); //hypotenuse
-			//let height = -this._vacuumCarGravityDistance / Math.tan((Collector._vacuumCarGravityAngle * Math.PI) / 180);
 			let shiftX = lengthOfShift * Math.sin(angleOfRightTriangle * Math.PI / 180); 
 			let shiftY = lengthOfShift * Math.cos(angleOfRightTriangle * Math.PI / 180);
-			//TODO: при мышке слева - нужно скорректировать
 			
 		Draw.ctx.setTransform(1, 0, 0, 1, Mouse.canvasX - shiftX, Mouse.canvasY - shiftY); 
 		Draw.ctx.rotate((angle - 90 - 45) * Math.PI / 180);
 
-		console.log('angle', angleOfRightTriangle, lengthOfShift, shiftX, shiftY);
 		let x = -cursorMagicWidth / 2; 
 		let y = -cursorMagicHeight / 2;
 
