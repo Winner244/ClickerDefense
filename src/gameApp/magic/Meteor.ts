@@ -156,42 +156,16 @@ export class Meteor extends Magic{
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
-
-		//display trajectory
 		let pointEnd = Mouse.getCanvasMousePoint();
 		pointStart = pointStart || pointEnd;
-		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
-		let angle = this.getAngle(pointStart, pointEnd);  //has distance logic inside. 0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
 
-		if(pointStart && pointEnd && distance > Meteor.distanceBetweenToAddAngle){
-			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
-			Draw.ctx.rotate(angle * Math.PI / 180);
-			Draw.ctx.beginPath();
-			let width = this.image.width * this.size;
-			Draw.ctx.rect(-Draw.ctx.canvas.height * 5, -width / 2, Draw.ctx.canvas.height * 10, width);
-			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-			Draw.ctx.fill();
-			Draw.ctx.lineWidth = 2;
-			Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
-			Draw.ctx.stroke();
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
+		this.displayTrajectory(pointStart, pointEnd);
+		this.displayMagicOnTheCursor(drawsDiffMs, pointStart, pointEnd, cursorMagicWidth, cursorMagicHeight);
 
-			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
-			Draw.ctx.beginPath();
-			Draw.ctx.arc(pointStart.x, pointStart.y, 5, 0, 2 * Math.PI);
-			Draw.ctx.fill();
+	}
 
-			var angleNotFiltered = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
-			if (angleNotFiltered == angle){
-				Draw.ctx.beginPath();
-				Draw.ctx.moveTo(pointStart.x, pointStart.y);
-				Draw.ctx.lineTo(pointEnd.x, pointEnd.y);
-				Draw.ctx.stroke();
-			}
-		}
-
-		//display magic on the cursor
+	displayMagicOnTheCursor(drawsDiffMs: number, pointStart: Point, pointEnd: Point, cursorMagicWidth: number, cursorMagicHeight: number){
+		let angle = this.getAngle(pointStart, pointEnd);  //has distance logic inside.
 
 		//высчитываем катет по гипотенузе и углу
 		let angleOfRightTriangle = Math.abs(angle - 90); //angle between hypotenuse and closest cathetus
@@ -214,12 +188,40 @@ export class Meteor extends Magic{
 
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
+	}
 
+	displayTrajectory(pointStart: Point, pointEnd: Point){
+		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+		if (distance > Meteor.distanceBetweenToAddAngle){
+			let angle = this.getAngle(pointStart, pointEnd);
+			let width = this.image.width * this.size;
+			let height = Draw.ctx.canvas.height;
 
-		Draw.ctx.fillStyle = 'rgba(255, 0, 0, 1)';
-		Draw.ctx.beginPath();
-		Draw.ctx.arc(pointEnd.x, pointEnd.y, 1, 0, 2 * Math.PI);
-		Draw.ctx.fill();
+			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
+			Draw.ctx.rotate(angle * Math.PI / 180);
+			Draw.ctx.beginPath();
+			Draw.ctx.rect(-height * 5, -width / 2, height * 10, width);
+			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
+			Draw.ctx.fill();
+			Draw.ctx.lineWidth = 2;
+			Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
+			Draw.ctx.stroke();
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+
+			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
+			Draw.ctx.beginPath();
+			Draw.ctx.arc(pointStart.x, pointStart.y, 5, 0, 2 * Math.PI);
+			Draw.ctx.fill();
+
+			var notChangedAngle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
+			if (notChangedAngle == angle){
+				Draw.ctx.beginPath();
+				Draw.ctx.moveTo(pointStart.x, pointStart.y);
+				Draw.ctx.lineTo(pointEnd.x, pointEnd.y);
+				Draw.ctx.stroke();
+			}
+		}
 	}
 }
 Object.defineProperty(Meteor, "name", { value: 'Meteor', writable: false }); //fix production minification class names
