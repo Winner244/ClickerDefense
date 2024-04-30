@@ -188,13 +188,19 @@ export class Meteor extends Magic{
 
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
+
+
+		Draw.ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.arc(pointEnd.x, pointEnd.y, 1, 0, 2 * Math.PI);
+		Draw.ctx.fill();
 	}
 
 	displayTrajectory(pointStart: Point, pointEnd: Point){
 		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 		if (distance > Meteor.distanceBetweenToAddAngle){
 			let angle = this.getAngle(pointStart, pointEnd);
-			let width = this.image.width * this.size;
+			let width = this.animation.image.width / this.animation.frames * this.size / 1.7;
 			let height = Draw.ctx.canvas.height;
 
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
