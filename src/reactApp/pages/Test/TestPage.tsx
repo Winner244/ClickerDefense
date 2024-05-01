@@ -36,6 +36,7 @@ import './TestPage.scss';
 import { Coins } from '../../../gameApp/coins/Coins';
 import { Coin } from '../../../gameApp/coins/Coin';
 import { Panels } from '../../components/Panels/Panels';
+import { Meteor } from '../../../gameApp/magic/Meteor';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -3289,6 +3290,24 @@ class TestPage extends React.Component {
                 }, 3000);
             }
         },*/
+
+        {
+            key: "Панель магии - с метеором",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                WavesState.isWaveStarted = false;
+                Waves.waveCurrent = 0;
+                Gamer.coins = 775;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                Game.buyThing(Meteor.shopItem);
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){

@@ -50,7 +50,7 @@ export class Meteor extends Magic{
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 0.3;
 
-	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
+	constructor(x: number, y: number, dx: number = 0, dy: number = 0, angle: number = 90, size: number|null = null)
 	{
 		super(x, y, 
 			size || Meteor.initialSize,
@@ -65,9 +65,14 @@ export class Meteor extends Magic{
 		
 		this.speed = Meteor.initialSpeed;
 		this.angle = angle - 45 - 90;  //0 - it is right, 90 - it is bottom, 180 it is left, 270 it is top
-		this.dx = -(angle - 90) / 90;
-		this.dy = 1 - Math.abs(this.dx);
+		//this.dx = -(angle - 90.0) / 90.0;
+		//this.dy = 1 - Math.abs(this.dx);
+		this.dx = dx;
+		this.dy = dy;
 		this.isEndLogic = false;
+
+		let angle3 = this.getAngle(new Point(x, y), new Point(x + this.dx * 100, y + this.dy * 100));
+		console.log('new Meteor: ', angle, (-(angle - 90.0) / 90.0), this.dx, this.dy, angle3, new Point(x, y), new Point(x + this.dx * 100, y + this.dy * 100));
 
 		Meteor.init(true);
 	}
@@ -109,11 +114,18 @@ export class Meteor extends Magic{
 		let y = -this.animation.image.height * this.size;
 		if(angle != 90){
 			let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, y), new Point(1, y));
+			console.log('getPointOfIntersection2LinesByPoints', point.x, point.y, y, pointStart, pointEnd, angle);
 			x = point.x
+
+			//check:
+			let angle2 = this.getAngle(point, pointEnd);
+			console.log('second angle: ', angle2);
 		}
 
-		x -= this.animation.image.width / this.animation.frames * this.size / 2;
-		return new Meteor(x, y, angle, this.size);
+		let dx = pointEnd.x - pointStart.x;
+		let dy = pointEnd.y - pointStart.y;
+		//x -= this.animation.image.width / this.animation.frames * this.size / 2;
+		return new Meteor(x, y, dx / dx, dy / dx, angle, this.size);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -203,6 +215,7 @@ export class Meteor extends Magic{
 			let width = this.animation.image.width / this.animation.frames * this.size / 1.7;
 			let height = Draw.ctx.canvas.height;
 
+			console.log('displayTrajectory', pointStart, pointEnd, angle);
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
 			Draw.ctx.rotate(angle * Math.PI / 180);
 			Draw.ctx.beginPath();
