@@ -48,7 +48,7 @@ export class Meteor extends Magic{
 	private isEndLogic: boolean;
 
 	static readonly initialSize: number = 0.5;
-	static readonly initialSpeed: number = 1;
+	static readonly initialSpeed: number = 0.5;
 
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
@@ -113,7 +113,17 @@ export class Meteor extends Magic{
 			x = point.x
 		}
 
-		x -= this.animation.image.width / this.animation.frames * this.size / 2;
+		//x -= this.animation.image.width / this.animation.frames * this.size / 2;
+		let xShift = this.animation.image.width / this.animation.frames * this.size / 2 * Math.cos((90 - angle) * Math.PI / 180);
+		x -= xShift;
+
+		console.log('angle', 90 - angle, xShift, this.animation.image.width / this.animation.frames * this.size / 2);
+
+		//без сдвига - он летит по среденине при 45 градусах
+		//при 0 градусов - смещён вправо
+		//при 80 градусов - смещён влево
+
+		//shift лишь сдвигает это на 45 градусов вниз
 		return new Meteor(x, y, angle, this.size);
 	}
 
