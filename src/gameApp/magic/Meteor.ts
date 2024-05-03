@@ -116,7 +116,7 @@ export class Meteor extends Magic{
 		//x -= this.animation.image.width / this.animation.frames * this.size / 2;
 		let angleToShift = 90 - angle;
 		//let kof = angleToShift > 0 && angleToShift < 45 ? 2 : 1;
-		//angleToShift += angleToShift > 0 ? 5 : 0;
+		angleToShift += angleToShift > 45 ? -5 : angleToShift < 0 ? 0 : 15;
 		//TODO if angleToShift > 55 градусов - начинается возрастающее отклонение траектории
 		let xShift = this.animation.image.width / this.animation.frames / 2 * this.size * Math.cos(angleToShift * Math.PI / 180);
 		x -= xShift;
