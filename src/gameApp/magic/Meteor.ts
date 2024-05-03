@@ -107,33 +107,15 @@ export class Meteor extends Magic{
 	createExemplar(pointStart: Point, pointEnd: Point): Meteor{
 		let angle = this.getAngle(pointStart, pointEnd);
 		let x = pointEnd.x;
-		let y = -this.animation.image.height * this.size;
+		let y = -this.height;
 		if(angle != 90){
 			let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, y), new Point(1, y));
 			x = point.x
 		}
 
-		//x -= this.animation.image.width / this.animation.frames * this.size / 2;
-		let angleToShift = 90 - angle;
-		//let kof = angleToShift > 0 && angleToShift < 45 ? 2 : 1;
-		angleToShift += angleToShift > 45 ? -5 : angleToShift < 0 ? 0 : 15;
-		//TODO if angleToShift > 55 градусов - начинается возрастающее отклонение траектории
-		let xShift = this.animation.image.width / this.animation.frames / 2 * this.size * Math.cos(angleToShift * Math.PI / 180);
-		x -= xShift;
+		x -= this.width / 2;
+		y -= this.height / 2;
 
-		let ySHift = this.animation.image.height / 2 * this.size * Math.sin(angleToShift * Math.PI / 180);
-		y -= ySHift;
-
-		console.log('angle', angleToShift, xShift, ySHift);
-
-		//у нас прямоугольник, который повёрнут на 45 (+-5) градусов
-		//когда общий угол поворота прямоугольника превышает 90 градусов - тогда надо брать высоту, а не ширину
-
-		//без сдвига - он летит по среденине при 45 градусах
-		//при 0 градусов - смещён вправо
-		//при 80 градусов - смещён влево
-
-		//shift лишь сдвигает это на 45 градусов вниз
 		return new Meteor(x, y, angle, this.size);
 	}
 
@@ -151,12 +133,12 @@ export class Meteor extends Magic{
 		this.x += this.dx * this.speed * drawsDiffMs;
 		this.y += this.dy * this.speed * drawsDiffMs;
 
-		if(this.y + this.animation.image.height * this.size / 1.2 > Draw.canvas.height - bottomShiftBorder){
+		if(this.y + this.height / 1.2 > Draw.canvas.height - bottomShiftBorder){
 			//TODO: урон монстрам в радиусе взрыва monsters
 			//TODO: взрыв
 		}
 
-		if(this.y + this.animation.image.height * this.size / 3 > Draw.canvas.height - bottomShiftBorder){
+		if(this.y + this.height / 3 > Draw.canvas.height - bottomShiftBorder){
 			this.isEndLogic = true;
 		}
 	}
@@ -166,12 +148,9 @@ export class Meteor extends Magic{
 			return;
 		}
 
-		let width = this.animation.image.width / this.animation.frames * this.size;
-		let height = this.animation.image.height * this.size;
-
-		Draw.ctx.setTransform(1, 0, 0, 1, this.x + width / 2, this.y + height / 2); 
+		Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 		Draw.ctx.rotate(this.angle * Math.PI / 180);
-		this.animation.draw(drawsDiffMs, false, -width / 2, -height / 2, width, height);
+		this.animation.draw(drawsDiffMs, false, -this.width / 2, -this.height / 2, this.width, this.height);
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
 	}
@@ -221,7 +200,7 @@ export class Meteor extends Magic{
 		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 		if (distance > Meteor.distanceBetweenToAddAngle){
 			let angle = this.getAngle(pointStart, pointEnd);
-			let width = this.animation.image.width / this.animation.frames * this.size / 1.7;
+			let width = this.width / 1.7;
 			let height = Draw.ctx.canvas.height;
 
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 

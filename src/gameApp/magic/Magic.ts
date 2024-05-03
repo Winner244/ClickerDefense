@@ -56,6 +56,14 @@ export class Magic{
 		this.isEnd = false;
 	}
 
+	get height(): number{
+		return this.animation.image.height * this.size;
+	}
+
+	get width(): number{
+		return this.animation.image.width / this.animation.frames * this.size;
+	}
+
 	mouseLogicOnCursor(starCreatingMousePosition: Point, currentMousePosition: Point, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
 		let isCursorChanged = false;
 		return isCursorChanged;
