@@ -124,11 +124,11 @@ export class Meteor extends Magic{
 
 		let angleToShift = 90 - angle;
 			let xShift = this.width / 2 * Math.cos(angleToShift * Math.PI / 180);
-			x -= xShift;
+			x -= this.width / 2;
 	
-			let yShift = Math.abs(this.height / 2  * Math.sin(angleToShift * Math.PI / 180));
-			y -= yShift;
-			console.log('angle', angleToShift, xShift, yShift);
+			//let yShift = this.height / 2  * Math.cos(angleToShift * Math.PI / 180);
+			y -= this.height / 2;
+			//console.log('angle', angleToShift, xShift, yShift);
 
 
 		//у нас прямоугольник, который повёрнут на 45 (+-5) градусов
@@ -285,23 +285,6 @@ export class Meteor extends Magic{
 			let angle = this.getAngle(pointStart, pointEnd);
 			let width = this.width / 1.7;
 			let height = Draw.ctx.canvas.height;
-
-			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
-			Draw.ctx.rotate(angle * Math.PI / 180);
-			Draw.ctx.beginPath();
-			Draw.ctx.rect(-height * 5, -width / 2, height * 10, width);
-			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
-			Draw.ctx.fill();
-			Draw.ctx.lineWidth = 2;
-			Draw.ctx.strokeStyle = 'rgb(0, 255, 0)';
-			Draw.ctx.stroke();
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
-
-			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
-			Draw.ctx.beginPath();
-			Draw.ctx.arc(pointStart.x, pointStart.y, 5, 0, 2 * Math.PI);
-			Draw.ctx.fill();
 
 			var notChangedAngle = Helper.getRotateAngle(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 			if (notChangedAngle == angle){
