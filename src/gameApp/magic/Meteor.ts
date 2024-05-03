@@ -114,10 +114,14 @@ export class Meteor extends Magic{
 		}
 
 		//x -= this.animation.image.width / this.animation.frames * this.size / 2;
-		let xShift = this.animation.image.width / this.animation.frames * this.size / 2 * Math.cos((90 - angle) * Math.PI / 180);
+		let angleToShift = 90 - angle;
+		let kof = angleToShift > 0 && angleToShift < 45 ? 2 : angleToShift;
+		//angleToShift += angleToShift > 0 ? 5 : 0;
+		//TODO if angleToShift > 55 градусов - начинается возрастающее отклонение траектории
+		let xShift = this.animation.image.width / this.animation.frames * this.size / 2 * Math.cos(angleToShift * Math.PI / 180 * kof);
 		x -= xShift;
 
-		console.log('angle', 90 - angle, xShift, this.animation.image.width / this.animation.frames * this.size / 2);
+		console.log('angle', angleToShift, xShift, this.animation.image.width / this.animation.frames * this.size / 2);
 
 		//у нас прямоугольник, который повёрнут на 45 (+-5) градусов
 		//когда общий угол поворота прямоугольника превышает 90 градусов - тогда надо брать высоту, а не ширину
