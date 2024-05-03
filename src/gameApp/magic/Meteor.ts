@@ -50,7 +50,10 @@ export class Meteor extends Magic{
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 0.5;
 
-	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
+	private pointStart: Point;
+	private pointEnd: Point;
+
+	constructor(x: number, y: number, angle: number = 90, size: number|null = null, pointStart: Point|null = null, pointEnd: Point|null = null)
 	{
 		super(x, y, 
 			size || Meteor.initialSize,
@@ -66,9 +69,12 @@ export class Meteor extends Magic{
 		this.speed = Meteor.initialSpeed;
 		this.angle = angle - 45 - 90;
 		this.angle += this.angle > 90 ? 5 : -5;
-		this.dy = this.speed * Math.sin(angle * Math.PI / 180);
-		this.dx = this.speed * Math.cos(angle * Math.PI / 180);
+		this.dy = 0;
+		this.dx = 0;
 		this.isEndLogic = false;
+
+		this.pointStart = pointStart ?? new Point(0, 0);
+		this.pointEnd = pointEnd ?? new Point(0, 0);
 
 		Meteor.init(true);
 	}
@@ -107,24 +113,23 @@ export class Meteor extends Magic{
 	createExemplar(pointStart: Point, pointEnd: Point): Meteor{
 		let angle = this.getAngle(pointStart, pointEnd);
 		let x = pointEnd.x;
-		let y = -this.animation.image.height * this.size;
+		let y = -this.height;
+		y = this.height;
+
+
 		if(angle != 90){
 			let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, y), new Point(1, y));
 			x = point.x
 		}
 
-		//x -= this.animation.image.width / this.animation.frames * this.size / 2;
 		let angleToShift = 90 - angle;
-		//let kof = angleToShift > 0 && angleToShift < 45 ? 2 : 1;
-		angleToShift += angleToShift > 45 ? -5 : angleToShift < 0 ? 0 : 15;
-		//TODO if angleToShift > 55 градусов - начинается возрастающее отклонение траектории
-		let xShift = this.animation.image.width / this.animation.frames / 2 * this.size * Math.cos(angleToShift * Math.PI / 180);
-		x -= xShift;
+			let xShift = this.width / 2 * Math.cos(angleToShift * Math.PI / 180);
+			x -= xShift;
+	
+			let yShift = Math.abs(this.height / 2  * Math.sin(angleToShift * Math.PI / 180));
+			y -= yShift;
+			console.log('angle', angleToShift, xShift, yShift);
 
-		let ySHift = this.animation.image.height / 2 * this.size * Math.sin(angleToShift * Math.PI / 180);
-		y -= ySHift;
-
-		console.log('angle', angleToShift, xShift, ySHift);
 
 		//у нас прямоугольник, который повёрнут на 45 (+-5) градусов
 		//когда общий угол поворота прямоугольника превышает 90 градусов - тогда надо брать высоту, а не ширину
@@ -134,7 +139,7 @@ export class Meteor extends Magic{
 		//при 80 градусов - смещён влево
 
 		//shift лишь сдвигает это на 45 градусов вниз
-		return new Meteor(x, y, angle, this.size);
+		return new Meteor(x, y, angle, this.size, pointStart, pointEnd);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -151,12 +156,12 @@ export class Meteor extends Magic{
 		this.x += this.dx * this.speed * drawsDiffMs;
 		this.y += this.dy * this.speed * drawsDiffMs;
 
-		if(this.y + this.animation.image.height * this.size / 1.2 > Draw.canvas.height - bottomShiftBorder){
+		if(this.y + this.height / 1.2 > Draw.canvas.height - bottomShiftBorder){
 			//TODO: урон монстрам в радиусе взрыва monsters
 			//TODO: взрыв
 		}
 
-		if(this.y + this.animation.image.height * this.size / 3 > Draw.canvas.height - bottomShiftBorder){
+		if(this.y + this.height / 3 > Draw.canvas.height - bottomShiftBorder){
 			this.isEndLogic = true;
 		}
 	}
@@ -166,14 +171,62 @@ export class Meteor extends Magic{
 			return;
 		}
 
-		let width = this.animation.image.width / this.animation.frames * this.size;
-		let height = this.animation.image.height * this.size;
+		let width = this.width;
+		let height = this.height;
 
 		Draw.ctx.setTransform(1, 0, 0, 1, this.x + width / 2, this.y + height / 2); 
 		Draw.ctx.rotate(this.angle * Math.PI / 180);
 		this.animation.draw(drawsDiffMs, false, -width / 2, -height / 2, width, height);
+
+		//TODO: test!!!!!!!!!!!!!!!!!!!!!!!
+		Draw.ctx.strokeStyle = 'rgba(255, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.moveTo(-width / 2, -height / 2);
+		Draw.ctx.lineTo(-width / 2 + width, -height / 2);
+		Draw.ctx.lineTo(-width / 2 + width, -height / 2 + height);
+		Draw.ctx.lineTo(-width / 2, -height / 2 + height);
+		Draw.ctx.lineTo(-width / 2, -height / 2);
+		Draw.ctx.stroke();
+
+		Draw.ctx.fillStyle = 'rgba(255, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.arc(0, 0, 5, 0, 2 * Math.PI);
+		Draw.ctx.fill();
+
+
+
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
+
+
+
+		//TODO: test!!!!!!!!!!!!!!!!!!!!!!!
+		Draw.ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.moveTo(this.x, this.y);
+		Draw.ctx.lineTo(this.x + width, this.y);
+		Draw.ctx.lineTo(this.x + width, this.y + height);
+		Draw.ctx.lineTo(this.x, this.y + height);
+		Draw.ctx.lineTo(this.x, this.y);
+		Draw.ctx.stroke();
+
+
+		Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.arc(this.x + width / 2, this.y + height / 2, 3, 0, 2 * Math.PI);
+		Draw.ctx.fill();
+
+
+		//TODO: test!!!!!!!!!!!!!!!!!!!!!!!
+		Draw.ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		let yyy = this.height;
+		Draw.ctx.moveTo(0, yyy);
+		Draw.ctx.lineTo(Draw.canvas.width, yyy);
+		Draw.ctx.stroke();
+
+
+		this.displayTrajectory(this.pointStart, this.pointEnd);
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
@@ -215,13 +268,22 @@ export class Meteor extends Magic{
 		Draw.ctx.beginPath();
 		Draw.ctx.arc(pointEnd.x, pointEnd.y, 1, 0, 2 * Math.PI);
 		Draw.ctx.fill();
+
+
+		//TODO: test!!!!!!!!!!!!!!!!!!!!!!!
+		Draw.ctx.strokeStyle = 'rgba(0, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		let yyy = this.height;
+		Draw.ctx.moveTo(0, yyy);
+		Draw.ctx.lineTo(Draw.canvas.width, yyy);
+		Draw.ctx.stroke();
 	}
 
 	displayTrajectory(pointStart: Point, pointEnd: Point){
 		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 		if (distance > Meteor.distanceBetweenToAddAngle){
 			let angle = this.getAngle(pointStart, pointEnd);
-			let width = this.animation.image.width / this.animation.frames * this.size / 1.7;
+			let width = this.width / 1.7;
 			let height = Draw.ctx.canvas.height;
 
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 

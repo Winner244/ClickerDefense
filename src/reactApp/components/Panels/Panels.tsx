@@ -236,7 +236,7 @@ export class Panels extends React.Component<Props, {}> {
         let mouseUp = Mouse.getCanvasMousePointByEvent(event);
         Magics.create(selectedItem, mouseUp);
       }
-      this.props.selectItem('');
+      //this.props.selectItem('');
     }
   }
 

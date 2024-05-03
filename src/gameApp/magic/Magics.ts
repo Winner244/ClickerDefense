@@ -34,7 +34,7 @@ export class Magics{
 	}
 
 	static clearCursor(){
-		this.cursorMagic = null;
+		//this.cursorMagic = null;
 		this.starCreatingPoint = null;
 	}
 
