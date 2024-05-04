@@ -26,7 +26,7 @@ import AnimationImage from '../../assets/img/magics/meteor/animation.png';
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
-	static readonly distanceBetweenToAddAngle: number = 30; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
+	static readonly distanceBetweenToAddAngle: number = 70; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
 	static readonly minHorizontalAngle: number = 10; //минимальный угол наклона от горизонта
 	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
 
@@ -110,7 +110,18 @@ export class Meteor extends Magic{
 		let y = -this.height;
 		if(angle != 90){
 			let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, y), new Point(1, y));
-			x = point.x
+			x = point.x;
+
+			if(x < -this.width){
+				x = -this.width;
+				let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(x, 0), new Point(x, 1));
+				y = point.y;
+			}
+			else if(x > Draw.canvas.width + this.width){
+				x = Draw.canvas.width + this.width;
+				let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(x, 0), new Point(x, 1));
+				y = point.y;
+			}
 		}
 
 		x -= this.width / 2;
