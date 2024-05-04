@@ -208,7 +208,11 @@ export class Panels extends React.Component<Props, {}> {
     return null;
   }
 
+  wasMouseDown: boolean = false;
   onMouseDown(event: MouseEvent){
+    if(this.isMouseIn)
+      return;
+
     if(this.props.selectedItemId){
       switch(event.button){
         case 0: // left click
@@ -216,27 +220,33 @@ export class Panels extends React.Component<Props, {}> {
           if (selectedItem){
             let mouseDown = Mouse.getCanvasMousePointByEvent(event);
             Magics.startCreatingCursorAnimation(selectedItem, mouseDown);
+            this.wasMouseDown = true;
           }
           break;
 
         case 2: //right click
           this.props.selectItem(''); 
           Magics.clearCursor();
+          this.wasMouseDown = false;
           break;  
       }
     }
   }
 
   onMouseUp(event: MouseEvent){
+    if(this.isMouseIn)
+      return;
+
     let isLeftClick = event.button == 0;
 
-    if(this.props.selectedItemId && isLeftClick && !this.isMouseIn){
+    if(this.props.selectedItemId && isLeftClick && this.wasMouseDown){
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
         let mouseUp = Mouse.getCanvasMousePointByEvent(event);
         Magics.create(selectedItem, mouseUp);
       }
       this.props.selectItem('');
+      this.wasMouseDown = false;
     }
   }
 
@@ -318,7 +328,7 @@ export class Panels extends React.Component<Props, {}> {
 
           return (
             <div key={index2} 
-              onClick={() => this.onClickSelectItem(item?.id)}
+              onMouseDown={() => this.onClickSelectItem(item?.id)}
               onMouseEnter={() => this.onMouseEnter(item)}
               onMouseLeave={() => this.onMouseLeave()}
               className={className}>
