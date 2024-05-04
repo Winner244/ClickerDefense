@@ -108,6 +108,14 @@ export class Meteor extends Magic{
 		let angle = this.getAngle(pointStart, pointEnd);
 		let x = pointEnd.x;
 		let y = -this.height;
+		
+		if(angle == Meteor.minHorizontalAngle || angle == 180 - Meteor.minHorizontalAngle){
+			pointStart = pointEnd;
+			let dy = this.speed * Math.sin(angle * Math.PI / 180);
+			let dx = this.speed * Math.cos(angle * Math.PI / 180);
+			pointEnd = new Point(pointStart.x + dx, pointStart.y + dy);
+		}
+		
 		if(angle != 90){
 			let point = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, y), new Point(1, y));
 			x = point.x;
