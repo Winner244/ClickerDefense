@@ -40,7 +40,7 @@ export class Panels extends React.Component<Props, {}> {
 
 	private static readonly imageAdding: HTMLImageElement = new Image(); //анимация добавления элемента
 
-  public static countAllItems(): number{
+  static countAllItems(): number{
     let panels = App.Store.getState().panels?.panels;
     return panels?.reduce((partialSum, panel) => partialSum + panel.items.filter(item => item != null).length, 0) || 0;
   }
@@ -96,7 +96,7 @@ export class Panels extends React.Component<Props, {}> {
     return panelWithFreePlace;
   }
 
-  public static addItemToPanel(item: Magic): Promise<BaseObject|null>{
+  static addItemToPanel(item: Magic): Promise<BaseObject|null>{
     let panelWithFreePlace = this.getFirstFreePanel();
     if (!panelWithFreePlace){
       return this.addNewPanel().then(isSuccess => {
@@ -155,7 +155,7 @@ export class Panels extends React.Component<Props, {}> {
     return new BaseObject(x, y, width, height);
   }
 
-  static startAddingItemAnimation(panelIndex: number, itemIndex: number){
+  private static startAddingItemAnimation(panelIndex: number, itemIndex: number){
     let classItem = `panel${panelIndex}__item${itemIndex}-canvas`;
     let elements = document.getElementsByClassName(classItem);
     if (!elements.length){
@@ -192,6 +192,30 @@ export class Panels extends React.Component<Props, {}> {
     window.requestAnimationFrame(animationCallback);
   }
 
+  static isDisabled: boolean = false;
+  static disable(): void{
+    Panels.isDisabled = true;
+    Panels.clearSelection();
+
+    let elements = document.getElementsByClassName('panel__item-container--hover');
+    for (let element of elements) {
+      element.classList.remove('panel__item-container--hover');
+    }
+  }
+
+  static undisable(): void{
+    Panels.isDisabled = false;
+    let elements = document.getElementsByClassName('panel__item-container');
+    for (let element of elements) {
+      element.classList.add('panel__item-container--hover');
+    }
+  }
+
+  static clearSelection(): void{
+    Magics.clearCursor();
+    App.Store.dispatch(PanelsStore.actionCreators.selectItem(''));
+  }
+
   getSelectedItem(itemId: string|null = null): Magic|null{
     if(!this.props.selectedItemId && !itemId){
       return null;
@@ -210,7 +234,7 @@ export class Panels extends React.Component<Props, {}> {
 
   wasMouseDown: boolean = false;
   onMouseDown(event: MouseEvent){
-    if(this.isMouseIn)
+    if(this.isMouseIn || Panels.isDisabled)
       return;
 
     if(this.props.selectedItemId){
@@ -234,7 +258,7 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onMouseUp(event: MouseEvent){
-    if(this.isMouseIn)
+    if(this.isMouseIn || Panels.isDisabled)
       return;
 
     let isLeftClick = event.button == 0;
@@ -251,7 +275,7 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onKey(event: KeyboardEvent){
-    if(!this.props.panels?.length){
+    if(!this.props.panels?.length || Panels.isDisabled){
       return;
     }
 
@@ -268,7 +292,7 @@ export class Panels extends React.Component<Props, {}> {
       let items = document.getElementsByClassName(`panel${panelIndex}__item${itemIndex}`);
       if (items.length){
         let item = items[0] as HTMLElement;
-        item.click();
+        this.onClickSelectItem(item.dataset.id ?? '')
       }
     }
   }
@@ -286,6 +310,9 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onClickSelectItem(itemId: string){
+    if(Panels.isDisabled)
+      return;
+
     if(this.props.selectedItemId == itemId){
       this.props.selectItem('');
       Magics.clearCursor();
@@ -331,8 +358,9 @@ export class Panels extends React.Component<Props, {}> {
               onMouseDown={() => this.onClickSelectItem(item?.id)}
               onMouseEnter={() => this.onMouseEnter(item)}
               onMouseLeave={() => this.onMouseLeave()}
-              className={className}>
-                <div className={"panel__item-container " + (item == null ? " panel__item-container--empty " : "")}>
+              className={className}
+              data-id={item?.id}>
+                <div className={"panel__item-container " + (Panels.isDisabled ? "" : " panel__item-container--hover ") + (item == null ? " panel__item-container--empty " : "")}>
                   {item == null 
                     ? null 
                     : <div className={"panel__item-img-gif nodrag "} style={{backgroundImage: `url(${item.imageGif.src})`}} />}

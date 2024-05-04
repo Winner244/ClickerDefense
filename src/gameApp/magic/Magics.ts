@@ -61,9 +61,7 @@ export class Magics{
 		let isCursorChanged = false;
 
 		if(this.cursorMagic){
-			let pointEnd = new Point(mouseX, mouseY);
-			let pointStart = this.starCreatingPoint ?? pointEnd;
-			isCursorChanged = this.cursorMagic.mouseLogicOnCursor(pointStart, pointEnd, isClick, isHoverFound, isWaveStarted, isWaveEnded);
+			isCursorChanged = true;
 		}
 
 		return isCursorChanged;

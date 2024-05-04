@@ -64,11 +64,6 @@ export class Magic{
 		return this.animation.image.width / this.animation.frames * this.size;
 	}
 
-	mouseLogicOnCursor(starCreatingMousePosition: Point, currentMousePosition: Point, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{
-		let isCursorChanged = false;
-		return isCursorChanged;
-	}
-
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
 		if(!this.imageHandler.isImagesCompleted){
 			return;

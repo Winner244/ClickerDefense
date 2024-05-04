@@ -117,6 +117,9 @@ export class Waves{
 
 		if(WavesState.delayStartLeftTimeMs > 0){
 			WavesState.delayStartLeftTimeMs -= drawsDiffMs;
+			if(WavesState.delayStartLeftTimeMs <= 0){
+				Game.startOfWave();
+			}
 			return;
 		}
 

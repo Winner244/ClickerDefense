@@ -154,6 +154,11 @@ export class Game {
 
 	static endOfWave(){
 		Buildings.clearModifiers();
+		Panels.clearSelection();
+	}
+
+	static startOfWave(){ //event after blackOut 
+		Panels.undisable();
 	}
 
 	static loadResourcesAfterBuild(building: Building){
@@ -210,6 +215,7 @@ export class Game {
 				Game.gaveOverTimeLeftMs = Game.gaveOverTimeMs;
 				AudioSystem.pauseSounds();
 				AudioSystem.play(-1, GameOverSound, 0);
+				Panels.disable();
 
 				if(Buildings.flyEarth.health <= 0){
 					//delete all miners from flyEarch
@@ -429,6 +435,7 @@ export class Game {
 		BuildingButtons.hide();
 		UnitButtons.hide();
 		AudioSystem.pauseSounds();
+		Panels.disable();
 	}
 
 	/** Продолжить игру */
@@ -439,6 +446,9 @@ export class Game {
 
 		if(!Game.isGameRun){
 			AudioSystem.resumeSounds();
+			if(!this.isGameOver){
+				Panels.undisable();
+			}
 		}
 
 		Game.isGameRun = true;
@@ -457,6 +467,7 @@ export class Game {
 		Game.continue();
 		Waves.startNewWave();
 		Upgrade.hide();
+		Panels.disable();
 	}
 
 	/** Игрок купил вещь в магазине */

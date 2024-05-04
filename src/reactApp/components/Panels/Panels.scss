@@ -64,14 +64,16 @@
 			box-shadow: 0 0 8px 1px black;
 		}
 
-		&:hover{
-			& .panel__item-img-gif{
-				opacity: 1;
-				box-shadow: 0 0 8px 1px red, inset 0 0 8px 1px red;
-			}   
-
-			& .panel__item-img{
-				opacity: 0;
+		&--hover{
+			&:hover{
+				& .panel__item-img-gif{
+					opacity: 1;
+					box-shadow: 0 0 8px 1px red, inset 0 0 8px 1px red;
+				}   
+	
+				& .panel__item-img{
+					opacity: 0;
+				}
 			}
 		}
 
@@ -143,12 +145,6 @@
 			top: -120px;
 			z-index: 3;
 			display: none;
-		}
-
-		&--not-empty{
-			&:hover{
-				background-color: yellowgreen;
-			}
 		}
 	}
 }
