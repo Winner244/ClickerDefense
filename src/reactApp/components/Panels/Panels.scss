@@ -122,6 +122,11 @@
 				opacity: 0;
 				cursor: pointer;
 			}
+
+			&--disable{
+				filter: brightness(0.4);
+				cursor: default !important;
+			}
 		}
 
 		&-number{

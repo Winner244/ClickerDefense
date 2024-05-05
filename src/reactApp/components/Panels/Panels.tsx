@@ -192,23 +192,13 @@ export class Panels extends React.Component<Props, {}> {
     window.requestAnimationFrame(animationCallback);
   }
 
-  static isDisabled: boolean = false;
   static disable(): void{
-    Panels.isDisabled = true;
     Panels.clearSelection();
-
-    let elements = document.getElementsByClassName('panel__item-container--hover');
-    for (let element of elements) {
-      element.classList.remove('panel__item-container--hover');
-    }
+    App.Store.dispatch(PanelsStore.actionCreators.disable());
   }
 
   static undisable(): void{
-    Panels.isDisabled = false;
-    let elements = document.getElementsByClassName('panel__item-container');
-    for (let element of elements) {
-      element.classList.add('panel__item-container--hover');
-    }
+    App.Store.dispatch(PanelsStore.actionCreators.undisable());
   }
 
   static clearSelection(): void{
@@ -234,7 +224,7 @@ export class Panels extends React.Component<Props, {}> {
 
   wasMouseDown: boolean = false;
   onMouseDown(event: MouseEvent){
-    if(this.isMouseIn || Panels.isDisabled)
+    if(this.isMouseIn || this.props.isDisabled)
       return;
 
     if(this.props.selectedItemId){
@@ -258,7 +248,7 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onMouseUp(event: MouseEvent){
-    if(this.isMouseIn || Panels.isDisabled)
+    if(this.isMouseIn || this.props.isDisabled)
       return;
 
     let isLeftClick = event.button == 0;
@@ -275,7 +265,7 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onKey(event: KeyboardEvent){
-    if(!this.props.panels?.length || Panels.isDisabled){
+    if(!this.props.panels?.length || this.props.isDisabled){
       return;
     }
 
@@ -310,7 +300,7 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   onClickSelectItem(itemId: string){
-    if(Panels.isDisabled)
+    if(this.props.isDisabled)
       return;
 
     if(this.props.selectedItemId == itemId){
@@ -360,13 +350,13 @@ export class Panels extends React.Component<Props, {}> {
               onMouseLeave={() => this.onMouseLeave()}
               className={className}
               data-id={item?.id}>
-                <div className={"panel__item-container " + (Panels.isDisabled ? "" : " panel__item-container--hover ") + (item == null ? " panel__item-container--empty " : "")}>
+                <div className={"panel__item-container " + (this.props.isDisabled ? "" : " panel__item-container--hover ") + (item == null ? " panel__item-container--empty " : "")}>
                   {item == null 
                     ? null 
                     : <div className={"panel__item-img-gif nodrag "} style={{backgroundImage: `url(${item.imageGif.src})`}} />}
                   {item == null 
                     ? null 
-                    : <div className={"panel__item-img nodrag "} style={{backgroundImage: `url(${item.image.src})`}} />}
+                    : <div className={"panel__item-img nodrag " + (this.props.isDisabled ? 'panel__item-img--disable' : '')} style={{backgroundImage: `url(${item.image.src})`}} />}
                   {item == null 
                     ? null 
                     : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Shift + " : ""}{(index2 + 1) % 10}</div>}
