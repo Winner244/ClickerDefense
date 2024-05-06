@@ -39,6 +39,8 @@ export class Meteor extends Magic{
 	private static readonly imageAnimationDuration: number = 100;
 	private static readonly imageAnimationForCursor: HTMLImageElement = new Image(); //картинка анимации магии для курсора после выбора магии и до момента её активации
 
+	private static readonly damageSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
+
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
 	private angle: number;
@@ -152,6 +154,13 @@ export class Meteor extends Magic{
 		this.x += this.dx * this.speed * drawsDiffMs;
 		this.y += this.dy * this.speed * drawsDiffMs;
 
+		//наносим урон при падении всем кто попал под траекторию движения метеорита
+		let monstersToDamage = monsters.filter(m => m.x + m.width > this.x + this.width * Meteor.damageSizeKof && m.x < this.x + this.width - this.width * Meteor.damageSizeKof &&
+												    m.y + m.height > this.y + this.height * Meteor.damageSizeKof && m.y < this.y + this.height);
+		if(){
+
+		}
+
 		if(this.y + this.height / 1.2 > Draw.canvas.height - bottomShiftBorder){
 			//TODO: урон монстрам в радиусе взрыва monsters
 			//TODO: взрыв
@@ -170,6 +179,22 @@ export class Meteor extends Magic{
 		Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 		Draw.ctx.rotate(this.angle * Math.PI / 180);
 		this.animation.draw(drawsDiffMs, false, -this.width / 2, -this.height / 2, this.width, this.height);
+
+
+
+		let monstersToDamage = monsters.filter(m => m.x + m.width > this.x + this.width * Meteor.damageSizeKof && m.x < this.x + this.width - this.width * Meteor.damageSizeKof &&
+			m.y + m.height > this.y + this.height * Meteor.damageSizeKof && m.y < this.y + this.height);
+			
+		//TODO: test!!!!!!!!!!!!!!!!!!!!!!!
+		Draw.ctx.strokeStyle = 'rgba(255, 0, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.moveTo(-this.width / 2 * Meteor.damageSizeKof, -this.height / 2 * Meteor.damageSizeKof);
+		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof + this.width, -this.height / 2 * Meteor.damageSizeKof);
+		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof + this.width, -this.height / 2 * Meteor.damageSizeKof + this.height);
+		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof, -this.height / 2 + this.height);
+		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof, -this.height / 2 * Meteor.damageSizeKof);
+		Draw.ctx.stroke();
+
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
 	}
@@ -219,7 +244,7 @@ export class Meteor extends Magic{
 		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 		if (distance > Meteor.distanceBetweenToAddAngle){
 			let angle = this.getAngle(pointStart, pointEnd);
-			let width = this.width / 1.7;
+			let width = this.width * Meteor.damageSizeKof;
 			let height = Draw.ctx.canvas.height;
 
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
