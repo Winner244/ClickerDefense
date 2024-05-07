@@ -40,6 +40,7 @@ export class Meteor extends Magic{
 	private static readonly imageAnimationForCursor: HTMLImageElement = new Image(); //картинка анимации магии для курсора после выбора магии и до момента её активации
 
 	private static readonly damageSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
+	private static readonly damageInSecondForFalling: number = 0.5; //урон в секунду при падении
 
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
@@ -154,18 +155,24 @@ export class Meteor extends Magic{
 		this.x += this.dx * this.speed * drawsDiffMs;
 		this.y += this.dy * this.speed * drawsDiffMs;
 
-		//наносим урон при падении всем кто попал под траекторию движения метеорита
-		let monstersToDamage = monsters.filter(m => m.x + m.width > this.x + this.width * Meteor.damageSizeKof && m.x < this.x + this.width - this.width * Meteor.damageSizeKof &&
-												    m.y + m.height > this.y + this.height * Meteor.damageSizeKof && m.y < this.y + this.height);
-		if(){
-
-		}
-
-		if(this.y + this.height / 1.2 > Draw.canvas.height - bottomShiftBorder){
+		let isFall = this.y + this.height / 1.2 > Draw.canvas.height - bottomShiftBorder;
+		if (isFall){
 			//TODO: урон монстрам в радиусе взрыва monsters
 			//TODO: взрыв
 		}
+		else{ //метеорит в воздухе
 
+			//наносим урон при падении всем кто попал под траекторию движения метеорита
+			//для оптимизации - высчитываем не попадание края монстра внутрь повёрнутого квадрата, а расстояние между монстром и метеоритом с вычитом их окружностей
+			let centerX = this.x + this.width / 2;
+			let centerY = this.y + this.height / 2;
+			let radiusMeteorit = this.width * Meteor.damageSizeKof / 2;
+			monsters
+				.filter(monster => Helper.getDistance(centerX, centerY, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
+				.forEach(monster => monster.applyDamage(Meteor.damageInSecondForFalling * drawsDiffMs / 1000));
+		}
+
+		//полное падение
 		if(this.y + this.height / 3 > Draw.canvas.height - bottomShiftBorder){
 			this.isEndLogic = true;
 		}
@@ -179,22 +186,6 @@ export class Meteor extends Magic{
 		Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 		Draw.ctx.rotate(this.angle * Math.PI / 180);
 		this.animation.draw(drawsDiffMs, false, -this.width / 2, -this.height / 2, this.width, this.height);
-
-
-
-		let monstersToDamage = monsters.filter(m => m.x + m.width > this.x + this.width * Meteor.damageSizeKof && m.x < this.x + this.width - this.width * Meteor.damageSizeKof &&
-			m.y + m.height > this.y + this.height * Meteor.damageSizeKof && m.y < this.y + this.height);
-			
-		//TODO: test!!!!!!!!!!!!!!!!!!!!!!!
-		Draw.ctx.strokeStyle = 'rgba(255, 0, 0, 1)';
-		Draw.ctx.beginPath();
-		Draw.ctx.moveTo(-this.width / 2 * Meteor.damageSizeKof, -this.height / 2 * Meteor.damageSizeKof);
-		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof + this.width, -this.height / 2 * Meteor.damageSizeKof);
-		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof + this.width, -this.height / 2 * Meteor.damageSizeKof + this.height);
-		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof, -this.height / 2 + this.height);
-		Draw.ctx.lineTo(-this.width / 2 * Meteor.damageSizeKof, -this.height / 2 * Meteor.damageSizeKof);
-		Draw.ctx.stroke();
-
 		Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 		Draw.ctx.rotate(0);
 	}
