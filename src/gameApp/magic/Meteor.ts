@@ -29,7 +29,7 @@ import ExplosionImage from '../../assets/img/magics/meteor/explosion.png';
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
-	static readonly distanceBetweenToAddAngle: number = 70; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
+	static readonly distanceBetweenToAddAngle: number = 50; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
 	static readonly minHorizontalAngle: number = 10; //минимальный угол наклона от горизонта
 	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
 	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
@@ -170,6 +170,11 @@ export class Meteor extends Magic{
 			return;
 		}
 
+		if(this.angle + 45 > 0 && this.x + this.width < 0 || this.angle < -45 && this.x > Draw.canvas.width){
+			this.isEnd = true;
+			console.log('end', this.angle);
+		}
+
 		this.x += this.dx * this.speed * drawsDiffMs;
 		this.y += this.dy * this.speed * drawsDiffMs;
 
@@ -189,9 +194,13 @@ export class Meteor extends Magic{
 			this.explosionAnimation.restart();
 
 			let radiusMeteorit = this.width * Meteor.damageEndSizeKof;
-			monsters
-				.filter(monster => Helper.getDistance(this.intersectionWithEarch.x, this.intersectionWithEarch.y, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
-				.forEach(monster => monster.applyDamage(Meteor.damageEnd));
+			monsters.forEach(monster => {
+				let distance = Helper.getDistance(this.intersectionWithEarch.x, this.intersectionWithEarch.y, monster.centerX, monster.centerY);
+				let distanceMax = radiusMeteorit + Math.min(monster.width, monster.height) / 2;
+				if(distance < distanceMax){
+					monster.applyDamage((1 - Math.min(1, distance / (distanceMax / 2))) * Meteor.damageEnd);
+				}
+			});
 
 		}
 

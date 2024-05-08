@@ -12,6 +12,8 @@ import {Meteor} from './Meteor';
 
 import {Helper} from '../helpers/Helper';
 
+import {Cursor} from '../gamer/Cursor';
+
 
 /** Система управления всеми задействованными магиями - единичный статичный класс */
 export class Magics{
@@ -62,6 +64,7 @@ export class Magics{
 
 		if(this.cursorMagic){
 			isCursorChanged = true;
+			Cursor.setCursor(Cursor.default);
 		}
 
 		return isCursorChanged;
