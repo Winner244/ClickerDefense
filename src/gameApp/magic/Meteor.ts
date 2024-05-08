@@ -301,6 +301,12 @@ export class Meteor extends Magic{
 				Draw.ctx.lineTo(pointEnd.x, pointEnd.y);
 				Draw.ctx.stroke();
 			}
+			else{
+				pointStart = pointEnd;
+				let dy = this.speed * Math.sin(angle * Math.PI / 180);
+				let dx = this.speed * Math.cos(angle * Math.PI / 180);
+				pointEnd = new Point(pointStart.x + dx, pointStart.y + dy);
+			}
 
 			let bottom = Draw.canvas.height - Draw.bottomShiftBorder;
 			let intersectionWithEarch = Helper.getPointOfIntersection2LinesByPoints(pointStart, pointEnd, new Point(0, bottom), new Point(1, bottom));
