@@ -29,6 +29,12 @@ export class Meteor extends Magic{
 	static readonly distanceBetweenToAddAngle: number = 70; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
 	static readonly minHorizontalAngle: number = 10; //минимальный угол наклона от горизонта
 	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
+	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
+	static readonly damageEndSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
+	static readonly damageInAirSecond: number = 5; //урон в секунду при падении
+	static readonly damageEndInSecond: number = 5; //Конечный урон в секунду (волна взрыва расходится какое-то время)
+	static readonly initialSize: number = 0.5;
+	static readonly initialSpeed: number = 1;
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
@@ -39,9 +45,6 @@ export class Meteor extends Magic{
 	private static readonly imageAnimationDuration: number = 100;
 	private static readonly imageAnimationForCursor: HTMLImageElement = new Image(); //картинка анимации магии для курсора после выбора магии и до момента её активации
 
-	private static readonly damageSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
-	private static readonly damageInSecondForFalling: number = 0.5; //урон в секунду при падении
-
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
 
 	private angle: number;
@@ -49,9 +52,6 @@ export class Meteor extends Magic{
 	private dy: number;
 	private speed: number;
 	private isEndLogic: boolean;
-
-	static readonly initialSize: number = 0.5;
-	static readonly initialSpeed: number = 0.5;
 
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
@@ -155,26 +155,32 @@ export class Meteor extends Magic{
 		this.x += this.dx * this.speed * drawsDiffMs;
 		this.y += this.dy * this.speed * drawsDiffMs;
 
-		let isFall = this.y + this.height / 1.2 > Draw.canvas.height - bottomShiftBorder;
-		if (isFall){
-			//TODO: урон монстрам в радиусе взрыва monsters
-			//TODO: взрыв
-		}
-		else{ //метеорит в воздухе
+		let centerX = this.x + this.width / 2;
+		let centerY = this.y + this.height / 2;
+
+		let isInAir = this.y + this.height / 1.2 < Draw.canvas.height - bottomShiftBorder;
+		if (isInAir){  //метеорит в воздухе ?
 
 			//наносим урон при падении всем кто попал под траекторию движения метеорита
 			//для оптимизации - высчитываем не попадание края монстра внутрь повёрнутого квадрата, а расстояние между монстром и метеоритом с вычитом их окружностей
-			let centerX = this.x + this.width / 2;
-			let centerY = this.y + this.height / 2;
-			let radiusMeteorit = this.width * Meteor.damageSizeKof / 2;
+			let radiusMeteorit = this.width * Meteor.damageInAirSizeKof / 2;
 			monsters
 				.filter(monster => Helper.getDistance(centerX, centerY, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
-				.forEach(monster => monster.applyDamage(Meteor.damageInSecondForFalling * drawsDiffMs / 1000));
+				.forEach(monster => monster.applyDamage(Meteor.damageInAirSecond * drawsDiffMs / 1000));
+		}
+		else{
+			//TODO: start взрыв
+			let radiusMeteorit = this.width * Meteor.damageEndSizeKof / 2;
+			monsters
+				.filter(monster => Helper.getDistance(centerX, centerY, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
+				.forEach(monster => monster.applyDamage(Meteor.damageEndInSecond * drawsDiffMs / 1000));
+
 		}
 
 		//полное падение
 		if(this.y + this.height / 3 > Draw.canvas.height - bottomShiftBorder){
 			this.isEndLogic = true;
+			this.isEnd = true;
 		}
 	}
 
@@ -235,7 +241,7 @@ export class Meteor extends Magic{
 		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 		if (distance > Meteor.distanceBetweenToAddAngle){
 			let angle = this.getAngle(pointStart, pointEnd);
-			let width = this.width * Meteor.damageSizeKof;
+			let width = this.width * Meteor.damageInAirSizeKof;
 			let height = Draw.ctx.canvas.height;
 
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
