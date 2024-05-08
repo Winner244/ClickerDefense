@@ -30,7 +30,7 @@ import ExplosionImage from '../../assets/img/magics/meteor/explosion.png';
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
 	static readonly distanceBetweenToAddAngle: number = 50; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
-	static readonly minHorizontalAngle: number = 10; //минимальный угол наклона от горизонта
+	static readonly minHorizontalAngle: number = 30; //минимальный угол наклона от горизонта
 	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
 	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
 	static readonly damageEndSizeKof: number = 1; //ширина метеорита которая наносит урон (0.%)
