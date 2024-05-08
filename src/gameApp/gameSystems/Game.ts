@@ -61,7 +61,6 @@ import GameOverSound from '../../assets/sounds/gameOver.mp3';
 
 /** Система управления игрой - единичный статичный экземпляр */
 export class Game {
-	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
 	private static readonly grassImage: HTMLImageElement = new Image(); //трава
 
@@ -237,18 +236,18 @@ export class Game {
 			
 			Game.mouseLogic(drawsDiffMs); //логика обработки мыши
 
-			Waves.logic(drawsDiffMs, Game.bottomShiftBorder);
+			Waves.logic(drawsDiffMs, Draw.bottomShiftBorder);
 		}
 		
-		Buildings.logic(drawsDiffMs, Game.isGameOver, Monsters.all, Units.all, Game.bottomShiftBorder);
+		Buildings.logic(drawsDiffMs, Game.isGameOver, Monsters.all, Units.all, Draw.bottomShiftBorder);
 		
-		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Units.all, Game.isGameOver, Draw.canvas.height - Game.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
+		Monsters.logic(drawsDiffMs, Buildings.flyEarth, Buildings.all, Units.all, Game.isGameOver, Draw.canvas.height - Draw.bottomShiftBorder, Waves.all[Waves.waveCurrent]);
 
-		Units.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Game.bottomShiftBorder);
+		Units.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Draw.bottomShiftBorder);
 		
-		Coins.logic(drawsDiffMs, Game.bottomShiftBorder);
+		Coins.logic(drawsDiffMs, Draw.bottomShiftBorder);
 
-		Magics.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Units.all, Game.bottomShiftBorder);
+		Magics.logic(drawsDiffMs, Game.isGameOver, Buildings.all, Monsters.all, Units.all, Draw.bottomShiftBorder);
 		
 		Labels.logic(drawsDiffMs);
 
@@ -402,7 +401,7 @@ export class Game {
 			}
 		}
 
-		if(Buildings.flyEarthRope.y < Draw.canvas.height - Game.bottomShiftBorder - 20){
+		if(Buildings.flyEarthRope.y < Draw.canvas.height - Draw.bottomShiftBorder - 20){
 			Buildings.flyEarthRope.y += 150 * drawsDiffMs / 1000;
 		}
 	}
@@ -486,7 +485,7 @@ export class Game {
 				throw `unexpected shopItem with type = Building (buyThing('${shopItem.name}')).`;
 			}
 
-			Builder.addBuilding(building, Draw.canvas.height - building.height + Game.bottomShiftBorder);
+			Builder.addBuilding(building, Draw.canvas.height - building.height + Draw.bottomShiftBorder);
 		}
 		else if(shopItem.category == ShopCategoryEnum.UNITS){
 			let newUnit: Unit|null = null;
@@ -497,7 +496,7 @@ export class Game {
 			}
 			else if(Collector.shopItem == shopItem){
 				var x = Helper.getRandom(Buildings.flyEarth.x, Buildings.flyEarth.x + Buildings.flyEarth.width);
-				var y = Draw.canvas.height - this.bottomShiftBorder - Collector.imageHeight - 75;
+				var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
 				newUnit = new Collector(x, y);
 				Units.add(newUnit);
 			}

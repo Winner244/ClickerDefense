@@ -99,7 +99,7 @@ class TestPage extends React.Component {
                 setTimeout(() => {
                     var tower1 = new Tower(200);
                     tower1.loadedResourcesAfterBuild();
-                    Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Game.bottomShiftBorder);
+                    Builder.addBuilding(tower1, Draw.canvas.height - tower1.height + Draw.bottomShiftBorder);
                     Builder.mouseLogic(200, 0, true, false, Buildings.all, Game.loadResourcesAfterBuild.bind(Game));
                 }, 300);
             }
@@ -401,7 +401,7 @@ class TestPage extends React.Component {
                 
                 let newSkelet = new Skelet(500, 0, true, 1);
                 newSkelet.isDisplayCreatingFromUndegroundAnimation = true;
-                newSkelet.y = Draw.canvas.height - Game.bottomShiftBorder - newSkelet.height;
+                newSkelet.y = Draw.canvas.height - Draw.bottomShiftBorder - newSkelet.height;
                 newSkelet.health -= 1;
                 Monsters.all.push(newSkelet);
             }
@@ -2390,7 +2390,7 @@ class TestPage extends React.Component {
                 });
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     //collector1.improveToWoodArmor();
@@ -2422,7 +2422,7 @@ class TestPage extends React.Component {
                 });
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     //collector1.improveToWoodArmor();
@@ -2458,7 +2458,7 @@ class TestPage extends React.Component {
                 });
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     Units.all.push(collector1);
@@ -2488,7 +2488,7 @@ class TestPage extends React.Component {
                 });
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     Units.all.push(collector1);
@@ -2527,7 +2527,7 @@ class TestPage extends React.Component {
                 }, 6000);
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuumCar();
@@ -2567,7 +2567,7 @@ class TestPage extends React.Component {
                 });
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Draw.canvas.width / 2, y);
                     collector1.loadedResourcesAfterBuild();
                     Units.all.push(collector1);
@@ -2631,7 +2631,7 @@ class TestPage extends React.Component {
 
                 var collector1: Collector|null = null;
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     collector1 = new Collector(Draw.canvas.width / 2 - 100, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToWoodArmor();
@@ -2670,7 +2670,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 15, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 collector1.improveToVacuum();
@@ -2704,7 +2704,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 1, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 Units.all.push(collector1);
@@ -2732,7 +2732,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 15, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 collector1.goalX = Draw.canvas.width / 2 - 250;
@@ -2766,7 +2766,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 15, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 Units.all.push(collector1);
@@ -2799,7 +2799,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 15, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 Units.all.push(collector1);
@@ -2859,7 +2859,7 @@ class TestPage extends React.Component {
                 AudioSystem.isEnabled = true;
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     //collector1.improveToWoodArmor();
@@ -2892,7 +2892,7 @@ class TestPage extends React.Component {
 
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     //collector1.improveToWoodArmor();
@@ -2929,7 +2929,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 15, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 Units.all.push(collector1);
@@ -3014,7 +3014,7 @@ class TestPage extends React.Component {
                 }, 300);
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuum();
@@ -3067,7 +3067,7 @@ class TestPage extends React.Component {
                 }, 300);
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuum();
@@ -3103,7 +3103,7 @@ class TestPage extends React.Component {
                         new WaveData(Zombie.name, 1, 10, 0)
                     ]];
 
-                var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                 var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
                 collector1.loadedResourcesAfterBuild();
                 collector1.improveToVacuum();
@@ -3150,7 +3150,7 @@ class TestPage extends React.Component {
 
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     collector1.improveToVacuum();
@@ -3225,7 +3225,7 @@ class TestPage extends React.Component {
                     ]];
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     Units.all.push(collector1);
@@ -3253,7 +3253,7 @@ class TestPage extends React.Component {
                     ]];
 
                 setTimeout(() => {
-                    var y = Draw.canvas.height - Game.bottomShiftBorder - Collector.imageHeight - 75;
+                    var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
                     var collector1 = new Collector(Buildings.flyEarth.centerX - 250, y);
                     collector1.loadedResourcesAfterBuild();
                     Units.all.push(collector1);

@@ -75,7 +75,7 @@ export class Magic{
 			return;
 		}
 		
-		this.animation.draw(drawsDiffMs, false, this.x, this.y, this.animation.image.width / this.animation.frames * this.size, this.animation.image.height * this.size);
+		this.animation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.animation.image.width / this.animation.frames * this.size, this.animation.image.height * this.size);
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){}

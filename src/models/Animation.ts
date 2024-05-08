@@ -24,7 +24,7 @@ export default class Animation extends AnimationBase {
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean, x: number, y: number, width: number, height: number, filter: string|null = null, isInvert: boolean = false){
-		if(!isGameOver){
+		if(!isGameOver && this.leftTimeMs > 0){
 			this.leftTimeMs -= drawsDiffMs;
 		}
 		

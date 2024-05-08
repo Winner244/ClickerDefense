@@ -4,6 +4,8 @@ export class Draw{
 	static ctx: CanvasRenderingContext2D;
 
 	private static filteredImages: { [Key: string]: { [Key: string]: OffscreenCanvas } } = {};
+	
+	static readonly bottomShiftBorder: number = 10; //нижняя граница по которой ходят монстры и до куда падают монетки 
 
 	static init(element: HTMLCanvasElement): void{
 		this.canvas = element;
