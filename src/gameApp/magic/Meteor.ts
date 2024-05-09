@@ -224,7 +224,7 @@ export class Meteor extends Magic{
 		}
 
 		if(this.explosionAnimation.leftTimeMs > 0){
-			let size = this.width * Meteor.damageEndSizeKof * 2;
+			let size = this.width * Meteor.damageEndSizeKof * 1.5;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 		}
 	}
