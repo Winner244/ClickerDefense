@@ -3308,6 +3308,33 @@ class TestPage extends React.Component {
                 Game.buyThing(Meteor.shopItem);
             }
         },
+
+        {
+            key: "Метеор - радиус урона",
+            code: () => {
+                Game.buyThing(Meteor.shopItem);
+
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                Waves.all = [ //монстры на волнах
+                    [ //1-я волна
+                        new WaveData(Boar.name, 1, 1, 6)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Boar.name, 15, 10, 0)
+                    ]];
+
+                for(let x = 10; x < 1900; x += 100){
+                    Monsters.all.push(new Zombie(x, 780, true, 1));
+                    Monsters.all.push(new Zombie(x + 50, 780, true, 1));
+                    Monsters.all.push(new Bat(x, 280, true, 1));
+                    Monsters.all.push(new Bat(x + 50, 380, true, 1));
+                }
+
+                Monsters.all.forEach(x => x.testNumber = 555);
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){

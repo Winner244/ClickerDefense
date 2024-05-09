@@ -35,7 +35,7 @@ export class Meteor extends Magic{
 	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
 	static readonly damageEndSizeKof: number = 1; //ширина метеорита которая наносит урон (0.%)
 	static readonly damageInAirSecond: number = 5; //урон в секунду при падении
-	static readonly damageEnd: number = 15; //Конечный урон при взрыве
+	static readonly damageEnd: number = 5; //Конечный урон при взрыве
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 1;
 
@@ -198,7 +198,7 @@ export class Meteor extends Magic{
 				let distance = Helper.getDistance(this.intersectionWithEarch.x, this.intersectionWithEarch.y, monster.centerX, monster.centerY);
 				let distanceMax = radiusMeteorit + Math.min(monster.width, monster.height) / 2;
 				if(distance < distanceMax){
-					monster.applyDamage((1 - Math.min(1, distance / (distanceMax / 2))) * Meteor.damageEnd);
+					monster.applyDamage((Math.min(1, (distanceMax - distance) / (distanceMax / 2))) * Meteor.damageEnd);
 				}
 			});
 
@@ -224,7 +224,7 @@ export class Meteor extends Magic{
 		}
 
 		if(this.explosionAnimation.leftTimeMs > 0){
-			let size = this.width * Meteor.damageEndSizeKof;
+			let size = this.width * Meteor.damageEndSizeKof * 2;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 		}
 	}

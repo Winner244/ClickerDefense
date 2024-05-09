@@ -62,6 +62,8 @@ export class AttackedObject {
 	protected _impulseX: number; //импульс от сверх ударов и сотрясений
 	protected _impulseY: number; //импульс от сверх ударов и сотрясений по оси Y
 
+	testNumber: number|null; //для тестирования разных кейсов
+
 
 	constructor(x: number, y: number, healthMax: number, scaleSize: number, image: HTMLImageElement, isLeftSide: boolean, isLand: boolean, reduceHover: number, name: string, imageHandler: ImageHandler,
 		frames: number, 
@@ -99,6 +101,8 @@ export class AttackedObject {
 		this._impulseY = 0;
 
 		this.shopItemName = null;
+
+		this.testNumber = null;
 	}
 
 	get height(): number {

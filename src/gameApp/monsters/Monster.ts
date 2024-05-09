@@ -134,6 +134,10 @@ export class Monster extends AttackedObject{
 	}
 
 	logicMoving(drawsDiffMs: number, speed: number){
+		if(this.testNumber == 555){
+			return;
+		}
+		
 		if(this._goal){
 			if(this.isLeftSide) //если монстр идёт с левой стороны
 			{
