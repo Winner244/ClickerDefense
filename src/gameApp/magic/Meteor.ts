@@ -172,7 +172,6 @@ export class Meteor extends Magic{
 
 		if(this.angle + 45 > 0 && this.x + this.width < 0 || this.angle < -45 && this.x > Draw.canvas.width){
 			this.isEnd = true;
-			console.log('end', this.angle);
 		}
 
 		this.x += this.dx * this.speed * drawsDiffMs;
