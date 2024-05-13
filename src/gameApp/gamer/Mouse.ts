@@ -38,12 +38,6 @@ export class Mouse{
 		Mouse.y = event.pageY + scrollTopMain;
 	}
 
-	static getCanvasMousePointByEvent(mouseEvent: MouseEvent): Point{
-		let x = mouseEvent.offsetX / (Draw.canvas.clientWidth / Draw.canvas.width);
-		let y = mouseEvent.offsetY / (Draw.canvas.clientHeight / Draw.canvas.height);
-		return new Point(x, y);
-	}
-
 	static getCanvasMousePoint(): Point{
 		let x = Mouse.x / (Draw.canvas.clientWidth / Draw.canvas.width);
 		let y = Mouse.y / (Draw.canvas.clientHeight / Draw.canvas.height);

@@ -232,7 +232,7 @@ export class Panels extends React.Component<Props, {}> {
         case 0: // left click
           let selectedItem = this.getSelectedItem();
           if (selectedItem){
-            let mouseDown = Mouse.getCanvasMousePointByEvent(event);
+            let mouseDown = Mouse.getCanvasMousePoint();
             Magics.startCreatingCursorAnimation(selectedItem, mouseDown);
             this.wasMouseDown = true;
           }
@@ -256,7 +256,7 @@ export class Panels extends React.Component<Props, {}> {
     if(this.props.selectedItemId && isLeftClick && this.wasMouseDown){
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
-        let mouseUp = Mouse.getCanvasMousePointByEvent(event);
+        let mouseUp = Mouse.getCanvasMousePoint();
         Magics.create(selectedItem, mouseUp);
       }
       this.props.selectItem('');
