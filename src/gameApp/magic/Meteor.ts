@@ -185,7 +185,7 @@ export class Meteor extends Magic{
 			return;
 		}
 
-		if(this.angle + 45 > 0 && this.x + this.width < 0 || this.angle < -45 && this.x > Draw.canvas.width){
+		if((this.angle + 45 > 0 && this.x + this.width < 0 || this.angle < -45 && this.x > Draw.canvas.width) && this.smokeElements.length == 0){
 			this.isEnd = true;
 		}
 
@@ -208,13 +208,11 @@ export class Meteor extends Magic{
 
 			//создаём дым от метеора
 			if(this.lastTimeCreatingSmoke < this.lastTimeCreatingSmoke + 1000 / Meteor.smokeFrequencyInSecond){
-				let smokeDistanceY = Helper.getRandom(-this.height / 2, this.height / 2);
-				let smokeDistanceX = Helper.getRandom(this.width / 10, this.width - this.width / 10);
 				let smokeX = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4;
 				let smokeY = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4;
 				let smokeWidth = this.width / 2;
-				let dx = (Math.random() - 0.5) * 100;
-				let dy = (Math.random() - 0.5) * 100;
+				let dx = (Math.random() - 0.5) * 250;
+				let dy = (Math.random() - 0.5) * 250;
 				this.smokeElements.push(new MovingObject(smokeX - smokeWidth / 2, smokeY - smokeWidth / 2, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
 				this.lastTimeCreatingSmoke = Date.now();
 			}
@@ -265,19 +263,6 @@ export class Meteor extends Magic{
 			let size = this.width * Meteor.damageEndSizeKof * 2;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 		}
-
-
-		let centerX = this.x + this.width / 2;
-		let centerY = this.y + this.height / 2;
-
-
-		let x = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4;
-		let y = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4;
-		Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
-		Draw.ctx.beginPath();
-		Draw.ctx.arc(x, y, 5, 0, 2 * Math.PI);
-		Draw.ctx.stroke();
-		Draw.ctx.fill();
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
