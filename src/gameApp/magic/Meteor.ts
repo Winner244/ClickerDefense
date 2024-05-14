@@ -36,7 +36,7 @@ export class Meteor extends Magic{
 	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
 	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
 	static readonly damageEndSizeKof: number = 1; //ширина метеорита которая наносит урон (0.%)
-	static readonly damageInAirSecond: number = 5; //урон в секунду при падении
+	static readonly damageInAirSecond: number = 15; //урон в секунду при падении
 	static readonly damageEnd: number = 5; //Конечный урон при взрыве
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 1;
@@ -197,22 +197,25 @@ export class Meteor extends Magic{
 
 			//наносим урон при падении всем кто попал под траекторию движения метеорита
 			//для оптимизации - высчитываем не попадание края монстра внутрь повёрнутого квадрата, а расстояние между монстром и метеоритом с вычитом их радиусов
-			let radiusMeteorit = this.width * Meteor.damageInAirSizeKof;
+			let radiusMeteorit = this.width * Meteor.damageInAirSizeKof / 2;
 			let centerX = this.x + this.width / 2;
 			let centerY = this.y + this.height / 2;
+			let xDamageCenter = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.width / 2;
+			let yDamageCenter = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 2;
 			monsters
-				.filter(monster => Helper.getDistance(centerX, centerY, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
+				.filter(monster => Helper.getDistance(xDamageCenter, yDamageCenter, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
 				.forEach(monster => monster.applyDamage(Meteor.damageInAirSecond * drawsDiffMs / 1000));
 
+			//создаём дым от метеора
 			if(this.lastTimeCreatingSmoke < this.lastTimeCreatingSmoke + 1000 / Meteor.smokeFrequencyInSecond){
-				let smokeDistanceY = Helper.getRandom(this.height / 2, this.height);
-				let smokeDistanceX = Helper.getRandom(1, this.width - 1);
-				let smokeX = centerX + Math.cos(this.angle * Math.PI / 180) * (smokeDistanceX - this.width / 2);
-				let smokeY = centerY + Math.sin(this.angle * Math.PI / 180) * (smokeDistanceY - this.width / 2);
+				let smokeDistanceY = Helper.getRandom(-this.height / 2, this.height / 2);
+				let smokeDistanceX = Helper.getRandom(this.width / 10, this.width - this.width / 10);
+				let smokeX = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4;
+				let smokeY = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4;
 				let smokeWidth = this.width / 2;
 				let dx = (Math.random() - 0.5) * 100;
 				let dy = (Math.random() - 0.5) * 100;
-				this.smokeElements.push(new MovingObject(smokeX - smokeWidth / 2, smokeY, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
+				this.smokeElements.push(new MovingObject(smokeX - smokeWidth / 2, smokeY - smokeWidth / 2, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
 				this.lastTimeCreatingSmoke = Date.now();
 			}
 		}
@@ -228,6 +231,9 @@ export class Meteor extends Magic{
 				}
 			});
 
+		}
+		else{
+			//TODO: создавать дым вокруг места взрыва на полусфере сверху
 		}
 
 		//полное падение
@@ -259,6 +265,19 @@ export class Meteor extends Magic{
 			let size = this.width * Meteor.damageEndSizeKof * 2;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 		}
+
+
+		let centerX = this.x + this.width / 2;
+		let centerY = this.y + this.height / 2;
+
+
+		let x = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4;
+		let y = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4;
+		Draw.ctx.fillStyle = 'rgba(0, 255, 0, 1)';
+		Draw.ctx.beginPath();
+		Draw.ctx.arc(x, y, 5, 0, 2 * Math.PI);
+		Draw.ctx.stroke();
+		Draw.ctx.fill();
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
