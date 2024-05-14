@@ -175,7 +175,7 @@ export class Meteor extends Magic{
 
 		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
 
-		this.smokeElements.forEach(x => x.leftTimeMs -= drawsDiffMs);
+		this.smokeElements.forEach(x => x.logic(drawsDiffMs));
 		this.smokeElements = this.smokeElements.filter(x => x.leftTimeMs > 0);
 
 		if(this.isEndLogic){
@@ -205,12 +205,14 @@ export class Meteor extends Magic{
 				.forEach(monster => monster.applyDamage(Meteor.damageInAirSecond * drawsDiffMs / 1000));
 
 			if(this.lastTimeCreatingSmoke < this.lastTimeCreatingSmoke + 1000 / Meteor.smokeFrequencyInSecond){
-				let smokeDistanceY = Helper.getRandom(10, this.height);
+				let smokeDistanceY = Helper.getRandom(this.height / 2, this.height);
 				let smokeDistanceX = Helper.getRandom(1, this.width - 1);
 				let smokeX = centerX + Math.cos(this.angle * Math.PI / 180) * (smokeDistanceX - this.width / 2);
 				let smokeY = centerY + Math.sin(this.angle * Math.PI / 180) * (smokeDistanceY - this.width / 2);
 				let smokeWidth = this.width / 2;
-				this.smokeElements.push(new MovingObject(smokeX, smokeY, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, 0, 0, this.angle));
+				let dx = (Math.random() - 0.5) * 100;
+				let dy = (Math.random() - 0.5) * 100;
+				this.smokeElements.push(new MovingObject(smokeX - smokeWidth / 2, smokeY, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
 				this.lastTimeCreatingSmoke = Date.now();
 			}
 		}
@@ -239,6 +241,12 @@ export class Meteor extends Magic{
 			return;
 		}
 
+		this.smokeElements.forEach(smoke => {
+			Draw.ctx.globalAlpha = smoke.leftTimeMs / smoke.initialLeftTimeMs;
+			Draw.ctx.drawImage(Meteor.imageSmoke, smoke.x, smoke.y, smoke.width, smoke.height);
+			Draw.ctx.globalAlpha = 1;
+		});
+
 		if(!this.isEndLogic){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 			Draw.ctx.rotate(this.angle * Math.PI / 180);
@@ -251,17 +259,6 @@ export class Meteor extends Magic{
 			let size = this.width * Meteor.damageEndSizeKof * 2;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 		}
-
-		this.smokeElements.forEach(smoke => {
-			Draw.ctx.globalAlpha = smoke.leftTimeMs / smoke.initialLeftTimeMs;
-			Draw.ctx.setTransform(1, 0, 0, 1, smoke.x + smoke.width / 2, smoke.y + smoke.height / 2); 
-			Draw.ctx.rotate(smoke.rotate * Math.PI / 180);
-			Draw.ctx.drawImage(Meteor.imageSmoke, -smoke.width / 2, -smoke.height / 2, smoke.width, smoke.height);
-			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
-			Draw.ctx.rotate(0);
-			Draw.ctx.globalAlpha = 1;
-			//Draw.ctx.drawImage(Meteor.imageSmoke, smoke.x, smoke.y, smoke.width, smoke.height);
-		});
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
