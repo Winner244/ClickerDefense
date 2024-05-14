@@ -14,6 +14,7 @@ import {AudioSystem} from '../gameSystems/AudioSystem';
 import Animation from '../../models/Animation';
 
 import {Point} from '../../models/Point';
+import {MovingObject} from '../../models/MovingObject';
 
 import {Magic} from './Magic';
 
@@ -26,6 +27,7 @@ import BaseImage from '../../assets/img/magics/meteor/image.png';
 import ImageGif from '../../assets/img/magics/meteor/imageGif.gif';  
 import AnimationImage from '../../assets/img/magics/meteor/animation.png'; 
 import ExplosionImage from '../../assets/img/magics/meteor/explosion.png'; 
+import SmokeImage from '../../assets/img/magics/meteor/smoke.png'; 
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
@@ -38,11 +40,14 @@ export class Meteor extends Magic{
 	static readonly damageEnd: number = 5; //Конечный урон при взрыве
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 1;
+	static readonly smokeLifeTimeMs: number = 1000; //время существования спрайта дыма
+	static readonly smokeFrequencyInSecond: number = 5; //количество создаваемых спрайтов дыма за секунду
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
 	private static readonly imageGif: HTMLImageElement = new Image(); //для отображения на панели доступа при наведении
+	private static readonly imageSmoke: HTMLImageElement = new Image(); //картинка дыма
 	private static readonly imageAnimation: HTMLImageElement = new Image(); //картинка анимации магии
 	private static readonly imageAnimationFrames: number = 4;
 	private static readonly imageAnimationDuration: number = 100;
@@ -59,6 +64,9 @@ export class Meteor extends Magic{
 	private speed: number;
 	private isEndLogic: boolean;
 	private intersectionWithEarch: Point;
+
+	private lastTimeCreatingSmoke: number; //время последнего создания картинки дыма
+	private smokeElements: MovingObject[];
 
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
@@ -86,6 +94,9 @@ export class Meteor extends Magic{
 		let xCenter = x + this.width / 2;
 		let yCenter = y + this.height / 2;
 		this.intersectionWithEarch = Helper.getPointOfIntersection2Lines(xCenter, yCenter, xCenter + this.dx, yCenter + this.dy, 0, bottom, 1, bottom);
+		this.lastTimeCreatingSmoke = 0;
+
+		this.smokeElements = [];
 
 		Meteor.init(true);
 	}
@@ -101,6 +112,7 @@ export class Meteor extends Magic{
 			Meteor.imageHandler.new(Meteor.imageAnimation).src = AnimationImage;
 			Meteor.imageHandler.new(Meteor.imageAnimationForCursor).src = AnimationImage;
 			Meteor.imageHandler.new(Meteor.imageAnimationExplosion).src = ExplosionImage;
+			Meteor.imageHandler.new(Meteor.imageSmoke).src = SmokeImage;
 		}
 	}
 
@@ -163,8 +175,11 @@ export class Meteor extends Magic{
 
 		super.logic(drawsDiffMs, buildings, monsters, units, bottomShiftBorder);
 
+		this.smokeElements.forEach(x => x.leftTimeMs -= drawsDiffMs);
+		this.smokeElements = this.smokeElements.filter(x => x.leftTimeMs > 0);
+
 		if(this.isEndLogic){
-			if(this.explosionAnimation.leftTimeMs <= 0){
+			if(this.explosionAnimation.leftTimeMs <= 0 && this.smokeElements.length == 0){
 				this.isEnd = true;
 			}
 			return;
@@ -181,13 +196,23 @@ export class Meteor extends Magic{
 		if (isInAir){  //метеорит в воздухе ?
 
 			//наносим урон при падении всем кто попал под траекторию движения метеорита
-			//для оптимизации - высчитываем не попадание края монстра внутрь повёрнутого квадрата, а расстояние между монстром и метеоритом с вычитом их окружностей
+			//для оптимизации - высчитываем не попадание края монстра внутрь повёрнутого квадрата, а расстояние между монстром и метеоритом с вычитом их радиусов
 			let radiusMeteorit = this.width * Meteor.damageInAirSizeKof;
 			let centerX = this.x + this.width / 2;
 			let centerY = this.y + this.height / 2;
 			monsters
 				.filter(monster => Helper.getDistance(centerX, centerY, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
 				.forEach(monster => monster.applyDamage(Meteor.damageInAirSecond * drawsDiffMs / 1000));
+
+			if(this.lastTimeCreatingSmoke < this.lastTimeCreatingSmoke + 1000 / Meteor.smokeFrequencyInSecond){
+				let smokeDistanceY = Helper.getRandom(10, this.height);
+				let smokeDistanceX = Helper.getRandom(1, this.width - 1);
+				let smokeX = centerX + Math.cos(this.angle * Math.PI / 180) * (smokeDistanceX - this.width / 2);
+				let smokeY = centerY + Math.sin(this.angle * Math.PI / 180) * (smokeDistanceY - this.width / 2);
+				let smokeWidth = this.width / 2;
+				this.smokeElements.push(new MovingObject(smokeX, smokeY, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, 0, 0, this.angle));
+				this.lastTimeCreatingSmoke = Date.now();
+			}
 		}
 		else if(this.explosionAnimation.leftTimeMs <= 0){
 			this.explosionAnimation.restart();
@@ -226,6 +251,17 @@ export class Meteor extends Magic{
 			let size = this.width * Meteor.damageEndSizeKof * 2;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 		}
+
+		this.smokeElements.forEach(smoke => {
+			Draw.ctx.globalAlpha = smoke.leftTimeMs / smoke.initialLeftTimeMs;
+			Draw.ctx.setTransform(1, 0, 0, 1, smoke.x + smoke.width / 2, smoke.y + smoke.height / 2); 
+			Draw.ctx.rotate(smoke.rotate * Math.PI / 180);
+			Draw.ctx.drawImage(Meteor.imageSmoke, -smoke.width / 2, -smoke.height / 2, smoke.width, smoke.height);
+			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
+			Draw.ctx.rotate(0);
+			Draw.ctx.globalAlpha = 1;
+			//Draw.ctx.drawImage(Meteor.imageSmoke, smoke.x, smoke.y, smoke.width, smoke.height);
+		});
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){
