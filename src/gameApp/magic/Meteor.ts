@@ -28,6 +28,7 @@ import ImageGif from '../../assets/img/magics/meteor/imageGif.gif';
 import AnimationImage from '../../assets/img/magics/meteor/animation.png'; 
 import ExplosionImage from '../../assets/img/magics/meteor/explosion.png'; 
 import SmokeImage from '../../assets/img/magics/meteor/smoke.png'; 
+import FireImage from '../../assets/img/magics/meteor/fire.png'; 
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
@@ -40,13 +41,12 @@ export class Meteor extends Magic{
 	static readonly damageEnd: number = 5; //Конечный урон при взрыве
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 1;
-	static readonly smokeLifeTimeMs: number = 1000; //время существования спрайта дыма
-	static readonly smokeFrequencyInSecond: number = 5; //количество создаваемых спрайтов дыма за секунду
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
 	private static readonly image: HTMLImageElement = new Image(); //для отображения на панели доступа и в магазине
 	private static readonly imageGif: HTMLImageElement = new Image(); //для отображения на панели доступа при наведении
+	private static readonly imageFire: HTMLImageElement = new Image(); //картинка огня
 	private static readonly imageSmoke: HTMLImageElement = new Image(); //картинка дыма
 	private static readonly imageAnimation: HTMLImageElement = new Image(); //картинка анимации магии
 	private static readonly imageAnimationFrames: number = 4;
@@ -65,8 +65,15 @@ export class Meteor extends Magic{
 	private isEndLogic: boolean;
 	private intersectionWithEarch: Point;
 
+	static readonly smokeLifeTimeMs: number = 1000; //время существования спрайта дыма
+	static readonly smokeFrequencyInSecond: number = 5; //количество создаваемых спрайтов дыма за секунду
 	private lastTimeCreatingSmoke: number; //время последнего создания картинки дыма
 	private smokeElements: MovingObject[];
+
+	static readonly fireLifeTimeMs: number = 200; //время существования спрайта огня
+	static readonly fireFrequencyInSecond: number = 12; //количество создаваемых спрайтов огня за секунду
+	private lastTimeCreatingFire: number; //время последнего создания картинки огня
+	private fireElements: MovingObject[];
 
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
@@ -94,9 +101,12 @@ export class Meteor extends Magic{
 		let xCenter = x + this.width / 2;
 		let yCenter = y + this.height / 2;
 		this.intersectionWithEarch = Helper.getPointOfIntersection2Lines(xCenter, yCenter, xCenter + this.dx, yCenter + this.dy, 0, bottom, 1, bottom);
-		this.lastTimeCreatingSmoke = 0;
 
+		this.lastTimeCreatingSmoke = 0;
 		this.smokeElements = [];
+
+		this.lastTimeCreatingFire = 0;
+		this.fireElements = [];
 
 		Meteor.init(true);
 	}
@@ -113,6 +123,7 @@ export class Meteor extends Magic{
 			Meteor.imageHandler.new(Meteor.imageAnimationForCursor).src = AnimationImage;
 			Meteor.imageHandler.new(Meteor.imageAnimationExplosion).src = ExplosionImage;
 			Meteor.imageHandler.new(Meteor.imageSmoke).src = SmokeImage;
+			Meteor.imageHandler.new(Meteor.imageFire).src = FireImage;
 		}
 	}
 
@@ -178,6 +189,13 @@ export class Meteor extends Magic{
 		this.smokeElements.forEach(x => x.logic(drawsDiffMs));
 		this.smokeElements = this.smokeElements.filter(x => x.leftTimeMs > 0);
 
+		this.fireElements.forEach(x => x.logic(drawsDiffMs));
+		this.fireElements.forEach(x => {
+			x.size.width--; 
+			x.size.height--;
+		});
+		this.fireElements = this.fireElements.filter(x => x.leftTimeMs > 0);
+
 		if(this.isEndLogic){
 			if(this.explosionAnimation.leftTimeMs <= 0 && this.smokeElements.length == 0){
 				this.isEnd = true;
@@ -216,6 +234,17 @@ export class Meteor extends Magic{
 				this.smokeElements.push(new MovingObject(smokeX - smokeWidth / 2, smokeY - smokeWidth / 2, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
 				this.lastTimeCreatingSmoke = Date.now();
 			}
+
+			//создаём огонь от метеора
+			if(this.lastTimeCreatingFire < this.lastTimeCreatingFire + 1000 / Meteor.fireFrequencyInSecond){
+				let fireX = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
+				let fireY = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
+				let fireWidth = this.width / 20;
+				let dx = (Math.random() - 0.5) * 250;
+				let dy = (Math.random() - 0.5) * 250;
+				this.fireElements.push(new MovingObject(fireX - fireWidth / 2, fireY - fireWidth / 2, fireWidth, fireWidth, Meteor.fireLifeTimeMs / this.speed, dx, dy, this.angle));
+				this.lastTimeCreatingFire = Date.now();
+			}
 		}
 		else if(this.explosionAnimation.leftTimeMs <= 0){
 			this.explosionAnimation.restart();
@@ -251,6 +280,8 @@ export class Meteor extends Magic{
 			Draw.ctx.globalAlpha = 1;
 		});
 
+		
+
 		if(!this.isEndLogic){
 			Draw.ctx.setTransform(1, 0, 0, 1, this.x + this.width / 2, this.y + this.height / 2); 
 			Draw.ctx.rotate(this.angle * Math.PI / 180);
@@ -258,6 +289,12 @@ export class Meteor extends Magic{
 			Draw.ctx.setTransform(1, 0, 0, 1, 0, 0);
 			Draw.ctx.rotate(0);
 		}
+
+		this.fireElements.forEach(fire => {
+			Draw.ctx.globalAlpha = fire.leftTimeMs / fire.initialLeftTimeMs;
+			Draw.ctx.drawImage(Meteor.imageFire, fire.x, fire.y, fire.width, fire.height);
+			Draw.ctx.globalAlpha = 1;
+		});
 
 		if(this.explosionAnimation.leftTimeMs > 0){
 			let size = this.width * Meteor.damageEndSizeKof * 2;
