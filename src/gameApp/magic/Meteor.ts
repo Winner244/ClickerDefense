@@ -262,7 +262,12 @@ export class Meteor extends Magic{
 
 		}
 		else{
-			//TODO: создавать дым вокруг места взрыва на полусфере сверху
+			let smokeWidth = this.width / 2;
+			let dx = (Math.random() - 0.5) * 500;
+			let dy = (Math.random() - 0.5) * 300;
+			let x = this.intersectionWithEarch.x - smokeWidth / 2;
+			let y = this.intersectionWithEarch.y - smokeWidth / 2;
+			this.smokeElements.push(new MovingObject(x, y, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
 		}
 
 		//полное падение
