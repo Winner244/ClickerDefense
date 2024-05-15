@@ -71,9 +71,8 @@ export class Meteor extends Magic{
 	private smokeElements: MovingObject[];
 
 	static readonly fireLifeTimeMs: number = 200; //время существования спрайта огня
-	static readonly fireFrequencyInSecond: number = 12; //количество создаваемых спрайтов огня за секунду
-	private lastTimeCreatingFire: number; //время последнего создания картинки огня
 	private fireElements: MovingObject[];
+	private fireElementShifts: Point[]; //массив сдвигов, что бы спрайт не в рандомном месте появлялся, а как огонь - струёй был
 
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
@@ -105,8 +104,14 @@ export class Meteor extends Magic{
 		this.lastTimeCreatingSmoke = 0;
 		this.smokeElements = [];
 
-		this.lastTimeCreatingFire = 0;
+		this.fireElementShifts = [];
 		this.fireElements = [];
+
+		for(let i = 0; i < 5; i++){
+			let fireX = Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
+			let fireY = Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
+			this.fireElementShifts.push(new Point(fireX, fireY));
+		}
 
 		Meteor.init(true);
 	}
@@ -191,8 +196,8 @@ export class Meteor extends Magic{
 
 		this.fireElements.forEach(x => x.logic(drawsDiffMs));
 		this.fireElements.forEach(x => {
-			x.size.width--; 
-			x.size.height--;
+			x.size.width -= 3 / drawsDiffMs; 
+			x.size.height -= 3 / drawsDiffMs;
 		});
 		this.fireElements = this.fireElements.filter(x => x.leftTimeMs > 0);
 
@@ -236,15 +241,12 @@ export class Meteor extends Magic{
 			}
 
 			//создаём огонь от метеора
-			if(this.lastTimeCreatingFire < this.lastTimeCreatingFire + 1000 / Meteor.fireFrequencyInSecond){
-				let fireX = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
-				let fireY = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
-				let fireWidth = this.width / 20;
-				let dx = (Math.random() - 0.5) * 250;
-				let dy = (Math.random() - 0.5) * 250;
-				this.fireElements.push(new MovingObject(fireX - fireWidth / 2, fireY - fireWidth / 2, fireWidth, fireWidth, Meteor.fireLifeTimeMs / this.speed, dx, dy, this.angle));
-				this.lastTimeCreatingFire = Date.now();
-			}
+			let location = this.fireElementShifts[Helper.getRandom(0, this.fireElementShifts.length - 1)];
+			let fireX = centerX + location.x;
+			let fireY = centerY + location.y;
+			let fireWidth = this.width / 20;
+			this.fireElements.push(new MovingObject(fireX - fireWidth / 2, fireY - fireWidth / 2, fireWidth, fireWidth, Meteor.fireLifeTimeMs / this.speed, 0, 0, this.angle));
+			
 		}
 		else if(this.explosionAnimation.leftTimeMs <= 0){
 			this.explosionAnimation.restart();
