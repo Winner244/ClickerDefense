@@ -151,12 +151,16 @@ export class Game {
 		}
 	}
 
-	static endOfWave(){
+	static endOfWave(){ //event before blackOut 
 		Buildings.clearModifiers();
-		Panels.clearSelection();
+		Panels.disable();
 	}
 
-	static startOfWave(){ //event after blackOut 
+	static endOfWaveComplete(){ //event after blackOut 
+		Panels.undisable();
+	}
+
+	static startOfWaveComplete(){ //event after blackOut 
 		Panels.undisable();
 	}
 

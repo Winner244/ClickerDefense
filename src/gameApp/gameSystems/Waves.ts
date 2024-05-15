@@ -108,6 +108,9 @@ export class Waves{
 	static logic(drawsDiffMs: number, bottomShiftBorder: number): void{
 		if(WavesState.delayEndLeftTimeMs > 0){
 			WavesState.delayEndLeftTimeMs -= drawsDiffMs;
+			if(WavesState.delayEndLeftTimeMs <= 0){
+				Game.endOfWaveComplete();
+			}
 			return;
 		}
 
@@ -118,7 +121,7 @@ export class Waves{
 		if(WavesState.delayStartLeftTimeMs > 0){
 			WavesState.delayStartLeftTimeMs -= drawsDiffMs;
 			if(WavesState.delayStartLeftTimeMs <= 0){
-				Game.startOfWave();
+				Game.startOfWaveComplete();
 			}
 			return;
 		}
