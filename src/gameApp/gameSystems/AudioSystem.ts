@@ -97,7 +97,7 @@ export class AudioSystem{
 	public static play(
 		x: number, 
 		pathToAudioFile: string, 
-		volume: number = 0,
+		volumeChange: number = 0,
 		speed: number = 1, 
 		isUseBiquadFilterRandom = false, 
 		isUseAutoPauseAndResume: boolean = false, 
@@ -117,7 +117,7 @@ export class AudioSystem{
 			: AudioSystem.soundVolume;
 
 		return this._load(pathToAudioFile)
-			.then(buffer => AudioSystem._play(x, buffer, volume * (1 + 1 - volumeSettings), speed, isUseBiquadFilterRandom, delayStartingSeconds, offsetStartingSeconds))
+			.then(buffer => AudioSystem._play(x, buffer, volumeChange * (1 + 1 - volumeSettings), speed, isUseBiquadFilterRandom, delayStartingSeconds, offsetStartingSeconds))
 			.then(source => {
 				if(!source){
 					return null;
@@ -157,7 +157,7 @@ export class AudioSystem{
 	private static _play(
 		x: number, 
 		buffer: AudioBuffer, 
-		volume: number, 
+		volumeChange: number, 
 		speed: number, 
 		isUseBiquadFilterRandom = false, 
 		delayStartingSeconds: number = 0, 
@@ -190,7 +190,7 @@ export class AudioSystem{
 		}
 
 		sourceTone.playbackRate = speed;
-		sourceTone.volume.value = volume; //changing The volume of the output in decibels.
+		sourceTone.volume.value = volumeChange; //changing The volume of the output in decibels.
 		sourceTone.toDestination();
 		sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 
 		return sourceTone;

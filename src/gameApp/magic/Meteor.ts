@@ -30,6 +30,8 @@ import ExplosionImage from '../../assets/img/magics/meteor/explosion.png';
 import SmokeImage from '../../assets/img/magics/meteor/smoke.png'; 
 import FireImage from '../../assets/img/magics/meteor/fire.png'; 
 
+import FireSoundUrl from '../../assets/sounds/magic/meteor/fire-moving.mp3'; 
+
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
 	static readonly distanceBetweenToAddAngle: number = 50; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
@@ -93,13 +95,8 @@ export class Meteor extends Magic{
 		this.dy = this.speed * Math.sin(angle * Math.PI / 180);
 		this.dx = this.speed * Math.cos(angle * Math.PI / 180);
 		this.isEndLogic = false;
-		this.explosionAnimation = new Animation(9, 9 * 50, Meteor.imageAnimationExplosion);
+		this.explosionAnimation = new Animation(9, 9 * 75, Meteor.imageAnimationExplosion);
 		this.explosionAnimation.leftTimeMs = 0;
-
-		let bottom = Draw.canvas.height - Draw.bottomShiftBorder;
-		let xCenter = x + this.width / 2;
-		let yCenter = y + this.height / 2;
-		this.intersectionWithEarch = Helper.getPointOfIntersection2Lines(xCenter, yCenter, xCenter + this.dx, yCenter + this.dy, 0, bottom, 1, bottom);
 
 		this.lastTimeCreatingSmoke = 0;
 		this.smokeElements = [];
@@ -107,13 +104,30 @@ export class Meteor extends Magic{
 		this.fireElementShifts = [];
 		this.fireElements = [];
 
-		for(let i = 0; i < 5; i++){
-			let fireX = Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
-			let fireY = Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
-			this.fireElementShifts.push(new Point(fireX, fireY));
-		}
 
-		Meteor.init(true);
+		let isShop = x == 0 && y == 0;
+		if (isShop){
+			this.intersectionWithEarch = new Point(0, 0);
+			Meteor.init(true);
+		}
+		else{
+			let bottom = Draw.canvas.height - Draw.bottomShiftBorder;
+			let xCenter = x + this.width / 2;
+			let yCenter = y + this.height / 2;
+			this.intersectionWithEarch = Helper.getPointOfIntersection2Lines(xCenter, yCenter, xCenter + this.dx, yCenter + this.dy, 0, bottom, 1, bottom);
+
+			for(let i = 0; i < 5; i++){
+				let fireX = Math.cos((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
+				let fireY = Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 4 + Helper.getRandom(-this.width / 7, this.width / 7);
+				this.fireElementShifts.push(new Point(fireX, fireY));
+			}
+
+			let distanceToGoal = Helper.getDistance(x, y, this.intersectionWithEarch.x, this.intersectionWithEarch.y);
+			console.log('distanceToGoal', distanceToGoal);  //1400 for duration - need to calculate on the speed
+			//TODO: change duration ? 
+			//TODO: stop if the end
+			AudioSystem.play(x, FireSoundUrl);
+		}
 	}
 
 	static initForShop(): void{
@@ -129,6 +143,7 @@ export class Meteor extends Magic{
 			Meteor.imageHandler.new(Meteor.imageAnimationExplosion).src = ExplosionImage;
 			Meteor.imageHandler.new(Meteor.imageSmoke).src = SmokeImage;
 			Meteor.imageHandler.new(Meteor.imageFire).src = FireImage;
+			AudioSystem.load(FireSoundUrl);
 		}
 	}
 
