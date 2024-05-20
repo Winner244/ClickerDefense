@@ -78,6 +78,7 @@ export class Meteor extends Magic{
 	private fireElementShifts: Point[]; //массив сдвигов, что бы спрайт не в рандомном месте появлялся, а как огонь - струёй был
 
 	private isSoundExplosionStarted: boolean; //звук взрыва уже начался?
+	static readonly fireSoundDistanceSpeedOk: number = 1200; //дистанция для обычной скорости звука огня
 
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
@@ -130,10 +131,10 @@ export class Meteor extends Magic{
 			}
 
 			let distanceToGoal = Helper.getDistance(x, y, this.intersectionWithEarch.x, this.intersectionWithEarch.y);
-			console.log('distanceToGoal', distanceToGoal);  //1400 for duration - need to calculate on the speed
-			//TODO: change duration ? 
-			//TODO: stop if the end
-			AudioSystem.play(x, FireSoundUrl);
+			let fireSoundSpeed = distanceToGoal > Meteor.fireSoundDistanceSpeedOk 
+				? 1 - (distanceToGoal / Meteor.fireSoundDistanceSpeedOk - 1) / 1.5 
+				: 1 + 1 - distanceToGoal / Meteor.fireSoundDistanceSpeedOk 
+			AudioSystem.play(x, FireSoundUrl, 0, fireSoundSpeed);
 		}
 	}
 
