@@ -31,6 +31,7 @@ import SmokeImage from '../../assets/img/magics/meteor/smoke.png';
 import FireImage from '../../assets/img/magics/meteor/fire.png'; 
 
 import FireSoundUrl from '../../assets/sounds/magic/meteor/fire-moving.mp3'; 
+import ExplosionSoundUrl from '../../assets/sounds/magic/meteor/explosion.mp3'; 
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
@@ -76,6 +77,8 @@ export class Meteor extends Magic{
 	private fireElements: MovingObject[];
 	private fireElementShifts: Point[]; //массив сдвигов, что бы спрайт не в рандомном месте появлялся, а как огонь - струёй был
 
+	private isSoundExplosionStarted: boolean; //звук взрыва уже начался?
+
 	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
 	{
 		super(x, y, 
@@ -104,6 +107,8 @@ export class Meteor extends Magic{
 		this.fireElementShifts = [];
 		this.fireElements = [];
 
+		this.isSoundExplosionStarted = false;
+
 
 		let isShop = x == 0 && y == 0;
 		if (isShop){
@@ -111,6 +116,8 @@ export class Meteor extends Magic{
 			Meteor.init(true);
 		}
 		else{
+			AudioSystem.load(ExplosionSoundUrl);
+
 			let bottom = Draw.canvas.height - Draw.bottomShiftBorder;
 			let xCenter = x + this.width / 2;
 			let yCenter = y + this.height / 2;
@@ -274,7 +281,6 @@ export class Meteor extends Magic{
 					monster.applyDamage((Math.min(1, (distanceMax - distance) / (distanceMax / 2))) * Meteor.damageEnd);
 				}
 			});
-
 		}
 		else{
 			let smokeWidth = this.width / 2;
@@ -283,6 +289,12 @@ export class Meteor extends Magic{
 			let x = this.intersectionWithEarch.x - smokeWidth / 2;
 			let y = this.intersectionWithEarch.y - smokeWidth / 2;
 			this.smokeElements.push(new MovingObject(x, y, smokeWidth, smokeWidth, Meteor.smokeLifeTimeMs / this.speed, dx, dy, this.angle));
+		}
+
+		//звук чуть раньше запускается
+		if(this.y + this.height / 1.2 + 75 > Draw.canvas.height - bottomShiftBorder && this.explosionAnimation.leftTimeMs <= 0 && !this.isSoundExplosionStarted){
+			this.isSoundExplosionStarted = true;
+			AudioSystem.play(this.intersectionWithEarch.x, ExplosionSoundUrl);
 		}
 
 		//полное падение
