@@ -99,7 +99,7 @@ export class Meteor extends Magic{
 		this.dy = this.speed * Math.sin(angle * Math.PI / 180);
 		this.dx = this.speed * Math.cos(angle * Math.PI / 180);
 		this.isEndLogic = false;
-		this.explosionAnimation = new Animation(9, 9 * 75, Meteor.imageAnimationExplosion);
+		this.explosionAnimation = new Animation(10, 10 * 75, Meteor.imageAnimationExplosion);
 		this.explosionAnimation.leftTimeMs = 0;
 
 		this.lastTimeCreatingSmoke = 0;
@@ -333,7 +333,9 @@ export class Meteor extends Magic{
 
 		if(this.explosionAnimation.leftTimeMs > 0){
 			let size = this.width * Meteor.damageEndSizeKof * 2;
+			Draw.ctx.globalAlpha = this.explosionAnimation.leftTimeMs / this.explosionAnimation.durationMs * 4;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
+			Draw.ctx.globalAlpha = 1;
 		}
 	}
 

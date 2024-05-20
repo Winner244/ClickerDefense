@@ -3298,13 +3298,13 @@ class TestPage extends React.Component {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
-                Waves.all = [ //монстры на волнах
+                /*Waves.all = [ //монстры на волнах
                     [ //1-я волна
                         new WaveData(Boar.name, 1, 1, 6)
                     ],
                     [ //2-я волна
                         new WaveData(Boar.name, 1, 1, 0)
-                    ]];
+                    ]];*/
                 WavesState.isWaveStarted = false;
                 Waves.waveCurrent = 0;
                 Gamer.coins = 775;
