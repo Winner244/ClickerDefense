@@ -257,8 +257,15 @@ export class Panels extends React.Component<Props, {}> {
       let selectedItem = this.getSelectedItem();
       if (selectedItem){
         let mouseUp = Mouse.getCanvasMousePoint();
-        Magics.create(selectedItem, mouseUp);
+        let isCreated = Magics.create(selectedItem, mouseUp);
+
+        if (isCreated){
+          //TODO: disable magic
+          //TODO: set timeout selectedItem.timeRecoveryMs  to undisable magic 
+          //TODO: set transition with time selectedItem.timeRecoveryMs on blackout
+        }
       }
+
       this.props.selectItem('');
       this.wasMouseDown = false;
     }
@@ -310,10 +317,10 @@ export class Panels extends React.Component<Props, {}> {
     }
 
     this.props.selectItem(itemId);
-		AudioSystem.play(-1, SelectingSoundUrl);
     let selectedItem = this.getSelectedItem(itemId);
-    if (selectedItem && !this.isMouseIn){
+    if (selectedItem && selectedItem.timeRecoveryLeftMs <= 0 && !this.isMouseIn){
       Magics.displayOnCursor(selectedItem);
+      AudioSystem.play(-1, SelectingSoundUrl);
     }
   }
 

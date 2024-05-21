@@ -45,7 +45,12 @@ export class Magics{
 		this.cursorMagic = magic;
 	}
 
-	static create(magic: Magic, pointEnd: Point){
+	static create(magic: Magic, pointEnd: Point): boolean{
+		if(magic.timeRecoveryLeftMs > 0){
+			console.error('time recovery of magic is not ended yet!');
+			return false;
+		}
+
 		let pointStart = this.starCreatingPoint ?? pointEnd;
 
 		switch(magic.name){
@@ -57,6 +62,8 @@ export class Magics{
 		}
 		
 		this.clearCursor();
+		magic.restartTimeRecovery();
+		return true;
 	}
 
 	static mouseLogic(mouseX: number, mouseY: number, isClick: boolean, isHoverFound: boolean, isWaveStarted: boolean, isWaveEnded: boolean): boolean{

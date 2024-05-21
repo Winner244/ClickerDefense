@@ -27,6 +27,8 @@ export class Magic{
 	leftTime: number|null; //оставшееся время жизни магии
 	size: number; //множитель размера (1 - оригинальный)
 	isEnd: boolean; //действие магии закончено ?
+	timeRecoveryLeftMs: number; //оставшееся время восстановления магии (миллисекунды)
+	timeRecoveryMs: number; //время восстановления магии (миллисекунды) - растёт при прокачке, так же можно отдельно её уменьшить за монеты
 
 	constructor(
 		x: number, 
@@ -39,6 +41,7 @@ export class Magic{
 		animationForCursor: AnimationInfinite, 
 		shiftAnimationForCursor: Point,
 		lifeTime: number|null,
+		timeRecoveryMs: number,
 		imageHandler: ImageHandler)
 	{
 		this.id = Helper.generateUid();
@@ -54,6 +57,7 @@ export class Magic{
 		this.leftTime = lifeTime;
 		this.imageHandler = imageHandler;
 		this.isEnd = false;
+		this.timeRecoveryMs = timeRecoveryMs;
 	}
 
 	get height(): number{
@@ -68,6 +72,9 @@ export class Magic{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
+
+		if (this.timeRecoveryLeftMs > 0)
+			this.timeRecoveryLeftMs -= drawsDiffMs;
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void{
@@ -76,6 +83,10 @@ export class Magic{
 		}
 		
 		this.animation.draw(drawsDiffMs, isGameOver, this.x, this.y, this.animation.image.width / this.animation.frames * this.size, this.animation.image.height * this.size);
+	}
+
+	restartTimeRecovery(){
+		this.timeRecoveryLeftMs = this.timeRecoveryMs;
 	}
 
 	displayMagicOnCursor(drawsDiffMs: number, pointStart: Point|null, cursorMagicWidth: number, cursorMagicHeight: number){}

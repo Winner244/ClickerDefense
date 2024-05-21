@@ -44,6 +44,7 @@ export class Meteor extends Magic{
 	static readonly damageEnd: number = 5; //Конечный урон при взрыве
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 1;
+	static readonly initialTimeRecoveryMs: number = 5000; //начальное время восстановления магии  (миллисекунды)
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
@@ -91,6 +92,7 @@ export class Meteor extends Magic{
 			new AnimationInfinite(Meteor.imageAnimationFrames, Meteor.imageAnimationFrames * Meteor.imageAnimationDuration, Meteor.imageAnimationForCursor), 
 			new Point(0, 30),
 			null, //lifeTime
+			Meteor.initialTimeRecoveryMs,
 			Meteor.imageHandler);
 		
 		this.speed = Meteor.initialSpeed;
