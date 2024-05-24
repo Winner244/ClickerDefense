@@ -58,6 +58,7 @@ export class Magic{
 		this.imageHandler = imageHandler;
 		this.isEnd = false;
 		this.timeRecoveryMs = timeRecoveryMs;
+		this.timeRecoveryLeftMs = 0;
 	}
 
 	get height(): number{
@@ -72,9 +73,6 @@ export class Magic{
 		if(!this.imageHandler.isImagesCompleted){
 			return;
 		}
-
-		if (this.timeRecoveryLeftMs > 0)
-			this.timeRecoveryLeftMs -= drawsDiffMs;
 	}
 
 	draw(drawsDiffMs: number, isGameOver: boolean): void{

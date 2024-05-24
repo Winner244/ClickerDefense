@@ -10,6 +10,7 @@ import Panel from '../../../models/Panel';
 import {BaseObject} from '../../../models/BaseObject';
 import {Point} from '../../../models/Point';
 import {Helper} from '../../../gameApp/helpers/Helper';
+import {RequestAnimationFrameHelper} from '../../../gameApp/helpers/RequestAnimationFrameHelper';
 
 import Animation from '../../../models/Animation';
 
@@ -169,27 +170,18 @@ export class Panels extends React.Component<Props, {}> {
     let animation = new Animation(31, 31 * 50, this.imageAdding, ctx);
 
 
-    let lastDrawTime: number = 0;
-    let animationCallback = (millisecondsFromStart: number) => {
-      if(!lastDrawTime){
-        lastDrawTime = millisecondsFromStart - 10;
-      }
-
-		  let drawsDiffMs = millisecondsFromStart - lastDrawTime; //сколько времени прошло с прошлой прорисовки
-      lastDrawTime = millisecondsFromStart;
-
+    let callback = (drawsDiffMs: number) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       animation.draw(drawsDiffMs, false, 0, 0, 320, 320);
 
-      if (animation.leftTimeMs > 0){
-        window.requestAnimationFrame(animationCallback);
-      }
-      else{
+      let isConunie = animation.leftTimeMs > 0;
+      if (!isConunie){
         canvas.style.display = 'none';
       }
-    };
 
-    window.requestAnimationFrame(animationCallback);
+      return isConunie;
+    } 
+    RequestAnimationFrameHelper.start(callback);
   }
 
   static disable(): void{
@@ -258,11 +250,26 @@ export class Panels extends React.Component<Props, {}> {
       if (selectedItem){
         let mouseUp = Mouse.getCanvasMousePoint();
         let isCreated = Magics.create(selectedItem, mouseUp);
-
         if (isCreated){
-          //TODO: disable magic
-          //TODO: set timeout selectedItem.timeRecoveryMs  to undisable magic 
           //TODO: set transition with time selectedItem.timeRecoveryMs on blackout
+          
+          let callback = (drawsDiffMs: number) => {
+            if(!selectedItem){
+              console.error('selectedItem in callback of RequestAnimationFrameHelper of Panel is empty!');
+              return false;
+            }
+
+            selectedItem.timeRecoveryLeftMs -= drawsDiffMs;
+            
+            let isConunie = selectedItem.timeRecoveryLeftMs > 0;
+            if (!isConunie){
+              this.forceUpdate();
+              //TODO: start animation - border moving red-orange-blue snake
+            }
+
+            return isConunie;
+          } 
+          RequestAnimationFrameHelper.start(callback);
         }
       }
 
@@ -310,18 +317,27 @@ export class Panels extends React.Component<Props, {}> {
     if(this.props.isDisabled)
       return;
 
-    if(this.props.selectedItemId == itemId){
+    if(!itemId || this.props.selectedItemId == itemId){
       this.props.selectItem('');
       Magics.clearCursor();
       return;
     }
 
-    this.props.selectItem(itemId);
     let selectedItem = this.getSelectedItem(itemId);
-    if (selectedItem && selectedItem.timeRecoveryLeftMs <= 0 && !this.isMouseIn){
-      Magics.displayOnCursor(selectedItem);
-      AudioSystem.play(-1, SelectingSoundUrl);
+    if (selectedItem){
+      if(selectedItem.timeRecoveryLeftMs > 0){
+        this.props.selectItem('');
+        Magics.clearCursor();
+        return;
+      }
+
+      if(!this.isMouseIn){
+        Magics.displayOnCursor(selectedItem);
+        AudioSystem.play(-1, SelectingSoundUrl);
+      }
     }
+
+    this.props.selectItem(itemId);
   }
 
   isMouseIn: boolean = false;
@@ -357,13 +373,13 @@ export class Panels extends React.Component<Props, {}> {
               onMouseLeave={() => this.onMouseLeave()}
               className={className}
               data-id={item?.id}>
-                <div className={"panel__item-container " + (this.props.isDisabled ? "" : " panel__item-container--hover ") + (item == null ? " panel__item-container--empty " : "")}>
+                <div className={"panel__item-container " + (this.props.isDisabled || item?.timeRecoveryLeftMs > 0 ? "" : " panel__item-container--hover ") + (item == null ? " panel__item-container--empty " : "")}>
                   {item == null 
                     ? null 
                     : <div className={"panel__item-img-gif nodrag "} style={{backgroundImage: `url(${item.imageGif.src})`}} />}
                   {item == null 
                     ? null 
-                    : <div className={"panel__item-img nodrag " + (this.props.isDisabled ? 'panel__item-img--disable' : '')} style={{backgroundImage: `url(${item.image.src})`}} />}
+                    : <div className={"panel__item-img nodrag " + (this.props.isDisabled || item?.timeRecoveryLeftMs > 0  ? 'panel__item-img--disable' : '')} style={{backgroundImage: `url(${item.image.src})`}} />}
                   {item == null 
                     ? null 
                     : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Shift + " : ""}{(index2 + 1) % 10}</div>}

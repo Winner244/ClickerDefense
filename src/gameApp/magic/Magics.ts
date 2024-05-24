@@ -47,7 +47,7 @@ export class Magics{
 
 	static create(magic: Magic, pointEnd: Point): boolean{
 		if(magic.timeRecoveryLeftMs > 0){
-			console.error('time recovery of magic is not ended yet!');
+			console.error('time recovery of magic is not ended yet!', magic.timeRecoveryLeftMs);
 			return false;
 		}
 
