@@ -38,13 +38,13 @@ export class Meteor extends Magic{
 	static readonly distanceBetweenToAddAngle: number = 50; //дистанция между нажатой мышей и текущим положением мыши, при котором появляется возможность менять наклон падения метеорита
 	static readonly minHorizontalAngle: number = 30; //минимальный угол наклона от горизонта
 	static readonly defaultAngle: number = 90; //если не выбирать угол наклона, то будет использовано это значение (90 - it is bottom)
-	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон (0.%)
-	static readonly damageEndSizeKof: number = 1; //ширина метеорита которая наносит урон (0.%)
-	static readonly damageInAirSecond: number = 15; //урон в секунду при падении
+	static readonly damageInAirSizeKof: number = 0.5; //ширина метеорита которая наносит урон В ВОЗДУХЕ (0.%)
+	static readonly damageEndSizeKof: number = 1; //ширина метеорита которая наносит урон НА ЗЕМЛЕ (0.%)
+	static readonly damageInAirSecond: number = 15; //урон в секунду при падении в воздухе
 	static readonly damageEnd: number = 5; //Конечный урон при взрыве
 	static readonly initialSize: number = 0.5;
 	static readonly initialSpeed: number = 1;
-	static readonly initialTimeRecoveryMs: number = 5000; //начальное время восстановления магии  (миллисекунды)
+	static readonly initialTimeRecoveryMs: number = 3000; //начальное время восстановления магии  (миллисекунды)
 
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 
@@ -297,7 +297,7 @@ export class Meteor extends Magic{
 		//звук чуть раньше запускается
 		if(this.y + this.height / 1.2 + 75 > Draw.canvas.height - bottomShiftBorder && this.explosionAnimation.leftTimeMs <= 0 && !this.isSoundExplosionStarted){
 			this.isSoundExplosionStarted = true;
-			AudioSystem.play(this.intersectionWithEarch.x, ExplosionSoundUrl);
+			AudioSystem.play(this.intersectionWithEarch.x, ExplosionSoundUrl, -2);
 		}
 
 		//полное падение
@@ -329,7 +329,13 @@ export class Meteor extends Magic{
 
 		this.fireElements.forEach(fire => {
 			Draw.ctx.globalAlpha = fire.leftTimeMs / fire.initialLeftTimeMs;
-			Draw.ctx.drawImage(Meteor.imageFire, fire.x, fire.y, fire.width, fire.height);
+			let i = 0;
+			while(Draw.ctx.globalAlpha > 0.05 && i < 50){
+				Draw.ctx.drawImage(Meteor.imageFire, fire.x - this.dx * i, fire.y - this.dy * i, fire.width, fire.height);
+				Draw.ctx.globalAlpha -= 0.1;
+				i+=3;
+			}
+			//Draw.ctx.drawImage(Meteor.imageFire, fire.x, fire.y, fire.width, fire.height);
 			Draw.ctx.globalAlpha = 1;
 		});
 

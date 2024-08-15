@@ -72,7 +72,7 @@ export class Waves{
 				new WaveData(Bat.name, 15, 40, 20),
 			],
 			[ //5-ая волна (демо - без нового монстра)
-				new WaveData(Zombie.name, 30, 24, 0),
+				new WaveData(Zombie.name, 30, 50, 0),
 				new WaveData(Boar.name, 18, 37.5, 1),
 				new WaveData(Bat.name, 90, 50, 2),
 				new WaveData(Necromancer.name, 15, 45, 0),

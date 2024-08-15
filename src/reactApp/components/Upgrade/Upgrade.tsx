@@ -191,13 +191,13 @@ export class Upgrade extends React.Component<Props, {}> {
     if(elements && elements.length){
       const element: HTMLElement = elements[0] as HTMLElement;
 
-      var curtainElements = document.querySelectorAll('.upgrade__improvement--' + id + ' > .upgrade__improvement-item-curtain');
-      if(curtainElements && curtainElements.length){
-        const curtainElement: HTMLElement = curtainElements[0] as HTMLElement;
-        curtainElement.className = '';
+      var curtainElement = document.querySelector('.upgrade__improvement--' + id + ' > .upgrade__improvement-item-curtain');
+      if(curtainElement){
+        const curtainHtmlElement: HTMLElement = curtainElement as HTMLElement;
+        curtainHtmlElement.className = '';
 
         setTimeout(() => {
-          curtainElement.className = 'upgrade__improvement-item-curtain';
+          curtainHtmlElement.className = 'upgrade__improvement-item-curtain';
         }, 500);
       }
 
