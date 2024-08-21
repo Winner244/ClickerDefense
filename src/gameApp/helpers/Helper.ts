@@ -29,6 +29,40 @@ export class Helper{
 	}
 
 	/**
+	 * Возвращает местонахождение точки, которая лежит на конце прямой, которая начинается от (x, y) и идёт до вычисляемой точки с длиной distance 
+	 * и повернутой на rotateAngle градусов относительно горизонта (где 0/360 градусов - это направо, 90 градусов это вверх, 180 это налево, 270 градусов вниз)
+	 * @param x точка начала
+	 * @param y точка начала
+	 * @param rotateAngle угол поворота (0/360 градусов - направо, 90 - вверх, 180 влево, 270 вниз)
+	 * @param distance дистанция от точки начала до вычисляемой точки
+	 */
+	static getPointByRotateAngle(x: number, y: number, rotateAngle: number, distance: number) : Point{
+		rotateAngle = rotateAngle % 360;
+		let k1 = Math.sin(rotateAngle * Math.PI / 180) * distance;
+		let k2 = Math.cos(rotateAngle * Math.PI / 180) * distance;
+		let endX: number = x, endY: number = y;
+
+		if(rotateAngle == 0 || rotateAngle == 360){
+			endX += distance;
+		}
+		else if(rotateAngle == 90){
+			endY -= distance; 
+		}
+		else if(rotateAngle == 180){
+			endX -= distance;
+		}
+		else if(rotateAngle == 270){
+			endY += distance;
+		}
+		else {
+			endX += k2; 
+			endY -= k1;
+		}
+
+		return new Point(endX, endY);
+	}
+
+	/**
 	 * Расстояние между точками
 	 * @param x1 
 	 * @param y1 
