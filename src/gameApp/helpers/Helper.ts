@@ -38,27 +38,8 @@ export class Helper{
 	 */
 	static getPointByRotateAngle(x: number, y: number, rotateAngle: number, distance: number) : Point{
 		rotateAngle = rotateAngle % 360;
-		let k1 = Math.sin(rotateAngle * Math.PI / 180) * distance;
-		let k2 = Math.cos(rotateAngle * Math.PI / 180) * distance;
-		let endX: number = x, endY: number = y;
-
-		if(rotateAngle == 0 || rotateAngle == 360){
-			endX += distance;
-		}
-		else if(rotateAngle == 90){
-			endY -= distance; 
-		}
-		else if(rotateAngle == 180){
-			endX -= distance;
-		}
-		else if(rotateAngle == 270){
-			endY += distance;
-		}
-		else {
-			endX += k2; 
-			endY -= k1;
-		}
-
+		let endX = x + Math.cos(rotateAngle * Math.PI / 180) * distance;
+		let endY = y - Math.sin(rotateAngle * Math.PI / 180) * distance;
 		return new Point(endX, endY);
 	}
 

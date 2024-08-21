@@ -23,7 +23,8 @@ import './Panels.scss';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
-import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
+import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3'; //TODO: change sound
+import RecoveryEndSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
 import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
 import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
@@ -40,6 +41,10 @@ type Props =
 export class Panels extends React.Component<Props, {}> {
 
 	private static readonly imageAdding: HTMLImageElement = new Image(); //анимация добавления элемента
+	private static readonly durationOfEndRecoveryAdnimationMs: number = 3000; //время анимации завершения восстановления магии в ячейке
+	private static readonly countSnakesOfEndRecoveryAdnimation: number = 6; //количество бегающих змеек
+	private static readonly lengthOfSnakeOfEndRecoveryAdnimation: number = 5; //длина бегающей змейки
+	private static readonly speedOfSnakeOfEndRecoveryAdnimationPx: number = 50; //скорость змейки (пиксели в секунду)
 
   static countAllItems(): number{
     let panels = App.Store.getState().panels?.panels;
@@ -59,7 +64,7 @@ export class Panels extends React.Component<Props, {}> {
 
     App.Store.dispatch(PanelsStore.actionCreators.add());
 
-    setTimeout(() => AudioSystem.play(-1, AddingPanelSoundUrl, -5), 200);
+    setTimeout(() => AudioSystem.play(-1, AddingPanelSoundUrl, -7), 200);
 
     return new Promise((done, fail) => { 
       setTimeout(() => {
@@ -83,6 +88,7 @@ export class Panels extends React.Component<Props, {}> {
     AudioSystem.load(AddingItemSoundUrl);
     AudioSystem.load(AddingPanelSoundUrl);
     AudioSystem.load(SelectingSoundUrl);
+    AudioSystem.load(RecoveryEndSoundUrl);
     this.imageAdding.src = AddingImage;
   }
 
@@ -149,7 +155,7 @@ export class Panels extends React.Component<Props, {}> {
 
     App.Store.dispatch(PanelsStore.actionCreators.addItem(panelWithFreePlaceIndex, freePlaceIndex, item));
 
-    AudioSystem.play(-1, AddingItemSoundUrl);
+    AudioSystem.play(-1, AddingItemSoundUrl, -3);
 
     this.startAddingItemAnimation(panelWithFreePlaceIndex, freePlaceIndex);
 
@@ -196,6 +202,198 @@ export class Panels extends React.Component<Props, {}> {
   static clearSelection(): void{
     Magics.clearCursor();
     App.Store.dispatch(PanelsStore.actionCreators.selectItem(''));
+  }
+
+  private animateRecovery(selectedItem: Magic, selectedItemId: string){
+    if(!selectedItem){
+      console.error('selectedItem in animateRecovery is empty!');
+      return false;
+    }
+
+    this.animateTime(selectedItemId, selectedItem.timeRecoveryMs);
+
+    let callback = (drawsDiffMs: number) => {
+      selectedItem.timeRecoveryLeftMs -= drawsDiffMs;
+      
+      let isContinue = selectedItem.timeRecoveryLeftMs > 0;
+      if (!isContinue){
+        this.forceUpdate();
+        this.animateEndRecovery(selectedItemId);
+        AudioSystem.play(-1, RecoveryEndSoundUrl);
+      }
+
+      return isContinue;
+    } 
+    RequestAnimationFrameHelper.start(callback);
+  }
+
+  private animateEndRecovery(selectedItemId: string){
+    this.animateSnakes(selectedItemId);
+
+
+    let element = document.querySelector(`.panel__item[data-id='${selectedItemId}']`);
+    if (!element){
+      console.error('element not found in the panel!', selectedItemId);
+      return false;
+    }
+    
+    element.classList.add("panel__item--yellow");
+    
+    let imgs = element.getElementsByClassName('panel__item-img');
+    let img = imgs.length > 0 ? imgs[0] : null;
+    if (img){
+      img.classList.add("panel__item--red-shadow");
+    }
+
+    setTimeout(() => {
+      if(element){
+        element.classList.add("panel__item--transition-color");
+      }
+      if (img){
+        img.classList.add("panel__item--transition-color");
+      }
+    }, 200);
+
+    setTimeout(() => {
+      if(element){
+        element.classList.remove("panel__item--yellow");
+        if (img){
+          img.classList.remove("panel__item--red-shadow");
+        }
+      }
+    }, 300);
+  }
+
+  private animateTime(selectedItemId: string, timeRecoveryMs: number){
+    let element = document.querySelector(`.panel__item[data-id='${selectedItemId}']`);
+    if (!element){
+      console.error('element not found in the panel!', selectedItemId);
+      return false;
+    }
+
+    let canvas = element.querySelector('.panel__item-canvas-ahead') as HTMLCanvasElement|null;
+    if (!canvas){
+      console.error('canvas-ahead not found in the item!', selectedItemId);
+      return;
+    }
+
+    canvas.style.display = 'block';
+		let ctx = canvas.getContext('2d') || new CanvasRenderingContext2D();
+    let leftTimeMs = timeRecoveryMs;
+    let centerX = canvas.width / 2;
+    let centerY = canvas.height / 2;
+    let callback = (drawsDiffMs: number) => {
+      if (!canvas){
+        console.error('canvas-ahead lost!', selectedItemId);
+        return false;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      let angle = leftTimeMs / timeRecoveryMs * 360 + 90;
+      let endPoint = Helper.getPointByRotateAngle(centerX, centerY, angle, canvas.width / 2);
+
+      //display red line as End time arrow
+      ctx.beginPath();
+      ctx.strokeStyle = "red";
+			ctx.lineWidth = 1;
+      ctx.moveTo(centerX, centerY)
+      ctx.lineTo(canvas.width / 2, 0);
+			ctx.stroke(); 
+
+      //display red line as time arrow
+      ctx.beginPath();
+      ctx.strokeStyle = "red";
+			ctx.lineWidth = 1;
+      ctx.moveTo(centerX, centerY)
+      ctx.lineTo(endPoint.x, endPoint.y);
+			ctx.stroke(); 
+
+      leftTimeMs -= drawsDiffMs;
+      let isConunie = leftTimeMs > 0;
+      if (!isConunie){
+        canvas.style.display = 'none';
+      }
+      return isConunie;
+    } 
+    RequestAnimationFrameHelper.start(callback);
+  }
+
+  
+  private animateSnakes(selectedItemId: string){
+    let element = document.querySelector(`.panel__item[data-id='${selectedItemId}']`);
+    if (!element){
+      console.error('element not found in the panel!', selectedItemId);
+      return false;
+    }
+    
+    let canvas = element.querySelector('.panel__item-canvas-behind') as HTMLCanvasElement|null;
+    if (!canvas){
+      console.error('canvas-behind not found in the item!', selectedItemId);
+      return;
+    }
+    
+    canvas.style.display = 'block';
+		let ctx = canvas.getContext('2d') || new CanvasRenderingContext2D();
+
+    let leftTimeMs = Panels.durationOfEndRecoveryAdnimationMs;
+    let shiftStart = 0;
+    let callback = (drawsDiffMs: number) => {
+      if (canvas == null){
+        console.error('canvas-behind lost!', selectedItemId);
+        return false;
+      }
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      let borderShift = 2;
+      let lengthOfRoad = canvas.width * 2 - borderShift * 2 + canvas.height * 2 - borderShift * 2;
+      let distanceBetweeSnakes = lengthOfRoad / Panels.countSnakesOfEndRecoveryAdnimation;
+      
+      shiftStart += Panels.speedOfSnakeOfEndRecoveryAdnimationPx / drawsDiffMs;
+      if(shiftStart > distanceBetweeSnakes){
+        shiftStart -= distanceBetweeSnakes;
+      }
+
+      for(var i = 0; i < Panels.countSnakesOfEndRecoveryAdnimation; i++){
+        for(var l = 0; l < Panels.lengthOfSnakeOfEndRecoveryAdnimation; l++){
+          let positionOnTheRoad = shiftStart + i * distanceBetweeSnakes + l;
+          let x = 0;
+          let y = 0;
+
+          if(positionOnTheRoad < lengthOfRoad / 4){
+            x = borderShift;
+            y = positionOnTheRoad;
+          }
+          else if(positionOnTheRoad < lengthOfRoad / 4 * 2){
+            x = positionOnTheRoad - lengthOfRoad / 4;
+            y = canvas.height - borderShift;
+          }
+          else if(positionOnTheRoad < lengthOfRoad / 4 * 3){
+            x = canvas.width - borderShift;
+            y = lengthOfRoad / 4 * 3 - positionOnTheRoad;
+          }
+          else{
+            x = lengthOfRoad - positionOnTheRoad;
+            y = borderShift;
+          }
+
+          //ctx.globalAlpha = Panels.lengthOfSnakeOfEndRecoveryAdnimation / (l + 1);
+          ctx.globalAlpha = 1 / Panels.lengthOfSnakeOfEndRecoveryAdnimation * (Panels.lengthOfSnakeOfEndRecoveryAdnimation - l);
+          ctx.arc(x, y, 3, 0, 2 * Math.PI);
+			    ctx.globalAlpha = 1;
+        }
+      }
+
+      leftTimeMs -= drawsDiffMs;
+      let isConunie = leftTimeMs > 0;
+      if (!isConunie){
+        canvas.style.display = 'none';
+      }
+
+      return isConunie;
+    } 
+    RequestAnimationFrameHelper.start(callback);
   }
 
   getSelectedItem(itemId: string|null = null): Magic|null{
@@ -251,25 +449,7 @@ export class Panels extends React.Component<Props, {}> {
         let mouseUp = Mouse.getCanvasMousePoint();
         let isCreated = Magics.create(selectedItem, mouseUp);
         if (isCreated){
-          //TODO: set transition with time selectedItem.timeRecoveryMs on blackout
-          
-          let callback = (drawsDiffMs: number) => {
-            if(!selectedItem){
-              console.error('selectedItem in callback of RequestAnimationFrameHelper of Panel is empty!');
-              return false;
-            }
-
-            selectedItem.timeRecoveryLeftMs -= drawsDiffMs;
-            
-            let isConunie = selectedItem.timeRecoveryLeftMs > 0;
-            if (!isConunie){
-              this.forceUpdate();
-              //TODO: start animation - border moving red-orange-blue snake
-            }
-
-            return isConunie;
-          } 
-          RequestAnimationFrameHelper.start(callback);
+          this.animateRecovery(selectedItem, this.props.selectedItemId);
         }
       }
 
@@ -373,6 +553,7 @@ export class Panels extends React.Component<Props, {}> {
               onMouseLeave={() => this.onMouseLeave()}
               className={className}
               data-id={item?.id}>
+                <canvas width="90" height="90" className={`panel__item-canvas-behind`}></canvas>
                 <div className={"panel__item-container " + (this.props.isDisabled || item?.timeRecoveryLeftMs > 0 ? "" : " panel__item-container--hover ") + (item == null ? " panel__item-container--empty " : "")}>
                   {item == null 
                     ? null 
@@ -385,6 +566,7 @@ export class Panels extends React.Component<Props, {}> {
                     : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Shift + " : ""}{(index2 + 1) % 10}</div>}
                 </div>
                 <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
+                <canvas width="90" height="90" className={`panel__item-canvas-ahead`}></canvas>
             </div>
           );
         })}

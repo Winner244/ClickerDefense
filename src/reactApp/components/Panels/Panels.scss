@@ -140,8 +140,12 @@
 			background-color: yellow !important;
 		}
 
+		&--red-shadow{
+			box-shadow: 0 0 18px 8px red !important;
+		}
+
 		&--transition-color{
-			transition: background-color 1s;
+			transition: background-color 1s, box-shadow 1s;
 		}
 
 		&-canvas{
@@ -149,6 +153,22 @@
 			left: -120px;
 			top: -120px;
 			z-index: 3;
+			display: none;
+		}
+
+		&-canvas-behind{
+			position: absolute;
+			left: -5px;
+			top: -5px;
+			z-index: 1;
+			display: none;
+		}
+
+		&-canvas-ahead{
+			left: 0;
+			top: 0;
+			position: absolute;
+			z-index: 1;
 			display: none;
 		}
 	}
