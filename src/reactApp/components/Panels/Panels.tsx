@@ -290,8 +290,32 @@ export class Panels extends React.Component<Props, {}> {
 
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       
-      let angle = leftTimeMs / timeRecoveryMs * 360 + 90;
-      let endPoint = Helper.getPointByRotateAngle(centerX, centerY, angle, canvas.width / 2);
+      let angleShift = 90;
+      let angle = -leftTimeMs / timeRecoveryMs * 360 + angleShift;
+      let endPointArrow = Helper.getPointByRotateAngle(centerX, centerY, angle, canvas.width / 2);
+      let endPoint = Helper.getPointByRotateAngle(centerX, centerY, angle, canvas.width);
+
+      //display blackout
+      ctx.beginPath();
+      ctx.moveTo(centerX, centerY)
+      ctx.lineTo(canvas.width / 2, 0);
+      let angleMetric = angle * -1 + angleShift
+      if (angleMetric > 45){
+        ctx.lineTo(canvas.width, 0);
+      }
+      if (angleMetric > 180 - 45){
+        ctx.lineTo(canvas.width, canvas.height);
+      }
+      if (angleMetric > 180 + 45){
+        ctx.lineTo(0, canvas.height);
+      }
+      if (angleMetric > 360 - 45){
+        ctx.lineTo(0, 0);
+      }
+      ctx.lineTo(endPoint.x, endPoint.y);
+      ctx.lineTo(centerX, centerY)
+      ctx.fillStyle = "rgba(1, 1, 1, 0.7)";
+      ctx.fill();
 
       //display red line as End time arrow
       ctx.beginPath();
@@ -306,7 +330,7 @@ export class Panels extends React.Component<Props, {}> {
       ctx.strokeStyle = "red";
 			ctx.lineWidth = 1;
       ctx.moveTo(centerX, centerY)
-      ctx.lineTo(endPoint.x, endPoint.y);
+      ctx.lineTo(endPointArrow.x, endPointArrow.y);
 			ctx.stroke(); 
 
       leftTimeMs -= drawsDiffMs;
@@ -566,7 +590,7 @@ export class Panels extends React.Component<Props, {}> {
                     : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Shift + " : ""}{(index2 + 1) % 10}</div>}
                 </div>
                 <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
-                <canvas width="90" height="90" className={`panel__item-canvas-ahead`}></canvas>
+                <canvas width="80" height="80" className={`panel__item-canvas-ahead`}></canvas>
             </div>
           );
         })}
