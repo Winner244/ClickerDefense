@@ -23,8 +23,8 @@ import './Panels.scss';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
-import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3'; //TODO: change sound
-import RecoveryEndSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
+import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
+import RecoveryEndSoundUrl from '../../../assets/sounds/panel/recovery.mp3';
 import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
 import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
@@ -537,8 +537,9 @@ export class Panels extends React.Component<Props, {}> {
 
       if(!this.isMouseIn){
         Magics.displayOnCursor(selectedItem);
-        AudioSystem.play(-1, SelectingSoundUrl);
       }
+      
+      AudioSystem.play(-1, SelectingSoundUrl);
     }
 
     this.props.selectItem(itemId);
