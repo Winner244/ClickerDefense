@@ -41,10 +41,10 @@ type Props =
 export class Panels extends React.Component<Props, {}> {
 
 	private static readonly imageAdding: HTMLImageElement = new Image(); //анимация добавления элемента
-	private static readonly durationOfEndRecoveryAdnimationMs: number = 3000; //время анимации завершения восстановления магии в ячейке
+	private static readonly durationOfEndRecoveryAdnimationMs: number = 2500; //время анимации завершения восстановления магии в ячейке
 	private static readonly countSnakesOfEndRecoveryAdnimation: number = 6; //количество бегающих змеек
 	private static readonly lengthOfSnakeOfEndRecoveryAdnimation: number = 5; //длина бегающей змейки
-	private static readonly speedOfSnakeOfEndRecoveryAdnimationPx: number = 50; //скорость змейки (пиксели в секунду)
+	private static readonly speedOfSnakeOfEndRecoveryAdnimationPx: number = 20; //скорость змейки (пиксели в секунду)
 
   static countAllItems(): number{
     let panels = App.Store.getState().panels?.panels;
@@ -402,10 +402,12 @@ export class Panels extends React.Component<Props, {}> {
             y = borderShift;
           }
 
-          //ctx.globalAlpha = Panels.lengthOfSnakeOfEndRecoveryAdnimation / (l + 1);
-          ctx.globalAlpha = 1 / Panels.lengthOfSnakeOfEndRecoveryAdnimation * (Panels.lengthOfSnakeOfEndRecoveryAdnimation - l);
+          ctx.beginPath();
+          let globalAlpha = leftTimeMs < 2000 ? leftTimeMs / 2000 : 1;
           ctx.arc(x, y, 3, 0, 2 * Math.PI);
 			    ctx.globalAlpha = 1;
+          ctx.fillStyle = `rgba(255, 255, 0, ${globalAlpha})`;
+          ctx.fill();
         }
       }
 
@@ -538,7 +540,7 @@ export class Panels extends React.Component<Props, {}> {
       if(!this.isMouseIn){
         Magics.displayOnCursor(selectedItem);
       }
-      
+
       AudioSystem.play(-1, SelectingSoundUrl);
     }
 
