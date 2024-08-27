@@ -16,7 +16,7 @@ import HealthIcon from '../assets/img/icons/health.png';
 import ShieldIcon from '../assets/img/icons/shield.png';
 
 /** Базовый класс для объектов, которые можно прокачать (Строения, Юниты) */
-export class UpgradebleObject extends AttackedObject{
+export class UpgradableObject extends AttackedObject{
 	static readonly upgradeAnimation: AnimationInfinite = new AnimationInfinite(90, 3000); //анимация апгрейда
 
 	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
@@ -62,7 +62,7 @@ export class UpgradebleObject extends AttackedObject{
 		this.isSupportRecovery = isSupportRecovery;
 		this.isSupportUpgrade = isSupportUpgrade;
 
-		this.recoveryPricePerHealth = this.price / this.healthMax / UpgradebleObject.recoveryDiscount;
+		this.recoveryPricePerHealth = this.price / this.healthMax / UpgradableObject.recoveryDiscount;
 
 		this._isDisplayRecoveryAnimation = false;
 		this._isDisplayedUpgradeWindow = false;
@@ -73,12 +73,12 @@ export class UpgradebleObject extends AttackedObject{
 	}
 
 	static loadUpgradeResources(): void{
-		UpgradebleObject.upgradeAnimation.changeImage(UpgradeAnimation);
+		UpgradableObject.upgradeAnimation.changeImage(UpgradeAnimation);
 	}
 
 	loadedResourcesAfterBuild(){
 		this.infoItems = [
-			new ParameterItem(UpgradebleObject.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, 13, () => this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
+			new ParameterItem(UpgradableObject.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, 13, () => this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
 			new ParameterItem('Защита', () => this.defense.toFixed(1), ShieldIcon, 13, () => this.price * (this.defense + 1), () => this.defense += 1)
 		];
@@ -153,7 +153,7 @@ export class UpgradebleObject extends AttackedObject{
 		y = y ?? this.y;
 
 		if(this.isDisplayedUpgradeWindow){
-			UpgradebleObject.upgradeAnimation.draw(drawsDiffMs, isGameOver, this.x - this.width / 10, this.y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
+			UpgradableObject.upgradeAnimation.draw(drawsDiffMs, isGameOver, this.x - this.width / 10, this.y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
 		}
 
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);

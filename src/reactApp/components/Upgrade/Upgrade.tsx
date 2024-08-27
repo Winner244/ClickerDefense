@@ -25,7 +25,7 @@ import {BuildingButtons} from '../BuildingButtons/BuildingButtons';
 
 import {UnitButtons} from '../UnitButtons/UnitButtons';
 
-import {UpgradebleObject} from '../../../models/UpgradebleObject';
+import {UpgradableObject} from '../../../models/UpgradableObject';
 
 import CoinImage from '../../../assets/img/coin.png';
 
@@ -56,7 +56,7 @@ export class Upgrade extends React.Component<Props, {}> {
   coinLabel: React.RefObject<HTMLDivElement> = React.createRef();
   popup: React.RefObject<HTMLDivElement> = React.createRef();
 
-  static show(selectedObject: UpgradebleObject): void{
+  static show(selectedObject: UpgradableObject): void{
     const oldSelectedObject = App.Store.getState().upgrade?.selectedObject;
     if(oldSelectedObject){
       oldSelectedObject.isDisplayedUpgradeWindow = false;

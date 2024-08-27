@@ -1,7 +1,7 @@
 import {Draw} from '../gameSystems/Draw';
 
 import {AttackedObject} from '../../models/AttackedObject';
-import {UpgradebleObject} from '../../models/UpgradebleObject';
+import {UpgradableObject} from '../../models/UpgradableObject';
 
 import {AudioSystem} from '../gameSystems/AudioSystem';
 
@@ -44,7 +44,7 @@ import End7Sound from '../../assets/sounds/units/end7.mp3';
 
 
 /** Базовый класс для всех Юнитов пользователя */
-export class Unit extends UpgradebleObject {
+export class Unit extends UpgradableObject {
 	protected _passiveWaitingAnimation: AnimationInfinite; //анимация ожидания в мирное время (между волнами)
 	protected _fallEndAnimation: Animation; //анимация приземления юнита 
 	protected _fallImage: HTMLImageElement;
