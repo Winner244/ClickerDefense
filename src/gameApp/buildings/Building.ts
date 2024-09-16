@@ -1,7 +1,7 @@
 import {Monster} from '../monsters/Monster';
 import {Unit} from '../units/Unit';
 
-import {UpgradableObject} from '../../models/UpgradableObject';
+import {UpgradableAttackedObject} from '../../models/UpgradableAttackedObject';
 
 import {ImageHandler} from '../ImageHandler';
 
@@ -16,7 +16,7 @@ import RepairHammerSoundUrl from '../../assets/sounds/buildings/repair_hammer.mp
 import HammerImage from '../../assets/img/buttons/hammer.png';
 
 /** Базовый класс для всех зданий */
-export class Building extends UpgradableObject{
+export class Building extends UpgradableAttackedObject{
 	static readonly repairImage: HTMLImageElement = new Image(); //картинка для анимации починки
 	static readonly repairAnimationDurationMs: number = 1800; //продолжительность анимации починки (миллисекунды)
 

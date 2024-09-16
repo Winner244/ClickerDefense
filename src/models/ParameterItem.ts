@@ -15,6 +15,8 @@ export default class ParameterItem{
 	mouseIn: () => void; //наведении мышкой на параметр в UI
 	mouseOut: () => void; //увод мышкой от параметра в UI
 
+	isActive: () => boolean; //активно ли улучшение?
+
 	private _priceToImprove: () => number|null; //цена повышения характеристики (если null, то улучшение не предпологается)
 	private _improve: () => void; //функция повышения характеристики
 
@@ -26,7 +28,8 @@ export default class ParameterItem{
 		priceToImprove: () => number|null = () => null, 
 		improve: () => void = () => {},
 		mouseIn: () => void = () => {},
-		mouseOut: () => void = () => {})
+		mouseOut: () => void = () => {},
+		isActive: () => boolean = () => true)
 	{
 		this.id = Helper.generateUid();
 		this.label = label;
@@ -46,6 +49,7 @@ export default class ParameterItem{
 
 		this.mouseIn = mouseIn;
 		this.mouseOut = mouseOut;
+		this.isActive = isActive;
 
 		this._initialValue = this.getNumberValue();
 	}
@@ -82,7 +86,7 @@ export default class ParameterItem{
 
 	improve(): number {
 		let priceToImprove = this.priceToImprove();
-		if(priceToImprove){
+		if (priceToImprove && this.isActive()){
 			if(Gamer.coins >= priceToImprove){
 				Gamer.coins -= priceToImprove
 				this._improve();

@@ -93,7 +93,8 @@ export class Meteor extends Magic{
 			new Point(0, 30),
 			null, //lifeTime
 			Meteor.initialTimeRecoveryMs,
-			Meteor.imageHandler);
+			Meteor.imageHandler,
+			Meteor.shopItem.price);
 		
 		this.speed = Meteor.initialSpeed;
 		this.angle = angle - 45 - 90;

@@ -1,14 +1,14 @@
 import {Reducer} from 'redux';
-import {UpgradableObject} from '../../../models/UpgradableObject';
+import {IUpgradableObject} from '../../../models/IUpgradableObject';
 
 // STATE
 export interface UpgradeState {
 	isOpen: boolean;
-	selectedObject: UpgradableObject | null;
+	selectedObject: IUpgradableObject | null;
 }
 
 // ACTIONS
-interface OpenAction { type: 'UPGRADE__OPEN', selectedObject: UpgradableObject }
+interface OpenAction { type: 'UPGRADE__OPEN', selectedObject: IUpgradableObject }
 interface CloseAction { type: 'UPGRADE__CLOSE' }
 
 type KnownAction = CloseAction | OpenAction
@@ -16,11 +16,11 @@ type KnownAction = CloseAction | OpenAction
 // ACTION CREATORS
 //for TypeScript
 export interface UpgradeAction {
-    open: (selectedObject: UpgradableObject) => OpenAction;
+    open: (selectedObject: IUpgradableObject) => OpenAction;
     close: () => CloseAction;
 }
 export const actionCreators = {
-    open: (selectedObject: UpgradableObject) => <OpenAction>{ type: 'UPGRADE__OPEN', selectedObject: selectedObject},
+    open: (selectedObject: IUpgradableObject) => <OpenAction>{ type: 'UPGRADE__OPEN', selectedObject: selectedObject},
     close: () => <CloseAction>{ type: 'UPGRADE__CLOSE' },
 };
 

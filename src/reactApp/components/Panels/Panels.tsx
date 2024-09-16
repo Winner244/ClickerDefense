@@ -23,6 +23,10 @@ import './Panels.scss';
 
 import {AudioSystem} from '../../../gameApp/gameSystems/AudioSystem';
 
+import {Game} from '../../../gameApp/gameSystems/Game';
+import {WavesState} from '../../../gameApp/gameSystems/WavesState';
+import {Upgrade} from '../Upgrade/Upgrade';
+
 import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
 import RecoveryEndSoundUrl from '../../../assets/sounds/panel/recovery.mp3';
 import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
@@ -343,7 +347,6 @@ export class Panels extends React.Component<Props, {}> {
     RequestAnimationFrameHelper.start(callback);
   }
 
-  
   private animateSnakes(selectedItemId: string){
     let element = document.querySelector(`.panel__item[data-id='${selectedItemId}']`);
     if (!element){
@@ -532,6 +535,13 @@ export class Panels extends React.Component<Props, {}> {
     let selectedItem = this.getSelectedItem(itemId);
     if (selectedItem){
       if(selectedItem.timeRecoveryLeftMs > 0){
+        this.props.selectItem('');
+        Magics.clearCursor();
+        return;
+      }
+
+      if(!Game.isGameOver && !WavesState.isWaveStarted && WavesState.delayEndLeftTimeMs <= 0){
+        Upgrade.show(selectedItem);
         this.props.selectItem('');
         Magics.clearCursor();
         return;

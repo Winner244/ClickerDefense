@@ -25,13 +25,15 @@ import {BuildingButtons} from '../BuildingButtons/BuildingButtons';
 
 import {UnitButtons} from '../UnitButtons/UnitButtons';
 
-import {UpgradableObject} from '../../../models/UpgradableObject';
+import {IUpgradableObject} from '../../../models/IUpgradableObject';
+import {UpgradableAttackedObject} from '../../../models/UpgradableAttackedObject';
+import {Unit} from '../../../gameApp/units/Unit';
 
 import CoinImage from '../../../assets/img/coin.png';
 
 import SelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import ImproveSoundUrl from '../../../assets/sounds/buildings/placing.mp3'; 
-import { Unit } from '../../../gameApp/units/Unit';
+
 
 
 interface Prop {
@@ -56,7 +58,7 @@ export class Upgrade extends React.Component<Props, {}> {
   coinLabel: React.RefObject<HTMLDivElement> = React.createRef();
   popup: React.RefObject<HTMLDivElement> = React.createRef();
 
-  static show(selectedObject: UpgradableObject): void{
+  static show(selectedObject: IUpgradableObject): void{
     const oldSelectedObject = App.Store.getState().upgrade?.selectedObject;
     if(oldSelectedObject){
       oldSelectedObject.isDisplayedUpgradeWindow = false;
@@ -173,7 +175,7 @@ export class Upgrade extends React.Component<Props, {}> {
   }
 
   recovery(infoItem : ParameterItem, e : React.MouseEvent<HTMLButtonElement, MouseEvent>){
-    if(this.props.selectedObject) {
+    if(this.props.selectedObject && this.props.selectedObject instanceof UpgradableAttackedObject) {
       const repairPrice = this.props.selectedObject.getRecoveryPrice();
       const result = this.props.selectedObject.recovery();
       if(result){
@@ -269,7 +271,10 @@ export class Upgrade extends React.Component<Props, {}> {
                   <img className="upgrade__image nodrag" src={this.props.selectedObject.image.src} />
                   <ul className="upgrade__parameters-box">
                     {this.props.selectedObject.infoItems.map((infoItem, i) => {
-                      let isDisplayRepairButton = infoItem.label == Building.improveHealthLabel && this.props.selectedObject?.health != this.props.selectedObject?.healthMax;
+
+                      let isDisplayRepairButton = this.props.selectedObject instanceof UpgradableAttackedObject
+                        ? infoItem.label == Building.improveHealthLabel && this.props.selectedObject?.health != this.props.selectedObject?.healthMax
+                        : false;
                       let priceToImprove = infoItem.priceToImprove();
 
                       return (<li className={"upgrade__parameter upgrade__parameter--hover-active upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
@@ -284,7 +289,7 @@ export class Upgrade extends React.Component<Props, {}> {
                           <div className='upgrade__parameter-value' dangerouslySetInnerHTML={{__html: infoItem.getValue() + ''}}></div>
                           <div className='upgrade__parameter-buttons-box'>
 
-                            {isDisplayRepairButton
+                            {isDisplayRepairButton && this.props.selectedObject instanceof UpgradableAttackedObject
                               ? <div className='upgrade__parameter-buttons-box-group'>
                                   <span className={'upgrade__parameter-price ' + (this.props.selectedObject?.isCanBeRecovered() != true ? 'upgrade__parameter-price--red' : '')}>
                                     {this.props.selectedObject?.getRecoveryPrice()}

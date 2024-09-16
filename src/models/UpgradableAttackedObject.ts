@@ -2,6 +2,7 @@ import ParameterItem from './ParameterItem';
 import AnimationInfinite from './AnimationInfinite';
 import Improvement from './Improvement';
 import {AttackedObject} from './AttackedObject';
+import {IUpgradableObject} from './IUpgradableObject';
 
 import {Gamer} from '../gameApp/gamer/Gamer';
 
@@ -9,14 +10,12 @@ import {Labels} from '../gameApp/labels/Labels';
 
 import {ImageHandler} from '../gameApp/ImageHandler';
 
-import {AudioSystem} from '../gameApp/gameSystems/AudioSystem';
-
 import UpgradeAnimation from '../assets/img/buildings/upgrade.png';
 import HealthIcon from '../assets/img/icons/health.png';
 import ShieldIcon from '../assets/img/icons/shield.png';
 
 /** Базовый класс для объектов, которые можно прокачать (Строения, Юниты) */
-export class UpgradableObject extends AttackedObject{
+export class UpgradableAttackedObject extends AttackedObject implements IUpgradableObject{
 	static readonly upgradeAnimation: AnimationInfinite = new AnimationInfinite(90, 3000); //анимация апгрейда
 
 	static readonly improveHealthLabel: string = 'Здоровье'; //нужно для добавления кнопки ремонта в окне апгрейда строения рядом с этой характеристикой
@@ -62,7 +61,7 @@ export class UpgradableObject extends AttackedObject{
 		this.isSupportRecovery = isSupportRecovery;
 		this.isSupportUpgrade = isSupportUpgrade;
 
-		this.recoveryPricePerHealth = this.price / this.healthMax / UpgradableObject.recoveryDiscount;
+		this.recoveryPricePerHealth = this.price / this.healthMax / UpgradableAttackedObject.recoveryDiscount;
 
 		this._isDisplayRecoveryAnimation = false;
 		this._isDisplayedUpgradeWindow = false;
@@ -73,12 +72,12 @@ export class UpgradableObject extends AttackedObject{
 	}
 
 	static loadUpgradeResources(): void{
-		UpgradableObject.upgradeAnimation.changeImage(UpgradeAnimation);
+		UpgradableAttackedObject.upgradeAnimation.changeImage(UpgradeAnimation);
 	}
 
 	loadedResourcesAfterBuild(){
 		this.infoItems = [
-			new ParameterItem(UpgradableObject.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, 13, () => this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
+			new ParameterItem(UpgradableAttackedObject.improveHealthLabel, this.improveHealthGetValue.bind(this), HealthIcon, 13, () => this.price - this.price / 5, () => this.improveHealth(this.initialHealthMax)),
 
 			new ParameterItem('Защита', () => this.defense.toFixed(1), ShieldIcon, 13, () => this.price * (this.defense + 1), () => this.defense += 1)
 		];
@@ -153,7 +152,7 @@ export class UpgradableObject extends AttackedObject{
 		y = y ?? this.y;
 
 		if(this.isDisplayedUpgradeWindow){
-			UpgradableObject.upgradeAnimation.draw(drawsDiffMs, isGameOver, this.x - this.width / 10, this.y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
+			UpgradableAttackedObject.upgradeAnimation.draw(drawsDiffMs, isGameOver, this.x - this.width / 10, this.y - this.height / 10, this.width + this.width / 10 * 2, this.height + this.height / 10)
 		}
 
 		super.drawBase(drawsDiffMs, isGameOver, x, y, filter);
