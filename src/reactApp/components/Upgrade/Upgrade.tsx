@@ -27,6 +27,7 @@ import {UnitButtons} from '../UnitButtons/UnitButtons';
 
 import {IUpgradableObject} from '../../../models/IUpgradableObject';
 import {UpgradableAttackedObject} from '../../../models/UpgradableAttackedObject';
+import {UpgradableMagicObject} from '../../../models/UpgradableMagicObject';
 import {Unit} from '../../../gameApp/units/Unit';
 
 import CoinImage from '../../../assets/img/coin.png';
@@ -258,6 +259,9 @@ export class Upgrade extends React.Component<Props, {}> {
       }
     }
 
+    var isMagic = this.props.selectedObject instanceof UpgradableMagicObject;
+    var imageStyle: React.CSSProperties|undefined = isMagic ? {width: "100%"} : undefined;
+
     return (
       <div className="upgrade noselect" id="upgrade" ref={this.popup}>
         <div className="upgrade__body">
@@ -268,7 +272,7 @@ export class Upgrade extends React.Component<Props, {}> {
             <div className="upgrade__container">
               <div className="upgrade__main-box">
                 <div className="upgrade__info">
-                  <img className="upgrade__image nodrag" src={this.props.selectedObject.image.src} />
+                  <img className="upgrade__image nodrag" src={this.props.selectedObject.image.src} style={imageStyle} />
                   <ul className="upgrade__parameters-box">
                     {this.props.selectedObject.infoItems.map((infoItem, i) => {
 

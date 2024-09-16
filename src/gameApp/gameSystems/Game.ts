@@ -37,6 +37,7 @@ import {Tower} from '../buildings/Tower';
 import {Barricade} from '../buildings/Barricade';
 
 import {Magics} from '../magic/Magics';
+import {Magic} from '../magic/Magic';
 import {Meteor} from '../magic/Meteor';
 
 import {Helper} from '../helpers/Helper';
@@ -49,6 +50,7 @@ import {BuildingButtons} from '../../reactApp/components/BuildingButtons/Buildin
 import {UnitButtons} from '../../reactApp/components/UnitButtons/UnitButtons';
 
 import ShopItem from '../../models/ShopItem';
+
 
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 
@@ -514,14 +516,16 @@ export class Game {
 		}
 		else if(shopItem.category == ShopCategoryEnum.MAGIC){
 			
-			let promise: Promise<BaseObject|null>;
+			var magic: Magic;
 			if(Meteor.shopItem == shopItem){
-				promise = Panels.addItemToPanel(new Meteor(0, 0));
+				magic = new Meteor(0, 0);
 			}
 			else{
 				throw `unexpected shopItem with type = Unit (buyThing('${shopItem.name}')).`;
 			}
 
+			magic.loadedResourcesAfterBuy();
+			let promise: Promise<BaseObject|null> = Panels.addItemToPanel(magic);
 			promise.then(itemPosition => {
 				if(itemPosition){
 					let x = itemPosition.location.x / (Draw.canvas.clientWidth / Draw.canvas.width);

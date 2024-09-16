@@ -4,7 +4,6 @@ import Improvement from './Improvement';
 
 import {IUpgradableObject} from './IUpgradableObject';
 
-import UpgradeAnimation from '../assets/img/buildings/upgrade.png';
 import timerIcon from '../assets/img/icons/timer.png';  
 
 /** Базовый класс для магии, которрое можно прокачать */
@@ -39,10 +38,6 @@ export class UpgradableMagicObject implements IUpgradableObject {
 
 		this.infoItems = [];
 		this.improvements = [];
-	}
-
-	static loadUpgradeResources(): void{
-		UpgradableMagicObject.upgradeAnimation.changeImage(UpgradeAnimation);
 	}
 
 	loadedResourcesAfterBuy(){

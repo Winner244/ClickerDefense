@@ -20,6 +20,7 @@ import {Magic} from './Magic';
 
 import ShopItem from '../../models/ShopItem';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
+import ParameterItem from '../../models/ParameterItem';
 
 import AnimationInfinite from '../../models/AnimationInfinite';
 
@@ -32,6 +33,7 @@ import FireImage from '../../assets/img/magics/meteor/fire.png';
 
 import FireSoundUrl from '../../assets/sounds/magic/meteor/fire-moving.mp3'; 
 import ExplosionSoundUrl from '../../assets/sounds/magic/meteor/explosion.mp3'; 
+import swordIcon from '../../assets/img/icons/sword.png';  
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
@@ -61,6 +63,11 @@ export class Meteor extends Magic{
 	private readonly explosionAnimation: Animation; //анимация Взрыва
 
 	static readonly shopItem: ShopItem = new ShopItem('Метеор', Meteor.image, 10, 'Вызывает падение метеорита на летающих и ходячих монстров', ShopCategoryEnum.MAGIC, 30);
+
+	private damageEnd: number;
+	private damageInAirSecond: number; 
+	private damageEndSizeKof: number;
+	private damageInAirSizeKof: number; 
 
 	private angle: number;
 	private dx: number;
@@ -113,6 +120,11 @@ export class Meteor extends Magic{
 
 		this.isSoundExplosionStarted = false;
 
+		this.damageEnd = Meteor.damageEnd;
+		this.damageInAirSecond = Meteor.damageInAirSecond;
+		this.damageEndSizeKof = Meteor.damageEndSizeKof;
+		this.damageInAirSizeKof = Meteor.damageInAirSizeKof;
+
 
 		let isShop = x == 0 && y == 0;
 		if (isShop){
@@ -156,6 +168,20 @@ export class Meteor extends Magic{
 			Meteor.imageHandler.new(Meteor.imageFire).src = FireImage;
 			AudioSystem.load(FireSoundUrl);
 		}
+	}
+
+	loadedResourcesAfterBuy(){
+		super.loadedResourcesAfterBuy();
+
+		this.infoItems.push(new ParameterItem('Урон', 
+			() => this.damageEnd, swordIcon, 13, 
+			() => this.price * this.damageEnd, 
+			() => {
+				this.damageEnd += 1;
+				this.damageInAirSecond += 1;
+				this.damageEndSizeKof += 0.1;
+				this.damageInAirSizeKof += 0.05;
+			}));
 	}
 
 	getAngle(pointStart: Point, pointEnd: Point): number{
@@ -246,14 +272,14 @@ export class Meteor extends Magic{
 
 			//наносим урон при падении всем кто попал под траекторию движения метеорита
 			//для оптимизации - высчитываем не попадание края монстра внутрь повёрнутого квадрата, а расстояние между монстром и метеоритом с вычитом их радиусов
-			let radiusMeteorit = this.width * Meteor.damageInAirSizeKof / 2;
+			let radiusMeteorit = this.width * this.damageInAirSizeKof / 2;
 			let centerX = this.x + this.width / 2;
 			let centerY = this.y + this.height / 2;
 			let xDamageCenter = centerX + Math.cos((this.angle + 142) * Math.PI / 180) * this.width / 2;
 			let yDamageCenter = centerY + Math.sin((this.angle + 142) * Math.PI / 180) * this.height / 2;
 			monsters
 				.filter(monster => Helper.getDistance(xDamageCenter, yDamageCenter, monster.centerX, monster.centerY) < radiusMeteorit + Math.min(monster.width, monster.height) / 2)
-				.forEach(monster => monster.applyDamage(Meteor.damageInAirSecond * drawsDiffMs / 1000));
+				.forEach(monster => monster.applyDamage(this.damageInAirSecond * drawsDiffMs / 1000));
 
 			//создаём дым от метеора
 			if(this.lastTimeCreatingSmoke < this.lastTimeCreatingSmoke + 1000 / Meteor.smokeFrequencyInSecond){
@@ -277,12 +303,12 @@ export class Meteor extends Magic{
 		else if(this.explosionAnimation.leftTimeMs <= 0){
 			this.explosionAnimation.restart();
 
-			let radiusMeteorit = this.width * Meteor.damageEndSizeKof;
+			let radiusMeteorit = this.width * this.damageEndSizeKof;
 			monsters.forEach(monster => {
 				let distance = Helper.getDistance(this.intersectionWithEarch.x, this.intersectionWithEarch.y, monster.centerX, monster.centerY);
 				let distanceMax = radiusMeteorit + Math.min(monster.width, monster.height) / 2;
 				if(distance < distanceMax){
-					monster.applyDamage((Math.min(1, (distanceMax - distance) / (distanceMax / 2))) * Meteor.damageEnd);
+					monster.applyDamage((Math.min(1, (distanceMax - distance) / (distanceMax / 2))) * this.damageEnd);
 				}
 			});
 		}
@@ -341,7 +367,7 @@ export class Meteor extends Magic{
 		});
 
 		if(this.explosionAnimation.leftTimeMs > 0){
-			let size = this.width * Meteor.damageEndSizeKof * 2;
+			let size = this.width * this.damageEndSizeKof * 2;
 			Draw.ctx.globalAlpha = this.explosionAnimation.leftTimeMs / this.explosionAnimation.durationMs * 4;
 			this.explosionAnimation.draw(drawsDiffMs, isGameOver, this.intersectionWithEarch.x - size / 2, this.intersectionWithEarch.y - size / 2, size, size);
 			Draw.ctx.globalAlpha = 1;
@@ -393,7 +419,7 @@ export class Meteor extends Magic{
 		let distance = Helper.getDistance(pointStart.x, pointStart.y, pointEnd.x, pointEnd.y); 
 		if (distance > Meteor.distanceBetweenToAddAngle){
 			let angle = this.getAngle(pointStart, pointEnd);
-			let width = this.width * Meteor.damageInAirSizeKof;
+			let width = this.width * this.damageInAirSizeKof;
 			let height = Draw.ctx.canvas.height;
 
 			Draw.ctx.setTransform(1, 0, 0, 1, pointEnd.x, pointEnd.y); 
@@ -432,7 +458,7 @@ export class Meteor extends Magic{
 
 			Draw.ctx.fillStyle = 'rgba(0, 255, 0, 0.1)';
 			Draw.ctx.beginPath();
-			Draw.ctx.arc(intersectionWithEarch.x, intersectionWithEarch.y, this.width * Meteor.damageEndSizeKof, 0, 2 * Math.PI);
+			Draw.ctx.arc(intersectionWithEarch.x, intersectionWithEarch.y, this.width * this.damageEndSizeKof, 0, 2 * Math.PI);
 			Draw.ctx.stroke();
 			Draw.ctx.fill();
 
