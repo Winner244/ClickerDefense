@@ -3307,7 +3307,7 @@ class TestPage extends React.Component {
                     ]];*/
                 WavesState.isWaveStarted = false;
                 Waves.waveCurrent = 0;
-                Gamer.coins = 775;
+                Gamer.coins = 22775;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;

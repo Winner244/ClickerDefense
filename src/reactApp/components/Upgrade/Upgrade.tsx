@@ -280,6 +280,7 @@ export class Upgrade extends React.Component<Props, {}> {
                         ? infoItem.label == Building.improveHealthLabel && this.props.selectedObject?.health != this.props.selectedObject?.healthMax
                         : false;
                       let priceToImprove = infoItem.priceToImprove();
+                      let isActive = infoItem.isActive();
 
                       return (<li className={"upgrade__parameter upgrade__parameter--hover-active upgrade__parameter--" + infoItem.id} key={i} onMouseOver={infoItem.mouseIn} onMouseOut={infoItem.mouseOut}>
                         <div className="upgrade__parameter-name">
@@ -308,7 +309,7 @@ export class Upgrade extends React.Component<Props, {}> {
                                 </div>
                               : null}
 
-                              {priceToImprove && !isDisplayRepairButton
+                              {priceToImprove && !isDisplayRepairButton && isActive
                                 ? <div className='upgrade__parameter-buttons-box-group'>
                                     <span className={'upgrade__parameter-price ' + (priceToImprove > Gamer.coins ? 'upgrade__parameter-price--red' : '')}
                                     >

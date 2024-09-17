@@ -46,6 +46,8 @@ export class UpgradableMagicObject implements IUpgradableObject {
 				() => this.timeRecoveryMs, timerIcon, 13, 
 				() => Math.max(1, 100 - (this.timeRecoveryMs / 100)), 
 				() => this.timeRecoveryMs = Math.max(0, this.timeRecoveryMs - 100),
+				() => {},
+				() => {},
 				() => this.timeRecoveryMs > 0)
 		];
 	}

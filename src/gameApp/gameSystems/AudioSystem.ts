@@ -189,7 +189,7 @@ export class AudioSystem{
 			sourceTone.chain(panner, Tone.Destination);
 		}
 
-		sourceTone.playbackRate = speed;
+		sourceTone.playbackRate = Math.max(0.1, speed);
 		sourceTone.volume.value = volumeChange; //changing The volume of the output in decibels.
 		sourceTone.toDestination();
 		sourceTone.start("+" + delayStartingSeconds, offsetSeconds); 

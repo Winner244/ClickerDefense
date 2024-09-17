@@ -145,7 +145,7 @@ export class Meteor extends Magic{
 				this.fireElementShifts.push(new Point(fireX, fireY));
 			}
 
-			let distanceToGoal = Helper.getDistance(x, y, this.intersectionWithEarch.x, this.intersectionWithEarch.y);
+			let distanceToGoal = Helper.getDistance(x, y, this.intersectionWithEarch.x, this.intersectionWithEarch.y) / Math.max(1, this.size);
 			let fireSoundSpeed = distanceToGoal > Meteor.fireSoundDistanceSpeedOk 
 				? 1 - (distanceToGoal / Meteor.fireSoundDistanceSpeedOk - 1) / 1.5 
 				: 1 + 1 - distanceToGoal / Meteor.fireSoundDistanceSpeedOk 
@@ -175,12 +175,12 @@ export class Meteor extends Magic{
 
 		this.infoItems.push(new ParameterItem('Урон', 
 			() => this.damageEnd, swordIcon, 13, 
-			() => this.price * this.damageEnd, 
+			() => this.price * this.damageEnd / 2, 
 			() => {
 				this.damageEnd += 1;
 				this.damageInAirSecond += 1;
-				this.damageEndSizeKof += 0.1;
-				this.damageInAirSizeKof += 0.05;
+				this.timeRecoveryMs += 50;
+				this.size += 0.05;
 			}));
 	}
 
