@@ -59,9 +59,14 @@ export class Upgrade extends React.Component<Props, {}> {
   coinLabel: React.RefObject<HTMLDivElement> = React.createRef();
   popup: React.RefObject<HTMLDivElement> = React.createRef();
 
-  static show(selectedObject: IUpgradableObject): void{
+  static show(selectedObject: IUpgradableObject, isHideIfTheSameObject: boolean = false): void{
     const oldSelectedObject = App.Store.getState().upgrade?.selectedObject;
     if(oldSelectedObject){
+      if(isHideIfTheSameObject && oldSelectedObject.name == selectedObject.name && selectedObject.isDisplayedUpgradeWindow){
+        this.hide();
+        return;
+      }
+
       oldSelectedObject.isDisplayedUpgradeWindow = false;
     }
 

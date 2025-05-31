@@ -4,7 +4,7 @@ React + Redux + TypeScript + canvas + Tone.js
 
 Canvas game - need to defense flying earch + mine coins from it + destroy waves of monsters by setting up defenses
 
-last version: 0.18
+last version: 0.19
 
 <br>
 <h3>Monsters:</h3>

@@ -8,7 +8,6 @@ import { App } from '../../App';
 
 import Panel from '../../../models/Panel';
 import {BaseObject} from '../../../models/BaseObject';
-import {Point} from '../../../models/Point';
 import {Helper} from '../../../gameApp/helpers/Helper';
 import {RequestAnimationFrameHelper} from '../../../gameApp/helpers/RequestAnimationFrameHelper';
 
@@ -27,6 +26,7 @@ import {Game} from '../../../gameApp/gameSystems/Game';
 import {WavesState} from '../../../gameApp/gameSystems/WavesState';
 import {Upgrade} from '../Upgrade/Upgrade';
 
+import MenuSelectingSoundUrl from '../../../assets/sounds/menu/selecting.mp3'; 
 import SelectingSoundUrl from '../../../assets/sounds/panel/selecting.mp3';
 import RecoveryEndSoundUrl from '../../../assets/sounds/panel/recovery.mp3';
 import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3'; 
@@ -541,7 +541,8 @@ export class Panels extends React.Component<Props, {}> {
       }
 
       if(!Game.isGameOver && !WavesState.isWaveStarted && WavesState.delayEndLeftTimeMs <= 0){
-        Upgrade.show(selectedItem);
+        Upgrade.show(selectedItem, true);
+        AudioSystem.play(Mouse.x, MenuSelectingSoundUrl, -15);
         this.props.selectItem('');
         Magics.clearCursor();
         return;
