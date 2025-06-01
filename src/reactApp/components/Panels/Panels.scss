@@ -56,6 +56,10 @@
 			background-color: transparent;
 		}
 	}
+	
+	&--disabled{
+		opacity: 0.4;
+	}
 
 	&__item-container{
     	height: 100%;

@@ -217,10 +217,14 @@ export class Panels extends React.Component<Props, {}> {
     this.animateTime(selectedItemId, selectedItem.timeRecoveryMs);
 
     let callback = (drawsDiffMs: number) => {
-      if(Game.isGameOver || !Game.isGameRun){
+      if(Game.isGameOver){
+        return false;
+      }
+
+      if(!Game.isGameRun){ //pause
         return true;
       }
-      
+
       selectedItem.timeRecoveryLeftMs -= drawsDiffMs;
       
       let isContinue = selectedItem.timeRecoveryLeftMs > 0;
@@ -291,7 +295,11 @@ export class Panels extends React.Component<Props, {}> {
     let centerX = canvas.width / 2;
     let centerY = canvas.height / 2;
     let callback = (drawsDiffMs: number) => {
-      if(Game.isGameOver || !Game.isGameRun){
+      if(Game.isGameOver){
+        return false;
+      }
+
+      if(!Game.isGameRun){ //pause
         return true;
       }
   
@@ -584,7 +592,7 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   renderPanel(panel: Panel, index: number, isTop: boolean){
-    return <div className={"panel " + (isTop ? "panel--top" : "panel--bottom panels--shift-top panels--transition")} key={index}>
+    return <div className={"panel " + (isTop ? "panel--top" : "panel--bottom panels--shift-top panels--transition") + (this.props.isDisabled ? " panel--disabled" : "")} key={index}>
         {panel.items.map((item: Magic, index2) => {
           let className = `panel__item  panel${index}__item${index2} `;
 
