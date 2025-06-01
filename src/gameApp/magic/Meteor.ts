@@ -27,7 +27,7 @@ import AnimationInfinite from '../../models/AnimationInfinite';
 import BaseImage from '../../assets/img/magics/meteor/image.png';  
 import ImageGif from '../../assets/img/magics/meteor/imageGif.gif';  
 import AnimationImage from '../../assets/img/magics/meteor/animation.png'; 
-import ExplosionImage from '../../assets/img/magics/meteor/explosion.png'; 
+import ExplosionImage from '../../assets/img/magics/meteor/explosion.svg'; 
 import SmokeImage from '../../assets/img/magics/meteor/smoke.png'; 
 import FireImage from '../../assets/img/magics/meteor/fire.png'; 
 
