@@ -217,6 +217,10 @@ export class Panels extends React.Component<Props, {}> {
     this.animateTime(selectedItemId, selectedItem.timeRecoveryMs);
 
     let callback = (drawsDiffMs: number) => {
+      if(Game.isGameOver || !Game.isGameRun){
+        return true;
+      }
+      
       selectedItem.timeRecoveryLeftMs -= drawsDiffMs;
       
       let isContinue = selectedItem.timeRecoveryLeftMs > 0;
@@ -287,6 +291,10 @@ export class Panels extends React.Component<Props, {}> {
     let centerX = canvas.width / 2;
     let centerY = canvas.height / 2;
     let callback = (drawsDiffMs: number) => {
+      if(Game.isGameOver || !Game.isGameRun){
+        return true;
+      }
+  
       if (!canvas){
         console.error('canvas-ahead lost!', selectedItemId);
         return false;
