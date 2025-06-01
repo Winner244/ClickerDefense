@@ -324,7 +324,7 @@ export class Meteor extends Magic{
 		//звук чуть раньше запускается
 		if(this.y + this.height / 1.2 + 75 > Draw.canvas.height - bottomShiftBorder && this.explosionAnimation.leftTimeMs <= 0 && !this.isSoundExplosionStarted){
 			this.isSoundExplosionStarted = true;
-			AudioSystem.play(this.intersectionWithEarch.x, ExplosionSoundUrl, -2);
+			AudioSystem.play(this.intersectionWithEarch.x, ExplosionSoundUrl, -2, 1, false, true);
 		}
 
 		//полное падение

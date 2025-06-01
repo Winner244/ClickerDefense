@@ -652,6 +652,11 @@ export class Panels extends React.Component<Props, {}> {
                   {item == null 
                     ? null 
                     : <div className="panel__item-number noselect">{index == 1 ? "Alt + " : index == 2 ? "Shift + " : ""}{(index2 + 1) % 10}</div>}
+                  {item == null || !WavesState.isWaveEnded
+                    ? null 
+                    : <div className='panel__item-upgrade-button'>
+                        <img className='panel__item-upgrade-button-image nodrag' src={UpgradeImage}/>
+                      </div>}
                 </div>
                 <canvas width="320" height="320" className={`panel__item-canvas panel${index}__item${index2}-canvas`}></canvas>
                 <canvas width="80" height="80" className={`panel__item-canvas-ahead`}></canvas>

@@ -176,5 +176,39 @@
 			z-index: 11;
 			display: none;
 		}
+
+		&-upgrade-button{
+    		opacity: 0;
+			
+            cursor: pointer;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			position: absolute;
+			width: 30px;
+			height: 40px;
+			left: 20px;
+			top: 25%;
+			max-width: 50px;
+			padding: 0 5px;
+			//background-color: rgb(212, 183, 30);
+			background-color: rgb(212, 223, 30);
+			border: 1px solid #c10000;
+			box-shadow: 0 0 3px rgb(255, 0, 0), inset 0 0 15px 1px #ff3b3b;
+
+
+			.panel__item-container:hover &{
+				opacity: 1;
+			}
+
+			&-image{
+				width: 100%;
+
+				&--coin{
+					width: 35%;
+					margin-left: 1px;
+				}
+			}
+		}
 	}
 }

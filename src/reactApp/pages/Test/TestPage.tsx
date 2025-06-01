@@ -3328,6 +3328,7 @@ class TestPage extends React.Component {
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
+                Gamer.coins = 22775;
 
                 Game.buyThing(Meteor.shopItem);
                 setTimeout(() => {
@@ -3357,6 +3358,7 @@ class TestPage extends React.Component {
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
+                Gamer.coins = 22775;
 
                 Game.buyThing(Meteor.shopItem);
                 setTimeout(() => {
