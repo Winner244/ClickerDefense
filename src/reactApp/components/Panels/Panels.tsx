@@ -33,6 +33,7 @@ import AddingPanelSoundUrl from '../../../assets/sounds/panel/adding.mp3';
 import AddingItemSoundUrl from '../../../assets/sounds/magic/adding.mp3'; 
 
 import AddingImage from '../../../assets/img/magics/adding.png'; 
+import UpgradeImage from '../../../assets/img/buttons/upgrade.png';
 
 interface Prop {
 }
@@ -73,14 +74,13 @@ export class Panels extends React.Component<Props, {}> {
     return new Promise((done, fail) => { 
       setTimeout(() => {
           if(countPanels == 0){
-            document.getElementsByClassName("panels--top")[0].classList.remove("panels--shift-top");
+            App.Store.dispatch(PanelsStore.actionCreators.open());
           }
           else if(countPanels == 1){
-            document.getElementsByClassName("panel--bottom")[0].classList.remove("panels--shift-top");
+            App.Store.dispatch(PanelsStore.actionCreators.openSecond());
           }
           else if(countPanels == 2){
-            document.getElementsByClassName("panel--bottom")[1].classList.remove("panels--shift-top");
-            document.getElementsByClassName("panel--bottom")[0].classList.add("panel--clip-bottom");
+            App.Store.dispatch(PanelsStore.actionCreators.openThird());
           }
 
           setTimeout(() => done(true), 1200); //ожидаем полного появления панели
@@ -600,7 +600,33 @@ export class Panels extends React.Component<Props, {}> {
   }
 
   renderPanel(panel: Panel, index: number, isTop: boolean){
-    return <div className={"panel " + (isTop ? "panel--top" : "panel--bottom panels--shift-top panels--transition") + (this.props.isDisabled ? " panel--disabled" : "")} key={index}>
+    let classNames = ['panel'];
+
+    if(!isTop){
+      if(index == 1 && !this.props.isOpenedSecond){
+        classNames.push('panels--shift-top');
+      }
+      else if(index == 2 && !this.props.isOpenedThird){
+        classNames.push('panels--shift-top');
+      }
+    }
+
+    if(index == 1 && this.props.isOpenedThird){
+      classNames.push('panel--clip-bottom');
+    }
+
+    if(isTop){
+      classNames.push('panel--top');
+    }
+    else{
+      classNames.push('panel--bottom panels--transition');
+    }
+
+    if(this.props.isDisabled){
+      classNames.push('panel--disabled');
+    }
+
+    return <div className={classNames.join(' ')} key={index}>
         {panel.items.map((item: Magic, index2) => {
           let className = `panel__item  panel${index}__item${index2} `;
 
@@ -641,10 +667,9 @@ export class Panels extends React.Component<Props, {}> {
     }
 
     let countTopPanels = 1;
-
     return (
       <div className='panels'>
-        <div className='panels--top panels--shift-top panels--transition'>
+        <div className={'panels--top ' + (this.props.isOpened ? '' : ' panels--shift-top ') + ' panels--transition'}>
           {this.props.panels.slice(0, countTopPanels).map((panel, index) => this.renderPanel(panel, index, true))}
         </div>
 

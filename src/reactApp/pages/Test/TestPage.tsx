@@ -3317,6 +3317,75 @@ class TestPage extends React.Component {
         },
 
         {
+            key: "Панель магии - 2 уровня",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                WavesState.isWaveStarted = false;
+                Waves.waveCurrent = 0;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                Game.buyThing(Meteor.shopItem);
+                setTimeout(() => {
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                }, 3000)
+            }
+        },
+
+        {
+            key: "Панель магии - 3 уровня",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                WavesState.isWaveStarted = false;
+                Waves.waveCurrent = 0;
+                Menu.displayShopButton();
+                Menu.displayNewWaveButton();
+                AudioSystem.isEnabled = true;
+
+                Game.buyThing(Meteor.shopItem);
+                setTimeout(() => {
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    Game.buyThing(Meteor.shopItem);
+                    setTimeout(() => {
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                        Game.buyThing(Meteor.shopItem);
+                    }, 3000)
+                }, 3000)
+            }
+        },
+        {
             key: "Метеор - радиус урона",
             code: () => {
                 Game.buyThing(Meteor.shopItem);
