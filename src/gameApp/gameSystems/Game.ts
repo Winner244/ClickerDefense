@@ -67,7 +67,7 @@ export class Game {
 	private static readonly grassImage: HTMLImageElement = new Image(); //трава
 
 	static isGameRun: boolean = false; //если false - значит на паузе 
-	static isGameOver: boolean = false; //игра заканчивается
+	static isGameOver: boolean = false; //игра заканчивается (поражением)
 	static readonly gaveOverTimeMs: number = 3000; //время окончания игры после проигрыша
 	static gaveOverTimeLeftMs: number = Game.gaveOverTimeMs; //оставшееся время окончания игры
 	static isEndAfterGameOver: boolean = false; //игра закончилась

@@ -228,7 +228,7 @@ export class Panels extends React.Component<Props, {}> {
       selectedItem.timeRecoveryLeftMs -= drawsDiffMs;
       
       let isContinue = selectedItem.timeRecoveryLeftMs > 0;
-      if (!isContinue){
+      if (!isContinue && !WavesState.isWaveEnded){
         this.forceUpdate();
         this.animateEndRecovery(selectedItemId);
         AudioSystem.play(-1, RecoveryEndSoundUrl);
@@ -382,6 +382,14 @@ export class Panels extends React.Component<Props, {}> {
     let leftTimeMs = Panels.durationOfEndRecoveryAdnimationMs;
     let shiftStart = 0;
     let callback = (drawsDiffMs: number) => {
+      if(Game.isGameOver){
+        return false;
+      }
+
+      if(!Game.isGameRun){ //pause
+        return true;
+      }
+
       if (canvas == null){
         console.error('canvas-behind lost!', selectedItemId);
         return false;
