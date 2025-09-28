@@ -15,7 +15,8 @@ import startEmptyImage from '../../../assets/img/starEmpty.png';
 
 
 interface IState {
-  hoverStar: number;
+  starHover: number;
+  starSelected: number;
 }
 
 interface Prop {
@@ -38,15 +39,19 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
     super(props);
 
     this.state = { 
-      hoverStar: -1
+      starHover: -1,
+      starSelected: -1
     };
   }
 
   onMouseEnter(index: number){
-    this.setState({ hoverStar: index });
+    this.setState({ starHover: index });
   }
-  onMouseLeave(index: number){
-    this.setState({ hoverStar: -1 });
+  onMouseLeave(){
+    this.setState({ starHover: -1 });
+  }
+  onMouseClick(index: number){
+    this.setState({ starHover: -1, starSelected: index });
   }
 
   renderEmptyStart(){
@@ -60,10 +65,11 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
 
     return (
       <div className="successful-final-panel noselect">
-          <div className="successful-final-panel__body">
+          <div className="successful-final-panel__container">
               <div className="successful-final-panel__title">Конец</div>
-              <div className='successful-final-panel__text'>
+              <div className='successful-final-panel__body'>
                 Понравилось?
+
                 <div className='successful-final-panel__stars-container'>
                   <div className='successful-final-panel__stars'>
                       <div className='nodrag successful-final-panel__star'><img className='nodrag' src={startImage} /></div>
@@ -76,16 +82,25 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
                       {[1,2,3,4,5].map(i => {
                         return <div 
                             key={i}
-                            className={'nodrag successful-final-panel__star-empty ' + (i <= this.state.hoverStar ? 'successful-final-panel__star-empty--hover' : '')} 
+                            className={'nodrag successful-final-panel__star-empty ' + (i <= this.state.starHover || i <= this.state.starSelected && this.state.starHover == -1 ? 'successful-final-panel__star-empty--hover' : '')} 
                             onMouseEnter={() => this.onMouseEnter(i)} 
-                            onMouseLeave={() => this.onMouseLeave(i)} 
+                            onMouseLeave={() => this.onMouseLeave()} 
+                            onClick={() => this.onMouseClick(i)}
                           >
                           <img className='nodrag' src={startEmptyImage} />
                         </div>;
                       })}
                   </div>
                 </div>
-                Если да - то я добавлю ещё волн, монстров, строений, магии, юнитов, усилений курсора и новые карты с другими особенностями. 
+                
+                <div className='successful-final-panel__sub-text-2'>
+                  Если да - то я добавлю ещё волн, монстров, строений, магии, юнитов, усилений курсора и новые карты с другими особенностями. 
+                </div>
+
+                Что понравилось/не очень? Что добавить можно?
+                <textarea className='successful-final-panel__comment-input'>
+
+                </textarea>
               </div>
           </div>
       </div>
