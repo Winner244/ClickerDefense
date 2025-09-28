@@ -24,6 +24,8 @@ import {AudioSystem} from '../gameSystems/AudioSystem';
 
 import {Labels} from '../labels/Labels';
 
+import {MassDamageModifier} from '../modifiers/MassDamageModifier';
+
 import ExplosionImage from '../../assets/img/monsters/explosionOfEnergy.png'; 
 
 import ExplosionSound from '../../assets/sounds/monsters/explosion.mp3'; 
@@ -107,8 +109,10 @@ export class Monsters{
 					i--;
 					Gamer.coins += Math.round(monster.healthMax);
 					this.explosions.push(new SimpleObject(monster.x, monster.y, monster.width, monster.height, this.explosionAnimation.durationMs));
-					AudioSystem.play(monster.centerX, ExplosionSound, -3, 1, true);
-					AudioSystem.playRandomTone(monster.centerX, 0.001, 0, 200, AudioSystem.iirFilters.low);
+					if(monster.modifiers.find(m => m.name == MassDamageModifier.name) == null){
+						AudioSystem.play(monster.centerX, ExplosionSound, -3, 1, true);
+						AudioSystem.playRandomTone(monster.centerX, 0.001, 0, 200, AudioSystem.iirFilters.low);
+					}
 				}
 			}
 		}

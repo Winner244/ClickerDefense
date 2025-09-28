@@ -22,6 +22,8 @@ import ShopItem from '../../models/ShopItem';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
 import ParameterItem from '../../models/ParameterItem';
 
+import {MassDamageModifier} from '../modifiers/MassDamageModifier';
+
 import AnimationInfinite from '../../models/AnimationInfinite';
 
 import BaseImage from '../../assets/img/magics/meteor/image.png';  
@@ -300,6 +302,7 @@ export class Meteor extends Magic{
 			this.fireElements.push(new MovingObject(fireX - fireWidth / 2, fireY - fireWidth / 2, fireWidth, fireWidth, Meteor.fireLifeTimeMs / this.speed, 0, 0, this.angle));
 			
 		}
+		//высчитываем урон от столкновения метеора о землю
 		else if(this.explosionAnimation.leftTimeMs <= 0){
 			this.explosionAnimation.restart();
 
@@ -309,9 +312,11 @@ export class Meteor extends Magic{
 				let distanceMax = radiusMeteorit + Math.min(monster.width, monster.height) / 2;
 				if(distance < distanceMax){
 					monster.applyDamage((Math.min(1, (distanceMax - distance) / (distanceMax / 2))) * this.damageEnd);
+					monster.addModifier(new MassDamageModifier())
 				}
 			});
 		}
+		//дым после взрыва
 		else{
 			let smokeWidth = this.width / 2;
 			let dx = (Math.random() - 0.5) * 500;
