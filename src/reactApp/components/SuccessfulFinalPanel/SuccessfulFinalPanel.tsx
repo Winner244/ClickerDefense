@@ -57,6 +57,50 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
   }
   onMouseClick(index: number){
     this.setState({ starHover: -1, starSelected: index });
+
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push(
+      {
+          "ecommerce": {
+              "currencyCode": "RUB",
+              "click": {
+                  "actionField": {
+                    id: 'clickByStar',
+                    goal_id: 555555555
+                  },
+                  "products" : [{
+                    id: index
+                  }]
+              }
+          }
+      }
+    );
+    (window as any).ym(104308185,'reachGoal','555555555')
+  }
+
+  onSendForm(){
+    SuccessfulFinalPanel.close();
+
+
+    (window as any).dataLayer = (window as any).dataLayer || [];
+    (window as any).dataLayer.push(
+      {
+          "ecommerce": {
+              "currencyCode": "RUB",
+              "purchase": {
+                  "actionField": {
+                    id: 'sendForm',
+                    goal_id: 1234567890
+                  },
+                  "products" : [{
+                    id: this.state.starSelected, 
+                    variant: (document.querySelector('.successful-final-panel__comment-input') as HTMLTextAreaElement)?.value  || '' 
+                  }]
+              }
+          }
+      }
+    );
+    (window as any).ym(104308185,'reachGoal','1234567890')
   }
 
   renderEmptyStart(){
@@ -105,7 +149,7 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
                 Что понравилось/не очень? Что добавить можно?
                 <textarea className='successful-final-panel__comment-input'></textarea>
                 <div className='successful-final-panel__send-button-container'>
-                  <button className='successful-final-panel__send-button' onClick={SuccessfulFinalPanel.close}>Отправить</button>
+                  <button className='successful-final-panel__send-button' onClick={() => this.onSendForm()}>Отправить</button>
                 </div>
               </div>
           </div>
