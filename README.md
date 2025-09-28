@@ -9,14 +9,14 @@ last version: 0.19
 <br>
 <h3>Monsters:</h3>
 
-🎃 Zombie
+👾 Zombie
   
   <img src="https://clicker-defense.ru/static/media/readmy/Zombie1.gif" height="70" />
   <img src="https://clicker-defense.ru/static/media/readmy/Zombie2.gif" height="70" />
   <img src="https://clicker-defense.ru/static/media/readmy/Zombie3.gif" height="70" />
   <img src="https://clicker-defense.ru/static/media/readmy/Zombie4.gif" height="70" />
 	
-🎃 Boar
+👾 Boar
 
   <img src="https://clicker-defense.ru/static/media/readmy/Boar.gif" height="70" />
   
@@ -24,11 +24,11 @@ last version: 0.19
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/BoarSpecialAbility.gif" height="200" />
 	
-🎃 Bat
+👾 Bat
 
 <img src="https://clicker-defense.ru/static/media/readmy/Bat.gif" height="200" />
 
-🎃 Necromancer
+👾 Necromancer
 
 <img src="https://clicker-defense.ru/static/media/readmy/Necromancer.gif" height="200" />
   
@@ -124,6 +124,20 @@ attacked:
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <img src="https://clicker-defense.ru/static/media/readmy/CollectorWoodArmor.gif" height="200" />
 
 <img src="https://clicker-defense.ru/static/media/readmy/collector.jpg" height="250" />
+
+
+
+
+<br>
+<br>
+<h3>Magic:</h3>
+
+💥Meteor
+
+<img src="https://clicker-defense.ru/static/media/readmy/Meteor.gif" height="400" />
+
+<img src="https://clicker-defense.ru/static/media/readmy/meteor.jpg" height="250" />
+
 
 <br>
 <br>
