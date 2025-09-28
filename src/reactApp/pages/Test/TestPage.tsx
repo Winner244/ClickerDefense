@@ -3446,6 +3446,22 @@ class TestPage extends React.Component {
                 Monsters.all.forEach(x => x.testNumber = 555);
             }
         },
+
+        {
+            key: "Success End",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                Waves.all[Waves.all.length - 1] = [new WaveData(Boar.name, 1, 1, 0)];
+                Waves.waveCurrent = Waves.all.length - 1;
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                WavesState.isWaveStarted = true;
+
+                setTimeout(() => {
+                    Monsters.all[0].applyDamage(1000);
+                }, 1000);
+            }
+        },
     ];
 
     waitLoadingImage(imageHandler: ImageHandler, callback: Function){

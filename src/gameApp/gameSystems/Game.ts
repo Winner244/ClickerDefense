@@ -44,6 +44,7 @@ import {Helper} from '../helpers/Helper';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 import {Shop} from '../../reactApp/components/Shop/Shop';
+import {SuccessfulFinalPanel} from '../../reactApp/components/SuccessfulFinalPanel/SuccessfulFinalPanel';
 import {Panels} from '../../reactApp/components/Panels/Panels';
 import {Upgrade} from '../../reactApp/components/Upgrade/Upgrade';
 import {BuildingButtons} from '../../reactApp/components/BuildingButtons/BuildingButtons';
@@ -158,8 +159,13 @@ export class Game {
 		Panels.disable();
 	}
 
-	static endOfWaveComplete(){ //event after blackOut 
-		Panels.undisable();
+	static endOfWaveComplete(isWasLastWave: boolean){ //event after blackOut 
+		if(isWasLastWave){
+			SuccessfulFinalPanel.show();
+		}
+		else{
+			Panels.undisable();
+		}
 	}
 
 	static startOfWaveComplete(){ //event after blackOut 

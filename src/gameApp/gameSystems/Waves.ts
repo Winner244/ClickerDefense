@@ -115,7 +115,8 @@ export class Waves{
 		if(WavesState.delayEndLeftTimeMs > 0){
 			WavesState.delayEndLeftTimeMs -= drawsDiffMs;
 			if(WavesState.delayEndLeftTimeMs <= 0){
-				Game.endOfWaveComplete();
+				var isWasLastWave = this.waveCurrent + 1 >= Waves.all.length;
+				Game.endOfWaveComplete(isWasLastWave);
 			}
 			return;
 		}
@@ -136,11 +137,11 @@ export class Waves{
 
 		//end of wave
 		if(this.waveCountKilledMonsters >= this.waveCountMonsters && Monsters.all.length == 0){
-			Menu.displayShopButton();
 			WavesState.isWaveStarted = false;
 			WavesState.delayEndLeftTimeMs = this.delayEndTimeMs;
 			if(Waves.all.length > this.waveCurrent + 1){
 				Menu.displayNewWaveButton();
+				Menu.displayShopButton();
 			}
 			Game.loadResourcesAfterEndOfWave(Waves.waveCurrent);
 			Game.endOfWave();

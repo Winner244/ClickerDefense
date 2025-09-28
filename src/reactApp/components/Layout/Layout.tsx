@@ -8,6 +8,7 @@ import UnitButtons from "../UnitButtons/UnitButtons";
 import GameDisplay from "../GameDisplay/GameDisplay";
 import Upgrade from "../Upgrade/Upgrade";
 import CoinLabels from "../CoinLabels/CoinLabels";
+import SuccessfulFinalPanel from "../SuccessfulFinalPanel/SuccessfulFinalPanel";
 
 export interface Props {
     children?: React.ReactNode;
@@ -23,6 +24,7 @@ export default class Layout extends React.Component<Props, {}> {
             <UnitButtons />
             <Shop />
             <Upgrade />
+            <SuccessfulFinalPanel />
             <Menu />
             <CoinLabels />
         </div>;

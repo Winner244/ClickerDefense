@@ -5,6 +5,7 @@ import * as BuildingButtonsStore from '../components/BuildingButtons/BuildingBut
 import * as UnitButtonsStore from '../components/UnitButtons/UnitButtonsStore';
 import * as UpgradeStore from '../components/Upgrade/UpgradeStore';
 import * as CoinLabelsStore from '../components/CoinLabels/CoinLabelsStore';
+import * as SuccessfulFinalPanelStore from '../components/SuccessfulFinalPanel/SuccessfulFinalPanelStore';
 
 // The top-level state object
 export interface ApplicationState {
@@ -15,6 +16,7 @@ export interface ApplicationState {
     unitButtons: UnitButtonsStore.UnitButtonsState | undefined;
     upgrade: UpgradeStore.UpgradeState | undefined;
     coinLabels: CoinLabelsStore.CoinLabelsState | undefined;
+    successfulFinalPanel: SuccessfulFinalPanelStore.SuccessfulFinalPanelState | undefined;
 }
 
 // Whenever an action is dispatched, Redux will update each top-level application state property using
@@ -28,6 +30,7 @@ export const reducers = {
     unitButtons: UnitButtonsStore.reducer,
     upgrade: UpgradeStore.reducer,
     coinLabels: CoinLabelsStore.reducer,
+    successfulFinalPanel: SuccessfulFinalPanelStore.reducer
 };
 
 // This type can be used as a hint on action creators so that its 'dispatch' and 'getState' params are

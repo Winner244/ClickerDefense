@@ -1,0 +1,53 @@
+.successful-final-panel{
+	position: absolute;
+    width: 250px;
+	top: 200px;
+	left: calc(50% - 126px);
+	background-color: rgb(212, 183, 30);
+	border: 1px solid #c10000;
+	box-shadow: 0 0 10px rgb(255, 0, 0);
+	z-index: 12;
+	
+	&__body{
+		box-shadow: inset 0 0 30px 5px #ff3b3b;
+		padding: 10px 20px 20px;
+		overflow: hidden;
+	}
+
+	&__title{
+		font-family: 'FortunataCYR';
+		font-size: 52px;
+		text-align: center;
+		color: #e80000;
+		text-shadow: 0 0 10px black, 0 0 10px black;
+	}
+
+	&__stars-container{
+		height: 50px;
+	}
+
+	&__stars, &__stars-empty{
+		position: absolute;
+		display: flex;
+		z-index: 14;
+
+		& > * {
+			cursor: pointer;
+			width: 44px;
+		}
+	}
+
+	&__stars{
+		z-index: 14;
+	}
+
+	&__stars-empty{
+		z-index: 15;
+	}
+
+	&__star-empty--hover{
+		& > img{
+			display: none;
+		}
+	}
+}
