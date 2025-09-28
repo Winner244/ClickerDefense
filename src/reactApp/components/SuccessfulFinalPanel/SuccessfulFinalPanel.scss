@@ -65,4 +65,24 @@
     	outline: none;
     	border: none;
 	}
+
+
+	&__send-button-container{
+		text-align: right;
+	}
+
+	&__send-button{
+		padding: 5px 15px;
+		background-color: #ff6a00;
+    	border: none;
+		cursor: pointer;
+
+		&:hover{
+			background-color: #e15e00;
+		}
+
+		&:active{
+			background-color: green;
+		}
+	}
 }

@@ -35,6 +35,11 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
     App.Store.dispatch(SuccessfulFinalPanelStore.actionCreators.open());
   }
 
+  static close(): void
+  {
+    App.Store.dispatch(SuccessfulFinalPanelStore.actionCreators.close());
+  }
+
   constructor(props: Props) {
     super(props);
 
@@ -98,9 +103,10 @@ export class SuccessfulFinalPanel extends React.Component<Props, IState> {
                 </div>
 
                 Что понравилось/не очень? Что добавить можно?
-                <textarea className='successful-final-panel__comment-input'>
-
-                </textarea>
+                <textarea className='successful-final-panel__comment-input'></textarea>
+                <div className='successful-final-panel__send-button-container'>
+                  <button className='successful-final-panel__send-button' onClick={SuccessfulFinalPanel.close}>Отправить</button>
+                </div>
               </div>
           </div>
       </div>
