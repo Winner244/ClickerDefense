@@ -10,7 +10,7 @@ export default class ParameterItem{
 	readonly icon: HTMLImageElement|null; //иконка характеристики 
 	readonly iconWidth: number; //ширина иконки
 	getValue: () => string|number; //функция получения значения
-	private readonly _initialValue: number; 
+	private readonly _initialValue: number; //начальное значение параметра
 
 	mouseIn: () => void; //наведении мышкой на параметр в UI
 	mouseOut: () => void; //увод мышкой от параметра в UI
@@ -54,7 +54,8 @@ export default class ParameterItem{
 		this._initialValue = this.getNumberValue();
 	}
 
-	protected getNumberValue(){
+	//получает числовое значение параметра
+	protected getNumberValue(): number{
 		let valueStr = this.getValue();
 		let valueNumber = 0;
 		if(typeof valueStr == 'string'){
@@ -70,20 +71,23 @@ export default class ParameterItem{
 		return valueNumber;
 	}
 	
+	//цена для улучшения
 	priceToImprove(): number|null{
 		let priceToImprove = this._priceToImprove();
 		if (priceToImprove){
+			//прогрессивная цена - зависит от прокаченного уровня параметра - чем выше уровень от начального, тем выше цена прокачки дальше
 			var kof = 1;
 			if(this._initialValue != 0){
 				kof = this.getNumberValue() / this._initialValue;
-				kof = Math.max(kof, 1);
+				kof = Math.max(kof, 1) - 1;
 			}
 
-			priceToImprove = Math.round(kof * priceToImprove);
+			priceToImprove += Math.round(kof * priceToImprove / 10);
 		}
 		return priceToImprove;
 	}
 
+	//улучшить параметр
 	improve(): number {
 		let priceToImprove = this.priceToImprove();
 		if (priceToImprove && this.isActive()){
