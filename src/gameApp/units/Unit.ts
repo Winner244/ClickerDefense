@@ -318,59 +318,6 @@ export class Unit extends UpgradableAttackedObject {
 
 		if(this.health > 0){
 
-			if(this._goal){
-				if(this._goal.isLeftSide) //если монстр идёт с левой стороны
-				{
-					let condition = this.isLand 
-						? this.x > this._goal.x + this._goal.width - this.width / 5
-						: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
-		
-					if (condition) { //ещё не дошёл
-						this.x -= speed;
-		
-						if(!this.isLand){
-							//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
-						}
-						this._isAttack = false;
-					}
-					else //дошёл
-					{
-						if(this.isLand){
-							this.x = this._goal.x + this._goal.width - this.width / 5;
-						}
-						if(!this._isAttack){
-							this._attackAnimation.restart();
-						}
-						this._isAttack = true; //атакует
-					}
-				}
-				else 
-				{
-					let condition = this.isLand 
-						? this.x + this.width < this._goal.x + this.width / 5
-						: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
-		
-					if (condition) { //ещё не дошёл
-						this.x += speed;
-		
-						if(!this.isLand){
-							//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
-						}
-						this._isAttack = false;
-					}
-					else //дошёл
-					{
-						if(this.isLand){
-							this.x = this._goal.x - this.width + this.width / 5;
-						}
-						if(!this._isAttack){
-							this._attackAnimation.restart();
-						}
-						this._isAttack = true; //атакует
-					}
-				}
-			}
-
 			//волна окончена
 			if(WavesState.isWaveEnded && WavesState.delayEndLeftTimeMs <= 0 && !this._isFall && this._fallEndAnimation.leftTimeMs <= 0){
 				this.isRunRight = true;
@@ -384,6 +331,61 @@ export class Unit extends UpgradableAttackedObject {
 				if(this.goalY && Math.abs(this.y - this.goalY + this.height) > speed){
 					this.y -= Math.sign(this.y - this.goalY + this.height) * speed;
 					this.isRun = true;
+				}
+			}
+			else{
+				
+				if(this._goal && this._goal.health > 0){
+					if(this._goal.isLeftSide) //если монстр идёт с левой стороны
+					{
+						let condition = this.isLand 
+							? this.x > this._goal.x + this._goal.width - this.width / 5
+							: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+			
+						if (condition) { //ещё не дошёл
+							this.x -= speed;
+			
+							if(!this.isLand){
+								//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+							}
+							this._isAttack = false;
+						}
+						else //дошёл
+						{
+							if(this.isLand){
+								this.x = this._goal.x + this._goal.width - this.width / 5;
+							}
+							if(!this._isAttack){
+								this._attackAnimation.restart();
+							}
+							this._isAttack = true; //атакует
+						}
+					}
+					else 
+					{
+						let condition = this.isLand 
+							? this.x + this.width < this._goal.x + this.width / 5
+							: this._goal.width / 2 - this._goal.reduceHover < Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY);
+			
+						if (condition) { //ещё не дошёл
+							this.x += speed;
+			
+							if(!this.isLand){
+								//this.y += (this._goal.centerY - this.centerY) / Helper.getDistance(this.centerX, this.centerY, this._goal.centerX, this._goal.centerY) * speed;
+							}
+							this._isAttack = false;
+						}
+						else //дошёл
+						{
+							if(this.isLand){
+								this.x = this._goal.x - this.width + this.width / 5;
+							}
+							if(!this._isAttack){
+								this._attackAnimation.restart();
+							}
+							this._isAttack = true; //атакует
+						}
+					}
 				}
 			}
 		}
