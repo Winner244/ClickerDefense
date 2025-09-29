@@ -174,11 +174,11 @@ Game Over:
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 crusher (impulse anomaly with magnet)
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 meteors
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 meteor shower
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 lightning
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 cursor passive magic ....
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 😃 cursor passive magic (fire, damage, damage by area, ...)...
 
 ....
 
