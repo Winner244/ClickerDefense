@@ -843,10 +843,24 @@ export class Collector extends Unit{
 
 		//монетка исчезла
 		if(this._goalCoin && this._goalCoin.lifeTimeLeftMs <= 0){
+			const centerOfGoal = this._goalCoin.centerX;
 			this.isRun = false;
+
 			//поиск другой монеты поблизости
-			//TODO: search another coint nearly (15 pixels)
-			this.clear();
+			const searchRadius = 7;
+			var nearCoin = Coins.all.find(x => x !== this._goalCoin 
+				&& x
+				&& x.lifeTimeLeftMs > 0 
+				&& x.isFallEnd 
+				&& x.centerX > centerOfGoal - searchRadius 
+				&& x.centerX < centerOfGoal + searchRadius)
+
+			if(nearCoin){
+				this._goalCoin = nearCoin;
+			}
+			else{
+				this.clear();
+			}
 		}
 
 		//игра пошла
@@ -982,7 +996,6 @@ export class Collector extends Unit{
 		}
 		else if(WavesState.isWaveEnded){
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
-			this.isRun = false;
 			this.clear();
 		}
 	}
