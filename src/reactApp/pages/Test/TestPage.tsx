@@ -1664,7 +1664,7 @@ class TestPage extends React.Component {
         },*/
 
         {
-            key: "Золотодобытчики - Авто появление множественное + проверка на лимит покупки",
+            key: "Золотодобытчик - Авто появление множественное + проверка на лимит покупки",
             code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -1694,7 +1694,7 @@ class TestPage extends React.Component {
 
 
         {
-            key: "Золотодобытчики - нападение летучих мышей на множество добытчиков",
+            key: "Золотодобытчик - нападение летучих мышей на множество добытчиков",
             code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -1776,7 +1776,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - порядок отрисовки 1",
+            key: "Золотодобытчик - порядок отрисовки 1",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1809,7 +1809,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - порядок отрисовки 2",
+            key: "Золотодобытчик - порядок отрисовки 2",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1843,7 +1843,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - порядок отрисовки 3",
+            key: "Золотодобытчик - порядок отрисовки 3",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1876,7 +1876,7 @@ class TestPage extends React.Component {
         },
 
         /*{
-            key: "Золотодобытчики - за кристаллами",
+            key: "Золотодобытчик - за кристаллами",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1915,7 +1915,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - перед кристаллами",
+            key: "Золотодобытчик - перед кристаллами",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -1954,7 +1954,7 @@ class TestPage extends React.Component {
         },*/
 
         {
-            key: "Золотодобытчики - перед и за кристаллами",
+            key: "Золотодобытчик - перед и за кристаллами",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2017,7 +2017,7 @@ class TestPage extends React.Component {
         },
 
         /*{
-            key: "Золотодобытчики - движение за мышкой",
+            key: "Золотодобытчик - движение за мышкой",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2074,7 +2074,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - движение за мышкой - проверка выталкивания из кристаллов",
+            key: "Золотодобытчик - движение за мышкой - проверка выталкивания из кристаллов",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2107,7 +2107,7 @@ class TestPage extends React.Component {
         },*/
 
         {
-            key: "Золотодобытчики - добыча и конец волны",
+            key: "Золотодобытчик - добыча и конец волны",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2127,7 +2127,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - гибель от летучей мыши",
+            key: "Золотодобытчик - гибель от летучей мыши",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2159,7 +2159,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - самооборона от летучей мыши",
+            key: "Золотодобытчик - самооборона от летучей мыши",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2190,7 +2190,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - самооборона от 2х летучих мышей",
+            key: "Золотодобытчик - самооборона от 2х летучих мышей",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2226,7 +2226,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - магазин + летучие мыши",
+            key: "Золотодобытчик - магазин + летучие мыши",
             code: () => {
                 AudioSystem.isEnabled = false;
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
@@ -2252,7 +2252,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - нападение летучей мыши - спасён",
+            key: "Золотодобытчик - нападение летучей мыши - спасён",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2283,7 +2283,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - нападение летучей мыши - спасён + конец волны",
+            key: "Золотодобытчик - нападение летучей мыши - спасён + конец волны",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2316,7 +2316,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - гибель от летучей мыши - с другой стороны",
+            key: "Золотодобытчик - гибель от летучей мыши - с другой стороны",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2371,7 +2371,7 @@ class TestPage extends React.Component {
         },
 
         {
-            key: "Золотодобытчики - гибель",
+            key: "Золотодобытчик - гибель",
             code: () => {
                 App.Store.dispatch(MenuStore.actionCreators.startGame());
                 Game.startNew();
@@ -2717,6 +2717,40 @@ class TestPage extends React.Component {
                         var zombie = new Zombie(Draw.canvas.width / 2 + 120, 780, false, 1);
                         Monsters.all.push(zombie);
                     });
+                }, 3000);
+            }
+        },
+
+        
+        {
+            key: "Золотособиратель - переключение на другую монету после исчезновения первой",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                Waves.all = [
+                    [ //1-я волна
+                        new WaveData(Zombie.name, 1, 60, 0)
+                    ],
+                    [ //2-я волна
+                        new WaveData(Zombie.name, 15, 10, 0)
+                    ]];
+
+                var y = Draw.canvas.height - Draw.bottomShiftBorder - Collector.imageHeight - 75;
+                var collector1 = new Collector(Draw.canvas.width / 2 - 150, y);
+                collector1.loadedResourcesAfterBuild();
+                //collector1.improveToVacuum();
+                Units.all.push(collector1);
+
+                //first coin
+                setTimeout(() => {
+                    if(WavesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 22, Draw.canvas.height - 80));
+                }, 500);
+
+                setTimeout(() => {
+                    if(WavesState.isWaveStarted)
+                        Coins.all.push(new Coin(Draw.canvas.width / 2 + 27, Draw.canvas.height - 80));
                 }, 3000);
             }
         },

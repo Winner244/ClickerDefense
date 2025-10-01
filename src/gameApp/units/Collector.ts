@@ -844,6 +844,8 @@ export class Collector extends Unit{
 		//монетка исчезла
 		if(this._goalCoin && this._goalCoin.lifeTimeLeftMs <= 0){
 			this.isRun = false;
+			//поиск другой монеты поблизости
+			//TODO: search another coint nearly (15 pixels)
 			this.clear();
 		}
 
@@ -980,6 +982,7 @@ export class Collector extends Unit{
 		}
 		else if(WavesState.isWaveEnded){
 			this._collectingAnimation.leftTimeMs = this._collectingArmorAnimation.leftTimeMs = 0;
+			this.isRun = false;
 			this.clear();
 		}
 	}
