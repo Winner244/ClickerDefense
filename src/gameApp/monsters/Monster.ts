@@ -116,6 +116,10 @@ export class Monster extends AttackedObject{
 		AudioSystem.load(Hit11Sound);
 	}
 
+	clearGoal(){
+		this._goal = null;
+	}
+
 	selectGoal(buildings: Building[], monsters: Monster[], units: Unit[]): void{
 		if(this._goal == null || this._goal.health <= 0 || this.isLand && units.filter(x => x.isLand).length){
 			let goals: AttackedObject[] = [];

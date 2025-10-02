@@ -192,7 +192,7 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 WavesState.isWaveStarted = false;
                 Waves.waveCurrent = 0;
-                Gamer.coins = 775;
+                Gamer.coins = 1775;
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
                 AudioSystem.isEnabled = true;
@@ -3511,6 +3511,33 @@ class TestPage extends React.Component {
                 }
 
                 Monsters.all.forEach(x => x.testNumber = 555);
+            }
+        },
+
+        {
+            key: "Метеор",
+            code: () => {
+                AudioSystem.isEnabled = false;
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+                Waves.waveCurrent = 1;
+                AudioSystem.isEnabled = true;
+
+
+                var barricade1 = new Barricade(700);
+                barricade1.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade1);
+
+                var tower2 = new Tower(1100);
+                tower2.loadedResourcesAfterBuild();
+                Buildings.all.push(tower2);
+                
+                var barricade2 = new Barricade(1200);
+                barricade2.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade2);
+
+                Game.buyThing(Meteor.shopItem);
             }
         },
 

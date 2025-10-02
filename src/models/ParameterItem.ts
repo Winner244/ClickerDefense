@@ -82,7 +82,8 @@ export default class ParameterItem{
 				kof = Math.max(kof, 1) - 1;
 			}
 
-			priceToImprove += Math.round(kof * priceToImprove / 10);
+			priceToImprove += Math.round(kof * priceToImprove / 10 * 3);
+			priceToImprove = Math.round(priceToImprove);
 		}
 		return priceToImprove;
 	}

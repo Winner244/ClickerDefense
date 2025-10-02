@@ -12,6 +12,7 @@ export const routes = <div>
         <Switch>
             <Route exact path='/' component={MainPage} />
             <Route exact path='/test' component={TestPage} />
+            <Route exact path='/test.html' component={TestPage} />
             <Route exact path='/demo' component={DemoPage} />
         </Switch>
     </Layout>

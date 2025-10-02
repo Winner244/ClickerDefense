@@ -20,7 +20,9 @@ import {Magic} from './Magic';
 
 import ShopItem from '../../models/ShopItem';
 import {ShopCategoryEnum} from '../../enum/ShopCategoryEnum';
-import ParameterItem from '../../models/ParameterItem';
+import ParameterItem from '../../models/ParameterItem'; 
+
+import {PileStones} from '../buildings/PileStones';
 
 import {MassDamageModifier} from '../modifiers/MassDamageModifier';
 
@@ -35,7 +37,7 @@ import FireImage from '../../assets/img/magics/meteor/fire.png';
 
 import FireSoundUrl from '../../assets/sounds/magic/meteor/fire-moving.mp3'; 
 import ExplosionSoundUrl from '../../assets/sounds/magic/meteor/explosion.mp3'; 
-import swordIcon from '../../assets/img/icons/sword.png';  
+import swordIcon from '../../assets/img/icons/sword.png'; 
 
 /** Метеорит - тип магии */
 export class Meteor extends Magic{
@@ -90,7 +92,7 @@ export class Meteor extends Magic{
 	private isSoundExplosionStarted: boolean; //звук взрыва уже начался?
 	static readonly fireSoundDistanceSpeedOk: number = 1200; //дистанция для обычной скорости звука огня
 
-	constructor(x: number, y: number, angle: number = 90, size: number|null = null)
+	constructor(x: number, y: number, angle: number = 90, size: number|null = null, damageEnd: number|null = null, damageInAirSecond: number|null = null)
 	{
 		super(x, y, 
 			size || Meteor.initialSize,
@@ -122,8 +124,8 @@ export class Meteor extends Magic{
 
 		this.isSoundExplosionStarted = false;
 
-		this.damageEnd = Meteor.damageEnd;
-		this.damageInAirSecond = Meteor.damageInAirSecond;
+		this.damageEnd = damageEnd || Meteor.damageEnd;
+		this.damageInAirSecond = damageInAirSecond || Meteor.damageInAirSecond;
 		this.damageEndSizeKof = Meteor.damageEndSizeKof;
 		this.damageInAirSizeKof = Meteor.damageInAirSizeKof;
 
@@ -184,6 +186,9 @@ export class Meteor extends Magic{
 				this.timeRecoveryMs += 50;
 				this.size += 0.05;
 			}));
+
+			
+		PileStones.init(true);
 	}
 
 	getAngle(pointStart: Point, pointEnd: Point): number{
@@ -235,7 +240,7 @@ export class Meteor extends Magic{
 		x -= this.width / 2;
 		y -= this.height / 2;
 
-		return new Meteor(x, y, angle, this.size);
+		return new Meteor(x, y, angle, this.size, this.damageEnd, this.damageInAirSecond);
 	}
 
 	logic(drawsDiffMs: number, buildings: Building[], monsters: Monster[], units: Unit[], bottomShiftBorder: number){
@@ -315,6 +320,15 @@ export class Meteor extends Magic{
 					monster.addModifier(new MassDamageModifier())
 				}
 			});
+
+			//TODO: Добавлять только когда есть улучшение
+			//оставляем груду камней
+			console.log('damageEnd2', this.damageEnd);
+			console.log('damage', 50 * this.damageEnd / 5);
+			const pileStones = new PileStones(this.intersectionWithEarch.x, 0.6 * this.size * 0.9, 50 * this.damageEnd / 5);
+			pileStones.x -= pileStones.width / 2;
+			buildings.push(pileStones);
+			monsters.forEach(m => m.clearGoal());
 		}
 		//дым после взрыва
 		else{
@@ -384,11 +398,11 @@ export class Meteor extends Magic{
 		pointStart = pointStart || pointEnd;
 
 		this.displayTrajectory(pointStart, pointEnd);
-		this.displayMagicOnTheCursor(drawsDiffMs, pointStart, pointEnd, cursorMagicWidth, cursorMagicHeight);
+		this.displayMagicOnCursorCore(drawsDiffMs, pointStart, pointEnd, cursorMagicWidth, cursorMagicHeight);
 
 	}
 
-	displayMagicOnTheCursor(drawsDiffMs: number, pointStart: Point, pointEnd: Point, cursorMagicWidth: number, cursorMagicHeight: number){
+	displayMagicOnCursorCore(drawsDiffMs: number, pointStart: Point, pointEnd: Point, cursorMagicWidth: number, cursorMagicHeight: number){
 		let angle = this.getAngle(pointStart, pointEnd);  //has distance logic inside.
 
 		//высчитываем катет по гипотенузе и углу
