@@ -20,7 +20,7 @@ export class Mouse{
 	static init(): void{
 		window.removeEventListener('mousemove', Mouse.onMove);
 		window.removeEventListener('mousedown', Mouse.onClick);
-		window.addEventListener('mousemove', Mouse.onMove);
+		window.addEventListener('mousemove', Mouse.onMove, {passive: true});
 		window.addEventListener('mousedown', Mouse.onClick);
 		this.isClick = false;
 	}

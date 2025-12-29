@@ -101,7 +101,7 @@ export class Upgrade extends React.Component<Props, {}> {
   }
 
   componentDidMount(){
-    document.addEventListener('mousemove', this.onMouseMove.bind(this));
+    document.addEventListener('mousemove', this.onMouseMove.bind(this), {passive: true});
     document.addEventListener('mousedown', this.onMouseDown.bind(this));
     document.addEventListener('mouseup', this.onMouseUp.bind(this));
   }
