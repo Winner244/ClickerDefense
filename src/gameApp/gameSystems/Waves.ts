@@ -15,6 +15,7 @@ import {Zombie} from '../monsters/Zombie';
 import {Monsters} from '../monsters/Monsters';
 import {Necromancer} from '../monsters/Necromancer';
 import {Minotaur} from '../monsters/Minotaur';
+import {EyeJupiter} from '../monsters/EyeJupiter';
 
 import {Menu} from '../../reactApp/components/Menu/Menu';
 
@@ -51,37 +52,38 @@ export class Waves{
 				new WaveData(Zombie.name, 15, 15, 0),
 			],
 			[ //2-я волна
-				new WaveData(Zombie.name, 22, 16.5, 0),
-				new WaveData(Boar.name, 13, 21, 5)
+				new WaveData(Zombie.name, 22, 16.5 * 3, 0),
+				new WaveData(Boar.name, 13, 21 * 3, 5)
 			],
 			[ //3-я волна
-				new WaveData(Zombie.name, 30, 24, 0),
-				new WaveData(Boar.name, 18, 37.5, 1),
-				new WaveData(Bat.name, 35, 31, 2)
+				new WaveData(Zombie.name, 30, 24 * 3, 0),
+				new WaveData(Boar.name, 18, 37.5 * 3, 1),
+				new WaveData(Bat.name, 35, 31 * 3, 2)
 			],
 			[ //4-ая волна
-				new WaveData(Boar.name, 23, 20, 0),
-				new WaveData(Bat.name, 87, 21, 0),
+				new WaveData(Boar.name, 23, 20 * 3, 0),
+				new WaveData(Bat.name, 50, 21 * 3, 0),
 
-				new WaveData(Zombie.name, 100, 45, 15),
-				new WaveData(Necromancer.name, 10, 45, 15),
+				new WaveData(Zombie.name, 100, 45 * 3, 15),
+				new WaveData(Necromancer.name, 10, 45 * 3, 15),
 
-				new WaveData(Boar.name, 9, 40, 20),
-				new WaveData(Bat.name, 15, 40, 20),
+				new WaveData(Boar.name, 9, 40 * 3, 20),
+				new WaveData(Bat.name, 15, 40 * 3, 20),
 			],
 			[ //5-ая волна
-				new WaveData(Zombie.name, 30, 50, 0),
-				new WaveData(Boar.name, 18, 37.5, 1),
-				new WaveData(Bat.name, 70, 50, 2),
-				new WaveData(Necromancer.name, 15, 45, 0),
-				new WaveData(Minotaur.name, 2, 50, 0),
+				new WaveData(Zombie.name, 30, 50 * 3, 0),
+				new WaveData(Boar.name, 18, 37.5 * 3, 1),
+				new WaveData(Bat.name, 50, 50 * 3, 2),
+				new WaveData(Necromancer.name, 15, 45 * 3, 0),
+				new WaveData(Minotaur.name, 2, 50 * 3, 0),
 			],
-			[ //6-ая волна (демо - без нового монстра)
-				new WaveData(Zombie.name, 100, 50, 0),
-				new WaveData(Boar.name, 120, 37.5, 1),
-				new WaveData(Bat.name, 190, 50, 2),
-				new WaveData(Necromancer.name, 35, 70, 0),
-				new WaveData(Minotaur.name, 10, 70, 0),
+			[ //6-ая волна
+				new WaveData(Zombie.name, 70, 50 * 3, 0),
+				new WaveData(Boar.name, 80, 37.5 * 3, 1),
+				new WaveData(Bat.name, 60, 50 * 3, 2),
+				new WaveData(Necromancer.name, 25, 70 * 3, 0),
+				new WaveData(Minotaur.name, 10, 70 * 3, 0),
+				new WaveData(EyeJupiter.name, 10, 50, 5),
 			]];
 	}
 
@@ -170,6 +172,10 @@ export class Waves{
 				monster.y = monster.isLand 
 					? bottomPosition
 					: Helper.getRandom(0, bottomPosition - bottomPosition * 0.1);
+
+				if(waveData.monsterName == EyeJupiter.name){
+					monster.y -= EyeJupiter.hoverShiftBase;
+				}
 
 				Monsters.add(monster);
 

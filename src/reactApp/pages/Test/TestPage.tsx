@@ -43,6 +43,7 @@ import { PileStones } from '../../../gameApp/buildings/PileStones';
 import { Magics } from '../../../gameApp/magic/Magics';
 import { Point } from '../../../models/Point';
 import { Cursor } from '../../../gameApp/gamer/Cursor';
+import { EyeJupiter } from '../../../gameApp/monsters/EyeJupiter';
 
 class TestPage extends React.Component {
     text: string = "";
@@ -127,6 +128,25 @@ class TestPage extends React.Component {
 
                 var zombie = new Zombie(800, 780, true, 1);
                 Monsters.all.push(zombie);
+            }
+        },
+
+        {
+            key: "EyeJupiter + Баррикада",
+            code: () => {
+                App.Store.dispatch(MenuStore.actionCreators.startGame());
+                Game.startNew();
+                WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
+
+                var barricade = new Barricade(700);
+                barricade.loadedResourcesAfterBuild();
+                Buildings.all.push(barricade);
+
+                var eyeJupiter = new EyeJupiter(400, 800, true, 1);
+                eyeJupiter.y = Draw.canvas.height - Draw.bottomShiftBorder - eyeJupiter.height;
+                Monsters.all.push(eyeJupiter);
+
+                WavesState.isWaveStarted = false;
             }
         },
 
@@ -4140,7 +4160,7 @@ class TestPage extends React.Component {
                 WavesState.delayEndLeftTimeMs = WavesState.delayStartLeftTimeMs = 0;
                 WavesState.isWaveStarted = false;
                 Waves.waveCurrent = 2;
-                var coins = 250;
+                var coins = 4250;
                 Gamer.coins = coins; //pre закупка
                 Menu.displayShopButton();
                 Menu.displayNewWaveButton();
@@ -4401,6 +4421,7 @@ class TestPage extends React.Component {
         Zombie.init(true);
         Bat.init(true);
         Necromancer.init(true);
+        EyeJupiter.init(true);
         Builder.init(true);
         //Skelet.init(true);
         FlyEarth.loadExplosionResources();

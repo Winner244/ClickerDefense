@@ -6,6 +6,7 @@ import {ImageHandler} from '../ImageHandler';
 
 import {AttackedObject} from '../../models/AttackedObject';
 import {Minotaur} from '../monsters/Minotaur';
+import {EyeJupiter} from '../monsters/EyeJupiter';
 
 import Improvement from '../../models/shop/Improvement';
 import ImprovementParameterItem from '../../models/shop/ImprovementParameterItem';
@@ -97,7 +98,7 @@ export class Barricade extends Building{
 
 		var realDamage = super.applyDamage(damage, x, y, attackingObject);
 
-		if(attackingObject && attackingObject.name !== Minotaur.name){
+		if(attackingObject && attackingObject.name !== Minotaur.name && attackingObject.name !== EyeJupiter.name){
 			var mirrorDamage = damage / 100 * this.damageMirrorPercentage;
 			if(mirrorDamage > 0){
 				attackingObject.applyDamage(mirrorDamage, attackingObject.x + attackingObject.width / 2 + (attackingObject.isLeftSide ? 0: -17), attackingObject.y + attackingObject.height / 2);

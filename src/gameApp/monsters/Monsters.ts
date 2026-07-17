@@ -14,6 +14,7 @@ import {Boar} from './Boar';
 import {Necromancer} from './Necromancer';
 import {Skelet} from './Skelet';
 import {Minotaur} from './Minotaur';
+import {EyeJupiter} from './EyeJupiter';
 
 import {Gamer} from '../gamer/Gamer';
 import {Cursor} from '../gamer/Cursor';
@@ -60,6 +61,7 @@ export class Monsters{
 			case Necromancer.name: Necromancer.init(true); break;
 			case Skelet.name: Skelet.init(true); break;
 			case Minotaur.name: Minotaur.init(true); break;
+				case EyeJupiter.name: EyeJupiter.init(true); break;
 			default: throw `unexpected name of the monster (initMonster(${monsterName})).`;
 		}
 	}
@@ -113,7 +115,7 @@ export class Monsters{
 					Monsters.all.splice(i, 1);
 					i--;
 					var coinsForMonster = Math.round(monster.healthMax);
-					Gamer.coins += coinsForMonster;
+					Gamer.coins += coinsForMonster * 2;
 					Labels.createCoinLabel(monster.x, monster.y, `+${coinsForMonster}`);
 					this.explosions.push(new SimpleObject(
 						monster.centerX - monster.width * monster.explositionScaleSize / 2,  //x
@@ -187,6 +189,7 @@ export class Monsters{
 			case Necromancer.name: newMonster = new Necromancer(0, 0, isLeftSide, scaleSize); break;
 			case Skelet.name: newMonster = new Skelet(0, 0, isLeftSide, scaleSize); break;
 			case Minotaur.name: newMonster = new Minotaur(0, 0, isLeftSide, scaleSize); break;
+				case EyeJupiter.name: newMonster = new EyeJupiter(0, 0, isLeftSide, scaleSize); break;
 			default: throw `unexpected name of the monster (add(${name}, ...)).`;
 		}
 
