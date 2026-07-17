@@ -237,6 +237,8 @@ export class Game {
 				AudioSystem.pauseSounds();
 				AudioSystem.play(-1, GameOverSound, 0);
 				Panels.disable();
+				BuildingButtons.hide();
+				UnitButtons.hide();
 
 				if(Buildings.flyEarth.health <= 0){
 					//delete all miners from flyEarch

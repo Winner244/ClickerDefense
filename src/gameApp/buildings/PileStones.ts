@@ -5,7 +5,6 @@ import {Draw} from '../gameSystems/Draw';
 import {ImageHandler} from '../ImageHandler';
 
 import {AttackedObject} from '../../models/AttackedObject';
-import {EyeJupiter} from '../monsters/EyeJupiter';
 
 import Animation from '../../models/animations/Animation';
 import AnimationInfinite from '../../models/animations/AnimationInfinite';
@@ -22,6 +21,7 @@ export class PileStones extends Building{
 	static readonly imageHandler: ImageHandler = new ImageHandler();
 	static readonly image: HTMLImageElement = new Image();
 	static readonly imageHot: HTMLImageElement = new Image();
+	private static readonly ignoredMirrorDamageMonsterName = 'EyeJupiter';
 
 	isHot: boolean = false; //раскалённая глыба камней ?
 
@@ -89,7 +89,7 @@ export class PileStones extends Building{
 
 		var realDamage = super.applyDamage(damage, x, y, attackingObject);
 
-		if(this.isHot && attackingObject && attackingObject.name !== EyeJupiter.name){
+		if(this.isHot && attackingObject && attackingObject.name !== PileStones.ignoredMirrorDamageMonsterName){
 			var mirrorDamage = damage / 100 * this.damageCoreMirrorPercentage;
 			if(mirrorDamage > 0){
 				attackingObject.applyDamage(mirrorDamage, attackingObject.x + attackingObject.width / 2 + (attackingObject.isLeftSide ? 0: -17), attackingObject.y + attackingObject.height / 2);
