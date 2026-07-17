@@ -12,6 +12,7 @@ import {UnitButtons} from "../UnitButtons/UnitButtons";
 
 import {Mouse} from '../../../gameApp/gamer/Mouse';
 import {Keypad} from '../../../gameApp/gamer/Keypad';
+import {Gamer} from '../../../gameApp/gamer/Gamer';
 
 import {Game} from '../../../gameApp/gameSystems/Game';
 import {WavesState} from '../../../gameApp/WavesState';
@@ -195,6 +196,12 @@ export class Menu extends React.Component<Props, IState> {
     }
   }
 
+  onChangeDifficulty(event: React.ChangeEvent<HTMLSelectElement>){
+    const selectedLevel = parseInt(event.target.value || '1', 10);
+    Gamer.setDifficultyLevel(selectedLevel);
+    this.forceUpdate();
+  }
+
   getItemsMenu(){
     let i = 0;
     const itemsMenu = [
@@ -300,6 +307,19 @@ export class Menu extends React.Component<Props, IState> {
                   </div>
 
                   {this.getItemsMenu()}
+              </div>
+
+              <div className='menu__difficulty'>
+                <select
+                  className='menu__difficulty-select'
+                  value={Gamer.difficultyLevel}
+                  onChange={(event) => this.onChangeDifficulty(event)}
+                >
+                  <option value={1}>Супер сложно</option>
+                  <option value={2}>Сложно</option>
+                  <option value={3}>Просто</option>
+                  <option value={4}>Легко</option>
+                </select>
               </div>
             </div>
           : null

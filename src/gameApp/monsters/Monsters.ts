@@ -114,9 +114,10 @@ export class Monsters{
 					monster.destroy();
 					Monsters.all.splice(i, 1);
 					i--;
-					var coinsForMonster = Math.round(monster.healthMax);
-					Gamer.coins += coinsForMonster * 2;
-					Labels.createCoinLabel(monster.x, monster.y, `+${coinsForMonster}`);
+					let coinsForMonster = Math.round(monster.healthMax);
+					let coinsAward = coinsForMonster * Gamer.difficultyCoinMultiplier;
+					Gamer.coins += coinsAward;
+					Labels.createCoinLabel(monster.x, monster.y, `+${coinsAward}`);
 					this.explosions.push(new SimpleObject(
 						monster.centerX - monster.width * monster.explositionScaleSize / 2,  //x
 						monster.centerY - monster.height * monster.explositionScaleSize / 2, //y

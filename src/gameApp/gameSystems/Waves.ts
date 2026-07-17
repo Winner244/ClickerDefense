@@ -6,6 +6,7 @@ import {AudioSystem} from './AudioSystem';
 import {MusicSystem} from './MusicSystem';
 
 import {WaveData} from '../../models/WaveData';
+import {Gamer} from '../gamer/Gamer';
 
 import {Helper} from '../helpers/Helper';
 
@@ -52,37 +53,37 @@ export class Waves{
 				new WaveData(Zombie.name, 15, 15, 0),
 			],
 			[ //2-я волна
-				new WaveData(Zombie.name, 22, 16.5 * 3, 0),
-				new WaveData(Boar.name, 13, 21 * 3, 5)
+				new WaveData(Zombie.name, 22, 16.5, 0),
+				new WaveData(Boar.name, 13, 21, 5)
 			],
 			[ //3-я волна
-				new WaveData(Zombie.name, 30, 24 * 3, 0),
-				new WaveData(Boar.name, 18, 37.5 * 3, 1),
-				new WaveData(Bat.name, 35, 31 * 3, 2)
+				new WaveData(Zombie.name, 30, 24, 0),
+				new WaveData(Boar.name, 18, 37.5, 1),
+				new WaveData(Bat.name, 35, 31, 2)
 			],
 			[ //4-ая волна
-				new WaveData(Boar.name, 23, 20 * 3, 0),
-				new WaveData(Bat.name, 50, 21 * 3, 0),
+				new WaveData(Boar.name, 23, 20, 0),
+				new WaveData(Bat.name, 87, 21, 0),
 
-				new WaveData(Zombie.name, 100, 45 * 3, 15),
-				new WaveData(Necromancer.name, 10, 45 * 3, 15),
+				new WaveData(Zombie.name, 100, 45, 15),
+				new WaveData(Necromancer.name, 10, 45, 15),
 
-				new WaveData(Boar.name, 9, 40 * 3, 20),
-				new WaveData(Bat.name, 15, 40 * 3, 20),
+				new WaveData(Boar.name, 9, 40, 20),
+				new WaveData(Bat.name, 15, 40, 20),
 			],
 			[ //5-ая волна
-				new WaveData(Zombie.name, 30, 50 * 3, 0),
-				new WaveData(Boar.name, 18, 37.5 * 3, 1),
-				new WaveData(Bat.name, 50, 50 * 3, 2),
-				new WaveData(Necromancer.name, 15, 45 * 3, 0),
-				new WaveData(Minotaur.name, 2, 50 * 3, 0),
+				new WaveData(Zombie.name, 30, 50, 0),
+				new WaveData(Boar.name, 18, 37.5, 1),
+				new WaveData(Bat.name, 70, 50, 2),
+				new WaveData(Necromancer.name, 15, 45, 0),
+				new WaveData(Minotaur.name, 2, 50, 0),
 			],
 			[ //6-ая волна
-				new WaveData(Zombie.name, 70, 50 * 3, 0),
-				new WaveData(Boar.name, 80, 37.5 * 3, 1),
-				new WaveData(Bat.name, 60, 50 * 3, 2),
-				new WaveData(Necromancer.name, 25, 70 * 3, 0),
-				new WaveData(Minotaur.name, 10, 70 * 3, 0),
+				new WaveData(Zombie.name, 100, 50, 0),
+				new WaveData(Boar.name, 120, 37.5, 1),
+				new WaveData(Bat.name, 190, 50, 2),
+				new WaveData(Necromancer.name, 35, 70, 0),
+				new WaveData(Minotaur.name, 10, 70, 0),
 				new WaveData(EyeJupiter.name, 10, 50, 5),
 			]];
 	}
@@ -179,7 +180,7 @@ export class Waves{
 
 				Monsters.add(monster);
 
-				let periodWaitingTimeMs = waveData.durationCreatingMs / waveData.count;
+				let periodWaitingTimeMs = waveData.durationCreatingMs / waveData.count * Gamer.difficultyWaveMultiplier;
 				waveData.timeWaitingNewMonsterMs = periodWaitingTimeMs + Helper.getRandom(-periodWaitingTimeMs / 2, periodWaitingTimeMs / 2)
 				waveData.timeFromLastCreatedMs = 0;
 				waveData.wasCreatedCount++;
